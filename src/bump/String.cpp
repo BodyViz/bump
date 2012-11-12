@@ -6,24 +6,96 @@
 //  Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
+// C++ headers
+#include <iomanip>
+
+// Boost headers
+#include <boost/lexical_cast.hpp>
+
+// Bump headers
 #include <bump/String.h>
 
 using namespace bump;
 
-String::String() : std::string() {}
-String::String(const char* c_string) : std::string(c_string) {}
-String::String(const std::string& std_string) : std::string(std_string) {}
-String::String(unsigned char number) : std::string(_itoa(number)) {}
-String::String(char number) : std::string(_itoa(number)) {}
-String::String(unsigned short number) : std::string(_itoa(number)) {}
-String::String(short number) : std::string(_itoa(number)) {}
-String::String(unsigned int number) : std::string(_itoa(number)) {}
-String::String(int number) : std::string(_itoa(number)) {}
-String::String(unsigned long number) : std::string(_itoa(number)) {}
-String::String(long number) : std::string(_itoa(number)) {}
-String::String(float number) : std::string(_ftoa(number)) {}
-String::String(double number) : std::string(_dtoa(number)) {}
-String::String(bool bool_value) : std::string(_btoa(bool_value)) {}
+String::String() : std::string()
+{
+	;
+}
+
+String::String(const char* c_string) : std::string(c_string)
+{
+	;
+}
+
+String::String(const std::string& std_string) : std::string(std_string)
+{
+	;
+}
+
+String::String(unsigned char number)
+{
+	int value = (int)number;
+	*this = boost::lexical_cast<std::string>(value);
+}
+
+String::String(char number)
+{
+	int value = (int)number;
+	*this = boost::lexical_cast<std::string>(value);
+}
+
+String::String(unsigned short number)
+{
+	int value = (int)number;
+	*this = boost::lexical_cast<std::string>(value);
+}
+
+String::String(short number)
+{
+	int value = (int)number;
+	*this = boost::lexical_cast<std::string>(value);
+}
+
+String::String(unsigned int number)
+{
+	*this = boost::lexical_cast<std::string>(number);
+}
+
+String::String(int number)
+{
+	*this = boost::lexical_cast<std::string>(number);
+}
+
+String::String(unsigned long number)
+{
+	*this = boost::lexical_cast<std::string>(number);
+}
+
+String::String(long number)
+{
+	*this = boost::lexical_cast<std::string>(number);
+}
+
+String::String(float number, unsigned int precision)
+{
+	std::ostringstream result;
+	result.setf(std::ios::fixed, std::ios::floatfield);
+    result << std::setprecision(precision) << number;
+	*this = result.str();
+}
+
+String::String(double number, unsigned int precision)
+{
+	std::ostringstream result;
+	result.setf(std::ios::fixed, std::ios::floatfield);
+    result << std::setprecision(precision) << number;
+	*this = result.str();
+}
+
+String::String(bool boolValue)
+{
+	*this = boolValue == true ? String("true") : String("false");
+}
 
 String String::join(String path, String fname)
 {
@@ -734,47 +806,4 @@ String& String::operator << (bool append_bool)
 {
     *this += String(append_bool);
     return *this;
-}
-
-String String::_itoa(int input)
-{
-    std::ostringstream output;
-    if (!(output << input))
-    {
-        return "ERROR - Conversion did not work";
-    }
-
-    return String(output.str());
-}
-
-String String::_ftoa(float input)
-{
-    char floatChars[256];
-#ifdef _MSC_VER
-    sprintf_s(floatChars, "%f", input);
-#else
-    sprintf(floatChars, "%f", input);
-#endif
-
-    return String(floatChars);
-}
-
-String String::_dtoa(double input)
-{
-    char floatChars[512];
-#ifdef _MSC_VER
-    sprintf_s(floatChars, "%f", input);
-#else
-    sprintf(floatChars, "%f", input);
-#endif
-
-    return String(floatChars);
-}
-
-String String::_btoa(bool input)
-{
-    if (input == true)
-        return String("true");
-    else
-        return String("false");
 }

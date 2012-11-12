@@ -17,6 +17,9 @@
 #include <sstream>
 #include <vector>
 
+// Boost headers
+#include <boost/lexical_cast.hpp>
+
 namespace bump {
 
 /**
@@ -100,17 +103,17 @@ public:
     /**
      * Constructor that takes a float.
      */
-    String(float number);
+    String(float number, unsigned int precision = 3);
 
     /**
      * Constructor that takes a double.
      */
-    String(double number);
+    String(double number, unsigned int precision = 3);
 
     /**
      * Constructor that takes a bool.
      */
-    String(bool bool_value);
+    String(bool boolValue);
 
     /**
      * Returns a string joined between path and fname with a forward or back slash
@@ -726,28 +729,6 @@ public:
 	 * @param append_bool - the bool to add to the original String
 	 */
 	String& operator << (bool append_bool);
-
-protected:
-
-    /**
-     * Converts an integer to an String.
-     */
-    String _itoa(int input);
-
-    /**
-     * Converts an integer to an String.
-     */
-    String _ftoa(float input);
-
-    /**
-     * Converts an integer to an String.
-     */
-    String _dtoa(double input);
-
-    /**
-     * Converts an integer to an String.
-     */
-    String _btoa(bool input);
 };
 
 // Typedefs

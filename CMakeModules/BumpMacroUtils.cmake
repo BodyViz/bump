@@ -259,7 +259,43 @@ MACRO (SETUP_EXAMPLE EXAMPLE_NAME)
     # Install the example
     INSTALL (
         TARGETS ${TARGET_TARGETNAME}
-        RUNTIME DESTINATION share/vipre/bin
+        RUNTIME DESTINATION share/bump/bin
     )
 
 ENDMACRO (SETUP_EXAMPLE)
+
+#######################################################################################################
+#
+#  Macro for setting up a test.
+#
+#  NOTE: it expects some variables to be set either within local CMakeLists or higher in the hierarchy.
+#
+#  TARGET_COMMON_LIBRARIES      - common internal libraries to link against
+#  TARGET_SRC                   - source files of the target
+#
+##########################################################################################################
+
+MACRO (SETUP_TEST TEST_NAME)
+
+    SET (TARGET_NAME ${TEST_NAME})
+
+    # Specify whether it is a command line app
+    IF (${ARGC} GREATER 1)
+        SET (IS_COMMANDLINE_APP ${ARGV1})
+    ELSE ()
+        SET (IS_COMMANDLINE_APP 0)
+    ENDIF ()
+
+    # Setup the executable
+    SETUP_EXE (${IS_COMMANDLINE_APP})
+
+	# Put the generated project into an Tests folder
+	SET_TARGET_PROPERTIES(${TARGET_TARGETNAME} PROPERTIES FOLDER "Tests")
+
+    # Install the example
+    INSTALL (
+        TARGETS ${TARGET_TARGETNAME}
+        RUNTIME DESTINATION bin
+    )
+
+ENDMACRO (SETUP_TEST)

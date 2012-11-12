@@ -109,12 +109,19 @@ ENDFOREACH ()
 
 # Find all the dependency packages
 FIND_PACKAGE (Boost 1.52.0 REQUIRED)
+FIND_PACKAGE (GTest)
 
 # Add the src subdirectory
 ADD_SUBDIRECTORY (src)
 
 # Set whether to build the examples
-#OPTION (Bump_BUILD_EXAMPLES "Enable to build BUMP Examples" ON)
+#OPTION (Bump_BUILD_EXAMPLES "Enable to build Bump Examples" ON)
 #IF (Bump_BUILD_EXAMPLES)
 #    ADD_SUBDIRECTORY (examples)
 #ENDIF ()
+
+# Set whether to build the tests
+OPTION (Bump_BUILD_TESTS "Enable to build Bump Tests" ON)
+IF (Bump_BUILD_TESTS)
+   ADD_SUBDIRECTORY (tests)
+ENDIF ()
