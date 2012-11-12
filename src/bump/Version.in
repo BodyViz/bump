@@ -33,4 +33,15 @@ extern BUMP_EXPORT String bumpGetLibraryName();
 
 }	// End of bump namespace
 
+/**
+
+ \namespace bump
+ 
+ The bump library is a collection of helpful C++ addons meant to extend
+ beyond the basic abilities of the C++ language. Things such as intelligent
+ strings, logging systems, environment and file system management and even
+ cross-code abstract notifications can be found in bump.
+
+ */
+
 #endif  // End of BUMP_VERSION_H
