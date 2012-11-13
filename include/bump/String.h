@@ -22,6 +22,12 @@
 
 namespace bump {
 
+// Forward Declarations
+class String;
+
+// Typedefs
+typedef std::vector<String> StringList;
+
 /**
  * A string class which adds lots of useful string methods ontop of the std::string class. These
  * methods range from custom print methods for many different types of objects as well as string
@@ -52,99 +58,110 @@ public:
 
     /**
      * Constructor that takes a const char*.
+	 *
+     * @param cString - the c string to convert to a bump::String.
      */
-    String(const char* c_string);
+    String(const char* cString);
 
     /**
      * Constructor that takes a std::string.
+	 *
+     * @param stdString - the std::string to convert to a bump::String.
      */
-    String(const std::string& std_string);
+    String(const std::string& stdString);
 
     /**
      * Constructor that takes an unsigned char.
+	 *
+     * @param number - the number to convert to a bump::String.
      */
     String(unsigned char number);
 
     /**
      * Constructor that takes a char.
+	 *
+     * @param number - the number to convert to a bump::String.
      */
     String(char number);
 
     /**
      * Constructor that takes an unsigned short.
+	 *
+     * @param number - the number to convert to a bump::String.
      */
     String(unsigned short number);
 
     /**
      * Constructor that takes a short.
+	 *
+     * @param number - the number to convert to a bump::String.
      */
     String(short number);
 
     /**
      * Constructor that takes an unsigned int.
+	 *
+     * @param number - the number to convert to a bump::String.
      */
     String(unsigned int number);
 
     /**
      * Constructor that takes an int.
+	 *
+     * @param number - the number to convert to a bump::String.
      */
     String(int number);
 
     /**
      * Constructor that takes an unsigned long.
+	 *
+     * @param number - the number to convert to a bump::String.
      */
     String(unsigned long number);
 
     /**
      * Constructor that takes a long.
+	 *
+     * @param number - the number to convert to a bump::String.
      */
     String(long number);
 
     /**
      * Constructor that takes a float.
+	 *
+     * @param number - the number to convert to a bump::String.
+	 * @param precision - the number of decimal places to represent the number's precision.
      */
     String(float number, unsigned int precision = 3);
 
     /**
      * Constructor that takes a double.
+	 *
+     * @param number - the number to convert to a bump::String.
+	 * @param precision - the number of decimal places to represent the number's precision.
      */
     String(double number, unsigned int precision = 3);
 
     /**
      * Constructor that takes a bool.
+	 *
+     * @param boolValue - a boolean to convert to a bump::String.
      */
     String(bool boolValue);
 
     /**
-     * Returns a string joined between path and fname with a forward or back slash
-     * depending on the operating system.
-     *
-     * @param path - the file path.
-     * @param fname - the file name.
-     */
-    static String join(String path, String fname);
-
-    /**
-     * Returns a string joined by a forward or backslash between all the elements
-     * of the string vector.
-     *
-     * @param strings - the strings to join together.
-     */
-    static String joinVector(std::vector<String> strings);
-
-    /**
      * Appends the string append_string onto the end of this string.
      *
-     * @param append_string - the String to add.
+     * @param appendString - the string to add.
      */
-    void append(const String& append_string);
+    void append(const String& appendString);
 
     /**
      * Appends the const char* append_char onto the end of this string.
      *
-     * @param append_string - the String to add.
+     * @param appendString - the c string to add.
      */
-    void append(const char* append_char);
+    void append(const char* appendString);
 
     /**
      * Returns the character at the given index position in this string.
@@ -152,11 +169,6 @@ public:
      * @param position - the position of the character to return of this string.
      */
     char& at(int position);
-
-    /**
-     * Returns a c string.
-     */
-    const char* c_str();
 
     /**
      * Returns a c string.
@@ -178,54 +190,54 @@ public:
      *
      * Returns whether or not the content within both objects is the same.
      *
-     * @param str - the string to compare content against with this string.
+     * @param otherString - the string to compare content against with this string.
      */
-    bool compare(const String& str) const;
+    bool compare(const String& otherString) const;
 
     /**
      * Compares the content of this string with the const char* char_star.
      *
      * Returns whether or not the content within both objects is the same.
      *
-     * @param char_star - the const char* to compare content against with this string.
+     * @param otherString - the const char* to compare content against with this string.
      */
-    bool compare(const char* char_star) const;
+    bool compare(const char* otherString) const;
 
     /**
      * Returns true if this string contains an occurrence of the string str,
      * otherwise returns false.
      *
-     * @param contain_string - the String to see if is contained within this string.
-     * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
+     * @param containString - the String to see if is contained within this string.
+     * @param caseSensitivity - the case sensitivity to be used, defaults to String::CaseSensitive.
      */
-    bool contains(String contain_string, String::CaseSensitivity cs = String::CaseSensitive);
+    bool contains(const String& containString, CaseSensitivity caseSensitivity = String::CaseSensitive) const;
 
     /**
      * Returns true if this string contains an occurrence of the const char* contain_char,
      * otherwise returns false.
      *
-     * @param contain_char - the const char* to see if is contained within this string.
-     * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
+     * @param containString - the const char* to see if is contained within this string.
+     * @param caseSensitivity - the case sensitivity to be used, defaults to String::CaseSensitive.
      */
-    bool contains(const char* contain_char, String::CaseSensitivity cs = String::CaseSensitive);
+    bool contains(const char* containString, CaseSensitivity caseSensitivity = String::CaseSensitive) const;
 
     /**
      * Returns the number of (potentially overlapping) occurrences of the String
      * contain_string in this string.
      *
-     * @param contain_string - the String to see if is contained within this string.
-     * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
+     * @param containString - the String to see if is contained within this string.
+     * @param caseSensitivity - the case sensitivity to be used, defaults to String::CaseSensitive.
      */
-    int count(String contain_string, String::CaseSensitivity cs = String::CaseSensitive);
+    int count(const String& containString, String::CaseSensitivity caseSensitivity = String::CaseSensitive) const;
 
     /**
      * Returns the number of (potentially overlapping) occurrences of the const char*
      * contain_char in this string.
      *
-     * @param contain_char - the const char* to see if is contained within this string.
-     * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
+     * @param containString - the const char* to see if is contained within this string.
+     * @param caseSensitivity - the case sensitivity to be used, defaults to String::CaseSensitive.
      */
-    int count(const char* contain_char, String::CaseSensitivity cs = String::CaseSensitive);
+    int count(const char* containString, String::CaseSensitivity caseSensitivity = String::CaseSensitive) const;
 
     /**
      * Returns true if the string has no characters; otherwise returns false.
@@ -237,18 +249,10 @@ public:
     /**
      * Returns true if this string ends with end_string; otherwise returns false.
      *
-     * @param end_string - the string to check if this string ends with.
-     * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
+     * @param endString - the string to check if this string ends with.
+     * @param caseSensitivity - the case sensitivity to be used, defaults to String::CaseSensitive.
      */
-    bool endsWith(String end_string, String::CaseSensitivity cs = String::CaseSensitive);
-
-    /**
-     * Returns true if this string ends with end_string; otherwise returns false.
-     *
-     * @param end_string - the string to check if this string ends with.
-     * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
-     */
-    bool endsWith(String end_string, String::CaseSensitivity cs = String::CaseSensitive) const;
+    bool endsWith(const String& endString, String::CaseSensitivity caseSensitivity = String::CaseSensitive) const;
 
     /**
      * Returns true if this string ends with end_char; otherwise returns false.
@@ -256,15 +260,7 @@ public:
      * @param end_char - the const char* to check if this string ends with.
      * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
      */
-    bool endsWith(const char* end_char, String::CaseSensitivity cs = String::CaseSensitive);
-
-    /**
-     * Returns true if this string ends with end_char; otherwise returns false.
-     *
-     * @param end_char - the const char* to check if this string ends with.
-     * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
-     */
-    bool endsWith(const char* end_char, String::CaseSensitivity cs = String::CaseSensitive) const;
+    bool endsWith(const char* end_char, String::CaseSensitivity caseSensitivity = String::CaseSensitive) const;
 
     /**
      * Erases a part of the string content, shortening the length of this string.
@@ -730,9 +726,6 @@ public:
 	 */
 	String& operator << (bool append_bool);
 };
-
-// Typedefs
-typedef std::vector<bump::String> StringList;
 
 }   // End of bump namespace
 

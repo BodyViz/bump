@@ -22,12 +22,12 @@ String::String() : std::string()
 	;
 }
 
-String::String(const char* c_string) : std::string(c_string)
+String::String(const char* cString) : std::string(cString)
 {
 	;
 }
 
-String::String(const std::string& std_string) : std::string(std_string)
+String::String(const std::string& stdString) : std::string(stdString)
 {
 	;
 }
@@ -97,88 +97,19 @@ String::String(bool boolValue)
 	*this = boolValue == true ? String("true") : String("false");
 }
 
-String String::join(String path, String fname)
+void String::append(const String& appendString)
 {
-    String joined;
-#ifdef _MSC_VER
-    if (path.size() == 0 || fname.size() == 0)
-    {
-        joined = path + "\\" + fname;
-    }
-    else
-    {
-        char* end = &(path.at(path.length() - 1));
-        char* begin = &(fname.at(0));
-        if (String(end) == "\\" || String(begin) == "\\")
-        {
-            joined = path + fname;
-        }
-        else
-        {
-            joined = path + "\\" + fname;
-        }
-    }
-#else
-    if (path.size() == 0 || fname.size() == 0)
-    {
-        joined = path + "/" + fname;
-    }
-    else
-    {
-        char* end = &(path.at(path.length() - 1));
-        char* begin = &(fname.at(0));
-        if (String(end) == "/" || String(begin) == "/")
-        {
-            joined = path + fname;
-        }
-        else
-        {
-            joined = path + "/" + fname;
-        }
-    }
-#endif
-
-    return joined;
+    *this += appendString;
 }
 
-String String::joinVector(std::vector<String> strings)
+void String::append(const char* appendString)
 {
-    if (strings.size() == 0)
-    {
-        return String("");
-    }
-
-    String joined = strings.at(0);
-    for (unsigned int i = 1; i < strings.size(); i++)
-    {
-#ifdef _MSC_VER
-        joined += "\\" + strings.at(i);
-#else
-        joined += "/" + strings.at(i);
-#endif
-    }
-
-    return joined;
-}
-
-void String::append(const String& append_string)
-{
-    *this += append_string;
-}
-
-void String::append(const char* append_char)
-{
-    *this += append_char;
+    *this += appendString;
 }
 
 char& String::at(int position)
 {
     return this->std::string::at(position);
-}
-
-const char* String::c_str()
-{
-    return this->std::string::c_str();
 }
 
 const char* String::c_str() const
@@ -188,7 +119,10 @@ const char* String::c_str() const
 
 void String::capitalize()
 {
-    at(0) = toupper(at(0));
+	if (!isEmpty())
+	{
+		at(0) = toupper(at(0));
+	}
 }
 
 void String::clear()
@@ -196,9 +130,9 @@ void String::clear()
     this->std::string::clear();
 }
 
-bool String::compare(const String& str) const
+bool String::compare(const String& otherString) const
 {
-    if (this->std::string::compare(str) == 0)
+    if (this->std::string::compare(otherString) == 0)
     {
         return true;
     }
@@ -206,9 +140,9 @@ bool String::compare(const String& str) const
     return false;
 }
 
-bool String::compare(const char* char_star) const
+bool String::compare(const char* otherString) const
 {
-    if (this->std::string::compare(char_star) == 0)
+    if (this->std::string::compare(otherString) == 0)
     {
         return true;
     }
@@ -216,18 +150,19 @@ bool String::compare(const char* char_star) const
     return false;
 }
 
-bool String::contains(String contain_string, String::CaseSensitivity cs)
+bool String::contains(const String& containString, String::CaseSensitivity caseSensitivity) const
 {
     size_t found;
     String sub = *this;
+	String containStringCopy = containString;
 
-    if (cs == String::NotCaseSensitive)
+    if (caseSensitivity == String::NotCaseSensitive)
     {
         sub.toLowerCase();
-        contain_string.toLowerCase();
+        containStringCopy.toLowerCase();
     }
 
-    found = sub.find(contain_string);
+    found = sub.find(containStringCopy);
     if (found != std::string::npos)
     {
         return true;
@@ -238,28 +173,29 @@ bool String::contains(String contain_string, String::CaseSensitivity cs)
     }
 }
 
-bool String::contains(const char* contain_char, String::CaseSensitivity cs)
+bool String::contains(const char* containString, String::CaseSensitivity caseSensitivity) const
 {
-    return this->contains(String(contain_char), cs);
+    return this->contains(String(containString), caseSensitivity);
 }
 
-int String::count(String contain_string, String::CaseSensitivity cs)
+int String::count(const String& containString, String::CaseSensitivity caseSensitivity) const
 {
     size_t found;
     std::string temp_str;
     int contains_count = 0;
     String sub = *this;
+	String containStringCopy = containString;
 
-    if (cs == String::NotCaseSensitive)
+    if (caseSensitivity == String::NotCaseSensitive)
     {
         sub.toLowerCase();
-        contain_string.toLowerCase();
+        containStringCopy.toLowerCase();
     }
 
     for (int i = 0; i < sub.length(); i++)
     {
-        temp_str = sub.substr(i, contain_string.length());
-        found = temp_str.find(contain_string);
+        temp_str = sub.substr(i, containStringCopy.length());
+        found = temp_str.find(containString);
         if (found != std::string::npos)
         {
             contains_count++;
@@ -269,9 +205,9 @@ int String::count(String contain_string, String::CaseSensitivity cs)
     return contains_count;
 }
 
-int String::count(const char* contain_char, String::CaseSensitivity cs)
+int String::count(const char* containString, String::CaseSensitivity caseSensitivity) const
 {
-    return this->count(String(contain_char), cs);
+    return this->count(String(containString), caseSensitivity);
 }
 
 bool String::empty() const
@@ -279,19 +215,20 @@ bool String::empty() const
     return this->std::string::empty();
 }
 
-bool String::endsWith(String end_string, String::CaseSensitivity cs)
+bool String::endsWith(const String& endString, String::CaseSensitivity caseSensitivity) const
 {
     String sub = *this;
-    if (cs == String::NotCaseSensitive)
+	String endStringCopy = endString;
+    if (caseSensitivity == String::NotCaseSensitive)
     {
         sub.toLowerCase();
-        end_string.toLowerCase();
+        endStringCopy.toLowerCase();
     }
 
-    int index = sub.length() - end_string.length();
+    int index = sub.length() - endStringCopy.length();
     String last_part(sub.substr(index, sub.length()));
 
-    if (last_part == end_string)
+    if (last_part == endString)
     {
         return true;
     }
@@ -299,23 +236,25 @@ bool String::endsWith(String end_string, String::CaseSensitivity cs)
     return false;
 }
 
-bool String::endsWith(String end_string, String::CaseSensitivity cs) const
+bool String::endsWith(const char* endString, String::CaseSensitivity caseSensitivity) const
 {
-	return String(*this).endsWith(end_string, cs);
-}
-
-bool String::endsWith(const char* end_char, String::CaseSensitivity cs)
-{
-    return this->endsWith(String(end_char), cs);
-}
-
-bool String::endsWith(const char* end_char, String::CaseSensitivity cs) const
-{
-	return String(*this).endsWith(end_char, cs);
+    return this->endsWith(String(endString), caseSensitivity);
 }
 
 void String::erase(int position, int width)
 {
+	// Make sure the position is valid
+	if (position < 0)
+	{
+		throw std::range_error("bump::String::erase cannot handle a negative position");
+	}
+
+	// Make sure the width is valid
+	if (width < 0)
+	{
+		throw std::range_error("bump::String::erase cannot handle a negative width");
+	}
+
     this->std::string::erase(position, width);
 }
 
@@ -326,6 +265,12 @@ void String::erase(iterator position)
 
 void String::erase(iterator first, iterator last)
 {
+	// Throw an exception if the iterators are reversed
+	if (last < first)
+	{
+		throw std::range_error("bump::String::erase was passed reversed iterators meaning the last comes before the first");
+	}
+
     this->std::string::erase(first, last);
 }
 

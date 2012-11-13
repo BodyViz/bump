@@ -218,7 +218,7 @@ TEST_F(StringTest, testIntConstructor)
 	my_str = bump::String(my_int);
 	EXPECT_STRNE("3000000000", my_str.c_str());
 }
-	
+
 TEST_F(StringTest, testUnsignedLongConstructor)
 {
 	// Check in-range case
@@ -238,7 +238,7 @@ TEST_F(StringTest, testLongConstructor)
 	long my_long = 214748364000;
 	bump::String my_str(my_long);
 	EXPECT_STREQ("214748364000", my_str.c_str());
-	
+
 	// Check negative in-range case
 	my_long = -214748364000;
 	my_str = bump::String(my_long);
@@ -298,43 +298,43 @@ TEST_F(StringTest, testDoubleConstructor)
 	//========================================================
 	//                Default decimal places
 	//========================================================
-	
+
 	// Positive values
 	double my_double = 3;
 	bump::String my_str(my_double);
 	EXPECT_STREQ("3.000", my_str.c_str());
-	
+
 	my_double = 2569891;
 	my_str = bump::String(my_double);
 	EXPECT_STREQ("2569891.000", my_str.c_str());
-	
+
 	my_double = 232.23456;
 	my_str = bump::String(my_double);
 	EXPECT_STREQ("232.235", my_str.c_str());
-	
+
 	// Negative values
 	my_double = -42569;
 	my_str = bump::String(my_double);
 	EXPECT_STREQ("-42569.000", my_str.c_str());
-	
+
 	my_double = -39.64589;
 	my_str = bump::String(my_double);
 	EXPECT_STREQ("-39.646", my_str.c_str());
-	
+
 	//========================================================
 	//               Customized decimal places
 	//========================================================
-	
+
 	// Make sure we properly handle zero decimal places
 	my_double = 121.98734;
 	my_str = bump::String(my_double, 0);
 	EXPECT_STREQ("122", my_str.c_str());
-	
+
 	// Negative rounding
 	my_double = -4200.599963;
 	my_str = bump::String(my_double, 4);
 	EXPECT_STREQ("-4200.6000", my_str.c_str());
-	
+
 	// Positive rounding
 	my_double = 9.3215648;
 	my_str = bump::String(my_double, 2);
@@ -354,6 +354,423 @@ TEST_F(StringTest, testBoolConstructor)
 	EXPECT_STREQ("false", my_str.c_str());
 	my_str = bump::String((bool)0);
 	EXPECT_STREQ("false", my_str.c_str());
+}
+
+TEST_F(StringTest, testAppendString)
+{
+	// Normal append
+	bump::String str1("string 1");
+	bump::String str2(" and string 2");
+	str1.append(str2);
+	EXPECT_STREQ("string 1 and string 2", str1.c_str());
+
+	// Empty append
+	str1 = "string 1";
+	str2 = "";
+	str1.append(str2);
+	EXPECT_STREQ("string 1", str1.c_str());
+
+	// Append to empty string
+	str1 = "";
+	str2 = "string 2";
+	str1.append(str2);
+	EXPECT_STREQ("string 2", str1.c_str());
+
+	// Append two empty strings
+	str1 = "";
+	str2 = "";
+	str1.append(str2);
+	EXPECT_STREQ("", str1.c_str());
+}
+
+TEST_F(StringTest, testAppendCharStar)
+{
+	// Normal append
+	bump::String str1("string 1");
+	const char* str2 = " and string 2";
+	str1.append(str2);
+	EXPECT_STREQ("string 1 and string 2", str1.c_str());
+
+	// Empty append
+	str1 = "string 1";
+	str2 = "";
+	str1.append(str2);
+	EXPECT_STREQ("string 1", str1.c_str());
+
+	// Append to empty string
+	str1 = "";
+	str2 = "string 2";
+	str1.append(str2);
+	EXPECT_STREQ("string 2", str1.c_str());
+
+	// Append two empty strings
+	str1 = "";
+	str2 = "";
+	str1.append(str2);
+	EXPECT_STREQ("", str1.c_str());
+}
+
+TEST_F(StringTest, testAt)
+{
+	// Test all the characters
+	bump::String str = "string";
+	char character = str.at(0);
+	EXPECT_EQ('s', character);
+	character = str.at(1);
+	EXPECT_EQ('t', character);
+	character = str.at(2);
+	EXPECT_EQ('r', character);
+	character = str.at(3);
+	EXPECT_EQ('i', character);
+	character = str.at(4);
+	EXPECT_EQ('n', character);
+	character = str.at(5);
+	EXPECT_EQ('g', character);
+
+	// Test outside the bounds (should throw a std::exception)
+	EXPECT_THROW(str.at(-1), std::exception);
+	EXPECT_THROW(str.at(6), std::exception);
+}
+
+TEST_F(StringTest, testCStr)
+{
+	// Test full strings
+	bump::String str("My string");
+	EXPECT_STREQ("My string", str.c_str());
+
+	// Test strings with special characters
+	str = bump::String("this\thas\ttabs");
+	EXPECT_STREQ("this\thas\ttabs", str.c_str());
+
+	// Test strings with whitespace
+	str = bump::String("   where is the whitespace   ");
+	EXPECT_STREQ("   where is the whitespace   ", str.c_str());
+}
+
+TEST_F(StringTest, testCapitalize)
+{
+	// Test a regular lowercase string
+	bump::String str("example string");
+	str.capitalize();
+	EXPECT_STREQ("Example string", str.c_str());
+
+	// Test an empty string
+	str = bump::String("");
+	str.capitalize();
+	EXPECT_STREQ("", str.c_str());
+
+	// Test a special character string
+	str = bump::String("\t\n\t");
+	str.capitalize();
+	EXPECT_STREQ("\t\n\t", str.c_str());
+}
+
+TEST_F(StringTest, testClear)
+{
+	// Test a regular string
+	bump::String str("example string");
+	EXPECT_EQ(14, str.length());
+	str.clear();
+	EXPECT_STREQ("", str.c_str());
+	EXPECT_EQ(0, str.length());
+
+	// Test an empty string
+	str = bump::String("");
+	EXPECT_EQ(0, str.length());
+	str.clear();
+	EXPECT_STREQ("", str.c_str());
+	EXPECT_EQ(0, str.length());
+
+	// Test a default string
+	str = bump::String();
+	EXPECT_EQ(0, str.length());
+	str.clear();
+	EXPECT_STREQ("", str.c_str());
+	EXPECT_EQ(0, str.length());
+}
+
+TEST_F(StringTest, testCompareString)
+{
+	// Test regular strings
+	bump::String str1("str1");
+	bump::String str2("str2");
+	EXPECT_FALSE(str1.compare(str2));
+	str2 = bump::String("str1");
+	EXPECT_TRUE(str1.compare(str2));
+
+	// Test different capitalization
+	str1 = bump::String("Str1");
+	str2 = bump::String("str1");
+	EXPECT_FALSE(str1.compare(str2));
+	str2 = bump::String("Str1");
+	EXPECT_TRUE(str1.compare(str2));
+
+	// Test empty strings
+	str1 = bump::String("");
+	str2 = bump::String();
+	EXPECT_TRUE(str1.compare(str2));
+
+	// Test special character strings
+	str1 = bump::String("\t\n\t");
+	str2 = bump::String("\t\n\t");
+	EXPECT_TRUE(str1.compare(str2));
+}
+
+TEST_F(StringTest, testCompareCString)
+{
+	// Test regular strings
+	bump::String str1("str1");
+	const char* str2 = "str2";
+	EXPECT_FALSE(str1.compare(str2));
+	str2 = "str1";
+	EXPECT_TRUE(str1.compare(str2));
+
+	// Test different capitalization
+	str1 = bump::String("Str1");
+	str2 = "str1";
+	EXPECT_FALSE(str1.compare(str2));
+	str2 = "Str1";
+	EXPECT_TRUE(str1.compare(str2));
+
+	// Test empty strings
+	str1 = bump::String("");
+	str2 = "";
+	EXPECT_TRUE(str1.compare(str2));
+
+	// Test special character strings
+	str1 = bump::String("\t\n\t");
+	str2 = "\t\n\t";
+	EXPECT_TRUE(str1.compare(str2));
+}
+
+TEST_F(StringTest, testContainsString)
+{
+	// Test regular strings using the default case sensitive search
+	bump::String str1("this is an example string");
+	bump::String str2("Example");
+	EXPECT_FALSE(str1.contains(str2));
+	str2 = bump::String("example");
+	EXPECT_TRUE(str1.contains(str2));
+	str2 = bump::String("10 examples");
+	EXPECT_FALSE(str1.compare(str2));
+
+	// Test some non-case sensitive searches
+	str1 = bump::String("This ExaMple StRiNg...");
+	str2 = bump::String("EXAMPLE string...");
+	EXPECT_FALSE(str1.contains(str2, bump::String::CaseSensitive));
+	EXPECT_TRUE(str1.contains(str2, bump::String::NotCaseSensitive));
+
+	// Test with numbers and special characters
+	str1 = bump::String("This\thas\nfunky\t\tstuff");
+	str2 = bump::String("\nfunky\t");
+	EXPECT_TRUE(str1.contains(str2, bump::String::CaseSensitive));
+	EXPECT_TRUE(str1.contains(str2, bump::String::NotCaseSensitive));
+}
+
+TEST_F(StringTest, testContainsCString)
+{
+	// Test regular strings using the default case sensitive search
+	bump::String str1("this is an example string");
+	const char* str2 = "Example";
+	EXPECT_FALSE(str1.contains(str2));
+	str2 = "example";
+	EXPECT_TRUE(str1.contains(str2));
+	str2 = "10 examples";
+	EXPECT_FALSE(str1.compare(str2));
+
+	// Test some non-case sensitive searches
+	str1 = bump::String("This ExaMple StRiNg...");
+	str2 = "EXAMPLE string...";
+	EXPECT_FALSE(str1.contains(str2, bump::String::CaseSensitive));
+	EXPECT_TRUE(str1.contains(str2, bump::String::NotCaseSensitive));
+
+	// Test with numbers and special characters
+	str1 = bump::String("This\thas\nfunky\t\tstuff");
+	str2 = "\nfunky\t";
+	EXPECT_TRUE(str1.contains(str2, bump::String::CaseSensitive));
+	EXPECT_TRUE(str1.contains(str2, bump::String::NotCaseSensitive));
+}
+
+TEST_F(StringTest, testCountString)
+{
+	// Test regular strings
+	bump::String str1("how many different a values can I have???");
+	bump::String str2("a");
+	EXPECT_EQ(5, str1.count(str2));
+	str2 = bump::String("???");
+	EXPECT_EQ(1, str1.count(str2));
+	str2 = bump::String("   ");
+	EXPECT_EQ(0, str1.count(str2));
+
+	// Test empty strings
+	str1 = bump::String("");
+	str2 = bump::String();
+	EXPECT_EQ(0, str1.count(str2));
+
+	// Test special character strings
+	str1 = bump::String("this\tcontains\tmany\ttabs");
+	str2 = bump::String("\t");
+	EXPECT_EQ(3, str1.count(str2));
+}
+
+TEST_F(StringTest, testCountCString)
+{
+	// Test regular strings
+	bump::String str1("how many different a values can I have???");
+	const char* str2 = "a";
+	EXPECT_EQ(5, str1.count(str2));
+	str2 = "???";
+	EXPECT_EQ(1, str1.count(str2));
+	str2 = "   ";
+	EXPECT_EQ(0, str1.count(str2));
+
+	// Test empty strings
+	str1 = bump::String("");
+	str2 = "";
+	EXPECT_EQ(0, str1.count(str2));
+
+	// Test special character strings
+	str1 = bump::String("this\tcontains\tmany\ttabs");
+	str2 = "\t";
+	EXPECT_EQ(3, str1.count(str2));
+}
+
+TEST_F(StringTest, testEmpty)
+{
+	// Test regular strings
+	bump::String str("example string");
+	EXPECT_FALSE(str.empty());
+	str = bump::String("");
+	EXPECT_TRUE(str.empty());
+	str = bump::String();
+	EXPECT_TRUE(str.empty());
+
+	// Test special character strings
+	str = bump::String("\t\n");
+	EXPECT_FALSE(str.empty());
+	str = bump::String("0123456789");
+	EXPECT_FALSE(str.empty());
+}
+
+TEST_F(StringTest, testEndsWithString)
+{
+	// Test regular strings
+	bump::String str1("DO I end with THIS???");
+	bump::String str2("this???");
+	EXPECT_FALSE(str1.endsWith(str2));
+	EXPECT_FALSE(str1.endsWith(str2, bump::String::CaseSensitive));
+	EXPECT_TRUE(str1.endsWith(str2, bump::String::NotCaseSensitive));
+
+	// Test empty strings
+	str1 = bump::String("");
+	str2 = bump::String();
+	EXPECT_TRUE(str1.endsWith(str2));
+	EXPECT_TRUE(str1.endsWith(str2, bump::String::CaseSensitive));
+	EXPECT_TRUE(str1.endsWith(str2, bump::String::NotCaseSensitive));
+}
+
+TEST_F(StringTest, testEndsWithCString)
+{
+	// Test regular strings
+	bump::String str1("DO I end with THIS???");
+	const char* str2 = "this???";
+	EXPECT_FALSE(str1.endsWith(str2));
+	EXPECT_FALSE(str1.endsWith(str2, bump::String::CaseSensitive));
+	EXPECT_TRUE(str1.endsWith(str2, bump::String::NotCaseSensitive));
+
+	// Test empty strings
+	str1 = bump::String("");
+	str2 = "";
+	EXPECT_TRUE(str1.endsWith(str2));
+	EXPECT_TRUE(str1.endsWith(str2, bump::String::CaseSensitive));
+	EXPECT_TRUE(str1.endsWith(str2, bump::String::NotCaseSensitive));
+}
+
+TEST_F(StringTest, testErase1)
+{
+	// Remove from the end
+	bump::String str("i love programming in C++");
+	str.erase(18, 7);
+	EXPECT_STREQ("i love programming", str.c_str());
+
+	// Remove from the beginning
+	str.erase(0, 2);
+	EXPECT_STREQ("love programming", str.c_str());
+
+	// Remove from the middle
+	str.erase(5, 3);
+	EXPECT_STREQ("love gramming", str.c_str());
+
+	// Try removing outside the bounds with invalid arguments
+	EXPECT_THROW(str.erase(-1, 10), std::range_error);
+	EXPECT_THROW(str.erase(-2, -20), std::range_error);
+	EXPECT_THROW(str.erase(2, -30), std::range_error);
+
+	// Try removing outside the bounds with valid arguments
+	str = bump::String("i love programming");
+	EXPECT_THROW(str.erase(100, 4), std::exception);
+	str.erase(6, 1000);
+	EXPECT_STREQ("i love", str.c_str());
+}
+
+TEST_F(StringTest, testErase2)
+{
+	// Remove from the beginning
+	bump::String str("i love programming in C++");
+	bump::String::iterator iter = str.begin();
+	str.erase(iter);
+	EXPECT_STREQ(" love programming in C++", str.c_str());
+
+	// Remove from the end
+	iter = str.end() - 2;
+	str.erase(iter);
+	str.erase(iter);
+	EXPECT_STREQ(" love programming in C", str.c_str());
+
+	// Remove from the middle
+	iter = str.end() - 4;
+	str.erase(iter);
+	str.erase(iter);
+	str.erase(iter);
+	EXPECT_STREQ(" love programming C", str.c_str());
+}
+
+TEST_F(StringTest, testErase3)
+{
+	// Remove from the end
+	bump::String str("i love programming in C++");
+	bump::String::iterator start_iter = str.begin() + 18;
+	bump::String::iterator end_iter = str.begin() + 25;
+	str.erase(start_iter, end_iter);
+	EXPECT_STREQ("i love programming", str.c_str());
+
+	// Remove from the beginning
+	start_iter = str.begin();
+	end_iter = str.begin() + 2;
+	str.erase(start_iter, end_iter);
+	EXPECT_STREQ("love programming", str.c_str());
+
+	// Remove from the middle
+	start_iter = str.begin() + 5;
+	end_iter = str.begin() + 8;
+	str.erase(start_iter, end_iter);
+	EXPECT_STREQ("love gramming", str.c_str());
+
+	// Handle reversed iterators
+	str = bump::String("i love programming in C++");
+	start_iter = str.begin() + 4;
+	end_iter = str.begin() + 2;
+	EXPECT_THROW(str.erase(start_iter, end_iter), std::range_error);
+
+	// Handle doubled up iterators
+	start_iter = str.begin() + 2;
+	end_iter = str.begin() + 2;
+	str.erase(start_iter, end_iter);
+	EXPECT_STREQ("i love programming in C++", str.c_str());
+	start_iter = str.end();
+	end_iter = str.end();
+	str.erase(start_iter, end_iter);
+	EXPECT_STREQ("i love programming in C++", str.c_str());
 }
 
 }   // End of bumpTest namespace
