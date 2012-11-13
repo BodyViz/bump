@@ -274,61 +274,63 @@ void String::erase(iterator first, iterator last)
     this->std::string::erase(first, last);
 }
 
-void String::fill(const char* ch, int size)
+void String::fill(const String& character, int size)
 {
-    if (String(ch).length() > 1)
+	// Make sure they character passed in is a single character
+    if (character.length() != 1)
     {
-        assert(false);
+		throw std::invalid_argument("bump::String::fill passed invalid character...must be length of one");
     }
 
-    if (size != -1)
+	// Make sure the size is not less than -1
+	if (size < -1)
+	{
+		throw std::invalid_argument("bump::String::fill passed invalid size...must be positive");
+	}
+
+	// Change the size of the string if necessary
+    if (size > -1)
     {
         this->resize(size);
     }
 
-    for (int i = 0; i < this->size(); i++)
+	// Perform the actual fill
+	String character_copy = character;
+	char fill_character = character_copy.at(0);
+    for (int i = 0; i < this->size(); ++i)
     {
-        at(i) = *ch;
+        at(i) = fill_character;
     }
 }
 
-int String::find(const String& str, int position)
+int String::indexOf(const String& indexString, int from, CaseSensitivity caseSensitivity) const
 {
-    if (position > this->size() - 1)
+	// Make sure the index string passed in is not empty
+	if (indexString.empty())
+    {
+		throw std::invalid_argument("bump::String::indexOf passed empty index string");
+    }
+
+	// Make sure from is inside our bounds
+    if (from > this->size() - 1 || from < 0)
     {
         return -1;
     }
 
-    return int(this->std::string::find(str, position));
-}
-
-int String::find(const char* char_star, int position)
-{
-    if (position > this->size() - 1)
-    {
-        return -1;
-    }
-
-    return int(this->std::string::find(char_star, position));
-}
-
-int String::indexOf(String index_string, int from, String::CaseSensitivity cs)
-{
-    if (from > this->size() - 1)
-    {
-        assert(false);
-    }
-
+	// Create some copies for manipulation
     size_t found;
-    String sub = this->substr(from, this->length());
+	String sub = *this;
+	String index_string_copy = indexString;
 
-    if (cs == String::NotCaseSensitive)
+	// Adjust for case sensitivity
+    if (caseSensitivity == String::NotCaseSensitive)
     {
         sub.toLowerCase();
-        index_string.toLowerCase();
+        index_string_copy.toLowerCase();
     }
 
-    found = sub.find(index_string);
+	// Try to find the index string
+    found = sub.find(index_string_copy, from);
     if (found != std::string::npos)
     {
         return int(found);
@@ -337,9 +339,9 @@ int String::indexOf(String index_string, int from, String::CaseSensitivity cs)
     return -1;
 }
 
-int String::indexOf(const char* index_char, int from, String::CaseSensitivity cs)
+int String::indexOf(const char* indexString, int from, CaseSensitivity caseSensitivity) const
 {
-    return this->indexOf(String(index_char), from, cs);
+    return indexOf(String(indexString), from, caseSensitivity);
 }
 
 void String::insert(int position, String insert_string)
@@ -414,7 +416,7 @@ String String::left(int num)
     return this->substr(0, num);
 }
 
-int String::length()
+int String::length() const
 {
     return this->std::string::length();
 }
@@ -558,7 +560,7 @@ String String::section(int start, int length)
     return subString(start, length);
 }
 
-int String::size()
+int String::size() const
 {
     return this->std::string::size();
 }

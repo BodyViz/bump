@@ -286,61 +286,43 @@ public:
     void erase(iterator first, iterator last);
 
     /**
-     * Sets every character in the string to character ch. If size is different from -1 (default),
+     * Sets every character in the string to character. If size is different from -1 (default),
      * the string is resized to size beforehand.
      *
-     * @param ch - the character to fill this string with.
+     * @param character - the character to fill this string with.
      * @param size - the size to resize this string to be filling.
      */
-    void fill(const char* ch, int size=-1);
-
-    /**
-     * Searches the string for the content specified in string str and returns the
-     * position of the first occurrence in the string.
-     *
-     * @param str - the String to find the first occurence of in this string.
-     * @param position - the index of the string to start searching at.
-     */
-    int find(const String& str, int position = 0);
-
-    /**
-     * Searches the string for the content specified in the const char* and returns the
-     * position of the first occurrence in the string.
-     *
-     * @param char_star - the const char* to find the first occurence of in this string.
-     * @param position - the index of the string to start searching at.
-     */
-    int find(const char* char_star, int position = 0);
+    void fill(const String& character, int size = -1);
 
     /**
      * Returns the index position of the first occurrence of the String index_string
      * in this string, searching forward from index position from. Returns -1 if
      * index_string is not found.
      *
-     * @param index_string - the String to find the first occurence of in this string.
+     * @param indexString - the String to find the first occurence of in this string.
      * @param from - the index of the string to start searching at.
-     * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
+     * @param caseSensitivity - the case sensitivity to be used, defaults to String::CaseSensitive.
      */
-    int indexOf(String index_string, int from = 0, String::CaseSensitivity cs = String::CaseSensitive);
+    int indexOf(const String& indexString, int from = 0, CaseSensitivity caseSensitivity = String::CaseSensitive) const;
 
     /**
      * Returns the index position of the first occurrence of the const char* index_char
      * in this string, searching forward from index position from. Returns -1 if
      * index_char is not found.
      *
-     * @param index_char - the const char* to find the first occurence of in this string.
+     * @param indexString - the const char* to find the first occurence of in this string.
      * @param from - the index of the string to start searching at.
-     * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
+     * @param caseSensitivity - the case sensitivity to be used, defaults to String::CaseSensitive.
      */
-    int indexOf(const char* index_char, int from = 0, String::CaseSensitivity cs = String::CaseSensitive);
+    int indexOf(const char* indexString, int from = 0, CaseSensitivity caseSensitivity = String::CaseSensitive) const;
 
     /**
-     * Inserts the String insert_string at the given index position.
+     * Inserts the String insertString at the given index position.
      *
      * @param position - the index position of the string to start inserting at.
      * @param insert_string - the String to insert at the given index position in this string.
      */
-    void insert(int position, String insert_string);
+    void insert(int position, const String& insertString);
 
     /**
      * Inserts the const char* insert_char at the given index position.
@@ -394,7 +376,7 @@ public:
     /**
      * Returns the number of characters in this string. Equivalent to size().
      */
-    int length();
+    int length() const;
 
 	/**
 	 * Pads the string with zeroes at the beginning until it reaches length.
@@ -539,7 +521,7 @@ public:
     /**
      * Returns the number of characters in this string.
      */
-    int size();
+    int size() const;
 
     /**
      * Returns a vector of strings that were separated by the given character.

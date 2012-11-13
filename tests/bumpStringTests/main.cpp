@@ -686,7 +686,7 @@ TEST_F(StringTest, testEndsWithCString)
 	EXPECT_TRUE(str1.endsWith(str2, bump::String::NotCaseSensitive));
 }
 
-TEST_F(StringTest, testErase1)
+TEST_F(StringTest, testErasePositionWidth)
 {
 	// Remove from the end
 	bump::String str("i love programming in C++");
@@ -713,7 +713,7 @@ TEST_F(StringTest, testErase1)
 	EXPECT_STREQ("i love", str.c_str());
 }
 
-TEST_F(StringTest, testErase2)
+TEST_F(StringTest, testEraseIterator)
 {
 	// Remove from the beginning
 	bump::String str("i love programming in C++");
@@ -735,7 +735,7 @@ TEST_F(StringTest, testErase2)
 	EXPECT_STREQ(" love programming C", str.c_str());
 }
 
-TEST_F(StringTest, testErase3)
+TEST_F(StringTest, testEraseIteratorFirstAndLast)
 {
 	// Remove from the end
 	bump::String str("i love programming in C++");
@@ -771,6 +771,118 @@ TEST_F(StringTest, testErase3)
 	end_iter = str.end();
 	str.erase(start_iter, end_iter);
 	EXPECT_STREQ("i love programming in C++", str.c_str());
+}
+
+TEST_F(StringTest, testFill)
+{
+	// Default fill
+	bump::String str("example string");
+	str.fill("X");
+	EXPECT_STREQ("XXXXXXXXXXXXXX", str.c_str());
+	
+	// Default fill with empty string
+	str = "";
+	str.fill("X");
+	EXPECT_STREQ("", str.c_str());
+	
+	// Fill with set size
+	str.fill("Z", 10);
+	EXPECT_STREQ("ZZZZZZZZZZ", str.c_str());
+
+	// Test fill with negative size (throws std::invalid_argument)
+	str = "example string";
+	EXPECT_THROW(str.fill("X", -4), std::invalid_argument);
+
+	// Test fill with too many characters
+	EXPECT_THROW(str.fill("XYZ", 4), std::invalid_argument);
+}
+
+TEST_F(StringTest, testIndexOfString)
+{
+	// Default find
+	bump::String str1("a simple example string");
+	bump::String str2("example");
+	int index = str1.indexOf(str2);
+	EXPECT_EQ(9, index);
+	str2 = bump::String("try");
+	index = str1.indexOf(str2);
+	EXPECT_EQ(-1, index);
+
+	// Position offset find
+	str1 = bump::String("a simple example string");
+	str2 = bump::String(" ");
+	index = str1.indexOf(str2, 4, bump::String::CaseSensitive);
+	EXPECT_EQ(8, index);
+	str2 = bump::String("try");
+	index = str1.indexOf(str2, 4, bump::String::CaseSensitive);
+	EXPECT_EQ(-1, index);
+
+	// Try an empty search string
+	str2 = bump::String("");
+	EXPECT_THROW(str1.indexOf(str2), std::invalid_argument);
+
+	// Try a position less than 0
+	str2 = bump::String("example");
+	index = str1.indexOf(str2, -10);
+	EXPECT_EQ(-1, index);
+
+	// Try a position greather than the size of str1
+	str2 = bump::String("example");
+	index = str1.indexOf(str2, 100);
+	EXPECT_EQ(-1, index);
+
+	// Try some different non-case sensitive cases
+	str1 = bump::String("A Simple Example String");
+	str2 = bump::String("simple");
+	index = str1.indexOf(str2, 0, bump::String::NotCaseSensitive);
+	EXPECT_EQ(2, index);
+	str2 = bump::String("try");
+	index = str1.indexOf(str2, 0, bump::String::NotCaseSensitive);
+	EXPECT_EQ(-1, index);
+}
+
+TEST_F(StringTest, testIndexOfCString)
+{
+	// Default find
+	bump::String str1("a simple example string");
+	const char* str2("example");
+	int index = str1.indexOf(str2);
+	EXPECT_EQ(9, index);
+	str2 = "try";
+	index = str1.indexOf(str2);
+	EXPECT_EQ(-1, index);
+	
+	// Position offset find
+	str1 = bump::String("a simple example string");
+	str2 = " ";
+	index = str1.indexOf(str2, 4, bump::String::CaseSensitive);
+	EXPECT_EQ(8, index);
+	str2 = "try";
+	index = str1.indexOf(str2, 4, bump::String::CaseSensitive);
+	EXPECT_EQ(-1, index);
+	
+	// Try an empty search string
+	str2 = "";
+	EXPECT_THROW(str1.indexOf(str2), std::invalid_argument);
+	
+	// Try a position less than 0
+	str2 = "example";
+	index = str1.indexOf(str2, -10);
+	EXPECT_EQ(-1, index);
+	
+	// Try a position greather than the size of str1
+	str2 = "example";
+	index = str1.indexOf(str2, 100);
+	EXPECT_EQ(-1, index);
+	
+	// Try some different non-case sensitive cases
+	str1 = bump::String("A Simple Example String");
+	str2 = "simple";
+	index = str1.indexOf(str2, 0, bump::String::NotCaseSensitive);
+	EXPECT_EQ(2, index);
+	str2 = "try";
+	index = str1.indexOf(str2, 0, bump::String::NotCaseSensitive);
+	EXPECT_EQ(-1, index);
 }
 
 }   // End of bumpTest namespace
