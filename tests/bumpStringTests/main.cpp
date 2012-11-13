@@ -1,9 +1,9 @@
 //
-//  main.cpp
-//  Bump
+//	main.cpp
+//	Bump
 //
-//  Created by Christian Noon on 11/12/12.
-//  Copyright (c) 2011 Christian Noon. All rights reserved.
+//	Created by Christian Noon on 11/12/12.
+//	Copyright (c) 2011 Christian Noon. All rights reserved.
 //
 
 #include <gtest/gtest.h>
@@ -40,7 +40,7 @@ protected:
 		// Call the parent setup method
 		BaseTest::SetUp();
 
-        // Any custom setup we may need
+		// Any custom setup we may need
 	}
 
 	/** Invoked immediately after a test finishes. Stops the timer. */
@@ -49,35 +49,35 @@ protected:
 		// Call the parent tear down method
 		BaseTest::TearDown();
 
-        // Any custom teardown you may need
-    }
+		// Any custom teardown you may need
+	}
 };
 
 /**
  * All Possible Checks:
- * - EXPECT_FALSE (condition)                            = condition is true
- * - EXPECT_TRUE  (condition)                            = condition is false
+ * - EXPECT_FALSE (condition)							 = condition is true
+ * - EXPECT_TRUE  (condition)							 = condition is false
  *
- * - EXPECT_EQ    (expected, actual)                     = expected == actual
- * - EXPECT_NE    (val1, val2)                           = val1 != val2
- * - EXPECT_LT    (val1, val2)                           = val1 < val2
- * - EXPECT_LE    (val1, val2)                           = val1 <= val2
- * - EXPECT_GT    (val1, val2)                           = val1 > val2
- * - EXPECT_GE    (val1, val2)                           = val1 >= val2
+ * - EXPECT_EQ	  (expected, actual)					 = expected == actual
+ * - EXPECT_NE	  (val1, val2)							 = val1 != val2
+ * - EXPECT_LT	  (val1, val2)							 = val1 < val2
+ * - EXPECT_LE	  (val1, val2)							 = val1 <= val2
+ * - EXPECT_GT	  (val1, val2)							 = val1 > val2
+ * - EXPECT_GE	  (val1, val2)							 = val1 >= val2
  *
- * - EXPECT_STREQ (expected.c_str(), actual.c_str())     = expected == actual
- * - EXPECT_STRNE (expected.c_str(), actual.c_str())     = expected != actual
+ * - EXPECT_STREQ (expected.c_str(), actual.c_str())	 = expected == actual
+ * - EXPECT_STRNE (expected.c_str(), actual.c_str())	 = expected != actual
  * - EXPECT_STRCASEEQ (expected.c_str(), actual.c_str()) = expected == actual (ignoring case)
  * - EXPECT_STRCASENE (expected.c_str(), actual.c_str()) = expected != actual (ignoring case)
  *
- * - EXPECT_FLOAT_EQ (expected, actual)                  = expected almost equal to actual
- * - EXPECT_DOUBLE_EQ (expected, actual)                 = expected almost equal to actual
- * - EXPECT_NEAR (val1, val2, abs_error)                 = difference between val1 and val2 doesn't exceed abs_error
+ * - EXPECT_FLOAT_EQ (expected, actual)					 = expected almost equal to actual
+ * - EXPECT_DOUBLE_EQ (expected, actual)				 = expected almost equal to actual
+ * - EXPECT_NEAR (val1, val2, abs_error)				 = difference between val1 and val2 doesn't exceed abs_error
  */
 
 TEST_F(StringTest, testEmptyConstructor)
 {
-    bump::String empty_string_1;
+	bump::String empty_string_1;
 	bump::String empty_string_2("");
 	EXPECT_STREQ(empty_string_1.c_str(), empty_string_2.c_str());
 }
@@ -248,7 +248,7 @@ TEST_F(StringTest, testLongConstructor)
 TEST_F(StringTest, testFloatConstructor)
 {
 	//========================================================
-	//                Default decimal places
+	//				  Default decimal places
 	//========================================================
 
 	// Positive values
@@ -274,7 +274,7 @@ TEST_F(StringTest, testFloatConstructor)
 	EXPECT_STREQ("-39.646", my_str.c_str());
 
 	//========================================================
-	//               Customized decimal places
+	//				 Customized decimal places
 	//========================================================
 
 	// Make sure we properly handle zero decimal places
@@ -296,7 +296,7 @@ TEST_F(StringTest, testFloatConstructor)
 TEST_F(StringTest, testDoubleConstructor)
 {
 	//========================================================
-	//                Default decimal places
+	//				  Default decimal places
 	//========================================================
 
 	// Positive values
@@ -322,7 +322,7 @@ TEST_F(StringTest, testDoubleConstructor)
 	EXPECT_STREQ("-39.646", my_str.c_str());
 
 	//========================================================
-	//               Customized decimal places
+	//				 Customized decimal places
 	//========================================================
 
 	// Make sure we properly handle zero decimal places
@@ -599,7 +599,7 @@ TEST_F(StringTest, testCountString)
 	EXPECT_EQ(5, str1.count(str2));
 	str2 = bump::String("???");
 	EXPECT_EQ(1, str1.count(str2));
-	str2 = bump::String("   ");
+	str2 = bump::String("	");
 	EXPECT_EQ(0, str1.count(str2));
 
 	// Test empty strings
@@ -779,12 +779,12 @@ TEST_F(StringTest, testFill)
 	bump::String str("example string");
 	str.fill("X");
 	EXPECT_STREQ("XXXXXXXXXXXXXX", str.c_str());
-	
+
 	// Default fill with empty string
 	str = "";
 	str.fill("X");
 	EXPECT_STREQ("", str.c_str());
-	
+
 	// Fill with set size
 	str.fill("Z", 10);
 	EXPECT_STREQ("ZZZZZZZZZZ", str.c_str());
@@ -851,7 +851,7 @@ TEST_F(StringTest, testIndexOfCString)
 	str2 = "try";
 	index = str1.indexOf(str2);
 	EXPECT_EQ(-1, index);
-	
+
 	// Position offset find
 	str1 = bump::String("a simple example string");
 	str2 = " ";
@@ -860,21 +860,21 @@ TEST_F(StringTest, testIndexOfCString)
 	str2 = "try";
 	index = str1.indexOf(str2, 4, bump::String::CaseSensitive);
 	EXPECT_EQ(-1, index);
-	
+
 	// Try an empty search string
 	str2 = "";
 	EXPECT_THROW(str1.indexOf(str2), std::invalid_argument);
-	
+
 	// Try a position less than 0
 	str2 = "example";
 	index = str1.indexOf(str2, -10);
 	EXPECT_EQ(-1, index);
-	
+
 	// Try a position greather than the size of str1
 	str2 = "example";
 	index = str1.indexOf(str2, 100);
 	EXPECT_EQ(-1, index);
-	
+
 	// Try some different non-case sensitive cases
 	str1 = bump::String("A Simple Example String");
 	str2 = "simple";
@@ -885,4 +885,4 @@ TEST_F(StringTest, testIndexOfCString)
 	EXPECT_EQ(-1, index);
 }
 
-}   // End of bumpTest namespace
+}	// End of bumpTest namespace

@@ -1,9 +1,9 @@
 //
-//  EnvironmentFixture.h
-//  Bump
+//	EnvironmentFixture.h
+//	Bump
 //
-//  Created by Christian Noon on 11/12/11.
-//  Copyright (c) 2012 Christian Noon. All rights reserved.
+//	Created by Christian Noon on 11/12/11.
+//	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
 #ifndef BUMPTEST_ENVIRONMENT_FIXTURE_H

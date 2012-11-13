@@ -2,8 +2,8 @@
 # Only compile if we found GTest and Boost
 IF (GTEST_FOUND AND Boost_FOUND)
 
-    # Add the GTest and Boost headers
-    INCLUDE_DIRECTORIES (${GTEST_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
+	# Add the GTest and Boost headers
+	INCLUDE_DIRECTORIES (${GTEST_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
 
 	# Add the GTest libraries
 	SET (TARGET_EXTERNAL_LIBRARIES ${TARGET_EXTERNAL_LIBRARIES} ${GTEST_LIBRARIES})
@@ -16,8 +16,8 @@ IF (GTEST_FOUND AND Boost_FOUND)
 			bumpStringTests
 		)
 
-	    MESSAGE ("Configuring Test: " ${BUMP_TEST})
-	    ADD_SUBDIRECTORY (${BUMP_TEST})
+		MESSAGE ("Configuring Test: " ${BUMP_TEST})
+		ADD_SUBDIRECTORY (${BUMP_TEST})
 
 	ENDFOREACH ()
 

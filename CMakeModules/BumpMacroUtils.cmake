@@ -5,91 +5,91 @@
 #
 #  NOTE: it expects some variables to be set either within local CMakeLists or higher in the hierarchy.
 #
-#  LIB_NAME                     - name of the target library
-#  TARGET_SRC                   - source files of the target
-#  TARGET_H                     - eventual headers of the target
-#  TARGET_H_NO_MODULE_INSTALL   - target headers that won't get installed by the ModuleInstall script
-#  TARGET_LIBRARIES             - libraries to link to that are internal to the project (have d suffix)
-#  TARGET_EXTERNAL_LIBRARIES    - external libraries and are not differentiated with d suffix
-#  TARGET_LABEL                 - label IDE should show up for targets
+#  LIB_NAME						- name of the target library
+#  TARGET_SRC					- source files of the target
+#  TARGET_H						- eventual headers of the target
+#  TARGET_H_NO_MODULE_INSTALL	- target headers that won't get installed by the ModuleInstall script
+#  TARGET_LIBRARIES				- libraries to link to that are internal to the project (have d suffix)
+#  TARGET_EXTERNAL_LIBRARIES	- external libraries and are not differentiated with d suffix
+#  TARGET_LABEL					- label IDE should show up for targets
 #
 ##########################################################################################################
 
 MACRO (SETUP_LIBRARY LIB_NAME)
 
-    SET (TARGET_NAME ${LIB_NAME})
-    SET (TARGET_TARGETNAME ${LIB_NAME})
-    ADD_LIBRARY (
-        ${LIB_NAME}
-        ${Bump_USER_DEFINED_DYNAMIC_OR_STATIC}
-        ${TARGET_SRC}
-        ${TARGET_H}
-    )
+	SET (TARGET_NAME ${LIB_NAME})
+	SET (TARGET_TARGETNAME ${LIB_NAME})
+	ADD_LIBRARY (
+		${LIB_NAME}
+		${Bump_USER_DEFINED_DYNAMIC_OR_STATIC}
+		${TARGET_SRC}
+		${TARGET_H}
+	)
 
 	SET_TARGET_PROPERTIES(${LIB_NAME} PROPERTIES FOLDER "Libraries")
-    IF (TARGET_LABEL)
-        SET_TARGET_PROPERTIES (
-            ${TARGET_TARGETNAME}
-            PROPERTIES
-            PROJECT_LABEL
-            "${TARGET_LABEL}"
-        )
-    ENDIF (TARGET_LABEL)
+	IF (TARGET_LABEL)
+		SET_TARGET_PROPERTIES (
+			${TARGET_TARGETNAME}
+			PROPERTIES
+			PROJECT_LABEL
+			"${TARGET_LABEL}"
+		)
+	ENDIF (TARGET_LABEL)
 
-    # Add linking to other libraries here
-    IF (TARGET_LIBRARIES)
-        LINK_INTERNAL (${LIB_NAME} ${TARGET_LIBRARIES})
-    ENDIF()
-    IF (TARGET_EXTERNAL_LIBRARIES)
-        LINK_EXTERNAL (${LIB_NAME} ${TARGET_EXTERNAL_LIBRARIES})
-    ENDIF()
-    IF (TARGET_LIBRARIES_VARS)
-        LINK_WITH_VARIABLES (${LIB_NAME} ${TARGET_LIBRARIES_VARS})
-    ENDIF(TARGET_LIBRARIES_VARS)
+	# Add linking to other libraries here
+	IF (TARGET_LIBRARIES)
+		LINK_INTERNAL (${LIB_NAME} ${TARGET_LIBRARIES})
+	ENDIF()
+	IF (TARGET_EXTERNAL_LIBRARIES)
+		LINK_EXTERNAL (${LIB_NAME} ${TARGET_EXTERNAL_LIBRARIES})
+	ENDIF()
+	IF (TARGET_LIBRARIES_VARS)
+		LINK_WITH_VARIABLES (${LIB_NAME} ${TARGET_LIBRARIES_VARS})
+	ENDIF(TARGET_LIBRARIES_VARS)
 
-    # Install the libraries
-    SET (INSTALL_INCDIR include)
-    SET (INSTALL_BINDIR bin)
-    SET (INSTALL_LIBDIR lib)
-    SET (INSTALL_ARCHIVEDIR lib)
+	# Install the libraries
+	SET (INSTALL_INCDIR include)
+	SET (INSTALL_BINDIR bin)
+	SET (INSTALL_LIBDIR lib)
+	SET (INSTALL_ARCHIVEDIR lib)
 
-    INSTALL(
-        TARGETS ${LIB_NAME}
-        RUNTIME DESTINATION ${INSTALL_BINDIR}
-        LIBRARY DESTINATION ${INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${INSTALL_ARCHIVEDIR}
-    )
+	INSTALL(
+		TARGETS ${LIB_NAME}
+		RUNTIME DESTINATION ${INSTALL_BINDIR}
+		LIBRARY DESTINATION ${INSTALL_LIBDIR}
+		ARCHIVE DESTINATION ${INSTALL_ARCHIVEDIR}
+	)
 
-    IF (NOT Bump_COMPILE_FRAMEWORKS)
-        INSTALL (
-            FILES ${TARGET_H}
-            DESTINATION ${INSTALL_INCDIR}/${LIB_NAME}
-        )
+	IF (NOT Bump_COMPILE_FRAMEWORKS)
+		INSTALL (
+			FILES ${TARGET_H}
+			DESTINATION ${INSTALL_INCDIR}/${LIB_NAME}
+		)
 
-        # Still need to install the RPATH even if it is not a framework for deployment
-        IF (APPLE)
-            SET (CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-            SET (CMAKE_INSTALL_RPATH "${BUMP_INSTALL_NAME_DIR}")
+		# Still need to install the RPATH even if it is not a framework for deployment
+		IF (APPLE)
+			SET (CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+			SET (CMAKE_INSTALL_RPATH "${BUMP_INSTALL_NAME_DIR}")
 
-            SET_TARGET_PROPERTIES(${LIB_NAME} PROPERTIES
-                 FRAMEWORK FALSE
-                 FRAMEWORK_VERSION ${BUMP_SOVERSION}
-                 PUBLIC_HEADER "${TARGET_H}"
-                 INSTALL_NAME_DIR "${BUMP_INSTALL_NAME_DIR}"
-            )
-        ENDIF()
+			SET_TARGET_PROPERTIES(${LIB_NAME} PROPERTIES
+				 FRAMEWORK FALSE
+				 FRAMEWORK_VERSION ${BUMP_SOVERSION}
+				 PUBLIC_HEADER "${TARGET_H}"
+				 INSTALL_NAME_DIR "${BUMP_INSTALL_NAME_DIR}"
+			)
+		ENDIF()
 
-    ELSE ()
-        SET (CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-        SET (CMAKE_INSTALL_RPATH "${BUMP_INSTALL_NAME_DIR}")
+	ELSE ()
+		SET (CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+		SET (CMAKE_INSTALL_RPATH "${BUMP_INSTALL_NAME_DIR}")
 
-        SET_TARGET_PROPERTIES(${LIB_NAME} PROPERTIES
-             FRAMEWORK TRUE
-             FRAMEWORK_VERSION ${BUMP_SOVERSION}
-             PUBLIC_HEADER "${TARGET_H}"
-             INSTALL_NAME_DIR "${BUMP_INSTALL_NAME_DIR}"
-        )
-    ENDIF ()
+		SET_TARGET_PROPERTIES(${LIB_NAME} PROPERTIES
+			 FRAMEWORK TRUE
+			 FRAMEWORK_VERSION ${BUMP_SOVERSION}
+			 PUBLIC_HEADER "${TARGET_H}"
+			 INSTALL_NAME_DIR "${BUMP_INSTALL_NAME_DIR}"
+		)
+	ENDIF ()
 
 ENDMACRO (SETUP_LIBRARY LIB_NAME)
 
@@ -101,7 +101,7 @@ ENDMACRO (SETUP_LIBRARY LIB_NAME)
 #
 #  NOTE: it expects some variables to be set either within local CMakeLists or higher in the hierarchy.
 #
-#  LIB_NAME                     - name of the target library
+#  LIB_NAME						- name of the target library
 #
 ##########################################################################################################
 
@@ -132,13 +132,13 @@ MACRO (LINK_INTERNAL TRGTNAME)
 ENDMACRO ()
 
 MACRO (LINK_WITH_VARIABLES TRGTNAME)
-    FOREACH (varname ${ARGN})
-        IF (${varname}_DEBUG)
-            TARGET_LINK_LIBRARIES (${TRGTNAME} optimized "${${varname}}" debug "${${varname}_DEBUG}")
-        ELSE ()
-            TARGET_LINK_LIBRARIES (${TRGTNAME} "${${varname}}")
-        ENDIF ()
-    ENDFOREACH ()
+	FOREACH (varname ${ARGN})
+		IF (${varname}_DEBUG)
+			TARGET_LINK_LIBRARIES (${TRGTNAME} optimized "${${varname}}" debug "${${varname}_DEBUG}")
+		ELSE ()
+			TARGET_LINK_LIBRARIES (${TRGTNAME} "${${varname}}")
+		ENDIF ()
+	ENDFOREACH ()
 ENDMACRO ()
 
 
@@ -148,37 +148,37 @@ ENDMACRO ()
 #
 #  NOTE: it expects some variables to be set either within local CMakeLists or higher in the hierarchy.
 #
-#  TARGET_COMMON_LIBRARIES      - common internal libraries to link against
-#  TARGET_TARGETNAME            - name of the target
+#  TARGET_COMMON_LIBRARIES		- common internal libraries to link against
+#  TARGET_TARGETNAME			- name of the target
 #
 ##########################################################################################################
 
 MACRO (SETUP_LINK_LIBRARIES)
 
-    # First eliminate any duplicate common libraries
-    SET (TARGET_LIBRARIES ${TARGET_COMMON_LIBRARIES})
-    FOREACH (LINKLIB ${TARGET_ADDED_LIBRARIES})
-        SET (TO_INSERT TRUE)
-        FOREACH (value ${TARGET_COMMON_LIBRARIES})
-            IF (${value} STREQUAL ${LINKLIB})
-                SET (TO_INSERT FALSE)
-            ENDIF ()
-        ENDFOREACH ()
-        IF (TO_INSERT)
-            LIST (APPEND TARGET_LIBRARIES ${LINKLIB})
-        ENDIF ()
-    ENDFOREACH ()
+	# First eliminate any duplicate common libraries
+	SET (TARGET_LIBRARIES ${TARGET_COMMON_LIBRARIES})
+	FOREACH (LINKLIB ${TARGET_ADDED_LIBRARIES})
+		SET (TO_INSERT TRUE)
+		FOREACH (value ${TARGET_COMMON_LIBRARIES})
+			IF (${value} STREQUAL ${LINKLIB})
+				SET (TO_INSERT FALSE)
+			ENDIF ()
+		ENDFOREACH ()
+		IF (TO_INSERT)
+			LIST (APPEND TARGET_LIBRARIES ${LINKLIB})
+		ENDIF ()
+	ENDFOREACH ()
 
-    # Link the target to all the libraries built by this cmake project
-    LINK_INTERNAL (${TARGET_TARGETNAME} ${TARGET_LIBRARIES})
+	# Link the target to all the libraries built by this cmake project
+	LINK_INTERNAL (${TARGET_TARGETNAME} ${TARGET_LIBRARIES})
 
-    # Add linking to other libraries built externally
-    IF (TARGET_EXTERNAL_LIBRARIES)
-        TARGET_LINK_LIBRARIES (${TARGET_TARGETNAME} ${TARGET_EXTERNAL_LIBRARIES})
-    ENDIF ()
-    IF (TARGET_LIBRARIES_VARS)
-        LINK_WITH_VARIABLES (${TARGET_TARGETNAME} ${TARGET_LIBRARIES_VARS})
-    ENDIF ()
+	# Add linking to other libraries built externally
+	IF (TARGET_EXTERNAL_LIBRARIES)
+		TARGET_LINK_LIBRARIES (${TARGET_TARGETNAME} ${TARGET_EXTERNAL_LIBRARIES})
+	ENDIF ()
+	IF (TARGET_LIBRARIES_VARS)
+		LINK_WITH_VARIABLES (${TARGET_TARGETNAME} ${TARGET_LIBRARIES_VARS})
+	ENDIF ()
 
 ENDMACRO (SETUP_LINK_LIBRARIES)
 
@@ -189,32 +189,32 @@ ENDMACRO (SETUP_LINK_LIBRARIES)
 #
 #  NOTE: it expects some variables to be set either within local CMakeLists or higher in the hierarchy.
 #
-#  TARGET_COMMON_LIBRARIES      - common internal libraries to link against
-#  TARGET_H                     - eventual headers of the target
-#  TARGET_SRC                   - source files of the target
+#  TARGET_COMMON_LIBRARIES		- common internal libraries to link against
+#  TARGET_H						- eventual headers of the target
+#  TARGET_SRC					- source files of the target
 #
 ##########################################################################################################
 
 MACRO (SETUP_EXE IS_COMMANDLINE_APP)
 
-    IF (NOT TARGET_TARGETNAME)
-        SET(TARGET_TARGETNAME "${TARGET_DEFAULT_PREFIX}${TARGET_NAME}")
-    ENDIF()
+	IF (NOT TARGET_TARGETNAME)
+		SET(TARGET_TARGETNAME "${TARGET_DEFAULT_PREFIX}${TARGET_NAME}")
+	ENDIF()
 
-    IF (NOT TARGET_LABEL)
-        SET (TARGET_LABEL "${TARGET_DEFAULT_LABEL_PREFIX} ${TARGET_NAME}")
-    ENDIF()
+	IF (NOT TARGET_LABEL)
+		SET (TARGET_LABEL "${TARGET_DEFAULT_LABEL_PREFIX} ${TARGET_NAME}")
+	ENDIF()
 
-    IF (${IS_COMMANDLINE_APP})
-        ADD_EXECUTABLE (${TARGET_TARGETNAME} ${TARGET_SRC} ${TARGET_H})
-    ELSE (${IS_COMMANDLINE_APP})
-        IF (WIN32)
-            IF (REQUIRE_WINMAIN_FLAG)
-                SET (PLATFORM_SPECIFIC_CONTROL WIN32)
-            ENDIF ()
-        ENDIF ()
-        ADD_EXECUTABLE(${TARGET_TARGETNAME} ${PLATFORM_SPECIFIC_CONTROL} ${TARGET_SRC} ${TARGET_H})
-    ENDIF ()
+	IF (${IS_COMMANDLINE_APP})
+		ADD_EXECUTABLE (${TARGET_TARGETNAME} ${TARGET_SRC} ${TARGET_H})
+	ELSE (${IS_COMMANDLINE_APP})
+		IF (WIN32)
+			IF (REQUIRE_WINMAIN_FLAG)
+				SET (PLATFORM_SPECIFIC_CONTROL WIN32)
+			ENDIF ()
+		ENDIF ()
+		ADD_EXECUTABLE(${TARGET_TARGETNAME} ${PLATFORM_SPECIFIC_CONTROL} ${TARGET_SRC} ${TARGET_H})
+	ENDIF ()
 
 	SET_TARGET_PROPERTIES(${TARGET_TARGETNAME} PROPERTIES PROJECT_LABEL "${TARGET_LABEL}")
 	SET_TARGET_PROPERTIES(${TARGET_TARGETNAME} PROPERTIES OUTPUT_NAME ${TARGET_NAME})
@@ -223,7 +223,7 @@ MACRO (SETUP_EXE IS_COMMANDLINE_APP)
 	SET_TARGET_PROPERTIES(${TARGET_TARGETNAME} PROPERTIES RELWITHDEBINFO_OUTPUT_NAME "${TARGET_NAME}${CMAKE_RELWITHDEBINFO_POSTFIX}")
 	SET_TARGET_PROPERTIES(${TARGET_TARGETNAME} PROPERTIES MINSIZEREL_OUTPUT_NAME "${TARGET_NAME}${CMAKE_MINSIZEREL_POSTFIX}")
 
-    SETUP_LINK_LIBRARIES()
+	SETUP_LINK_LIBRARIES()
 
 ENDMACRO (SETUP_EXE)
 
@@ -234,33 +234,33 @@ ENDMACRO (SETUP_EXE)
 #
 #  NOTE: it expects some variables to be set either within local CMakeLists or higher in the hierarchy.
 #
-#  TARGET_COMMON_LIBRARIES      - common internal libraries to link against
-#  TARGET_SRC                   - source files of the target
+#  TARGET_COMMON_LIBRARIES		- common internal libraries to link against
+#  TARGET_SRC					- source files of the target
 #
 ##########################################################################################################
 
 MACRO (SETUP_EXAMPLE EXAMPLE_NAME)
 
-    SET (TARGET_NAME ${EXAMPLE_NAME})
+	SET (TARGET_NAME ${EXAMPLE_NAME})
 
-    # Specify whether it is a command line app
-    IF (${ARGC} GREATER 1)
-        SET (IS_COMMANDLINE_APP ${ARGV1})
-    ELSE ()
-        SET (IS_COMMANDLINE_APP 0)
-    ENDIF ()
+	# Specify whether it is a command line app
+	IF (${ARGC} GREATER 1)
+		SET (IS_COMMANDLINE_APP ${ARGV1})
+	ELSE ()
+		SET (IS_COMMANDLINE_APP 0)
+	ENDIF ()
 
-    # Setup the executable
-    SETUP_EXE (${IS_COMMANDLINE_APP})
+	# Setup the executable
+	SETUP_EXE (${IS_COMMANDLINE_APP})
 
 	# Put the generated project into an Examples folder
 	SET_TARGET_PROPERTIES(${TARGET_TARGETNAME} PROPERTIES FOLDER "Examples")
 
-    # Install the example
-    INSTALL (
-        TARGETS ${TARGET_TARGETNAME}
-        RUNTIME DESTINATION share/bump/bin
-    )
+	# Install the example
+	INSTALL (
+		TARGETS ${TARGET_TARGETNAME}
+		RUNTIME DESTINATION share/bump/bin
+	)
 
 ENDMACRO (SETUP_EXAMPLE)
 
@@ -270,32 +270,32 @@ ENDMACRO (SETUP_EXAMPLE)
 #
 #  NOTE: it expects some variables to be set either within local CMakeLists or higher in the hierarchy.
 #
-#  TARGET_COMMON_LIBRARIES      - common internal libraries to link against
-#  TARGET_SRC                   - source files of the target
+#  TARGET_COMMON_LIBRARIES		- common internal libraries to link against
+#  TARGET_SRC					- source files of the target
 #
 ##########################################################################################################
 
 MACRO (SETUP_TEST TEST_NAME)
 
-    SET (TARGET_NAME ${TEST_NAME})
+	SET (TARGET_NAME ${TEST_NAME})
 
-    # Specify whether it is a command line app
-    IF (${ARGC} GREATER 1)
-        SET (IS_COMMANDLINE_APP ${ARGV1})
-    ELSE ()
-        SET (IS_COMMANDLINE_APP 0)
-    ENDIF ()
+	# Specify whether it is a command line app
+	IF (${ARGC} GREATER 1)
+		SET (IS_COMMANDLINE_APP ${ARGV1})
+	ELSE ()
+		SET (IS_COMMANDLINE_APP 0)
+	ENDIF ()
 
-    # Setup the executable
-    SETUP_EXE (${IS_COMMANDLINE_APP})
+	# Setup the executable
+	SETUP_EXE (${IS_COMMANDLINE_APP})
 
 	# Put the generated project into an Tests folder
 	SET_TARGET_PROPERTIES(${TARGET_TARGETNAME} PROPERTIES FOLDER "Tests")
 
-    # Install the example
-    INSTALL (
-        TARGETS ${TARGET_TARGETNAME}
-        RUNTIME DESTINATION bin
-    )
+	# Install the example
+	INSTALL (
+		TARGETS ${TARGET_TARGETNAME}
+		RUNTIME DESTINATION bin
+	)
 
 ENDMACRO (SETUP_TEST)

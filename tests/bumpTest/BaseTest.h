@@ -1,9 +1,9 @@
 //
-//  BaseTest.h
-//  Bump
+//	BaseTest.h
+//	Bump
 //
-//  Created by Christian Noon on 11/12/11.
-//  Copyright (c) 2012 Christian Noon. All rights reserved.
+//	Created by Christian Noon on 11/12/11.
+//	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
 #ifndef BUMPTEST_BASE_TEST_H

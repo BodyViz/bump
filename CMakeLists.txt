@@ -15,7 +15,7 @@ SET (BUMP_VERSION ${BUMP_MAJOR_VERSION}.${BUMP_MINOR_VERSION}.${BUMP_PATCH_VERSI
 
 # Include all the header directories
 INCLUDE_DIRECTORIES (
-    ${Bump_SOURCE_DIR}/include
+	${Bump_SOURCE_DIR}/include
 )
 
 # Make the headers visible to everything
@@ -33,33 +33,33 @@ INCLUDE (BumpMacroUtils)
 
 # If on an apple device, set whether to compile frameworks
 IF (APPLE)
-    OPTION (Bump_COMPILE_FRAMEWORKS "Compile frameworks instead of dylibs" ON)
-    SET (Bump_INSTALL_NAME_DIR "@executable_path/../Frameworks"
-        CACHE STRING "install name dir for compiled frameworks"
-    )
+	OPTION (Bump_COMPILE_FRAMEWORKS "Compile frameworks instead of dylibs" ON)
+	SET (Bump_INSTALL_NAME_DIR "@executable_path/../Frameworks"
+		CACHE STRING "install name dir for compiled frameworks"
+	)
 ENDIF ()
 
 # Set whether to use dynamic or static linking
 OPTION (Bump_DYNAMIC_LINKING "Set to ON to build BUMP with dynamic linking (shared libraries). Use OFF for static." ON)
 IF (Bump_DYNAMIC_LINKING OR Bump_COMPILE_FRAMEWORKS)
-    SET (Bump_USER_DEFINED_DYNAMIC_OR_STATIC "SHARED")
+	SET (Bump_USER_DEFINED_DYNAMIC_OR_STATIC "SHARED")
 ELSE ()
-    SET (Bump_USER_DEFINED_DYNAMIC_OR_STATIC "STATIC")
+	SET (Bump_USER_DEFINED_DYNAMIC_OR_STATIC "STATIC")
 ENDIF()
 
 # If compiling with Visual Studio, set up some specific flags
 IF (WIN32 AND MSVC)
 
-    # This option is to enable the /MP switch for Visual Studio 2005 and above compilers
-    OPTION (WIN32_USE_MP "Set to ON to build BUMP with the /MP option (Visual Studio 2005 and above)." OFF)
-    MARK_AS_ADVANCED (WIN32_USE_MP)
-    IF (WIN32_USE_MP)
-        SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
-    ENDIF ()
+	# This option is to enable the /MP switch for Visual Studio 2005 and above compilers
+	OPTION (WIN32_USE_MP "Set to ON to build BUMP with the /MP option (Visual Studio 2005 and above)." OFF)
+	MARK_AS_ADVANCED (WIN32_USE_MP)
+	IF (WIN32_USE_MP)
+		SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+	ENDIF ()
 
-    # Some specific compiler flags to disable some warnings
-    ADD_DEFINITIONS (-D_SCL_SECURE_NO_WARNINGS)
-    ADD_DEFINITIONS (-D_CRT_SECURE_NO_DEPRECATE)
+	# Some specific compiler flags to disable some warnings
+	ADD_DEFINITIONS (-D_SCL_SECURE_NO_WARNINGS)
+	ADD_DEFINITIONS (-D_CRT_SECURE_NO_DEPRECATE)
 
 ENDIF ()
 
@@ -97,7 +97,7 @@ ENDIF (WIN32)
 
 # For each configuration (Debug, Release, MinSizeRel... and/or anything else)
 FOREACH (CONF ${CMAKE_CONFIGURATION_TYPES})
-	STRING (TOUPPER "${CONF}" CONF)          # Go uppercase (DEBUG, RELEASE...)
+	STRING (TOUPPER "${CONF}" CONF)			 # Go uppercase (DEBUG, RELEASE...)
 	SET ("CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${CONF}" "${OUTPUT_LIBDIR}")
 	SET ("CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONF}" "${OUTPUT_BINDIR}")
 	IF (WIN32)
@@ -117,7 +117,7 @@ ADD_SUBDIRECTORY (src)
 # Set whether to build the examples
 #OPTION (Bump_BUILD_EXAMPLES "Enable to build Bump Examples" ON)
 #IF (Bump_BUILD_EXAMPLES)
-#    ADD_SUBDIRECTORY (examples)
+#	 ADD_SUBDIRECTORY (examples)
 #ENDIF ()
 
 # Set whether to build the tests
