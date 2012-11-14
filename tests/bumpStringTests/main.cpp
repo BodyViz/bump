@@ -695,6 +695,15 @@ TEST_F(StringTest, testCountCString)
 	EXPECT_EQ(3, str1.count(str2));
 }
 
+TEST_F(StringTest, testData)
+{
+	// Test regular strings
+	bump::String str("test");
+	const char* cstr = "test";
+	unsigned int length = str.length();
+	EXPECT_EQ(0, memcmp(cstr, str.data(), length));
+}
+
 TEST_F(StringTest, testEndsWithString)
 {
 	// Test regular strings

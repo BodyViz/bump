@@ -288,6 +288,11 @@ int String::count(const char* containString, CaseSensitivity caseSensitivity) co
 	return this->count(String(containString), caseSensitivity);
 }
 
+const char* String::data() const
+{
+	return std::string::data();
+}
+
 bool String::endsWith(const String& endString, CaseSensitivity caseSensitivity) const
 {
 	// Make sure the end string isn't empty

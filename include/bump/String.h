@@ -273,6 +273,13 @@ public:
 	int count(const char* containString, CaseSensitivity caseSensitivity = CaseSensitive) const;
 
 	/**
+	 * Returns a pointer to an array of characters without appending a terminating null character.
+	 *
+	 * @return a pointer to an array of characters without appending a terminating null character.
+	 */
+	const char* data() const;
+
+	/**
 	 * Checks whether this string ends with the given string.
 	 *
 	 * Throws an InvalidArgumentError when passed an empty end string.
