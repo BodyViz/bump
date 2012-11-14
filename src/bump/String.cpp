@@ -10,12 +10,12 @@
 #include <iomanip>
 #include <limits>
 #include <sstream>
-#include <stdexcept>
 
 // Boost headers
 #include <boost/lexical_cast.hpp>
 
 // Bump headers
+#include <bump/Exception.h>
 #include <bump/String.h>
 
 using namespace bump;
@@ -94,7 +94,7 @@ String::String(float number, int precision)
 	// Make sure the precision is not less than -1
 	if (precision < -1)
 	{
-		throw std::invalid_argument("bump::String::String(float) cannot handle a precision less than -1");
+		throw InvalidArgumentError("bump::String::String(float) cannot handle a precision less than -1");
 	}
 
 	// Convert the float to the proper precision using an ostringstream
@@ -117,7 +117,7 @@ String::String(double number, int precision)
 	// Make sure the precision is not less than -1
 	if (precision < -1)
 	{
-		throw std::invalid_argument("bump::String::String(double) cannot handle a precision less than -1");
+		throw InvalidArgumentError("bump::String::String(double) cannot handle a precision less than -1");
 	}
 
 	// Convert the double to the proper precision using an ostringstream
@@ -141,6 +141,11 @@ String::String(bool boolValue)
 	*this = boolValue == true ? String("true") : String("false");
 }
 
+String::~String()
+{
+	;
+}
+
 String& String::append(const String& appendString)
 {
 	*this += appendString;
@@ -155,7 +160,14 @@ String& String::append(const char* appendString)
 
 const char String::at(int position) const
 {
-	return std::string::at(position);
+	try
+	{
+		return std::string::at(position);
+	}
+	catch (const std::out_of_range& e)
+	{
+		throw OutOfRangeError("bump::String::at() position is outside string bounds");
+	}
 }
 
 const char* String::c_str() const
@@ -263,6 +275,12 @@ int String::count(const char* containString, CaseSensitivity caseSensitivity) co
 
 bool String::endsWith(const String& endString, CaseSensitivity caseSensitivity) const
 {
+	// Make sure the end string isn't empty
+	if (endString.isEmpty())
+	{
+		throw InvalidArgumentError("bump::String::endsWith() passed empty end string");
+	}
+
 	// Make some copies to handle case sensitivity
 	String this_copy = *this;
 	String end_string_copy = endString;
@@ -297,13 +315,13 @@ String& String::fill(const String& character, int size)
 	// Make sure they character passed in is a single character
 	if (character.length() != 1)
 	{
-		throw std::invalid_argument("bump::String::fill passed invalid character...must be length of one");
+		throw InvalidArgumentError("bump::String::fill() passed invalid character...must be length of one");
 	}
 
 	// Make sure the size is not less than -1
 	if (size < -1)
 	{
-		throw std::invalid_argument("bump::String::fill passed invalid size...must be positive");
+		throw InvalidArgumentError("bump::String::fill() passed invalid size, must not be less than -1");
 	}
 
 	// Change the size of the string if necessary
@@ -328,7 +346,7 @@ int String::indexOf(const String& indexString, int startPosition, CaseSensitivit
 	// Make sure the index string passed in is not empty
 	if (indexString.empty())
 	{
-		throw std::invalid_argument("bump::String::indexOf passed empty index string");
+		throw InvalidArgumentError("bump::String::indexOf() passed empty index string");
 	}
 
 	// Make sure startPosition is inside our bounds
@@ -368,13 +386,13 @@ String& String::insert(const String& insertString, int position)
 	// Make sure the index string passed in is not empty
 	if (insertString.empty())
 	{
-		throw std::invalid_argument("bump::String::insert passed empty insert string");
+		throw InvalidArgumentError("bump::String::insert() passed empty insert string");
 	}
 
 	// Make sure position is inside our bounds
 	if (position > length() || position < 0)
 	{
-		throw std::range_error("bump::String::insert position outside string bounds");
+		throw OutOfRangeError("bump::String::insert() position outside string bounds");
 	}
 
 	// Split the string in two
@@ -415,7 +433,7 @@ int String::lastIndexOf(String indexString, int startPosition, CaseSensitivity c
 	// Make sure the index string passed in is not empty
 	if (indexString.empty())
 	{
-		throw std::invalid_argument("bump::String::lastIndexOf passed empty index string");
+		throw InvalidArgumentError("bump::String::lastIndexOf() passed empty index string");
 	}
 
 	// Make sure startPosition is inside our bounds
@@ -461,7 +479,7 @@ String String::left(int n) const
 	// Make sure number is inside our bounds
 	if (n > length() || n < 1)
 	{
-		throw std::range_error("bump::String::left n is outside string bounds");
+		throw OutOfRangeError("bump::String::left() n is outside string bounds");
 	}
 
 	return subString(0, n);
@@ -487,15 +505,15 @@ String& String::prepend(const char* prependString)
 String& String::remove(int position, int n)
 {
 	// Make sure the position is valid
-	if (position < 0)
+	if (position < 0 || position > length() - 1)
 	{
-		throw std::range_error("bump::String::remove cannot handle a negative position");
+		throw OutOfRangeError("bump::String::remove() position is outside string bounds");
 	}
 
 	// Make sure the width is valid
 	if (n < 0)
 	{
-		throw std::range_error("bump::String::remove cannot handle a negative width");
+		throw InvalidArgumentError("bump::String::remove() n cannot be negative");
 	}
 
 	std::string::erase(position, n);
@@ -507,7 +525,7 @@ String& String::remove(const String& removeString, CaseSensitivity caseSensitivi
 	// Make sure the remove string passed in is not empty
 	if (removeString.empty())
 	{
-		throw std::invalid_argument("bump::String::remove passed empty remove string");
+		throw InvalidArgumentError("bump::String::remove() passed empty remove string");
 	}
 
 	// Create some copies for manipulation
@@ -543,8 +561,21 @@ String& String::remove(const char* removeString, CaseSensitivity caseSensitivity
 
 String& String::replace(int position, int n, const String& replaceString)
 {
+	// Make sure the position is valid
+	if (position < 0 || position > length())
+	{
+		throw OutOfRangeError("bump::String::replace() position is outside string bounds");
+	}
+
+	// Make sure n is positive
+	if (n < 0)
+	{
+		throw InvalidArgumentError("bump::String::replace() n cannot be negative");
+	}
+
 	remove(position, n);
-	insert(replaceString, position);
+	if (!replaceString.isEmpty())
+		insert(replaceString, position);
 	return *this;
 }
 
@@ -558,7 +589,7 @@ String& String::replace(const String& before, const String& after, CaseSensitivi
 	// Make sure the before string is not empty
 	if (before.isEmpty())
 	{
-		throw std::invalid_argument("bump::String::replace passed an empty before string");
+		throw InvalidArgumentError("bump::String::replace() passed an empty before string");
 	}
 
 	// Ignore if the before and after strings are the same
@@ -609,7 +640,7 @@ String String::right(int n) const
 	// Make sure number is inside our bounds
 	if (n > length() || n < 1)
 	{
-		throw std::range_error("bump::String::left n is outside string bounds");
+		throw OutOfRangeError("bump::String::left() n is outside string bounds");
 	}
 
 	return subString(length() - n, length());
@@ -617,9 +648,22 @@ String String::right(int n) const
 
 String String::section(int startPosition, int length) const
 {
+	// Make sure the start position is valid
+	if (startPosition < 0 || startPosition > (int)this->length() - 1)
+	{
+		throw OutOfRangeError("bump::String::section() position is outside string bounds");
+	}
+
+	// Adjust for the default length
 	if (length == -1)
 	{
 		length = this->length();
+	}
+
+	// Make sure length is at least 1
+	if (length < 1)
+	{
+		throw InvalidArgumentError("bump::String::section() length must be at least one");
 	}
 
 	return subString(startPosition, length);
@@ -630,7 +674,7 @@ StringList String::split(const String& separator) const
 	// Make sure we only have a single character
 	if (separator.length() != 1)
 	{
-		throw std::invalid_argument("bump::String::split separator can only be a single character");
+		throw InvalidArgumentError("bump::String::split() separator can only be a single character");
 	}
 
 	// Make mutable copy of this string
@@ -655,6 +699,12 @@ StringList String::split(const String& separator) const
 
 bool String::startsWith(const String& startString, CaseSensitivity caseSensitivity) const
 {
+	// Make sure the start string isn't empty
+	if (startString.isEmpty())
+	{
+		throw InvalidArgumentError("bump::String::startsWith() start string cannot be empty");
+	}
+
 	// Create some copies for manipulation
 	String this_copy = *this;
 	String start_string_copy = startString;
@@ -688,13 +738,13 @@ String String::subString(int startPosition, int length) const
 	// Make sure startPosition is inside our bounds
 	if (startPosition < 0 || startPosition > (int)this->length())
 	{
-		throw std::range_error("bump::String::subString start position is outside string bounds");
+		throw OutOfRangeError("bump::String::subString() start position is outside string bounds");
 	}
 
 	// Make sure length is at least 1
 	if (length < 1)
 	{
-		throw std::invalid_argument("bump::String::subString length must be at least one");
+		throw InvalidArgumentError("bump::String::subString() length must be at least one");
 	}
 
 	return substr(startPosition, length);
@@ -709,7 +759,7 @@ bool String::toBool() const
 	// Make sure we have a valid bool or throw an exception
 	if (this_copy != "true" && this_copy != "false")
 	{
-		throw std::runtime_error("bump::String::toBool cannot convert string to bool");
+		throw TypeCastError("bump::String::toBool() cannot convert string to bool");
 	}
 
 	return this_copy == "true" ? true : false;
@@ -723,7 +773,7 @@ double String::toDouble() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw std::runtime_error("bump::String::toDouble cannot convert string to double");
+		throw TypeCastError("bump::String::toDouble() cannot convert string to double");
 	}
 }
 
@@ -735,7 +785,7 @@ float String::toFloat() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw std::runtime_error("bump::String::toFloat cannot convert string to float");
+		throw TypeCastError("bump::String::toFloat() cannot convert string to float");
 	}
 }
 
@@ -747,7 +797,7 @@ int String::toInt() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw std::runtime_error("bump::String::toInt cannot convert string to int");
+		throw TypeCastError("bump::String::toInt() cannot convert string to int");
 	}
 }
 
@@ -759,7 +809,7 @@ long String::toLong() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw std::runtime_error("bump::String::toLong cannot convert string to long");
+		throw TypeCastError("bump::String::toLong() cannot convert string to long");
 	}
 }
 
@@ -771,7 +821,7 @@ long long String::toLongLong() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw std::runtime_error("bump::String::toLongLong cannot convert string to long long");
+		throw TypeCastError("bump::String::toLongLong() cannot convert string to long long");
 	}
 }
 
@@ -793,7 +843,7 @@ int String::toShort() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw std::runtime_error("bump::String::toShort cannot convert string to short");
+		throw TypeCastError("bump::String::toShort() cannot convert string to short");
 	}
 }
 
@@ -810,7 +860,7 @@ unsigned int String::toUInt() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw std::runtime_error("bump::String::toUInt cannot convert string to unsigned int");
+		throw TypeCastError("bump::String::toUInt() cannot convert string to unsigned int");
 	}
 }
 
@@ -822,7 +872,7 @@ unsigned long String::toULong() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw std::runtime_error("bump::String::toULong cannot convert string to unsigned long");
+		throw TypeCastError("bump::String::toULong() cannot convert string to unsigned long");
 	}
 }
 
@@ -834,7 +884,7 @@ unsigned long long String::toULongLong() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw std::runtime_error("bump::String::toULongLong cannot convert string to unsigned long long");
+		throw TypeCastError("bump::String::toULongLong() cannot convert string to unsigned long long");
 	}
 }
 
@@ -856,7 +906,7 @@ unsigned short String::toUShort() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw std::runtime_error("bump::String::toUShort cannot convert string to unsigned short");
+		throw TypeCastError("bump::String::toUShort() cannot convert string to unsigned short");
 	}
 }
 

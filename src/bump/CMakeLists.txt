@@ -13,6 +13,7 @@ SET (HEADER_PATH ${Bump_SOURCE_DIR}/include/${LIB_NAME})
 # Add all the headers
 SET (
 	TARGET_H
+	${HEADER_PATH}/Exception.h
 	${HEADER_PATH}/Export.h
 	${HEADER_PATH}/String.h
 	${HEADER_PATH}/Version.h

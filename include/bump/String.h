@@ -52,91 +52,93 @@ public:
 	/**
 	 * Constructor that takes a const char*.
 	 *
-	 * @param cString the c string to convert to a bump::String.
+	 * @param cString the c string to convert to a string.
 	 */
 	String(const char* cString);
 
 	/**
 	 * Constructor that takes a std::string.
 	 *
-	 * @param stdString the std::string to convert to a bump::String.
+	 * @param stdString the std::string to convert to a string.
 	 */
 	String(const std::string& stdString);
 
 	/**
 	 * Constructor that takes an unsigned char.
 	 *
-	 * @param number the number to convert to a bump::String.
+	 * @param number the number to convert to a string.
 	 */
 	String(unsigned char number);
 
 	/**
 	 * Constructor that takes a char.
 	 *
-	 * @param number the number to convert to a bump::String.
+	 * @param number the number to convert to a string.
 	 */
 	String(char number);
 
 	/**
 	 * Constructor that takes an unsigned short.
 	 *
-	 * @param number the number to convert to a bump::String.
+	 * @param number the number to convert to a string.
 	 */
 	String(unsigned short number);
 
 	/**
 	 * Constructor that takes a short.
 	 *
-	 * @param number the number to convert to a bump::String.
+	 * @param number the number to convert to a string.
 	 */
 	String(short number);
 
 	/**
 	 * Constructor that takes an unsigned int.
 	 *
-	 * @param number the number to convert to a bump::String.
+	 * @param number the number to convert to a string.
 	 */
 	String(unsigned int number);
 
 	/**
 	 * Constructor that takes an int.
 	 *
-	 * @param number the number to convert to a bump::String.
+	 * @param number the number to convert to a string.
 	 */
 	String(int number);
 
 	/**
 	 * Constructor that takes an unsigned long.
 	 *
-	 * @param number the number to convert to a bump::String.
+	 * @param number the number to convert to a string.
 	 */
 	String(unsigned long number);
 
 	/**
 	 * Constructor that takes a long.
 	 *
-	 * @param number the number to convert to a bump::String.
+	 * @param number the number to convert to a string.
 	 */
 	String(long number);
 
 	/**
 	 * Constructor that takes an unsigned long long.
 	 *
-	 * @param number the number to convert to a bump::String.
+	 * @param number the number to convert to a string.
 	 */
 	String(unsigned long long number);
 
 	/**
 	 * Constructor that takes a long long.
 	 *
-	 * @param number the number to convert to a bump::String.
+	 * @param number the number to convert to a string.
 	 */
 	String(long long number);
 
 	/**
 	 * Constructor that takes a float.
 	 *
-	 * @param number the number to convert to a bump::String.
+	 * Throw an InvalidArgumentError when precision is less than -1.
+	 *
+	 * @param number the number to convert to a string.
 	 * @param precision the number of decimal places, default is -1 which uses full decimal representation.
 	 */
 	String(float number, int precision = -1);
@@ -144,7 +146,9 @@ public:
 	/**
 	 * Constructor that takes a double.
 	 *
-	 * @param number the number to convert to a bump::String.
+	 * Throw an InvalidArgumentError when precision is less than -1.
+	 *
+	 * @param number the number to convert to a string.
 	 * @param precision the number of decimal places, default is -1 which uses full decimal representation.
 	 */
 	String(double number, int precision = -1);
@@ -152,9 +156,14 @@ public:
 	/**
 	 * Constructor that takes a bool.
 	 *
-	 * @param boolValue a boolean to convert to a bump::String.
+	 * @param boolValue a boolean to convert to a string.
 	 */
 	String(bool boolValue);
+
+	/**
+	 * Destructor.
+	 */
+	~String();
 
 	/**
 	 * Appends the given string onto the end of this string.
@@ -174,6 +183,8 @@ public:
 
 	/**
 	 * Locates and returns the character at the position in this string.
+	 *
+	 * Throws an OutOfRangeError when position is outside this string's bounds.
 	 *
 	 * @param position the position of the character to return of this string.
 	 * @return the character at the given position.
@@ -254,6 +265,8 @@ public:
 	/**
 	 * Checks whether this string ends with the given string.
 	 *
+	 * Throws an InvalidArgumentError when passed an empty end string.
+	 *
 	 * @param endString the string to check if this string ends with.
 	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
 	 * @return true if this string ends with endString, otherwise returns false.
@@ -262,6 +275,8 @@ public:
 
 	/**
 	 * Checks whether this string ends with the given string.
+	 *
+	 * Throws an InvalidArgumentError when passed an empty end string.
 	 *
 	 * @param endString the const char* to check if this string ends with.
 	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
@@ -273,6 +288,9 @@ public:
 	 * Sets every character in the string to character. If size is different from -1 (default),
 	 * the string is resized to size beforehand.
 	 *
+	 * Throws an InvalidArgumentError when passed a character string with length not equal to one.
+	 * Throws an InvalidArgumentError when passed a size less than -1.
+	 *
 	 * @param character the character to fill this string with.
 	 * @param size the size to resize this string to be filling.
 	 * @return a reference to the modified string.
@@ -282,6 +300,8 @@ public:
 	/**
 	 * Finds the position of the first occurrence of indexString in this string by searching
 	 * forward from the startPosition.
+	 *
+	 * Throws an InvalidArgumentError when passed an empty index string.
 	 *
 	 * @param indexString the String to find the first occurence of in this string.
 	 * @param startPosition the index of the string to start searching at.
@@ -294,6 +314,8 @@ public:
 	 * Finds the position of the first occurrence of indexString in this string by searching
 	 * forward from the startPosition.
 	 *
+	 * Throws an InvalidArgumentError when passed an empty index string.
+	 *
 	 * @param indexString the const char* to find the first occurence of in this string.
 	 * @param startPosition the index of the string to start searching at.
 	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
@@ -303,6 +325,9 @@ public:
 
 	/**
 	 * Inserts the insertString at the given position.
+	 *
+	 * Throws an InvalidArgumentError when passed an empty insert string.
+	 * Throws an OutOfRangeError when position is outside this string's bounds.
 	 *
 	 * @param position the index position of the string to start inserting at.
 	 * @param insertString the String to insert at the given index position in this string.
@@ -338,6 +363,8 @@ public:
 	 * backwards from the startPosition. If startPosition is -1 (default), the search starts
 	 * at the last character.
 	 *
+	 * Throws an InvalidArgumentError when passed an empty index string.
+	 *
 	 * @param indexString the string to find the last occurence of in this string.
 	 * @param startPosition the index of the string to start searching at.
 	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
@@ -350,6 +377,8 @@ public:
 	 * backwards from the startPosition. If startPosition is -1 (default), the search starts
 	 * at the last character.
 	 *
+	 * Throws an InvalidArgumentError when passed an empty index string.
+	 *
 	 * @param indexString the const char* to find the last occurence of in this string.
 	 * @param startPosition the index of the string to start searching at.
 	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
@@ -359,6 +388,8 @@ public:
 
 	/**
 	 * Finds the substring that contains the number of leftmost characters of this string.
+	 *
+	 * Throws an OutOfRangeError when n is outside this string's bounds.
 	 *
 	 * @param n the number of characters to return.
 	 * @return the substring of the leftmost number of characters of this string.
@@ -391,6 +422,9 @@ public:
 	/**
 	 * Removes the given width of characters starting at the given position.
 	 *
+	 * Throws an OutOfRangeError when position is outside this string's bounds.
+	 * Throws an InvalidArgumentError when n is negative.
+	 *
 	 * @param position the index position to start removing characters at from this string.
 	 * @param n the number of characters to remove from this string.
 	 * @return the modified version of this string.
@@ -399,6 +433,8 @@ public:
 
 	/**
 	 * Removes every occurrence of the given in this string.
+	 *
+	 * Throws an InvalidArgumentError when the remove string is empty.
 	 *
 	 * @param removeString the string to remove from this string.
 	 * @param caseSensitivity - the case sensitivity to be used, defaults to String::CaseSensitive.
@@ -409,6 +445,8 @@ public:
 	/**
 	 * Removes every occurrence of the given in this string.
 	 *
+	 * Throws an InvalidArgumentError when the remove string is empty.
+	 *
 	 * @param removeString the const char* to remove from this string.
 	 * @param caseSensitivity - the case sensitivity to be used, defaults to String::CaseSensitive.
 	 * @return the modified version of this string.
@@ -417,6 +455,9 @@ public:
 
 	/**
 	 * Replaces n characters starting at position with the replace string.
+	 *
+	 * Throws an OutOfRangeError when position is outside this string's bounds.
+	 * Throws an InvalidArgumentError when n is negative.
 	 *
 	 * @param position the index of this string to start replacing at.
 	 * @param n the number of characters to replace in this string.
@@ -428,6 +469,9 @@ public:
 	/**
 	 * Replaces n characters starting at position with the replace string.
 	 *
+	 * Throws an OutOfRangeError when position is outside this string's bounds.
+	 * Throws an InvalidArgumentError when n is negative.
+	 *
 	 * @param position the index of this string to start replacing at.
 	 * @param n the number of characters to replace in this string.
 	 * @param replaceString the const char* to replace the n characters in this string.
@@ -437,6 +481,8 @@ public:
 
 	/**
 	 * Replaces every occurrence of the before string with the after string.
+	 *
+	 * Throws an InvalidArgumentError when passed an empty before string.
 	 *
 	 * @param before the string to be replaced.
 	 * @param after the string to replace the before string.
@@ -448,6 +494,8 @@ public:
 	/**
 	 * Replaces every occurrence of the before string with the after string.
 	 *
+	 * Throws an InvalidArgumentError when passed an empty before string.
+	 *
 	 * @param before the const char* to be replaced.
 	 * @param after the const char* to replace the before string.
 	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
@@ -458,6 +506,8 @@ public:
 	/**
 	 * Finds the substring that contains the number of rightmost characters of this string.
 	 *
+	 * Throws an OutOfRangeError when n is outside this string's bounds.
+	 *
 	 * @param n the number of characters to return.
 	 * @return the substring of the rightmost number of characters of this string.
 	 */
@@ -465,6 +515,9 @@ public:
 
 	/**
 	 * Creates a substring of the given length beginning at the start position.
+	 *
+	 * Throws an OutOfRangeError when position is outside this string's bounds.
+	 * Throws an InvalidArgumentError when length is less than one.
 	 *
 	 * @param startPosition the starting position in this string to begin the section.
 	 * @param length the length of the section to extract from the string.
@@ -475,6 +528,8 @@ public:
 	/**
 	 * Splits the string into a list of string that were separated by the given character.
 	 *
+	 * Throws an InvalidArgumentError when separator has a length not equal to one.
+	 *
 	 * @param separator a single character used to separate the string.
 	 * @return a list of strings separated by the separator character
 	 */
@@ -482,6 +537,8 @@ public:
 
 	/**
 	 * Checks whether this string starts with the given string.
+	 *
+	 * Throws an InvalidArgumentError when the start string is empty.
 	 *
 	 * @param startString the string to check if this string starts with.
 	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
@@ -492,6 +549,8 @@ public:
 	/**
 	 * Checks whether this string starts with the given string.
 	 *
+	 * Throws an InvalidArgumentError when the start string is empty.
+	 *
 	 * @param startString the const char* to check if this string starts with.
 	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
 	 * @return true if this string starts with startString, otherwise returns false.
@@ -500,6 +559,9 @@ public:
 
 	/**
 	 * Creates a new string beginning at the start position with the given length.
+	 *
+	 * Throws an OutOfRangeError when the start position is outside this string's bounds.
+	 * Throws an InvalidArgumentError when length is greater than zero.
 	 *
 	 * @param startPosition the index position to start the section at in this string.
 	 * @param length the length of the section to extract from the string.
@@ -510,12 +572,16 @@ public:
 	/**
 	 * Converts this string to a boolean.
 	 *
+	 * Throws a TypeCastError when this string cannot be converted to a boolean.
+	 *
 	 * @return the bool value of the string.
 	 */
 	bool toBool() const;
 
 	/**
 	 * Converts this string to a double.
+	 *
+	 * Throws a TypeCastError when this string cannot be converted to a double.
 	 *
 	 * @return the double value of the string.
 	 */
@@ -524,12 +590,16 @@ public:
 	/**
 	 * Converts this string to a float.
 	 *
+	 * Throws a TypeCastError when this string cannot be converted to a float.
+	 *
 	 * @return the float value of the string.
 	 */
 	float toFloat() const;
 
 	/**
 	 * Converts this string to an int.
+	 *
+	 * Throws a TypeCastError when this string cannot be converted to an int.
 	 *
 	 * @return the int value of the string.
 	 */
@@ -538,12 +608,16 @@ public:
 	/**
 	 * Converts this string to a long.
 	 *
+	 * Throws a TypeCastError when this string cannot be converted to a long.
+	 *
 	 * @return the long value of the string.
 	 */
 	long toLong() const;
 
 	/**
 	 * Converts this string to a long long.
+	 *
+	 * Throws a TypeCastError when this string cannot be converted to a long long.
 	 *
 	 * @return the long long value of the string.
 	 */
@@ -559,6 +633,8 @@ public:
 	/**
 	 * Converts this string to a short.
 	 *
+	 * Throws a TypeCastError when this string cannot be converted to a short.
+	 *
 	 * @return the short value of the string.
 	 */
 	int toShort() const;
@@ -573,6 +649,8 @@ public:
 	/**
 	 * Converts this string to an unsigned int.
 	 *
+	 * Throws a TypeCastError when this string cannot be converted to an unsigned int.
+	 *
 	 * @return the unsigned int value of the string.
 	 */
 	unsigned int toUInt() const;
@@ -580,12 +658,16 @@ public:
 	/**
 	 * Converts this string to an unsigned long.
 	 *
+	 * Throws a TypeCastError when this string cannot be converted to an unsigned long.
+	 *
 	 * @return the unsigned long value of the string.
 	 */
 	unsigned long toULong() const;
 
 	/**
 	 * Converts this string to an unsigned long long.
+	 *
+	 * Throws a TypeCastError when this string cannot be converted to an unsigned long long.
 	 *
 	 * @return the unsigned long long value of the string.
 	 */
@@ -600,6 +682,8 @@ public:
 
 	/**
 	 * Converts this string to an unsigned short.
+	 *
+	 * Throws a TypeCastError when this string cannot be converted to an unsigned short.
 	 *
 	 * @return the unsigned short value of the string.
 	 */

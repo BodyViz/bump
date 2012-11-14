@@ -12,7 +12,8 @@
 // GTest headers
 #include <gtest/gtest.h>
 
-// bump headers
+// Bump headers
+#include <bump/Exception.h>
 #include <bump/String.h>
 
 // bumpTest headers
@@ -472,9 +473,9 @@ TEST_F(StringTest, testAt)
 	character = str.at(5);
 	EXPECT_EQ('g', character);
 
-	// Test outside the bounds (should throw a std::exception)
-	EXPECT_THROW(str.at(-1), std::exception);
-	EXPECT_THROW(str.at(6), std::exception);
+	// Test outside the bounds (throws bump::OutOfRangeError exception)
+	EXPECT_THROW(str.at(-1), bump::OutOfRangeError);
+	EXPECT_THROW(str.at(6), bump::OutOfRangeError);
 }
 
 TEST_F(StringTest, testCStr)
@@ -692,9 +693,9 @@ TEST_F(StringTest, testEndsWithString)
 	// Test empty strings
 	str1 = bump::String("");
 	str2 = bump::String();
-	EXPECT_THROW(str1.endsWith(str2), std::invalid_argument);
-	EXPECT_THROW(str1.endsWith(str2, bump::String::CaseSensitive), std::invalid_argument);
-	EXPECT_THROW(str1.endsWith(str2, bump::String::NotCaseSensitive), std::invalid_argument);
+	EXPECT_THROW(str1.endsWith(str2), bump::InvalidArgumentError);
+	EXPECT_THROW(str1.endsWith(str2, bump::String::CaseSensitive), bump::InvalidArgumentError);
+	EXPECT_THROW(str1.endsWith(str2, bump::String::NotCaseSensitive), bump::InvalidArgumentError);
 }
 
 TEST_F(StringTest, testEndsWithCString)
@@ -709,10 +710,10 @@ TEST_F(StringTest, testEndsWithCString)
 	// Test empty strings
 	str1 = bump::String("");
 	str2 = "";
-	EXPECT_THROW(str1.endsWith(str2), std::invalid_argument);
-	EXPECT_THROW(str1.endsWith(str2, bump::String::CaseSensitive), std::invalid_argument);
-	EXPECT_THROW(str1.endsWith(str2, bump::String::NotCaseSensitive), std::invalid_argument);
-	}
+	EXPECT_THROW(str1.endsWith(str2), bump::InvalidArgumentError);
+	EXPECT_THROW(str1.endsWith(str2, bump::String::CaseSensitive), bump::InvalidArgumentError);
+	EXPECT_THROW(str1.endsWith(str2, bump::String::NotCaseSensitive), bump::InvalidArgumentError);
+}
 
 TEST_F(StringTest, testFill)
 {
@@ -735,12 +736,12 @@ TEST_F(StringTest, testFill)
 	str.fill("Z", 10);
 	EXPECT_STREQ("ZZZZZZZZZZ", str.c_str());
 
-	// Test fill with negative size (throws std::invalid_argument)
+	// Test fill with negative size (throws bump::InvalidArgumentError exception)
 	str = "example string";
-	EXPECT_THROW(str.fill("X", -4), std::invalid_argument);
+	EXPECT_THROW(str.fill("X", -4), bump::InvalidArgumentError);
 
 	// Test fill with too many characters
-	EXPECT_THROW(str.fill("XYZ", 4), std::invalid_argument);
+	EXPECT_THROW(str.fill("XYZ", 4), bump::InvalidArgumentError);
 }
 
 TEST_F(StringTest, testIndexOfString)
@@ -765,7 +766,7 @@ TEST_F(StringTest, testIndexOfString)
 
 	// Try an empty search string
 	str2 = bump::String("");
-	EXPECT_THROW(str1.indexOf(str2), std::invalid_argument);
+	EXPECT_THROW(str1.indexOf(str2), bump::InvalidArgumentError);
 
 	// Try a position less than 0
 	str2 = bump::String("example");
@@ -809,7 +810,7 @@ TEST_F(StringTest, testIndexOfCString)
 
 	// Try an empty search string
 	str2 = "";
-	EXPECT_THROW(str1.indexOf(str2), std::invalid_argument);
+	EXPECT_THROW(str1.indexOf(str2), bump::InvalidArgumentError);
 
 	// Try a position less than 0
 	str2 = "example";
@@ -861,14 +862,14 @@ TEST_F(StringTest, testInsertString)
 	// Try to insert an empty string
 	str1 = "an example";
 	str2 = "";
-	EXPECT_THROW(str1.insert(str2, 10), std::invalid_argument);
+	EXPECT_THROW(str1.insert(str2, 10), bump::InvalidArgumentError);
 
 	// Try to insert a string in a negative position
 	str2 = " string";
-	EXPECT_THROW(str1.insert(str2, -1), std::range_error);
+	EXPECT_THROW(str1.insert(str2, -1), bump::OutOfRangeError);
 
 	// Try to insert a string past the string bounds
-	EXPECT_THROW(str1.insert(str2, 100), std::range_error);
+	EXPECT_THROW(str1.insert(str2, 100), bump::OutOfRangeError);
 }
 
 TEST_F(StringTest, testInsertCString)
@@ -899,14 +900,14 @@ TEST_F(StringTest, testInsertCString)
 	// Try to insert an empty string
 	str1 = "an example";
 	str2 = "";
-	EXPECT_THROW(str1.insert(str2, 10), std::invalid_argument);
+	EXPECT_THROW(str1.insert(str2, 10), bump::InvalidArgumentError);
 
 	// Try to insert a string in a negative position
 	str2 = " string";
-	EXPECT_THROW(str1.insert(str2, -1), std::range_error);
+	EXPECT_THROW(str1.insert(str2, -1), bump::OutOfRangeError);
 
 	// Try to insert a string past the string bounds
-	EXPECT_THROW(str1.insert(str2, 100), std::range_error);
+	EXPECT_THROW(str1.insert(str2, 100), bump::OutOfRangeError);
 }
 
 TEST_F(StringTest, testIsEmpty)
@@ -974,7 +975,7 @@ TEST_F(StringTest, testLastIndexOfString)
 
 	// Try an empty search string
 	str2 = "";
-	EXPECT_THROW(str1.lastIndexOf(str2), std::invalid_argument);
+	EXPECT_THROW(str1.lastIndexOf(str2), bump::InvalidArgumentError);
 
 	// Try a position less than 0
 	str2 = "example";
@@ -1021,7 +1022,7 @@ TEST_F(StringTest, testLastIndexOfCString)
 
 	// Try an empty search string
 	str2 = "";
-	EXPECT_THROW(str1.lastIndexOf(str2), std::invalid_argument);
+	EXPECT_THROW(str1.lastIndexOf(str2), bump::InvalidArgumentError);
 
 	// Try a position less than 0
 	str2 = "example";
@@ -1054,12 +1055,12 @@ TEST_F(StringTest, testLeft)
 
 	// Empty string tests
 	str = "";
-	EXPECT_THROW(str.left(1), std::range_error);
+	EXPECT_THROW(str.left(1), bump::OutOfRangeError);
 
 	// Out-of-bounds tests
-	EXPECT_THROW(str.left(0), std::range_error);
-	EXPECT_THROW(str.left(-2), std::range_error);
-	EXPECT_THROW(str.left(str.length() + 1), std::range_error);
+	EXPECT_THROW(str.left(0), bump::OutOfRangeError);
+	EXPECT_THROW(str.left(-2), bump::OutOfRangeError);
+	EXPECT_THROW(str.left(str.length() + 1), bump::OutOfRangeError);
 }
 
 TEST_F(StringTest, testLength)
@@ -1164,13 +1165,14 @@ TEST_F(StringTest, testRemovePositionWidth)
 	EXPECT_STREQ("love programming", str.c_str());
 
 	// Try removing outside the bounds with invalid arguments
-	EXPECT_THROW(str.remove(-1, 10), std::range_error);
-	EXPECT_THROW(str.remove(-2, -20), std::range_error);
-	EXPECT_THROW(str.remove(2, -30), std::range_error);
+	EXPECT_THROW(str.remove(-1, 10), bump::OutOfRangeError);
+	EXPECT_THROW(str.remove(-2, -20), bump::OutOfRangeError);
+	EXPECT_THROW(str.remove(200, -30), bump::OutOfRangeError);
+	EXPECT_THROW(str.remove(2, -30), bump::InvalidArgumentError);
 
 	// Try removing outside the bounds with valid arguments
 	str = bump::String("i love programming");
-	EXPECT_THROW(str.remove(100, 4), std::exception);
+	EXPECT_THROW(str.remove(18, 0), bump::OutOfRangeError);
 	str.remove(6, 1000);
 	EXPECT_STREQ("i love", str.c_str());
 }
@@ -1203,7 +1205,7 @@ TEST_F(StringTest, testRemoveString)
 	// Try removing nothing from a string
 	str1 = "example string";
 	str2 = "";
-	EXPECT_THROW(str1.remove(str2), std::invalid_argument);
+	EXPECT_THROW(str1.remove(str2), bump::InvalidArgumentError);
 
 	// Test non-case sensitive cases
 	str1 = "I Love Programming In C++";
@@ -1249,7 +1251,7 @@ TEST_F(StringTest, testRemoveCString)
 	// Try removing nothing from a string
 	str1 = "example string";
 	str2 = "";
-	EXPECT_THROW(str1.remove(str2), std::invalid_argument);
+	EXPECT_THROW(str1.remove(str2), bump::InvalidArgumentError);
 
 	// Test non-case sensitive cases
 	str1 = "I Love Programming In C++";
@@ -1297,9 +1299,9 @@ TEST_F(StringTest, testReplaceString)
 	// Test the out-of-bounds cases
 	str1 = "i love programming in C++";
 	str2 = "Python";
-	EXPECT_THROW(str1.replace(-10, 3, str2), std::range_error);
-	EXPECT_THROW(str1.replace(100, 3, str2), std::exception);
-	EXPECT_THROW(str1.replace(2, -10, str2), std::range_error);
+	EXPECT_THROW(str1.replace(-10, 3, str2), bump::OutOfRangeError);
+	EXPECT_THROW(str1.replace(100, 3, str2), bump::OutOfRangeError);
+	EXPECT_THROW(str1.replace(2, -10, str2), bump::InvalidArgumentError);
 	str1 = "i love programming in C++";
 	str1.replace(2, 100, str2);
 	EXPECT_STREQ("i Python", str1.c_str());
@@ -1311,7 +1313,8 @@ TEST_F(StringTest, testReplaceString)
 	EXPECT_STREQ("test", str1.c_str());
 	str1 = "test";
 	str2 = "";
-	EXPECT_THROW(str1.replace(0, 0, str2), std::exception);
+	str1.replace(0, 0, str2);
+	EXPECT_STREQ("test", str1.c_str());
 }
 
 TEST_F(StringTest, testReplaceCString)
@@ -1344,9 +1347,9 @@ TEST_F(StringTest, testReplaceCString)
 	// Test the out-of-bounds cases
 	str1 = "i love programming in C++";
 	str2 = "Python";
-	EXPECT_THROW(str1.replace(-10, 3, str2), std::range_error);
-	EXPECT_THROW(str1.replace(100, 3, str2), std::exception);
-	EXPECT_THROW(str1.replace(2, -10, str2), std::range_error);
+	EXPECT_THROW(str1.replace(-10, 3, str2), bump::OutOfRangeError);
+	EXPECT_THROW(str1.replace(100, 3, str2), bump::OutOfRangeError);
+	EXPECT_THROW(str1.replace(2, -10, str2), bump::InvalidArgumentError);
 	str1 = "i love programming in C++";
 	str1.replace(2, 100, str2);
 	EXPECT_STREQ("i Python", str1.c_str());
@@ -1358,7 +1361,8 @@ TEST_F(StringTest, testReplaceCString)
 	EXPECT_STREQ("test", str1.c_str());
 	str1 = "test";
 	str2 = "";
-	EXPECT_THROW(str1.replace(0, 0, str2), std::exception);
+	str1.replace(0, 0, str2);
+	EXPECT_STREQ("test", str1.c_str());
 }
 
 TEST_F(StringTest, testReplaceBeforeAfterString)
@@ -1393,7 +1397,7 @@ TEST_F(StringTest, testReplaceBeforeAfterString)
 	str = "I Love Programming";
 	before = "";
 	after = "To Program";
-	EXPECT_THROW(str.replace(before, after), std::invalid_argument);
+	EXPECT_THROW(str.replace(before, after), bump::InvalidArgumentError);
 	str = "I Love Programming";
 	before = " Programming";
 	after = "";
@@ -1442,7 +1446,7 @@ TEST_F(StringTest, testReplaceBeforeAfterCString)
 	str = "I Love Programming";
 	before = "";
 	after = "To Program";
-	EXPECT_THROW(str.replace(before, after), std::invalid_argument);
+	EXPECT_THROW(str.replace(before, after), bump::InvalidArgumentError);
 	str = "I Love Programming";
 	before = " Programming";
 	after = "";
@@ -1470,12 +1474,12 @@ TEST_F(StringTest, testRight)
 
 	// Empty string tests
 	str = "";
-	EXPECT_THROW(str.right(1), std::range_error);
+	EXPECT_THROW(str.right(1), bump::OutOfRangeError);
 
 	// Out-of-bounds tests
-	EXPECT_THROW(str.right(0), std::range_error);
-	EXPECT_THROW(str.right(-2), std::range_error);
-	EXPECT_THROW(str.right(str.length() + 1), std::range_error);
+	EXPECT_THROW(str.right(0), bump::OutOfRangeError);
+	EXPECT_THROW(str.right(-2), bump::OutOfRangeError);
+	EXPECT_THROW(str.right(str.length() + 1), bump::OutOfRangeError);
 }
 
 TEST_F(StringTest, testSection)
@@ -1489,12 +1493,12 @@ TEST_F(StringTest, testSection)
 
 	// Empty string tests
 	str = "";
-	EXPECT_THROW(str.section(1), std::range_error);
+	EXPECT_THROW(str.section(1), bump::OutOfRangeError);
 
 	// Out-of-bounds tests
 	str = "a simple example string";
-	EXPECT_THROW(str.section(-2, 2), std::range_error);
-	EXPECT_THROW(str.section(2, 0), std::invalid_argument);
+	EXPECT_THROW(str.section(-2, 2), bump::OutOfRangeError);
+	EXPECT_THROW(str.section(2, 0), bump::InvalidArgumentError);
 }
 
 TEST_F(StringTest, testSplit)
@@ -1529,7 +1533,7 @@ TEST_F(StringTest, testSplit)
 
 	// Empty separator test
 	separator = "";
-	EXPECT_THROW(str.split(separator), std::invalid_argument);
+	EXPECT_THROW(str.split(separator), bump::InvalidArgumentError);
 }
 
 TEST_F(StringTest, testStartsWithString)
@@ -1544,9 +1548,9 @@ TEST_F(StringTest, testStartsWithString)
 	// Test empty strings
 	str1 = "";
 	str2 = bump::String();
-	EXPECT_THROW(str1.startsWith(str2), std::invalid_argument);
-	EXPECT_THROW(str1.startsWith(str2, bump::String::CaseSensitive), std::invalid_argument);
-	EXPECT_THROW(str1.startsWith(str2, bump::String::NotCaseSensitive), std::invalid_argument);
+	EXPECT_THROW(str1.startsWith(str2), bump::InvalidArgumentError);
+	EXPECT_THROW(str1.startsWith(str2, bump::String::CaseSensitive), bump::InvalidArgumentError);
+	EXPECT_THROW(str1.startsWith(str2, bump::String::NotCaseSensitive), bump::InvalidArgumentError);
 }
 
 TEST_F(StringTest, testStartsWithCString)
@@ -1561,9 +1565,9 @@ TEST_F(StringTest, testStartsWithCString)
 	// Test empty strings
 	str1 = "";
 	str2 = "";
-	EXPECT_THROW(str1.startsWith(str2), std::invalid_argument);
-	EXPECT_THROW(str1.startsWith(str2, bump::String::CaseSensitive), std::invalid_argument);
-	EXPECT_THROW(str1.startsWith(str2, bump::String::NotCaseSensitive), std::invalid_argument);
+	EXPECT_THROW(str1.startsWith(str2), bump::InvalidArgumentError);
+	EXPECT_THROW(str1.startsWith(str2, bump::String::CaseSensitive), bump::InvalidArgumentError);
+	EXPECT_THROW(str1.startsWith(str2, bump::String::NotCaseSensitive), bump::InvalidArgumentError);
 }
 
 TEST_F(StringTest, testSubString)
@@ -1577,12 +1581,12 @@ TEST_F(StringTest, testSubString)
 
 	// Empty string tests
 	str = "";
-	EXPECT_THROW(str.subString(1, 1), std::range_error);
+	EXPECT_THROW(str.subString(1, 1), bump::OutOfRangeError);
 
 	// Out-of-bounds tests
 	str = "a simple example string";
-	EXPECT_THROW(str.subString(-2, 2), std::range_error);
-	EXPECT_THROW(str.subString(2, 0), std::invalid_argument);
+	EXPECT_THROW(str.subString(-2, 2), bump::OutOfRangeError);
+	EXPECT_THROW(str.subString(2, 0), bump::InvalidArgumentError);
 }
 
 TEST_F(StringTest, testToBool)
@@ -1607,13 +1611,13 @@ TEST_F(StringTest, testToBool)
 
 	// Invalid usage tests
 	str = "27";
-	EXPECT_THROW(str.toBool(), std::runtime_error);
+	EXPECT_THROW(str.toBool(), bump::TypeCastError);
 	str = "test";
-	EXPECT_THROW(str.toBool(), std::runtime_error);
+	EXPECT_THROW(str.toBool(), bump::TypeCastError);
 	str = "39.8";
-	EXPECT_THROW(str.toBool(), std::runtime_error);
+	EXPECT_THROW(str.toBool(), bump::TypeCastError);
 	str = "";
-	EXPECT_THROW(str.toBool(), std::runtime_error);
+	EXPECT_THROW(str.toBool(), bump::TypeCastError);
 }
 
 TEST_F(StringTest, testToDouble)
@@ -1632,13 +1636,13 @@ TEST_F(StringTest, testToDouble)
 
 	// Invalid usage tests
 	str = "test";
-	EXPECT_THROW(str.toDouble(), std::runtime_error);
+	EXPECT_THROW(str.toDouble(), bump::TypeCastError);
 	str = true;
-	EXPECT_THROW(str.toDouble(), std::runtime_error);
+	EXPECT_THROW(str.toDouble(), bump::TypeCastError);
 	str = false;
-	EXPECT_THROW(str.toDouble(), std::runtime_error);
+	EXPECT_THROW(str.toDouble(), bump::TypeCastError);
 	str = "";
-	EXPECT_THROW(str.toDouble(), std::runtime_error);
+	EXPECT_THROW(str.toDouble(), bump::TypeCastError);
 }
 
 TEST_F(StringTest, testToFloat)
@@ -1657,13 +1661,13 @@ TEST_F(StringTest, testToFloat)
 
 	// Invalid usage tests
 	str = "test";
-	EXPECT_THROW(str.toFloat(), std::runtime_error);
+	EXPECT_THROW(str.toFloat(), bump::TypeCastError);
 	str = true;
-	EXPECT_THROW(str.toFloat(), std::runtime_error);
+	EXPECT_THROW(str.toFloat(), bump::TypeCastError);
 	str = false;
-	EXPECT_THROW(str.toFloat(), std::runtime_error);
+	EXPECT_THROW(str.toFloat(), bump::TypeCastError);
 	str = "";
-	EXPECT_THROW(str.toFloat(), std::runtime_error);
+	EXPECT_THROW(str.toFloat(), bump::TypeCastError);
 }
 
 TEST_F(StringTest, testToInt)
@@ -1676,15 +1680,15 @@ TEST_F(StringTest, testToInt)
 
 	// Invalid usage tests
 	str = 400.980;
-	EXPECT_THROW(str.toInt(), std::runtime_error);
+	EXPECT_THROW(str.toInt(), bump::TypeCastError);
 	str = "test";
-	EXPECT_THROW(str.toInt(), std::runtime_error);
+	EXPECT_THROW(str.toInt(), bump::TypeCastError);
 	str = true;
-	EXPECT_THROW(str.toInt(), std::runtime_error);
+	EXPECT_THROW(str.toInt(), bump::TypeCastError);
 	str = false;
-	EXPECT_THROW(str.toInt(), std::runtime_error);
+	EXPECT_THROW(str.toInt(), bump::TypeCastError);
 	str = "";
-	EXPECT_THROW(str.toInt(), std::runtime_error);
+	EXPECT_THROW(str.toInt(), bump::TypeCastError);
 }
 
 TEST_F(StringTest, testToLong)
@@ -1697,15 +1701,15 @@ TEST_F(StringTest, testToLong)
 
 	// Invalid usage tests
 	str = 400.980;
-	EXPECT_THROW(str.toLong(), std::runtime_error);
+	EXPECT_THROW(str.toLong(), bump::TypeCastError);
 	str = "test";
-	EXPECT_THROW(str.toLong(), std::runtime_error);
+	EXPECT_THROW(str.toLong(), bump::TypeCastError);
 	str = true;
-	EXPECT_THROW(str.toLong(), std::runtime_error);
+	EXPECT_THROW(str.toLong(), bump::TypeCastError);
 	str = false;
-	EXPECT_THROW(str.toLong(), std::runtime_error);
+	EXPECT_THROW(str.toLong(), bump::TypeCastError);
 	str = "";
-	EXPECT_THROW(str.toLong(), std::runtime_error);
+	EXPECT_THROW(str.toLong(), bump::TypeCastError);
 }
 
 TEST_F(StringTest, testToLongLong)
@@ -1718,15 +1722,15 @@ TEST_F(StringTest, testToLongLong)
 
 	// Invalid usage tests
 	str = 400.980;
-	EXPECT_THROW(str.toLongLong(), std::runtime_error);
+	EXPECT_THROW(str.toLongLong(), bump::TypeCastError);
 	str = "test";
-	EXPECT_THROW(str.toLongLong(), std::runtime_error);
+	EXPECT_THROW(str.toLongLong(), bump::TypeCastError);
 	str = true;
-	EXPECT_THROW(str.toLongLong(), std::runtime_error);
+	EXPECT_THROW(str.toLongLong(), bump::TypeCastError);
 	str = false;
-	EXPECT_THROW(str.toLongLong(), std::runtime_error);
+	EXPECT_THROW(str.toLongLong(), bump::TypeCastError);
 	str = "";
-	EXPECT_THROW(str.toLongLong(), std::runtime_error);
+	EXPECT_THROW(str.toLongLong(), bump::TypeCastError);
 }
 
 TEST_F(StringTest, testToLowerCase)
@@ -1752,15 +1756,15 @@ TEST_F(StringTest, testToShort)
 
 	// Invalid usage tests
 	str = 400.980;
-	EXPECT_THROW(str.toShort(), std::runtime_error);
+	EXPECT_THROW(str.toShort(), bump::TypeCastError);
 	str = "test";
-	EXPECT_THROW(str.toShort(), std::runtime_error);
+	EXPECT_THROW(str.toShort(), bump::TypeCastError);
 	str = true;
-	EXPECT_THROW(str.toShort(), std::runtime_error);
+	EXPECT_THROW(str.toShort(), bump::TypeCastError);
 	str = false;
-	EXPECT_THROW(str.toShort(), std::runtime_error);
+	EXPECT_THROW(str.toShort(), bump::TypeCastError);
 	str = "";
-	EXPECT_THROW(str.toShort(), std::runtime_error);
+	EXPECT_THROW(str.toShort(), bump::TypeCastError);
 }
 
 TEST_F(StringTest, testToStdString)
@@ -1786,15 +1790,15 @@ TEST_F(StringTest, testToUInt)
 
 	// Invalid usage tests
 	str = 400.980;
-	EXPECT_THROW(str.toUInt(), std::runtime_error);
+	EXPECT_THROW(str.toUInt(), bump::TypeCastError);
 	str = "test";
-	EXPECT_THROW(str.toUInt(), std::runtime_error);
+	EXPECT_THROW(str.toUInt(), bump::TypeCastError);
 	str = true;
-	EXPECT_THROW(str.toUInt(), std::runtime_error);
+	EXPECT_THROW(str.toUInt(), bump::TypeCastError);
 	str = false;
-	EXPECT_THROW(str.toUInt(), std::runtime_error);
+	EXPECT_THROW(str.toUInt(), bump::TypeCastError);
 	str = "";
-	EXPECT_THROW(str.toUInt(), std::runtime_error);
+	EXPECT_THROW(str.toUInt(), bump::TypeCastError);
 }
 
 TEST_F(StringTest, testToULong)
@@ -1807,15 +1811,15 @@ TEST_F(StringTest, testToULong)
 
 	// Invalid usage tests
 	str = 400.980;
-	EXPECT_THROW(str.toULong(), std::runtime_error);
+	EXPECT_THROW(str.toULong(), bump::TypeCastError);
 	str = "test";
-	EXPECT_THROW(str.toULong(), std::runtime_error);
+	EXPECT_THROW(str.toULong(), bump::TypeCastError);
 	str = true;
-	EXPECT_THROW(str.toULong(), std::runtime_error);
+	EXPECT_THROW(str.toULong(), bump::TypeCastError);
 	str = false;
-	EXPECT_THROW(str.toULong(), std::runtime_error);
+	EXPECT_THROW(str.toULong(), bump::TypeCastError);
 	str = "";
-	EXPECT_THROW(str.toULong(), std::runtime_error);
+	EXPECT_THROW(str.toULong(), bump::TypeCastError);
 }
 
 TEST_F(StringTest, testToULongLong)
@@ -1828,15 +1832,15 @@ TEST_F(StringTest, testToULongLong)
 
 	// Invalid usage tests
 	str = 400.980;
-	EXPECT_THROW(str.toULongLong(), std::runtime_error);
+	EXPECT_THROW(str.toULongLong(), bump::TypeCastError);
 	str = "test";
-	EXPECT_THROW(str.toULongLong(), std::runtime_error);
+	EXPECT_THROW(str.toULongLong(), bump::TypeCastError);
 	str = true;
-	EXPECT_THROW(str.toULongLong(), std::runtime_error);
+	EXPECT_THROW(str.toULongLong(), bump::TypeCastError);
 	str = false;
-	EXPECT_THROW(str.toULongLong(), std::runtime_error);
+	EXPECT_THROW(str.toULongLong(), bump::TypeCastError);
 	str = "";
-	EXPECT_THROW(str.toULongLong(), std::runtime_error);
+	EXPECT_THROW(str.toULongLong(), bump::TypeCastError);
 }
 
 TEST_F(StringTest, testToUpperCase)
@@ -1862,15 +1866,15 @@ TEST_F(StringTest, testToUShort)
 
 	// Invalid usage tests
 	str = 400.980;
-	EXPECT_THROW(str.toUShort(), std::runtime_error);
+	EXPECT_THROW(str.toUShort(), bump::TypeCastError);
 	str = "test";
-	EXPECT_THROW(str.toUShort(), std::runtime_error);
+	EXPECT_THROW(str.toUShort(), bump::TypeCastError);
 	str = true;
-	EXPECT_THROW(str.toUShort(), std::runtime_error);
+	EXPECT_THROW(str.toUShort(), bump::TypeCastError);
 	str = false;
-	EXPECT_THROW(str.toUShort(), std::runtime_error);
+	EXPECT_THROW(str.toUShort(), bump::TypeCastError);
 	str = "";
-	EXPECT_THROW(str.toUShort(), std::runtime_error);
+	EXPECT_THROW(str.toUShort(), bump::TypeCastError);
 }
 
 TEST_F(StringTest, testOperatorLTLTString)
