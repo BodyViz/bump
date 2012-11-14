@@ -471,6 +471,16 @@ public:
 	String& remove(const char* removeString, CaseSensitivity caseSensitivity = CaseSensitive);
 
 	/**
+	 * Generates a new string repeated the specified number of times.
+	 *
+	 * Passing a value of zero will return an empty string.
+	 *
+	 * @param times the number of times the new string will be repeated.
+	 * @return a new string repeated the specified number of times.
+	 */
+	String repeated(unsigned int times) const;
+
+	/**
 	 * Replaces n characters starting at position with the replace string.
 	 *
 	 * Throws an OutOfRangeError when position is outside this string's bounds.

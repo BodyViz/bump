@@ -522,6 +522,20 @@ String& String::prepend(const char* prependString)
 	return *this;
 }
 
+String String::repeated(unsigned int times) const
+{
+	// Create the repeated string instance
+	String repeated_string;
+
+	// Add the data from this string the specified number of times
+	for (unsigned int i = 0; i < times; ++i)
+	{
+		repeated_string += *this;
+	}
+
+	return repeated_string;
+}
+
 String& String::remove(int position, int n)
 {
 	// Make sure the position is valid

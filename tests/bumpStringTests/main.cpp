@@ -1167,6 +1167,25 @@ TEST_F(StringTest, testPrependCString)
 	EXPECT_STREQ("", str1.c_str());
 }
 
+TEST_F(StringTest, testRepeated)
+{
+	// Regular usage
+	bump::String str("xyz");
+	EXPECT_STREQ("", str.repeated(0).c_str());
+	EXPECT_STREQ("xyz", str.repeated(1).c_str());
+	EXPECT_STREQ("xyzxyz", str.repeated(2).c_str());
+	EXPECT_STREQ("xyzxyzxyz", str.repeated(3).c_str());
+	EXPECT_STREQ("xyzxyzxyzxyz", str.repeated(4).c_str());
+
+	// Special characters
+	str = "Ab\t\n";
+	EXPECT_STREQ("", str.repeated(0).c_str());
+	EXPECT_STREQ("Ab\t\n", str.repeated(1).c_str());
+	EXPECT_STREQ("Ab\t\nAb\t\n", str.repeated(2).c_str());
+	EXPECT_STREQ("Ab\t\nAb\t\nAb\t\n", str.repeated(3).c_str());
+	EXPECT_STREQ("Ab\t\nAb\t\nAb\t\nAb\t\n", str.repeated(4).c_str());
+}
+
 TEST_F(StringTest, testRemovePositionWidth)
 {
 	// Remove from the end
