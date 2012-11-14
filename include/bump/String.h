@@ -478,7 +478,7 @@ public:
 	 * @param separator a single character used to separate the string.
 	 * @return a list of strings separated by the separator character
 	 */
-	StringList split(const String& separator);
+	StringList split(const String& separator) const;
 
 	/**
 	 * Checks whether this string starts with the given string.

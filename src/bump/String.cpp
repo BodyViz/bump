@@ -625,7 +625,7 @@ String String::section(int startPosition, int length) const
 	return subString(startPosition, length);
 }
 
-StringList String::split(const String& separator)
+StringList String::split(const String& separator) const
 {
 	// Make sure we only have a single character
 	if (separator.length() != 1)
