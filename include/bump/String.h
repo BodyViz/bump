@@ -717,6 +717,15 @@ public:
 	unsigned short toUShort() const;
 
 	/**
+	 * Generates a string that has all whitespace removed from the start and end.
+	 *
+	 * Whitespace characters are ' ', '\t', '\n', '\v', '\f' and '\r'.
+	 *
+	 * @return a new string that has all whitespace removed from the start and end.
+	 */
+	String trimmed() const;
+
+	/**
 	 * Appends the string onto the end of this string.
 	 *
 	 * @param appendString the string to append onto this string.

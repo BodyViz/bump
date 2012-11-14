@@ -12,6 +12,7 @@
 #include <sstream>
 
 // Boost headers
+#include <boost/algorithm/string/trim.hpp>
 #include <boost/lexical_cast.hpp>
 
 // Bump headers
@@ -942,6 +943,11 @@ unsigned short String::toUShort() const
 	{
 		throw TypeCastError("bump::String::toUShort() cannot convert string to unsigned short");
 	}
+}
+
+String String::trimmed() const
+{
+	return boost::algorithm::trim_copy_if(static_cast<std::string>(*this), boost::algorithm::is_any_of(" \t\n\v\f\r"));
 }
 
 String& String::operator << (const String& appendString)

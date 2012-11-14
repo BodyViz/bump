@@ -1919,6 +1919,19 @@ TEST_F(StringTest, testToUShort)
 	EXPECT_THROW(str.toUShort(), bump::TypeCastError);
 }
 
+TEST_F(StringTest, testTrimmed)
+{
+	// Regular cases
+	bump::String str("     1x x x x1     ");
+	EXPECT_STREQ("1x x x x1", str.trimmed().c_str());
+	str = " \t\n\v\f\r1x x x x1\t\n\v\f\r ";
+	EXPECT_STREQ("1x x x x1", str.trimmed().c_str());
+
+	// Empty cases
+	str = "";
+	EXPECT_STREQ("", str.trimmed().c_str());
+}
+
 TEST_F(StringTest, testOperatorLTLTString)
 {
 	// Normal append
