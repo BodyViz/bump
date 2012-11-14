@@ -206,6 +206,16 @@ public:
 	String& capitalize();
 
 	/**
+	 * Chops the specified number of characters off from the end of this string.
+	 *
+	 * If n is greater than the string's length, the result is an empty string.
+	 *
+	 * @param n the number of characters to chop off the end of this string.
+	 * @return the modified version of this string.
+	 */
+	String& chop(unsigned int n);
+
+	/**
 	 * Clears the contents of the string making it empty.
 	 */
 	void clear();

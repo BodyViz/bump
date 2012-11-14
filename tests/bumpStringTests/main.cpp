@@ -511,6 +511,20 @@ TEST_F(StringTest, testCapitalize)
 	EXPECT_STREQ("\t\n\t", str.c_str());
 }
 
+TEST_F(StringTest, testChop)
+{
+	// Test regular usage cases
+	bump::String str("example string");
+	str.chop(1);
+	EXPECT_STREQ("example strin", str.c_str());
+	str.chop(0);
+	EXPECT_STREQ("example strin", str.c_str());
+	str.chop(6);
+	EXPECT_STREQ("example", str.c_str());
+	str.chop(400);
+	EXPECT_STREQ("", str.c_str());
+}
+
 TEST_F(StringTest, testClear)
 {
 	// Test a regular string

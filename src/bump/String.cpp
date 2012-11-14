@@ -185,6 +185,21 @@ String& String::capitalize()
 	return *this;
 }
 
+String& String::chop(unsigned int n)
+{
+	// If n is greater than or equal to length(), clear the string
+	if (n >= length())
+	{
+		clear();
+	}
+	else
+	{
+		*this = subString(0, length() - n);
+	}
+
+	return *this;
+}
+
 void String::clear()
 {
 	std::string::clear();
