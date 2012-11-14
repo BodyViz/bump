@@ -8,6 +8,8 @@
 
 // C++ headers
 #include <iomanip>
+#include <sstream>
+#include <stdexcept>
 
 // Boost headers
 #include <boost/lexical_cast.hpp>
@@ -76,6 +78,16 @@ String::String(long number)
 	*this = boost::lexical_cast<std::string>(number);
 }
 
+String::String(unsigned long long number)
+{
+	*this = boost::lexical_cast<std::string>(number);
+}
+
+String::String(long long number)
+{
+	*this = boost::lexical_cast<std::string>(number);
+}
+
 String::String(float number, unsigned int precision)
 {
 	std::ostringstream result;
@@ -97,42 +109,46 @@ String::String(bool boolValue)
 	*this = boolValue == true ? String("true") : String("false");
 }
 
-void String::append(const String& appendString)
+String& String::append(const String& appendString)
 {
 	*this += appendString;
+	return *this;
 }
 
-void String::append(const char* appendString)
+String& String::append(const char* appendString)
 {
 	*this += appendString;
+	return *this;
 }
 
-char& String::at(int position)
+const char String::at(int position) const
 {
-	return this->std::string::at(position);
+	return std::string::at(position);
 }
 
 const char* String::c_str() const
 {
-	return this->std::string::c_str();
+	return std::string::c_str();
 }
 
-void String::capitalize()
+String& String::capitalize()
 {
 	if (!isEmpty())
 	{
-		at(0) = toupper(at(0));
+		(*this)[0] = toupper(at(0));
 	}
+
+	return *this;
 }
 
 void String::clear()
 {
-	this->std::string::clear();
+	std::string::clear();
 }
 
 bool String::compare(const String& otherString) const
 {
-	if (this->std::string::compare(otherString) == 0)
+	if (std::string::compare(otherString) == 0)
 	{
 		return true;
 	}
@@ -142,7 +158,7 @@ bool String::compare(const String& otherString) const
 
 bool String::compare(const char* otherString) const
 {
-	if (this->std::string::compare(otherString) == 0)
+	if (std::string::compare(otherString) == 0)
 	{
 		return true;
 	}
@@ -150,84 +166,87 @@ bool String::compare(const char* otherString) const
 	return false;
 }
 
-bool String::contains(const String& containString, String::CaseSensitivity caseSensitivity) const
+bool String::contains(const String& containString, CaseSensitivity caseSensitivity) const
 {
-	size_t found;
-	String sub = *this;
-	String containStringCopy = containString;
+	// Make some copies to handle case sensitivity
+	String this_copy = *this;
+	String contain_string_copy = containString;
 
-	if (caseSensitivity == String::NotCaseSensitive)
+	// Adjust if not case sensitive
+	if (caseSensitivity == NotCaseSensitive)
 	{
-		sub.toLowerCase();
-		containStringCopy.toLowerCase();
+		this_copy.toLowerCase();
+		contain_string_copy.toLowerCase();
 	}
 
-	found = sub.find(containStringCopy);
+	// Try to find the contain string in this string
+	size_t found = this_copy.find(contain_string_copy);
 	if (found != std::string::npos)
 	{
 		return true;
 	}
-	else
+
+	return false;
+}
+
+bool String::contains(const char* containString, CaseSensitivity caseSensitivity) const
+{
+	return contains(String(containString), caseSensitivity);
+}
+
+int String::count(const String& containString, CaseSensitivity caseSensitivity) const
+{
+	// Make some copies to handle case sensitivity
+	String this_copy = *this;
+	String contain_string_copy = containString;
+
+	// Adjust if not case sensitive
+	if (caseSensitivity == NotCaseSensitive)
 	{
-		return false;
+		this_copy.toLowerCase();
+		contain_string_copy.toLowerCase();
 	}
-}
 
-bool String::contains(const char* containString, String::CaseSensitivity caseSensitivity) const
-{
-	return this->contains(String(containString), caseSensitivity);
-}
-
-int String::count(const String& containString, String::CaseSensitivity caseSensitivity) const
-{
+	// Count all the occurrences of the contain string
 	size_t found;
 	std::string temp_str;
 	int contains_count = 0;
-	String sub = *this;
-	String containStringCopy = containString;
-
-	if (caseSensitivity == String::NotCaseSensitive)
+	for (int i = 0; i < this_copy.length(); ++i)
 	{
-		sub.toLowerCase();
-		containStringCopy.toLowerCase();
-	}
-
-	for (int i = 0; i < sub.length(); i++)
-	{
-		temp_str = sub.substr(i, containStringCopy.length());
-		found = temp_str.find(containString);
+		temp_str = this_copy.subString(i, contain_string_copy.length());
+		found = temp_str.find(contain_string_copy);
 		if (found != std::string::npos)
 		{
-			contains_count++;
+			++contains_count;
 		}
 	}
 
 	return contains_count;
 }
 
-int String::count(const char* containString, String::CaseSensitivity caseSensitivity) const
+int String::count(const char* containString, CaseSensitivity caseSensitivity) const
 {
 	return this->count(String(containString), caseSensitivity);
 }
 
-bool String::empty() const
+bool String::endsWith(const String& endString, CaseSensitivity caseSensitivity) const
 {
-	return this->std::string::empty();
-}
+	// Make some copies to handle case sensitivity
+	String this_copy = *this;
+	String end_string_copy = endString;
 
-bool String::endsWith(const String& endString, String::CaseSensitivity caseSensitivity) const
-{
-	String sub = *this;
-	String endStringCopy = endString;
-	if (caseSensitivity == String::NotCaseSensitive)
+	// Adjust if not case sensitive
+	if (caseSensitivity == NotCaseSensitive)
 	{
-		sub.toLowerCase();
-		endStringCopy.toLowerCase();
+		this_copy.toLowerCase();
+		end_string_copy.toLowerCase();
 	}
 
-	int index = sub.length() - endStringCopy.length();
-	String last_part(sub.substr(index, sub.length()));
+	// Find the end section of the current string
+	int index = this_copy.length() - end_string_copy.length();
+	String last_part(this_copy.subString(index, this_copy.length()));
 
+	// Test whether they're equal
 	if (last_part == endString)
 	{
 		return true;
@@ -236,45 +255,12 @@ bool String::endsWith(const String& endString, String::CaseSensitivity caseSensi
 	return false;
 }
 
-bool String::endsWith(const char* endString, String::CaseSensitivity caseSensitivity) const
+bool String::endsWith(const char* endString, CaseSensitivity caseSensitivity) const
 {
-	return this->endsWith(String(endString), caseSensitivity);
+	return endsWith(String(endString), caseSensitivity);
 }
 
-void String::erase(int position, int width)
-{
-	// Make sure the position is valid
-	if (position < 0)
-	{
-		throw std::range_error("bump::String::erase cannot handle a negative position");
-	}
-
-	// Make sure the width is valid
-	if (width < 0)
-	{
-		throw std::range_error("bump::String::erase cannot handle a negative width");
-	}
-
-	this->std::string::erase(position, width);
-}
-
-void String::erase(iterator position)
-{
-	this->std::string::erase(position);
-}
-
-void String::erase(iterator first, iterator last)
-{
-	// Throw an exception if the iterators are reversed
-	if (last < first)
-	{
-		throw std::range_error("bump::String::erase was passed reversed iterators meaning the last comes before the first");
-	}
-
-	this->std::string::erase(first, last);
-}
-
-void String::fill(const String& character, int size)
+String& String::fill(const String& character, int size)
 {
 	// Make sure they character passed in is a single character
 	if (character.length() != 1)
@@ -299,11 +285,13 @@ void String::fill(const String& character, int size)
 	char fill_character = character_copy.at(0);
 	for (int i = 0; i < this->size(); ++i)
 	{
-		at(i) = fill_character;
+		(*this)[i] = fill_character;
 	}
+
+	return *this;
 }
 
-int String::indexOf(const String& indexString, int from, CaseSensitivity caseSensitivity) const
+int String::indexOf(const String& indexString, int startPosition, CaseSensitivity caseSensitivity) const
 {
 	// Make sure the index string passed in is not empty
 	if (indexString.empty())
@@ -311,26 +299,25 @@ int String::indexOf(const String& indexString, int from, CaseSensitivity caseSen
 		throw std::invalid_argument("bump::String::indexOf passed empty index string");
 	}
 
-	// Make sure from is inside our bounds
-	if (from > this->size() - 1 || from < 0)
+	// Make sure startPosition is inside our bounds
+	if (startPosition > length() - 1 || startPosition < 0)
 	{
 		return -1;
 	}
 
 	// Create some copies for manipulation
-	size_t found;
-	String sub = *this;
+	String this_copy = *this;
 	String index_string_copy = indexString;
 
 	// Adjust for case sensitivity
-	if (caseSensitivity == String::NotCaseSensitive)
+	if (caseSensitivity == NotCaseSensitive)
 	{
-		sub.toLowerCase();
+		this_copy.toLowerCase();
 		index_string_copy.toLowerCase();
 	}
 
 	// Try to find the index string
-	found = sub.find(index_string_copy, from);
+	size_t found = this_copy.find(index_string_copy, startPosition);
 	if (found != std::string::npos)
 	{
 		return int(found);
@@ -339,60 +326,91 @@ int String::indexOf(const String& indexString, int from, CaseSensitivity caseSen
 	return -1;
 }
 
-int String::indexOf(const char* indexString, int from, CaseSensitivity caseSensitivity) const
+int String::indexOf(const char* indexString, int startPosition, CaseSensitivity caseSensitivity) const
 {
-	return indexOf(String(indexString), from, caseSensitivity);
+	return indexOf(String(indexString), startPosition, caseSensitivity);
 }
 
-void String::insert(int position, const String& insertString)
+String& String::insert(const String& insertString, int position)
 {
-	if (position > this->size())
+	// Make sure the index string passed in is not empty
+	if (insertString.empty())
 	{
-		assert(false);
+		throw std::invalid_argument("bump::String::insert passed empty insert string");
 	}
 
-	String first = this->substr(0, position);
-	String end = this->substr(position, this->length());
+	// Make sure position is inside our bounds
+	if (position > length() || position < 0)
+	{
+		throw std::range_error("bump::String::insert position outside string bounds");
+	}
 
-	*this = first + insertString + end;
+	// Split the string in two
+	String start;
+	String end;
+	if (position > 0)
+		start = subString(0, position);
+	if (length() > position)
+		end = subString(position, this->length());
+
+	// Combine them
+	*this = start + insertString + end;
+
+	return *this;
 }
 
-void String::insert(int position, const char* insertString)
+String& String::insert(const char* insertString, int position)
 {
-	insert(position, String(insertString));
+	return insert(String(insertString), position);
 }
 
-bool String::isEmpty()
+bool String::isEmpty() const
 {
-	return this->empty();
+	return std::string::empty();
 }
 
-bool String::isNumber()
+bool String::isNumber() const
 {
-	String temp = *this;
+	String this_copy = *this;
 	double num;
-	std::istringstream iss(temp);
+	std::istringstream iss(this_copy);
 	iss >> num;
-	return (iss.fail() || (int)iss.tellg() != (int)temp.length()) ? false : true;
+	return (iss.fail() || (int)iss.tellg() != (int)this_copy.length()) ? false : true;
 }
 
-int String::lastIndexOf(String index_string, int from, String::CaseSensitivity cs)
+int String::lastIndexOf(String indexString, int startPosition, CaseSensitivity caseSensitivity) const
 {
-	if (from > this->size() - 1)
+	// Make sure the index string passed in is not empty
+	if (indexString.empty())
 	{
-		assert(false);
+		throw std::invalid_argument("bump::String::lastIndexOf passed empty index string");
 	}
 
-	size_t found;
-	String sub = this->substr(from, this->length());
-
-	if (cs == String::NotCaseSensitive)
+	// Make sure startPosition is inside our bounds
+	if (startPosition > (int)length() - 1 || startPosition < -1)
 	{
-		sub.toLowerCase();
-		index_string.toLowerCase();
+		return -1;
 	}
 
-	found = sub.rfind(index_string);
+	// Adjust a -1 startPosition to the end of this string
+	if (startPosition == -1)
+	{
+		startPosition = length() - 1;
+	}
+
+	// Create some copies for manipulation
+	String this_copy = *this;
+	String index_string_copy = indexString;
+
+	// Adjust for case sensitivity
+	if (caseSensitivity == NotCaseSensitive)
+	{
+		this_copy.toLowerCase();
+		index_string_copy.toLowerCase();
+	}
+
+	// Try to find the index string
+	size_t found = this_copy.rfind(index_string_copy, startPosition);
 	if (found != std::string::npos)
 	{
 		return int(found);
@@ -401,202 +419,226 @@ int String::lastIndexOf(String index_string, int from, String::CaseSensitivity c
 	return -1;
 }
 
-int String::lastIndexOf(const char* index_char, int from, String::CaseSensitivity cs)
+int String::lastIndexOf(const char* indexString, int startPosition, CaseSensitivity caseSensitivity) const
 {
-	return this->lastIndexOf(String(index_char), from, cs);
+	return lastIndexOf(String(indexString), startPosition, caseSensitivity);
 }
 
-String String::left(int num)
+String String::left(int n) const
 {
-	if (num > this->size() - 1)
+	// Make sure number is inside our bounds
+	if (n > length() || n < 1)
 	{
-		assert(false);
+		throw std::range_error("bump::String::left n is outside string bounds");
 	}
 
-	return this->substr(0, num);
+	return subString(0, n);
 }
 
-int String::length() const
+unsigned int String::length() const
 {
-	return this->std::string::length();
+	return std::string::length();
 }
 
-void String::padWithZeroes(unsigned int length)
+String& String::prepend(const String& prependString)
 {
-	while (length > (unsigned int)this->length())
-		this->prepend("0");
+	std::string::insert(0, prependString);
+	return *this;
 }
 
-void String::prepend(const String& prepend_string)
+String& String::prepend(const char* prependString)
 {
-	this->std::string::insert(0, prepend_string);
+	std::string::insert(0, prependString);
+	return *this;
 }
 
-void String::prepend(const char* prepend_char)
+String& String::remove(int position, int n)
 {
-	this->std::string::insert(0, prepend_char);
+	// Make sure the position is valid
+	if (position < 0)
+	{
+		throw std::range_error("bump::String::remove cannot handle a negative position");
+	}
+
+	// Make sure the width is valid
+	if (n < 0)
+	{
+		throw std::range_error("bump::String::remove cannot handle a negative width");
+	}
+
+	std::string::erase(position, n);
+	return *this;
 }
 
-void String::print()
+String& String::remove(const String& removeString, CaseSensitivity caseSensitivity)
 {
-	std::cout << *this << std::endl;
-}
+	// Make sure the remove string passed in is not empty
+	if (removeString.empty())
+	{
+		throw std::invalid_argument("bump::String::remove passed empty remove string");
+	}
 
-void String::remove(int position, int width)
-{
-	erase(position, width);
-}
+	// Create some copies for manipulation
+	String this_copy = *this;
+	String remove_string_copy = removeString;
 
-void String::remove(String remove_string, String::CaseSensitivity cs)
-{
+	// Adjust for case sensitivity
+	if (caseSensitivity == NotCaseSensitive)
+	{
+		this_copy.toLowerCase();
+		remove_string_copy.toLowerCase();
+	}
+
+	// Remove all occurrences of the remove string
 	size_t found = 0;
-	String sub = *this;
-
-	if (cs == String::NotCaseSensitive)
-	{
-		sub.toLowerCase();
-		remove_string.toLowerCase();
-	}
-
 	while (found != std::string::npos)
 	{
-		found = sub.rfind(remove_string);
+		found = this_copy.rfind(remove_string_copy);
 		if (found != std::string::npos)
 		{
-			this->erase(int(found), remove_string.length());
-			sub.erase(int(found), remove_string.length());
+			remove(int(found), remove_string_copy.length());
+			this_copy.remove(int(found), remove_string_copy.length());
 		}
 	}
+
+	return *this;
 }
 
-void String::remove(const char* remove_char, String::CaseSensitivity cs)
+String& String::remove(const char* removeString, CaseSensitivity caseSensitivity)
 {
-	remove(String(remove_char), cs);
+	return remove(String(removeString), caseSensitivity);
 }
 
-void String::replace(int position, int width, const String& replace_string)
+String& String::replace(int position, int n, const String& replaceString)
 {
-	erase(position, width);
-	insert(position, replace_string);
+	remove(position, n);
+	insert(replaceString, position);
+	return *this;
 }
 
-void String::replace(int position, int width, const char* replace_char)
+String& String::replace(int position, int n, const char* replaceString)
 {
-	replace(position, width, String(replace_char));
+	return replace(position, n, String(replaceString));
 }
 
-void String::replace(String before_string, String after_string, String::CaseSensitivity cs)
+String& String::replace(const String& before, const String& after, CaseSensitivity caseSensitivity)
 {
+	// Make sure the before string is not empty
+	if (before.isEmpty())
+	{
+		throw std::invalid_argument("bump::String::replace passed an empty before string");
+	}
+
+	// Ignore if the before and after strings are the same
+	if (before == after)
+	{
+		return *this;
+	}
+
+	// Create some copies for manipulation
+	String this_copy = *this;
+	String before_copy = before;
+
+	// Adjust for case sensitivity
+	if (caseSensitivity == NotCaseSensitive)
+	{
+		this_copy.toLowerCase();
+		before_copy.toLowerCase();
+	}
+
+	// Replace all occurrences of before with after
 	size_t found = 0;
-	String sub = *this;
-
-	if (before_string == after_string)
-	{
-		return;
-	}
-
-	if (cs == String::NotCaseSensitive)
-	{
-		sub.toLowerCase();
-		before_string.toLowerCase();
-	}
-
 	while (found != std::string::npos)
 	{
-		found = sub.find(before_string, found);
+		found = this_copy.find(before, found);
 		if (found != std::string::npos)
 		{
-			erase(int(found), before_string.length());
-			sub.erase(int(found), before_string.length());
-			insert(found, after_string);
-			sub.insert(found, after_string);
-			found += after_string.length();
+			remove(int(found), before.length());
+			this_copy.remove(int(found), before.length());
+			if (!after.isEmpty())
+			{
+				insert(after, found);
+				this_copy.insert(after, found);
+				found += after.length();
+			}
 		}
 	}
+
+	return *this;
 }
 
-void String::replace(const char* before_char, const char* after_char, String::CaseSensitivity cs)
+String& String::replace(const char* before, const char* after, CaseSensitivity caseSensitivity)
 {
-	replace(String(before_char), String(after_char), cs);
+	return replace(String(before), String(after), caseSensitivity);
 }
 
-void String::resize(int n)
+String String::right(int n) const
 {
-	this->std::string::resize(n);
-}
-
-void String::resize(int n, const char* c)
-{
-	this->std::string::resize(n, *c);
-}
-
-int String::rfind(const String& str)
-{
-	return int(this->std::string::rfind(str));
-}
-
-int String::rfind(const char* char_star)
-{
-	return int(this->std::string::rfind(char_star));
-}
-
-String String::right(int num)
-{
-	if (num > this->size() - 1)
+	// Make sure number is inside our bounds
+	if (n > length() || n < 1)
 	{
-		assert(false);
+		throw std::range_error("bump::String::left n is outside string bounds");
 	}
 
-	return this->substr(this->length() - num, this->length());
+	return subString(length() - n, length());
 }
 
-String String::section(int start, int length)
+String String::section(int startPosition, int length) const
 {
 	if (length == -1)
 	{
 		length = this->length();
 	}
 
-	return subString(start, length);
+	return subString(startPosition, length);
 }
 
-int String::size() const
+StringList String::split(const String& separator)
 {
-	return this->std::string::size();
-}
-
-std::vector<String> String::split(const char* sep)
-{
-	size_t found = 0;
-	String search_str = *this;
-	std::vector<String> split_strings;
-
-	while (found != std::string::npos)
+	// Make sure we only have a single character
+	if (separator.length() != 1)
 	{
-		found = search_str.find(sep);
-		if (found != std::string::npos)
+		throw std::invalid_argument("bump::String::split separator can only be a single character");
+	}
+
+	// Make mutable copy of this string
+	String this_copy = *this;
+
+	// Split up the copy into a separated string list
+	std::vector<String> split_strings;
+	int index = 0;
+	while (index != -1)
+	{
+		index = this_copy.indexOf(separator);
+		if (index != -1)
 		{
-			split_strings.push_back(search_str.substr(0, found));
-			search_str.erase(0, int(found) + 1);
+			split_strings.push_back(this_copy.substr(0, index));
+			this_copy.remove(0, index + 1);
 		}
 	}
-	split_strings.push_back(search_str);
+	split_strings.push_back(this_copy);
 
 	return split_strings;
 }
 
-bool String::startsWith(String start_string, String::CaseSensitivity cs)
+bool String::startsWith(const String& startString, CaseSensitivity caseSensitivity) const
 {
-	String sub = *this;
-	if (cs == String::NotCaseSensitive)
+	// Create some copies for manipulation
+	String this_copy = *this;
+	String start_string_copy = startString;
+	
+	// Adjust for case sensitivity
+	if (caseSensitivity == NotCaseSensitive)
 	{
-		sub.toLowerCase();
-		start_string.toLowerCase();
+		this_copy.toLowerCase();
+		start_string_copy.toLowerCase();
 	}
 
-	String first_part(sub.substr(0, start_string.length()));
+	// Find the first substring with the same length as the start string
+	String first_part(this_copy.subString(0, start_string_copy.length()));
 
-	if (first_part == start_string)
+	// Test whether they're equal
+	if (first_part == start_string_copy)
 	{
 		return true;
 	}
@@ -604,76 +646,185 @@ bool String::startsWith(String start_string, String::CaseSensitivity cs)
 	return false;
 }
 
-bool String::startsWith(String start_string, String::CaseSensitivity cs) const
+bool String::startsWith(const char* startString, CaseSensitivity caseSensitivity) const
 {
-	return String(*this).startsWith(start_string, cs);
+	return startsWith(String(startString), caseSensitivity);
 }
 
-bool String::startsWith(const char* start_char, String::CaseSensitivity cs)
+String String::subString(int startPosition, int length) const
 {
-	return this->startsWith(String(start_char), cs);
-}
-
-bool String::startsWith(const char* start_char, String::CaseSensitivity cs) const
-{
-	return String(*this).startsWith(start_char, cs);
-}
-
-String String::substr(int start, int length)
-{
-	return String(this->std::string::substr(start, length));
-}
-
-String String::subString(int start, int length)
-{
-	return substr(start, length);
-}
-
-bool String::toBool()
-{
-	String temp = *this;
-	temp.toLowerCase();
-	if (temp == "true")
+	// Make sure startPosition is inside our bounds
+	if (startPosition < 0 || startPosition > (int)this->length())
 	{
-		return true;
+		throw std::range_error("bump::String::subString start position is outside string bounds");
 	}
 
-	return false;
-}
-
-double String::toDouble()
-{
-	return strtod(this->c_str(), NULL);
-}
-
-float String::toFloat()
-{
-	return (float)atof(this->c_str());
-}
-
-int String::toInt()
-{
-	return atoi(this->c_str());
-}
-
-void String::toLowerCase()
-{
-	for (int i = 0; i < this->length(); i++)
+	// Make sure length is at least 1
+	if (length < 1)
 	{
-		at(i) = tolower(at(i));
+		throw std::invalid_argument("bump::String::subString length must be at least one");
+	}
+
+	return substr(startPosition, length);
+}
+
+bool String::toBool() const
+{
+	// Make a copy and cast make it lowercase
+	String this_copy = *this;
+	this_copy.toLowerCase();
+
+	// Make sure we have a valid bool or throw an exception
+	if (this_copy != "true" && this_copy != "false")
+	{
+		throw std::runtime_error("bump::String::toBool cannot convert string to bool");
+	}
+
+	return this_copy == "true" ? true : false;
+}
+
+double String::toDouble() const
+{
+	try
+	{
+		return boost::lexical_cast<double>((*this).data());
+	}
+	catch (boost::bad_lexical_cast)
+	{
+		throw std::runtime_error("bump::String::toDouble cannot convert string to double");
 	}
 }
 
-std::string String::toStdString()
+float String::toFloat() const
 {
-	return (std::string)*this;
+	try
+	{
+		return boost::lexical_cast<float>((*this).data());
+	}
+	catch (boost::bad_lexical_cast)
+	{
+		throw std::runtime_error("bump::String::toFloat cannot convert string to float");
+	}
 }
 
-void String::toUpperCase()
+int String::toInt() const
 {
-	for (int i = 0; i < this->length(); i++)
+	try
 	{
-		at(i) = toupper(at(i));
+		return boost::lexical_cast<int>((*this).data());
+	}
+	catch (boost::bad_lexical_cast)
+	{
+		throw std::runtime_error("bump::String::toInt cannot convert string to int");
+	}
+}
+
+long String::toLong() const
+{
+	try
+	{
+		return boost::lexical_cast<long>((*this).data());
+	}
+	catch (boost::bad_lexical_cast)
+	{
+		throw std::runtime_error("bump::String::toLong cannot convert string to long");
+	}
+}
+
+long long String::toLongLong() const
+{
+	try
+	{
+		return boost::lexical_cast<long long>((*this).data());
+	}
+	catch (boost::bad_lexical_cast)
+	{
+		throw std::runtime_error("bump::String::toLongLong cannot convert string to long long");
+	}
+}
+
+String& String::toLowerCase()
+{
+	for (int i = 0; i < length(); ++i)
+	{
+		(*this)[i] = tolower(at(i));
+	}
+
+	return *this;
+}
+
+int String::toShort() const
+{
+	try
+	{
+		return boost::lexical_cast<short>((*this).data());
+	}
+	catch (boost::bad_lexical_cast)
+	{
+		throw std::runtime_error("bump::String::toShort cannot convert string to short");
+	}
+}
+
+std::string String::toStdString() const
+{
+	return *this;
+}
+
+unsigned int String::toUInt() const
+{
+	try
+	{
+		return boost::lexical_cast<unsigned int>((*this).data());
+	}
+	catch (boost::bad_lexical_cast)
+	{
+		throw std::runtime_error("bump::String::toUInt cannot convert string to unsigned int");
+	}
+}
+
+unsigned long String::toULong() const
+{
+	try
+	{
+		return boost::lexical_cast<unsigned long>((*this).data());
+	}
+	catch (boost::bad_lexical_cast)
+	{
+		throw std::runtime_error("bump::String::toULong cannot convert string to unsigned long");
+	}
+}
+
+unsigned long long String::toULongLong() const
+{
+	try
+	{
+		return boost::lexical_cast<unsigned long long>((*this).data());
+	}
+	catch (boost::bad_lexical_cast)
+	{
+		throw std::runtime_error("bump::String::toULongLong cannot convert string to unsigned long long");
+	}
+}
+
+String& String::toUpperCase()
+{
+	for (int i = 0; i < length(); ++i)
+	{
+		(*this)[i] = toupper(at(i));
+	}
+
+	return *this;
+}
+
+unsigned short String::toUShort() const
+{
+	try
+	{
+		return boost::lexical_cast<unsigned short>((*this).data());
+	}
+	catch (boost::bad_lexical_cast)
+	{
+		throw std::runtime_error("bump::String::toUShort cannot convert string to unsigned short");
 	}
 }
 

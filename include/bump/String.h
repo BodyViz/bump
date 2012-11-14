@@ -10,15 +10,8 @@
 #define BUMP_STRING_H
 
 // C++ headers
-#include <assert.h>
-#include <cstdio>
-#include <cstdlib>
 #include <iostream>
-#include <sstream>
 #include <vector>
-
-// Boost headers
-#include <boost/lexical_cast.hpp>
 
 namespace bump {
 
@@ -59,563 +52,558 @@ public:
 	/**
 	 * Constructor that takes a const char*.
 	 *
-	 * @param cString - the c string to convert to a bump::String.
+	 * @param cString the c string to convert to a bump::String.
 	 */
 	String(const char* cString);
 
 	/**
 	 * Constructor that takes a std::string.
 	 *
-	 * @param stdString - the std::string to convert to a bump::String.
+	 * @param stdString the std::string to convert to a bump::String.
 	 */
 	String(const std::string& stdString);
 
 	/**
 	 * Constructor that takes an unsigned char.
 	 *
-	 * @param number - the number to convert to a bump::String.
+	 * @param number the number to convert to a bump::String.
 	 */
 	String(unsigned char number);
 
 	/**
 	 * Constructor that takes a char.
 	 *
-	 * @param number - the number to convert to a bump::String.
+	 * @param number the number to convert to a bump::String.
 	 */
 	String(char number);
 
 	/**
 	 * Constructor that takes an unsigned short.
 	 *
-	 * @param number - the number to convert to a bump::String.
+	 * @param number the number to convert to a bump::String.
 	 */
 	String(unsigned short number);
 
 	/**
 	 * Constructor that takes a short.
 	 *
-	 * @param number - the number to convert to a bump::String.
+	 * @param number the number to convert to a bump::String.
 	 */
 	String(short number);
 
 	/**
 	 * Constructor that takes an unsigned int.
 	 *
-	 * @param number - the number to convert to a bump::String.
+	 * @param number the number to convert to a bump::String.
 	 */
 	String(unsigned int number);
 
 	/**
 	 * Constructor that takes an int.
 	 *
-	 * @param number - the number to convert to a bump::String.
+	 * @param number the number to convert to a bump::String.
 	 */
 	String(int number);
 
 	/**
 	 * Constructor that takes an unsigned long.
 	 *
-	 * @param number - the number to convert to a bump::String.
+	 * @param number the number to convert to a bump::String.
 	 */
 	String(unsigned long number);
 
 	/**
 	 * Constructor that takes a long.
 	 *
-	 * @param number - the number to convert to a bump::String.
+	 * @param number the number to convert to a bump::String.
 	 */
 	String(long number);
 
 	/**
+	 * Constructor that takes an unsigned long long.
+	 *
+	 * @param number the number to convert to a bump::String.
+	 */
+	String(unsigned long long number);
+
+	/**
+	 * Constructor that takes a long long.
+	 *
+	 * @param number the number to convert to a bump::String.
+	 */
+	String(long long number);
+
+	/**
 	 * Constructor that takes a float.
 	 *
-	 * @param number - the number to convert to a bump::String.
-	 * @param precision - the number of decimal places to represent the number's precision.
+	 * @param number the number to convert to a bump::String.
+	 * @param precision the number of decimal places to represent the number's precision.
 	 */
 	String(float number, unsigned int precision = 3);
 
 	/**
 	 * Constructor that takes a double.
 	 *
-	 * @param number - the number to convert to a bump::String.
-	 * @param precision - the number of decimal places to represent the number's precision.
+	 * @param number the number to convert to a bump::String.
+	 * @param precision the number of decimal places to represent the number's precision.
 	 */
 	String(double number, unsigned int precision = 3);
 
 	/**
 	 * Constructor that takes a bool.
 	 *
-	 * @param boolValue - a boolean to convert to a bump::String.
+	 * @param boolValue a boolean to convert to a bump::String.
 	 */
 	String(bool boolValue);
 
 	/**
-	 * Appends the string append_string onto the end of this string.
+	 * Appends the given string onto the end of this string.
 	 *
-	 * @param appendString - the string to add.
+	 * @param appendString the string to add.
+	 * @return a reference to the modified string.
 	 */
-	void append(const String& appendString);
+	String& append(const String& appendString);
 
 	/**
-	 * Appends the const char* append_char onto the end of this string.
+	 * Appends the given string onto the end of this string.
 	 *
-	 * @param appendString - the c string to add.
+	 * @param appendString the c string to add.
+	 * @return a reference to the modified string.
 	 */
-	void append(const char* appendString);
+	String& append(const char* appendString);
 
 	/**
-	 * Returns the character at the given index position in this string.
+	 * Locates and returns the character at the position in this string.
 	 *
-	 * @param position - the position of the character to return of this string.
+	 * @param position the position of the character to return of this string.
+	 * @return the character at the given position.
 	 */
-	char& at(int position);
+	const char at(int position) const;
 
 	/**
-	 * Returns a c string.
+	 * Converts the string to a c string.
+	 *
+	 * @return the c string representation of the string.
 	 */
 	const char* c_str() const;
 
 	/**
 	 * Capitalizes the first letter of this string.
+	 *
+	 * @return a reference to the modified string.
 	 */
-	void capitalize();
+	String& capitalize();
 
 	/**
-	 * Clears the contents of the string and makes it empty.
+	 * Clears the contents of the string making it empty.
 	 */
 	void clear();
 
 	/**
-	 * Compares the content of this string with the String str.
+	 * Compares the content of the this string with the given string.
 	 *
-	 * Returns whether or not the content within both objects is the same.
-	 *
-	 * @param otherString - the string to compare content against with this string.
+	 * @param otherString the string to compare content against with this string.
+	 * @return whether the content within both objects is the same.
 	 */
 	bool compare(const String& otherString) const;
 
 	/**
-	 * Compares the content of this string with the const char* char_star.
+	 * Compares the content of the this string with the given string.
 	 *
-	 * Returns whether or not the content within both objects is the same.
-	 *
-	 * @param otherString - the const char* to compare content against with this string.
+	 * @param otherString the const char* to compare content against with this string.
+	 * @return whether the content within both objects is the same.
 	 */
 	bool compare(const char* otherString) const;
 
 	/**
-	 * Returns true if this string contains an occurrence of the string str,
-	 * otherwise returns false.
+	 * Finds out whether this string contains an occurrence of the given string.
 	 *
-	 * @param containString - the String to see if is contained within this string.
-	 * @param caseSensitivity - the case sensitivity to be used, defaults to String::CaseSensitive.
+	 * @param containString the String to see if is contained within this string.
+	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
+	 * @return true if the string contains an occurrence of containString, otherwise returns false.
 	 */
-	bool contains(const String& containString, CaseSensitivity caseSensitivity = String::CaseSensitive) const;
+	bool contains(const String& containString, CaseSensitivity caseSensitivity = CaseSensitive) const;
 
 	/**
-	 * Returns true if this string contains an occurrence of the const char* contain_char,
-	 * otherwise returns false.
+	 * Finds out whether this string contains an occurrence of the given string.
 	 *
-	 * @param containString - the const char* to see if is contained within this string.
-	 * @param caseSensitivity - the case sensitivity to be used, defaults to String::CaseSensitive.
+	 * @param containString the const char* to see if is contained within this string.
+	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
+	 * @return true if the string contains an occurrence of containString, otherwise returns false.
 	 */
-	bool contains(const char* containString, CaseSensitivity caseSensitivity = String::CaseSensitive) const;
+	bool contains(const char* containString, CaseSensitivity caseSensitivity = CaseSensitive) const;
 
 	/**
-	 * Returns the number of (potentially overlapping) occurrences of the String
-	 * contain_string in this string.
+	 * Counts the number of (potentially overlapping) occurrences of the given string in this string.
 	 *
-	 * @param containString - the String to see if is contained within this string.
-	 * @param caseSensitivity - the case sensitivity to be used, defaults to String::CaseSensitive.
+	 * @param containString the tring to see if is contained within this string.
+	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
+	 * @return the number of occurrences of the given string in this string.
 	 */
-	int count(const String& containString, String::CaseSensitivity caseSensitivity = String::CaseSensitive) const;
+	int count(const String& containString, CaseSensitivity caseSensitivity = CaseSensitive) const;
 
 	/**
-	 * Returns the number of (potentially overlapping) occurrences of the const char*
-	 * contain_char in this string.
+	 * Counts the number of (potentially overlapping) occurrences of the given string in this string.
 	 *
-	 * @param containString - the const char* to see if is contained within this string.
-	 * @param caseSensitivity - the case sensitivity to be used, defaults to String::CaseSensitive.
+	 * @param containString the const char* to see if is contained within this string.
+	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
+	 * @return the number of occurrences of the given string in this string.
 	 */
-	int count(const char* containString, String::CaseSensitivity caseSensitivity = String::CaseSensitive) const;
+	int count(const char* containString, CaseSensitivity caseSensitivity = CaseSensitive) const;
 
 	/**
-	 * Returns true if the string has no characters; otherwise returns false.
+	 * Checks whether this string ends with the given string.
 	 *
-	 * Same as isEmpty() method.
+	 * @param endString the string to check if this string ends with.
+	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
+	 * @return true if this string ends with endString, otherwise returns false.
 	 */
-	bool empty() const;
+	bool endsWith(const String& endString, CaseSensitivity caseSensitivity = CaseSensitive) const;
 
 	/**
-	 * Returns true if this string ends with end_string; otherwise returns false.
+	 * Checks whether this string ends with the given string.
 	 *
-	 * @param endString - the string to check if this string ends with.
-	 * @param caseSensitivity - the case sensitivity to be used, defaults to String::CaseSensitive.
+	 * @param endString the const char* to check if this string ends with.
+	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
+	 * @return true if this string ends with endString, otherwise returns false.
 	 */
-	bool endsWith(const String& endString, String::CaseSensitivity caseSensitivity = String::CaseSensitive) const;
-
-	/**
-	 * Returns true if this string ends with end_char; otherwise returns false.
-	 *
-	 * @param end_char - the const char* to check if this string ends with.
-	 * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
-	 */
-	bool endsWith(const char* end_char, String::CaseSensitivity caseSensitivity = String::CaseSensitive) const;
-
-	/**
-	 * Erases a part of the string content, shortening the length of this string.
-	 *
-	 * @param position - the index of this string to start erasing at.
-	 * @param width - the number of characters to erase from this string.
-	 */
-	void erase(int position, int width);
-
-	/**
-	 * Erases a part of the string content, shortening the length of this string.
-	 *
-	 * @param position - an iterator at the character index to remove from this string.
-	 */
-	void erase(iterator position);
-
-	/**
-	 * Erases a part of the string content, shortening the length of the string.
-	 *
-	 * @param first - an iterator at the character index to start removing from this string.
-	 * @param last - an iterator at the character index to stop removing from this string.
-	 */
-	void erase(iterator first, iterator last);
+	bool endsWith(const char* endString, CaseSensitivity caseSensitivity = CaseSensitive) const;
 
 	/**
 	 * Sets every character in the string to character. If size is different from -1 (default),
 	 * the string is resized to size beforehand.
 	 *
-	 * @param character - the character to fill this string with.
-	 * @param size - the size to resize this string to be filling.
+	 * @param character the character to fill this string with.
+	 * @param size the size to resize this string to be filling.
+	 * @return a reference to the modified string.
 	 */
-	void fill(const String& character, int size = -1);
+	String& fill(const String& character, int size = -1);
 
 	/**
-	 * Returns the index position of the first occurrence of the String index_string
-	 * in this string, searching forward from index position from. Returns -1 if
-	 * index_string is not found.
+	 * Finds the position of the first occurrence of indexString in this string by searching
+	 * forward from the startPosition.
 	 *
-	 * @param indexString - the String to find the first occurence of in this string.
-	 * @param from - the index of the string to start searching at.
+	 * @param indexString the String to find the first occurence of in this string.
+	 * @param startPosition the index of the string to start searching at.
+	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
+	 * @return the position of the first occurrence of indexString, defaults to -1 if not found.
+	 */
+	int indexOf(const String& indexString, int startPosition = 0, CaseSensitivity caseSensitivity = CaseSensitive) const;
+
+	/**
+	 * Finds the position of the first occurrence of indexString in this string by searching
+	 * forward from the startPosition.
+	 *
+	 * @param indexString the const char* to find the first occurence of in this string.
+	 * @param startPosition the index of the string to start searching at.
+	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
+	 * @return the position of the first occurrence of indexString, defaults to -1 if not found.
+	 */
+	int indexOf(const char* indexString, int startPosition = 0, CaseSensitivity caseSensitivity = CaseSensitive) const;
+
+	/**
+	 * Inserts the insertString at the given position.
+	 *
+	 * @param position the index position of the string to start inserting at.
+	 * @param insertString the String to insert at the given index position in this string.
+	 * @return a reference to the modified string.
+	 */
+	String& insert(const String& insertString, int position);
+
+	/**
+	 * Inserts the insertString at the given position.
+	 *
+	 * @param position the index position of the string to start inserting at.
+	 * @param insertString the const char* to insert at the given index position in this string.
+	 * @return a reference to the modified string.
+	 */
+	String& insert(const char* insertString, int position);
+
+	/**
+	 * Determines whether the string has any characters.
+	 *
+	 * @return true if the string has no characters, otherwise returns false.
+	 */
+	bool isEmpty() const;
+
+	/**
+	 * Determines whether the string is any kind of number (int, float, double, scientific).
+	 *
+	 * @return whether the string is a valid number (int, float, double, scientific).
+	 */
+	bool isNumber() const;
+
+	/**
+	 * Finds the position of the last occurrence of indexString in this string by searching
+	 * backwards from the startPosition. If startPosition is -1 (default), the search starts
+	 * at the last character.
+	 *
+	 * @param indexString the string to find the last occurence of in this string.
+	 * @param startPosition the index of the string to start searching at.
+	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
+	 * @return the position of the last occurrence of indexString, defaults to -1 if not found.
+	 */
+	int lastIndexOf(String indexString, int startPosition = -1, CaseSensitivity caseSensitivity = CaseSensitive) const;
+
+	/**
+	 * Finds the position of the last occurrence of indexString in this string by searching
+	 * backwards from the startPosition. If startPosition is -1 (default), the search starts
+	 * at the last character.
+	 *
+	 * @param indexString the const char* to find the last occurence of in this string.
+	 * @param startPosition the index of the string to start searching at.
+	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
+	 * @return the position of the last occurrence of indexString, defaults to -1 if not found.
+	 */
+	int lastIndexOf(const char* indexString, int startPosition = -1, CaseSensitivity caseSensitivity = CaseSensitive) const;
+
+	/**
+	 * Finds the substring that contains the number of leftmost characters of this string.
+	 *
+	 * @param n the number of characters to return.
+	 * @return the substring of the leftmost number of characters of this string.
+	 */
+	String left(int n) const;
+
+	/**
+	 * Computes the total number of characters in this string.
+	 *
+	 * @return the total number of characters in this string.
+	 */
+	unsigned int length() const;
+
+	/**
+	 * Adds the given string to the beginning of this string.
+	 *
+	 * @param prependString the string to add to the beginning of this string.
+	 * @return the modified version of this string.
+	 */
+	String& prepend(const String& prependString);
+
+	/**
+	 * Adds the given string to the beginning of this string.
+	 *
+	 * @param prependString the const char* to add to the beginning of this string.
+	 * @return the modified version of this string.
+	 */
+	String& prepend(const char* prependString);
+
+	/**
+	 * Removes the given width of characters starting at the given position.
+	 *
+	 * @param position the index position to start removing characters at from this string.
+	 * @param n the number of characters to remove from this string.
+	 * @return the modified version of this string.
+	 */
+	String& remove(int position, int n);
+
+	/**
+	 * Removes every occurrence of the given in this string.
+	 *
+	 * @param removeString the string to remove from this string.
 	 * @param caseSensitivity - the case sensitivity to be used, defaults to String::CaseSensitive.
+	 * @return the modified version of this string.
 	 */
-	int indexOf(const String& indexString, int from = 0, CaseSensitivity caseSensitivity = String::CaseSensitive) const;
+	String& remove(const String& removeString, CaseSensitivity caseSensitivity = CaseSensitive);
 
 	/**
-	 * Returns the index position of the first occurrence of the const char* index_char
-	 * in this string, searching forward from index position from. Returns -1 if
-	 * index_char is not found.
+	 * Removes every occurrence of the given in this string.
 	 *
-	 * @param indexString - the const char* to find the first occurence of in this string.
-	 * @param from - the index of the string to start searching at.
+	 * @param removeString the const char* to remove from this string.
 	 * @param caseSensitivity - the case sensitivity to be used, defaults to String::CaseSensitive.
+	 * @return the modified version of this string.
 	 */
-	int indexOf(const char* indexString, int from = 0, CaseSensitivity caseSensitivity = String::CaseSensitive) const;
+	String& remove(const char* removeString, CaseSensitivity caseSensitivity = CaseSensitive);
 
 	/**
-	 * Inserts the String insertString at the given index position.
+	 * Replaces n characters starting at position with the replace string.
 	 *
-	 * @param position - the index position of the string to start inserting at.
-	 * @param insertString - the String to insert at the given index position in this string.
+	 * @param position the index of this string to start replacing at.
+	 * @param n the number of characters to replace in this string.
+	 * @param replaceString the string to replace the n characters in this string.
+	 * @return the modified version of this string.
 	 */
-	void insert(int position, const String& insertString);
+	String& replace(int position, int n, const String& replaceString);
 
 	/**
-	 * Inserts the const char* insert_char at the given index position.
+	 * Replaces n characters starting at position with the replace string.
 	 *
-	 * @param position - the index position of the string to start inserting at.
-	 * @param insertString - the const char* to insert at the given index position in this string.
+	 * @param position the index of this string to start replacing at.
+	 * @param n the number of characters to replace in this string.
+	 * @param replaceString the const char* to replace the n characters in this string.
+	 * @return the modified version of this string.
 	 */
-	void insert(int position, const char* insertString);
+	String& replace(int position, int n, const char* replaceString);
 
 	/**
-	 * Returns true if the string has no characters; otherwise returns false.
+	 * Replaces every occurrence of the before string with the after string.
 	 *
-	 * Same as empty() method.
+	 * @param before the string to be replaced.
+	 * @param after the string to replace the before string.
+	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
+	 * @return the modified version of this string.
 	 */
-	bool isEmpty();
+	String& replace(const String& before, const String& after, CaseSensitivity caseSensitivity = CaseSensitive);
 
 	/**
-	 * Returns whether the string is a number.
-	 */
-	bool isNumber();
-
-	/**
-	 * Returns the index position of the last occurrence of the String index_string
-	 * in this string, searching backward from index position from. If from is -1 (default),
-	 * the search starts at the last character.
+	 * Replaces every occurrence of the before string with the after string.
 	 *
-	 * @param index_string - the String to find the first occurence of in this string.
-	 * @param from - the index position of the string to start searching at.
-	 * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
+	 * @param before the const char* to be replaced.
+	 * @param after the const char* to replace the before string.
+	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
+	 * @return the modified version of this string.
 	 */
-	int lastIndexOf(String index_string, int from = -1, String::CaseSensitivity cs=String::CaseSensitive);
+	String& replace(const char* before, const char* after, CaseSensitivity caseSensitivity = CaseSensitive);
 
 	/**
-	 * Returns the index position of the last occurrence of the const char* index_char
-	 * in this string, searching backward from index position from. If from is -1 (default),
-	 * the search starts at the last character.
+	 * Finds the substring that contains the number of rightmost characters of this string.
 	 *
-	 * @param index_char - the const char* to find the first occurence of in this string.
-	 * @param from - the index position of the string to start searching at.
-	 * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
+	 * @param n the number of characters to return.
+	 * @return the substring of the rightmost number of characters of this string.
 	 */
-	int lastIndexOf(const char* index_char, int from = -1, String::CaseSensitivity cs=String::CaseSensitive);
+	String right(int n) const;
 
 	/**
-	 * Returns a substring that contains the num leftmost characters of the string.
+	 * Creates a substring of the given length beginning at the start position.
 	 *
-	 * @param num - the number of characters to return.
+	 * @param startPosition the starting position in this string to begin the section.
+	 * @param length the length of the section to extract from the string.
+	 * @return a section of the string beginning at the start position with the given length.
 	 */
-	String left(int num);
+	String section(int startPosition, int length = -1) const;
 
 	/**
-	 * Returns the number of characters in this string. Equivalent to size().
-	 */
-	int length() const;
-
-	/**
-	 * Pads the string with zeroes at the beginning until it reaches length.
-	 */
-	void padWithZeroes(unsigned int length);
-
-	/**
-	 * Prepends the String prepend_string to the beginning of this string.
+	 * Splits the string into a list of string that were separated by the given character.
 	 *
-	 * @param prepend_string - the String to prepend to the beginning of this string.
+	 * @param separator a single character used to separate the string.
+	 * @return a list of strings separated by the separator character
 	 */
-	void prepend(const String& prepend_string);
+	StringList split(const String& separator);
 
 	/**
-	 * Prepends the const char* prepend_string to the beginning of this string.
+	 * Checks whether this string starts with the given string.
 	 *
-	 * @param prepend_char - the const char* to prepend to the beginning of this string.
+	 * @param startString the string to check if this string starts with.
+	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
+	 * @return true if this string starts with startString, otherwise returns false.
 	 */
-	void prepend(const char* prepend_char);
+	bool startsWith(const String& startString, CaseSensitivity caseSensitivity = CaseSensitive) const;
 
 	/**
-	 * Prints this string.
+	 * Checks whether this string starts with the given string.
+	 *
+	 * @param startString the const char* to check if this string starts with.
+	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
+	 * @return true if this string starts with startString, otherwise returns false.
 	 */
-	void print();
+	bool startsWith(const char* startString, CaseSensitivity caseSensitivity = CaseSensitive) const;
 
 	/**
-	 * Removes n characters from the string, starting at the given position index..
+	 * Creates a new string beginning at the start position with the given length.
 	 *
-	 * @param position - the index position to start removing characters at from this string.
-	 * @param width - the number of characters to remove from this string.
+	 * @param startPosition the index position to start the section at in this string.
+	 * @param length the length of the section to extract from the string.
+	 * @return the string beginning at the start position with the given length.
 	 */
-	void remove(int position, int width);
-
-	/**
-	 * Removes every occurrence of the given String remove_string in this string.
-	 *
-	 * @param remove_string - the String to remove from this string.
-	 * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
-	 */
-	void remove(String remove_string, String::CaseSensitivity cs=String::CaseSensitive);
-
-	/**
-	 * Removes every occurrence of the given const char* remove_char in this string.
-	 *
-	 * @param remove_char - the const char* to remove from this string.
-	 * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
-	 */
-	void remove(const char* remove_char, String::CaseSensitivity cs=String::CaseSensitive);
-
-	/**
-	 * Replaces width characters beginning at the index position in this string with
-	 * the String replace_string.
-	 *
-	 * @param position - the index of this string to start replacing at.
-	 * @param width - the number of characters to replace in this string.
-	 * @param replace_string - the String to replace the width characters in this string.
-	 */
-	void replace(int position, int width, const String& replace_string);
-
-	/**
-	 * Replaces width characters beginning at the index position in this string with
-	 * the const char* replace_char.
-	 *
-	 * @param position - the index of this string to start replacing at.
-	 * @param width - the number of characters to replace in this string.
-	 * @param replace_char - the const char* to replace the width characters in this string.
-	 */
-	void replace(int position, int width, const char* replace_char);
-
-	/**
-	 * Replaces every occurrence of the String before_string with the String after_string.
-	 *
-	 * @param before_string - the String to be replaced in this string.
-	 * @param after_string - the String to replace the before_string in this string.
-	 * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
-	 */
-	void replace(String before_string, String after_string, String::CaseSensitivity cs=String::CaseSensitive);
-
-	/**
-	 * Replaces every occurrence of the const char* before_char with the const char* after_char.
-	 *
-	 * @param before_char - the const char* to be replaced in this string.
-	 * @param after_char - the const char* to replace the before_string in this string.
-	 * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
-	 */
-	void replace(const char* before_char, const char* after_char, String::CaseSensitivity cs=String::CaseSensitive);
-
-	/**
-	 * Resizes this string content to n characters.
-	 *
-	 * If n is smaller than the current length of the string, the content is reduced to its first
-	 * n characters, the rest being dropped.
-	 *
-	 * @param n - the number of characters to resize this string to.
-	 */
-	void resize(int n);
-
-	/**
-	 * Resizes this string content to n characters.
-	 *
-	 * If n is smaller than the current length of the string, the content is reduced to its first
-	 * n characters, the rest being dropped.
-	 *
-	 * If n is greater than the current length of the string, the content is expanded by appending
-	 * as many instances of the const char* c as needed to reach a size of n characters.
-	 *
-	 * @param n - the number of characters to resize this string to.
-	 */
-	void resize(int n, const char* c);
-
-	/**
-	 * Searches this string for the content specified in String str and returns the
-	 * position of the last occurrence in the string.
-	 *
-	 * @param str - the String to find in this string.
-	 */
-	int rfind(const String& str);
-
-	/**
-	 * Searches this string for the content specified in const char* char_star and returns the
-	 * position of the last occurrence in the string.
-	 *
-	 * @param char_star - the const char* to find in this string.
-	 */
-	int rfind(const char* char_star);
-
-	/**
-	 * Returns a substring that contains the num rightmost characters of the string.
-	 *
-	 * @param num - the number of characters to return.
-	 */
-	String right(int num);
-
-	/**
-	 * Returns a section of the string between start and end positions.
-	 *
-	 * @param start - the index position to start the section at in this string.
-	 * @param length - the length of the section to extract from the string.
-	 */
-	String section(int start, int length = -1);
-
-	/**
-	 * Returns the number of characters in this string.
-	 */
-	int size() const;
-
-	/**
-	 * Returns a vector of strings that were separated by the given character.
-	 *
-	 * @param sep - the const char* used to separate all the Strings in this string.
-	 */
-	std::vector<String> split(const char* sep);
-
-	/**
-	 * Returns true if this string starts with start_string; otherwise returns false.
-	 *
-	 * @param start_string - the String used to see if this string starts with
-	 * the same characters.
-	 * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
-	 */
-	bool startsWith(String start_string, String::CaseSensitivity cs=String::CaseSensitive);
-
-	/**
-	 * Returns true if this string starts with start_string; otherwise returns false.
-	 *
-	 * @param start_string - the String used to see if this string starts with
-	 * the same characters.
-	 * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
-	 */
-	bool startsWith(String start_string, String::CaseSensitivity cs=String::CaseSensitive) const;
-
-	/**
-	 * Returns true if this string starts with start_char; otherwise returns false.
-	 *
-	 * @param start_char - the const char* used to see if this string starts
-	 * with the same characters.
-	 * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
-	 */
-	bool startsWith(const char* start_char, String::CaseSensitivity cs=String::CaseSensitive);
-
-	/**
-	 * Returns true if this string starts with start_char; otherwise returns false.
-	 *
-	 * @param start_char - the const char* used to see if this string starts
-	 * with the same characters.
-	 * @param cs - the case sensitivity to be used, defaults to String::CaseSensitive.
-	 */
-	bool startsWith(const char* start_char, String::CaseSensitivity cs=String::CaseSensitive) const;
-
-	/**
-	 * Return the part of the string between the indices from and to.
-	 *
-	 * @param start - the index position to start the section at in this string.
-	 * @param length - the length of the section to extract from the string.
-	 */
-	String substr(int start, int length);
-
-	/**
-	 * Return the part of the string between the indices from and to.
-	 *
-	 * @param start - the index position to start the section at in this string.
-	 * @param length - the length of the section to extract from the string.
-	 */
-	String subString(int start, int length);
+	String subString(int startPosition, int length) const;
 
 	/**
 	 * Converts this string to a boolean.
+	 *
+	 * @return the bool value of the string.
 	 */
-	bool toBool();
+	bool toBool() const;
 
 	/**
 	 * Converts this string to a double.
+	 *
+	 * @return the double value of the string.
 	 */
-	double toDouble();
+	double toDouble() const;
 
 	/**
 	 * Converts this string to a float.
+	 *
+	 * @return the float value of the string.
 	 */
-	float toFloat();
+	float toFloat() const;
 
 	/**
 	 * Converts this string to an int.
+	 *
+	 * @return the int value of the string.
 	 */
-	int toInt();
+	int toInt() const;
+
+	/**
+	 * Converts this string to a long.
+	 *
+	 * @return the long value of the string.
+	 */
+	long toLong() const;
+
+	/**
+	 * Converts this string to a long long.
+	 *
+	 * @return the long long value of the string.
+	 */
+	long long toLongLong() const;
 
 	/**
 	 * Converts this string to all lowercase text.
+	 *
+	 * @return the modified version of this string.
 	 */
-	void toLowerCase();
+	String& toLowerCase();
 
 	/**
-	 * Returns a std::string object with the data contained in this String.
+	 * Converts this string to a short.
+	 *
+	 * @return the short value of the string.
 	 */
-	std::string toStdString();
+	int toShort() const;
+
+	/**
+	 * Converts the string to a std::string.
+	 *
+	 * @return the std::string representation of the string.
+	 */
+	std::string toStdString() const;
+
+	/**
+	 * Converts this string to an unsigned int.
+	 *
+	 * @return the unsigned int value of the string.
+	 */
+	unsigned int toUInt() const;
+
+	/**
+	 * Converts this string to an unsigned long.
+	 *
+	 * @return the unsigned long value of the string.
+	 */
+	unsigned long toULong() const;
+
+	/**
+	 * Converts this string to an unsigned long long.
+	 *
+	 * @return the unsigned long long value of the string.
+	 */
+	unsigned long long toULongLong() const;
 
 	/**
 	 * Converts this string to all uppercase text.
+	 *
+	 * @return the modified version of this string.
 	 */
-	void toUpperCase();
+	String& toUpperCase();
+
+	/**
+	 * Converts this string to an unsigned short.
+	 *
+	 * @return the unsigned short value of the string.
+	 */
+	unsigned short toUShort() const;
 
 	/**
 	 * Appends the String append_string onto the end of this string.
