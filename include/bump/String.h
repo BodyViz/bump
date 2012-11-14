@@ -3,7 +3,7 @@
 //	Bump
 //
 //	Created by Christian Noon on 11/7/12.
-//Copyright (c) 2012 Christian Noon. All rights reserved.
+//	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
 #ifndef BUMP_STRING_H
