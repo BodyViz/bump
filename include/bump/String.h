@@ -137,17 +137,17 @@ public:
 	 * Constructor that takes a float.
 	 *
 	 * @param number the number to convert to a bump::String.
-	 * @param precision the number of decimal places to represent the number's precision.
+	 * @param precision the number of decimal places, default is -1 which uses full decimal representation.
 	 */
-	String(float number, unsigned int precision = 3);
+	String(float number, int precision = -1);
 
 	/**
 	 * Constructor that takes a double.
 	 *
 	 * @param number the number to convert to a bump::String.
-	 * @param precision the number of decimal places to represent the number's precision.
+	 * @param precision the number of decimal places, default is -1 which uses full decimal representation.
 	 */
-	String(double number, unsigned int precision = 3);
+	String(double number, int precision = -1);
 
 	/**
 	 * Constructor that takes a bool.
@@ -606,95 +606,124 @@ public:
 	unsigned short toUShort() const;
 
 	/**
-	 * Appends the String append_string onto the end of this string.
+	 * Appends the string onto the end of this string.
 	 *
-	 * @param append_string - the String to add.
+	 * @param appendString the string to append onto this string.
+	 * @return the modified version of this string.
 	 */
-	String& operator << (const String& append_string);
+	String& operator << (const String& appendString);
 
 	/**
-	 * Appends the const char* to the end of the string.
+	 * Appends the string onto the end of this string.
 	 *
-	 * @param append_char_array - the const char* to add to the original String
+	 * @param appendString the const char* to append onto this string.
+	 * @return the modified version of this string.
 	 */
-	String& operator << (const char* append_char_array);
+	String& operator << (const char* appendString);
 
 	/**
-	 * Appends the unsigned char to the end of the string.
+	 * Appends the unsigned char to the end of this string.
 	 *
-	 * @param rhs - the char short to add to the original String
+	 * @param appendChar the unsigned char to append onto this string.
+	 * @return the modified version of this string.
 	 */
-	String& operator << (unsigned char append_char);
+	String& operator << (unsigned char appendChar);
 
 	/**
-	 * Appends the char to the end of the string.
+	 * Appends the char to the end of this string.
 	 *
-	 * @param append_char - the char to add to the original String
+	 * @param appendChar the char to append onto this string.
+	 * @return the modified version of this string.
 	 */
-	String& operator << (char append_char);
+	String& operator << (char appendChar);
 
 	/**
-	 * Appends the unsigned short to the end of the string.
+	 * Appends the unsigned short to the end of this string.
 	 *
-	 * @param append_short - the unsigned short to add to the original String
+	 * @param appendShort the unsigned short to append onto this string.
+	 * @return the modified version of this string.
 	 */
-	String& operator << (unsigned short append_short);
+	String& operator << (unsigned short appendShort);
 
 	/**
-	 * Appends the short to the end of the string.
+	 * Appends the short to the end of this string.
 	 *
-	 * @param append_short - the short to add to the original String
+	 * @param appendShort the short to append onto this string.
+	 * @return the modified version of this string.
 	 */
-	String& operator << (short append_short);
+	String& operator << (short appendShort);
 
 	/**
-	 * Appends the unsigned int to the end of the string.
+	 * Appends the unsigned int to the end of this string.
 	 *
-	 * @param append_int - the unsigned int to add to the original String
+	 * @param appendInt the unsigned int to append onto this string.
+	 * @return the modified version of this string.
 	 */
-	String& operator << (unsigned int append_int);
+	String& operator << (unsigned int appendInt);
 
 	/**
-	 * Appends the int to the end of the string.
+	 * Appends the int to the end of this string.
 	 *
-	 * @param append_int - the int to add to the original String
+	 * @param appendInt the int to append onto this string.
+	 * @return the modified version of this string.
 	 */
-	String& operator << (int append_int);
+	String& operator << (int appendInt);
 
 	/**
-	 * Appends the unsigned long to the end of the string.
+	 * Appends the unsigned long to the end of this string.
 	 *
-	 * @param append_long - the unsigned long to add to the original String
+	 * @param appendLong the unsigned long to append onto this string.
+	 * @return the modified version of this string.
 	 */
-	String& operator << (unsigned long append_long);
+	String& operator << (unsigned long appendLong);
 
 	/**
-	 * Appends the long to the end of the string.
+	 * Appends the long to the end of this string.
 	 *
-	 * @param append_long - the long to add to the original String
+	 * @param appendLong the long to append onto this string.
+	 * @return the modified version of this string.
 	 */
-	String& operator << (long append_long);
+	String& operator << (long appendLong);
 
 	/**
-	 * Appends the float to the end of the string.
+	 * Appends the unsigned long long to the end of this string.
 	 *
-	 * @param append_float - the float to add to the original String
+	 * @param appendLongLong the unsigned long long to append onto this string.
+	 * @return the modified version of this string.
 	 */
-	String& operator << (float append_float);
+	String& operator << (unsigned long long appendLongLong);
 
 	/**
-	 * Appends the double to the end of the string.
+	 * Appends the long long to the end of this string.
 	 *
-	 * @param append_double - the double to add to the original String
+	 * @param appendLongLong the long long to append onto this string.
+	 * @return the modified version of this string.
 	 */
-	String& operator << (double append_double);
+	String& operator << (long long appendLongLong);
 
 	/**
-	 * Appends the bool to the end of the string.
+	 * Appends the float to the end of this string.
 	 *
-	 * @param append_bool - the bool to add to the original String
+	 * @param appendFloat the float to append onto this string.
+	 * @return the modified version of this string.
 	 */
-	String& operator << (bool append_bool);
+	String& operator << (float appendFloat);
+
+	/**
+	 * Appends the double to the end of this string.
+	 *
+	 * @param appendDouble the float to append onto this string.
+	 * @return the modified version of this string.
+	 */
+	String& operator << (double appendDouble);
+
+	/**
+	 * Appends the bool to the end of this string.
+	 *
+	 * @param appendBool the bool to append onto this string.
+	 * @return the modified version of this string.
+	 */
+	String& operator << (bool appendBool);
 };
 
 }	// End of bump namespace

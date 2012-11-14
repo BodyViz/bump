@@ -287,24 +287,24 @@ TEST_F(StringTest, testFloatConstructor)
 	// Positive values
 	float my_float = 3;
 	bump::String my_str(my_float);
-	EXPECT_STREQ("3.000", my_str.c_str());
+	EXPECT_STREQ("3", my_str.c_str());
 
 	my_float = 2569891;
 	my_str = bump::String(my_float);
-	EXPECT_STREQ("2569891.000", my_str.c_str());
+	EXPECT_STREQ("2569891", my_str.c_str());
 
-	my_float = 232.23456;
+	my_float = 232.2345;
 	my_str = bump::String(my_float);
-	EXPECT_STREQ("232.235", my_str.c_str());
+	EXPECT_STREQ("232.2345", my_str.c_str());
 
 	// Negative values
 	my_float = -42569;
 	my_str = bump::String(my_float);
-	EXPECT_STREQ("-42569.000", my_str.c_str());
+	EXPECT_STREQ("-42569", my_str.c_str());
 
 	my_float = -39.64589;
 	my_str = bump::String(my_float);
-	EXPECT_STREQ("-39.646", my_str.c_str());
+	EXPECT_STREQ("-39.64589", my_str.c_str());
 
 	//========================================================
 	//				 Customized decimal places
@@ -335,24 +335,24 @@ TEST_F(StringTest, testDoubleConstructor)
 	// Positive values
 	double my_double = 3;
 	bump::String my_str(my_double);
-	EXPECT_STREQ("3.000", my_str.c_str());
+	EXPECT_STREQ("3", my_str.c_str());
 
 	my_double = 2569891;
 	my_str = bump::String(my_double);
-	EXPECT_STREQ("2569891.000", my_str.c_str());
+	EXPECT_STREQ("2569891", my_str.c_str());
 
 	my_double = 232.23456;
 	my_str = bump::String(my_double);
-	EXPECT_STREQ("232.235", my_str.c_str());
+	EXPECT_STREQ("232.23456", my_str.c_str());
 
 	// Negative values
 	my_double = -42569;
 	my_str = bump::String(my_double);
-	EXPECT_STREQ("-42569.000", my_str.c_str());
+	EXPECT_STREQ("-42569", my_str.c_str());
 
 	my_double = -39.64589;
 	my_str = bump::String(my_double);
-	EXPECT_STREQ("-39.646", my_str.c_str());
+	EXPECT_STREQ("-39.64589", my_str.c_str());
 
 	//========================================================
 	//				 Customized decimal places
@@ -1654,7 +1654,7 @@ TEST_F(StringTest, testToFloat)
 	EXPECT_FLOAT_EQ(20, str.toFloat());
 	str = bump::String(-90.895623, 2);
 	EXPECT_FLOAT_EQ(-90.90, str.toFloat());
-	
+
 	// Invalid usage tests
 	str = "test";
 	EXPECT_THROW(str.toFloat(), std::runtime_error);
@@ -1871,6 +1871,412 @@ TEST_F(StringTest, testToUShort)
 	EXPECT_THROW(str.toUShort(), std::runtime_error);
 	str = "";
 	EXPECT_THROW(str.toUShort(), std::runtime_error);
+}
+
+TEST_F(StringTest, testOperatorLTLTString)
+{
+	// Normal append
+	bump::String str1("string 1");
+	bump::String str2(" and string 2");
+	str1 << str2;
+	EXPECT_STREQ("string 1 and string 2", str1.c_str());
+
+	// Double append
+	str1 = "an";
+	str2 = " example";
+	bump::String str3(" string");
+	str1 << str2 << str3;
+	EXPECT_STREQ("an example string", str1.c_str());
+
+	// Empty append
+	str1 = "string 1";
+	str2 = "";
+	str1 << str2;
+	EXPECT_STREQ("string 1", str1.c_str());
+
+	// Append to empty string
+	str1 = "";
+	str2 = "string 2";
+	str1 << str2;
+	EXPECT_STREQ("string 2", str1.c_str());
+
+	// Append two empty strings
+	str1 = "";
+	str2 = "";
+	str1 << str2;
+	EXPECT_STREQ("", str1.c_str());
+}
+
+TEST_F(StringTest, testOperatorLTLTCString)
+{
+	// Normal append
+	bump::String str1("string 1");
+	const char* str2(" and string 2");
+	str1 << str2;
+	EXPECT_STREQ("string 1 and string 2", str1.c_str());
+
+	// Double append
+	str1 = "an";
+	str2 = " example";
+	const char* str3(" string");
+	str1 << str2 << str3;
+	EXPECT_STREQ("an example string", str1.c_str());
+
+	// Empty append
+	str1 = "string 1";
+	str2 = "";
+	str1 << str2;
+	EXPECT_STREQ("string 1", str1.c_str());
+
+	// Append to empty string
+	str1 = "";
+	str2 = "string 2";
+	str1 << str2;
+	EXPECT_STREQ("string 2", str1.c_str());
+
+	// Append two empty strings
+	str1 = "";
+	str2 = "";
+	str1 << str2;
+	EXPECT_STREQ("", str1.c_str());
+}
+
+TEST_F(StringTest, testOperatorLTLTUnsignedChar)
+{
+	// Normal append
+	bump::String str("example string ");
+	unsigned char num1 = 0;
+	str << num1;
+	EXPECT_STREQ("example string 0", str.c_str());
+	str = "example string ";
+	num1 = 255;
+	str << num1;
+	EXPECT_STREQ("example string 255", str.c_str());
+
+	// Double append
+	str = "a ";
+	num1 = 10;
+	unsigned char num2 = 20;
+	str << num1 << " and " << num2;
+	EXPECT_STREQ("a 10 and 20", str.c_str());
+
+	// Append to empty string
+	str = "";
+	num1 = 40;
+	str << num1;
+	EXPECT_STREQ("40", str.c_str());
+}
+
+TEST_F(StringTest, testOperatorLTLTChar)
+{
+	// Normal append
+	bump::String str("example string ");
+	char num1 = -128;
+	str << num1;
+	EXPECT_STREQ("example string -128", str.c_str());
+	str = "example string ";
+	num1 = 127;
+	str << num1;
+	EXPECT_STREQ("example string 127", str.c_str());
+
+	// Double append
+	str = "a ";
+	num1 = -10;
+	char num2 = 20;
+	str << num1 << " and " << num2;
+	EXPECT_STREQ("a -10 and 20", str.c_str());
+
+	// Append to empty string
+	str = "";
+	num1 = 40;
+	str << num1;
+	EXPECT_STREQ("40", str.c_str());
+}
+
+TEST_F(StringTest, testOperatorLTLTUnsignedShort)
+{
+	// Normal append
+	bump::String str("example string ");
+	unsigned short num1 = 0;
+	str << num1;
+	EXPECT_STREQ("example string 0", str.c_str());
+	str = "example string ";
+	num1 = 65535;
+	str << num1;
+	EXPECT_STREQ("example string 65535", str.c_str());
+
+	// Double append
+	str = "a ";
+	num1 = 10;
+	unsigned short num2 = 20;
+	str << num1 << " and " << num2;
+	EXPECT_STREQ("a 10 and 20", str.c_str());
+
+	// Append to empty string
+	str = "";
+	num1 = 40;
+	str << num1;
+	EXPECT_STREQ("40", str.c_str());
+}
+
+TEST_F(StringTest, testOperatorLTLTShort)
+{
+	// Normal append
+	bump::String str("example string ");
+	short num1 = -32768;
+	str << num1;
+	EXPECT_STREQ("example string -32768", str.c_str());
+	str = "example string ";
+	num1 = 32767;
+	str << num1;
+	EXPECT_STREQ("example string 32767", str.c_str());
+
+	// Double append
+	str = "a ";
+	num1 = -10;
+	short num2 = 20;
+	str << num1 << " and " << num2;
+	EXPECT_STREQ("a -10 and 20", str.c_str());
+
+	// Append to empty string
+	str = "";
+	num1 = 40;
+	str << num1;
+	EXPECT_STREQ("40", str.c_str());
+}
+
+TEST_F(StringTest, testOperatorLTLTUnsignedInt)
+{
+	// Normal append
+	bump::String str("example string ");
+	unsigned int num1 = 0;
+	str << num1;
+	EXPECT_STREQ("example string 0", str.c_str());
+	str = "example string ";
+	num1 = 2147483647;
+	str << num1;
+	EXPECT_STREQ("example string 2147483647", str.c_str());
+
+	// Double append
+	str = "a ";
+	num1 = 10;
+	unsigned int num2 = 20;
+	str << num1 << " and " << num2;
+	EXPECT_STREQ("a 10 and 20", str.c_str());
+
+	// Append to empty string
+	str = "";
+	num1 = 40;
+	str << num1;
+	EXPECT_STREQ("40", str.c_str());
+}
+
+TEST_F(StringTest, testOperatorLTLTInt)
+{
+	// Normal append
+	bump::String str("example string ");
+	int num1 = -2147483648;
+	str << num1;
+	EXPECT_STREQ("example string -2147483648", str.c_str());
+	str = "example string ";
+	num1 = 2147483647;
+	str << num1;
+	EXPECT_STREQ("example string 2147483647", str.c_str());
+
+	// Double append
+	str = "a ";
+	num1 = -10;
+	int num2 = 20;
+	str << num1 << " and " << num2;
+	EXPECT_STREQ("a -10 and 20", str.c_str());
+
+	// Append to empty string
+	str = "";
+	num1 = 40;
+	str << num1;
+	EXPECT_STREQ("40", str.c_str());
+}
+
+TEST_F(StringTest, testOperatorLTLTUnsignedLong)
+{
+	// Normal append
+	bump::String str("example string ");
+	unsigned long num1 = 0;
+	str << num1;
+	EXPECT_STREQ("example string 0", str.c_str());
+	str = "example string ";
+	num1 = 2147483647;
+	str << num1;
+	EXPECT_STREQ("example string 2147483647", str.c_str());
+
+	// Double append
+	str = "a ";
+	num1 = 10;
+	unsigned long num2 = 20;
+	str << num1 << " and " << num2;
+	EXPECT_STREQ("a 10 and 20", str.c_str());
+
+	// Append to empty string
+	str = "";
+	num1 = 40;
+	str << num1;
+	EXPECT_STREQ("40", str.c_str());
+}
+
+TEST_F(StringTest, testOperatorLTLTLong)
+{
+	// Normal append
+	bump::String str("example string ");
+	long num1 = -2147483648;
+	str << num1;
+	EXPECT_STREQ("example string -2147483648", str.c_str());
+	str = "example string ";
+	num1 = 2147483647;
+	str << num1;
+	EXPECT_STREQ("example string 2147483647", str.c_str());
+
+	// Double append
+	str = "a ";
+	num1 = -10;
+	long num2 = 20;
+	str << num1 << " and " << num2;
+	EXPECT_STREQ("a -10 and 20", str.c_str());
+
+	// Append to empty string
+	str = "";
+	num1 = 40;
+	str << num1;
+	EXPECT_STREQ("40", str.c_str());
+}
+
+TEST_F(StringTest, testOperatorLTLTUnsignedLongLong)
+{
+	// Normal append
+	bump::String str("example string ");
+	unsigned long long num1 = 0;
+	str << num1;
+	EXPECT_STREQ("example string 0", str.c_str());
+	str = "example string ";
+	num1 = 1844674407370955161;
+	str << num1;
+	EXPECT_STREQ("example string 1844674407370955161", str.c_str());
+
+	// Double append
+	str = "a ";
+	num1 = 10;
+	unsigned long long num2 = 20;
+	str << num1 << " and " << num2;
+	EXPECT_STREQ("a 10 and 20", str.c_str());
+
+	// Append to empty string
+	str = "";
+	num1 = 40;
+	str << num1;
+	EXPECT_STREQ("40", str.c_str());
+}
+
+TEST_F(StringTest, testOperatorLTLTLongLong)
+{
+	// Normal append
+	bump::String str("example string ");
+	long long num1 = -922337203685477580;
+	str << num1;
+	EXPECT_STREQ("example string -922337203685477580", str.c_str());
+	str = "example string ";
+	num1 = 922337203685477580;
+	str << num1;
+	EXPECT_STREQ("example string 922337203685477580", str.c_str());
+
+	// Double append
+	str = "a ";
+	num1 = -10;
+	long long num2 = 20;
+	str << num1 << " and " << num2;
+	EXPECT_STREQ("a -10 and 20", str.c_str());
+
+	// Append to empty string
+	str = "";
+	num1 = 40;
+	str << num1;
+	EXPECT_STREQ("40", str.c_str());
+}
+
+TEST_F(StringTest, testOperatorLTLTFloat)
+{
+	// Normal append
+	bump::String str("example string ");
+	float num1 = -92.3015;
+	str << num1;
+	EXPECT_STREQ("example string -92.3015", str.c_str());
+	str = "example string ";
+	num1 = 4068.983;
+	str << num1;
+	EXPECT_STREQ("example string 4068.983", str.c_str());
+
+	// Double append
+	str = "a ";
+	num1 = -10.01001;
+	float num2 = 20.2385;
+	str << num1 << " and " << num2;
+	EXPECT_STREQ("a -10.01001 and 20.2385", str.c_str());
+
+	// Append to empty string
+	str = "";
+	num1 = 40.1;
+	str << num1;
+	EXPECT_STREQ("40.1", str.c_str());
+}
+
+TEST_F(StringTest, testOperatorLTLTDouble)
+{
+	// Normal append
+	bump::String str("example string ");
+	double num1 = -92.30145;
+	str << num1;
+	EXPECT_STREQ("example string -92.30145", str.c_str());
+	str = "example string ";
+	num1 = 40068.98304;
+	str << num1;
+	EXPECT_STREQ("example string 40068.98304", str.c_str());
+
+	// Double append
+	str = "a ";
+	num1 = -10.01;
+	double num2 = 20.238473;
+	str << num1 << " and " << num2;
+	EXPECT_STREQ("a -10.01 and 20.238473", str.c_str());
+
+	// Append to empty string
+	str = "";
+	num1 = 40.1;
+	str << num1;
+	EXPECT_STREQ("40.1", str.c_str());
+}
+
+TEST_F(StringTest, testOperatorLTLTBool)
+{
+	// Normal append
+	bump::String str("example string ");
+	bool bool1 = true;
+	str << bool1;
+	EXPECT_STREQ("example string true", str.c_str());
+	str = "example string ";
+	bool1 = false;
+	str << bool1;
+	EXPECT_STREQ("example string false", str.c_str());
+
+	// Double append
+	str = "a ";
+	bool1 = false;
+	bool bool2 = false;
+	str << bool1 << " and " << bool2;
+	EXPECT_STREQ("a false and false", str.c_str());
+
+	// Append to empty string
+	str = "";
+	bool1 = true;
+	str << bool1;
+	EXPECT_STREQ("true", str.c_str());
 }
 
 }	// End of bumpTest namespace

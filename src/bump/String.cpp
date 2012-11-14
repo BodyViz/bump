@@ -8,6 +8,7 @@
 
 // C++ headers
 #include <iomanip>
+#include <limits>
 #include <sstream>
 #include <stdexcept>
 
@@ -88,19 +89,50 @@ String::String(long long number)
 	*this = boost::lexical_cast<std::string>(number);
 }
 
-String::String(float number, unsigned int precision)
+String::String(float number, int precision)
 {
+	// Make sure the precision is not less than -1
+	if (precision < -1)
+	{
+		throw std::invalid_argument("bump::String::String(float) cannot handle a precision less than -1");
+	}
+
+	// Convert the float to the proper precision using an ostringstream
 	std::ostringstream result;
-	result.setf(std::ios::fixed, std::ios::floatfield);
-	result << std::setprecision(precision) << number;
+	if (precision == -1)
+	{
+		result << std::setprecision(std::numeric_limits<float>::digits10 + 1) << number;
+	}
+	else
+	{
+		result.setf(std::ios::fixed, std::ios::floatfield);
+		result << std::setprecision(precision) << number;
+	}
+
 	*this = result.str();
 }
 
-String::String(double number, unsigned int precision)
+String::String(double number, int precision)
 {
+	// Make sure the precision is not less than -1
+	if (precision < -1)
+	{
+		throw std::invalid_argument("bump::String::String(double) cannot handle a precision less than -1");
+	}
+
+	// Convert the double to the proper precision using an ostringstream
 	std::ostringstream result;
-	result.setf(std::ios::fixed, std::ios::floatfield);
-	result << std::setprecision(precision) << number;
+
+	if (precision == -1)
+	{
+		result << std::setprecision(std::numeric_limits<double>::digits10 + 1) << number;
+	}
+	else
+	{
+		result.setf(std::ios::fixed, std::ios::floatfield);
+		result << std::setprecision(precision) << number;
+	}
+
 	*this = result.str();
 }
 
@@ -626,7 +658,7 @@ bool String::startsWith(const String& startString, CaseSensitivity caseSensitivi
 	// Create some copies for manipulation
 	String this_copy = *this;
 	String start_string_copy = startString;
-	
+
 	// Adjust for case sensitivity
 	if (caseSensitivity == NotCaseSensitive)
 	{
@@ -828,80 +860,92 @@ unsigned short String::toUShort() const
 	}
 }
 
-String& String::operator << (const String& append_string)
+String& String::operator << (const String& appendString)
 {
-	*this += append_string;
+	*this += appendString;
 	return *this;
 }
 
-String& String::operator << (const char* append_char_array)
+String& String::operator << (const char* appendString)
 {
-	*this += String(append_char_array);
+	*this += String(appendString);
 	return *this;
 }
 
-String& String::operator << (unsigned char append_char)
+String& String::operator << (unsigned char appendChar)
 {
-	*this += String(append_char);
+	*this += String(appendChar);
 	return *this;
 }
 
-String& String::operator << (char append_char)
+String& String::operator << (char appendChar)
 {
-	*this += String(append_char);
+	*this += String(appendChar);
 	return *this;
 }
 
-String& String::operator << (unsigned short append_short)
+String& String::operator << (unsigned short appendShort)
 {
-	*this += String(append_short);
+	*this += String(appendShort);
 	return *this;
 }
 
-String& String::operator << (short append_short)
+String& String::operator << (short appendShort)
 {
-	*this += String(append_short);
+	*this += String(appendShort);
 	return *this;
 }
 
-String& String::operator << (unsigned int append_int)
+String& String::operator << (unsigned int appendInt)
 {
-	*this += String(append_int);
+	*this += String(appendInt);
 	return *this;
 }
 
-String& String::operator << (int append_int)
+String& String::operator << (int appendInt)
 {
-	*this += String(append_int);
+	*this += String(appendInt);
 	return *this;
 }
 
-String& String::operator << (unsigned long append_long)
+String& String::operator << (unsigned long appendLong)
 {
-	*this += String(append_long);
+	*this += String(appendLong);
 	return *this;
 }
 
-String& String::operator << (long append_long)
+String& String::operator << (long appendLong)
 {
-	*this += String(append_long);
+	*this += String(appendLong);
 	return *this;
 }
 
-String& String::operator << (float append_float)
+String& String::operator << (unsigned long long appendLongLong)
 {
-	*this += String(append_float);
+	*this += String(appendLongLong);
 	return *this;
 }
 
-String& String::operator << (double append_double)
+String& String::operator << (long long appendLongLong)
 {
-	*this += String(append_double);
+	*this += String(appendLongLong);
 	return *this;
 }
 
-String& String::operator << (bool append_bool)
+String& String::operator << (float appendFloat)
 {
-	*this += String(append_bool);
+	*this += String(appendFloat);
+	return *this;
+}
+
+String& String::operator << (double appendDouble)
+{
+	*this += String(appendDouble);
+	return *this;
+}
+
+String& String::operator << (bool appendBool)
+{
+	*this += String(appendBool);
 	return *this;
 }
