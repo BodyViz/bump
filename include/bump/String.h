@@ -664,7 +664,7 @@ public:
 	 *
 	 * @return the short value of the string.
 	 */
-	int toShort() const;
+	short toShort() const;
 
 	/**
 	 * Converts the string to a std::string.

@@ -816,7 +816,7 @@ String& String::toLowerCase()
 	return *this;
 }
 
-int String::toShort() const
+short String::toShort() const
 {
 	try
 	{
