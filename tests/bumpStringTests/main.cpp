@@ -3,7 +3,7 @@
 //	Bump
 //
 //	Created by Christian Noon on 11/12/12.
-//	Copyright (c) 2011 Christian Noon. All rights reserved.
+//	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
 // C++ headers
@@ -21,7 +21,9 @@
 #include "../bumpTest/EnvironmentFixture.h"
 
 /**
- * This test TODO...
+ * This application consists of a full coverage set of unit tests for the bump::String
+ * class. It uses the GTest framework to each possible runtime path of every function
+ * in the String class.
  */
 int main(int argc, char **argv)
 {
@@ -37,7 +39,12 @@ int main(int argc, char **argv)
 
 namespace bumpTest {
 
-/** TODO. */
+/**
+ * This is our main string testing class. The SetUp and TearDown methods are
+ * executed before the test runs and after it completes. This is where we can
+ * add any custom set up for each test without having to add this to "every"
+ * test individually.
+ */
 class StringTest : public BaseTest
 {
 protected:
@@ -60,28 +67,6 @@ protected:
 		// Any custom teardown you may need
 	}
 };
-
-/**
- * All Possible Checks:
- * - EXPECT_FALSE (condition)							 = condition is true
- * - EXPECT_TRUE  (condition)							 = condition is false
- *
- * - EXPECT_EQ	  (expected, actual)					 = expected == actual
- * - EXPECT_NE	  (val1, val2)							 = val1 != val2
- * - EXPECT_LT	  (val1, val2)							 = val1 < val2
- * - EXPECT_LE	  (val1, val2)							 = val1 <= val2
- * - EXPECT_GT	  (val1, val2)							 = val1 > val2
- * - EXPECT_GE	  (val1, val2)							 = val1 >= val2
- *
- * - EXPECT_STREQ (expected.c_str(), actual.c_str())	 = expected == actual
- * - EXPECT_STRNE (expected.c_str(), actual.c_str())	 = expected != actual
- * - EXPECT_STRCASEEQ (expected.c_str(), actual.c_str()) = expected == actual (ignoring case)
- * - EXPECT_STRCASENE (expected.c_str(), actual.c_str()) = expected != actual (ignoring case)
- *
- * - EXPECT_FLOAT_EQ (expected, actual)					 = expected almost equal to actual
- * - EXPECT_DOUBLE_EQ (expected, actual)				 = expected almost equal to actual
- * - EXPECT_NEAR (val1, val2, abs_error)				 = difference between val1 and val2 doesn't exceed abs_error
- */
 
 TEST_F(StringTest, testEmptyConstructor)
 {
