@@ -1573,9 +1573,13 @@ TEST_F(StringTest, testSplit)
 	result = str.split(separator);
 	EXPECT_STREQ("", result.at(0).c_str());
 
-	// Empty separator test
-	separator = "";
-	EXPECT_THROW(str.split(separator), bump::InvalidArgumentError);
+	// Big separators
+	str = "I amXyZThis isXyZAnd Again";
+	separator = "XyZ";
+	result = str.split(separator);
+	EXPECT_STREQ("I am", result.at(0).c_str());
+	EXPECT_STREQ("This is", result.at(1).c_str());
+	EXPECT_STREQ("And Again", result.at(2).c_str());
 }
 
 TEST_F(StringTest, testStartsWithString)

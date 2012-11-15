@@ -676,30 +676,15 @@ String String::section(int startPosition, int length) const
 
 StringList String::split(const String& separator) const
 {
-	// Make sure we only have a single character
-	if (separator.length() != 1)
-	{
-		throw InvalidArgumentError("bump::String::split() separator can only be a single character");
-	}
+	// Use boost to split the string into a vector of std::strings
+	std::vector<std::string> split_strings;
+	boost::algorithm::split(split_strings, *this, boost::is_any_of(separator), boost::token_compress_on);
 
-	// Make mutable copy of this string
-	String this_copy = *this;
+	// Convert the vector to a StringList
+	StringList converted_strings;
+	converted_strings.insert(converted_strings.end(), split_strings.begin(), split_strings.end());
 
-	// Split up the copy into a separated string list
-	std::vector<String> split_strings;
-	int index = 0;
-	while (index != -1)
-	{
-		index = this_copy.indexOf(separator);
-		if (index != -1)
-		{
-			split_strings.push_back(this_copy.substr(0, index));
-			this_copy.remove(0, index + 1);
-		}
-	}
-	split_strings.push_back(this_copy);
-
-	return split_strings;
+	return converted_strings;
 }
 
 bool String::startsWith(const String& startString, CaseSensitivity caseSensitivity) const

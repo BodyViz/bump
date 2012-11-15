@@ -549,11 +549,9 @@ public:
 	String section(int startPosition, int length = -1) const;
 
 	/**
-	 * Splits the string into a list of string that were separated by the given character.
+	 * Splits the string into a list of string that were separated by the given separator string.
 	 *
-	 * Throws an InvalidArgumentError when separator has a length not equal to one.
-	 *
-	 * @param separator a single character used to separate the string.
+	 * @param separator a string used to split the string into a list of strings.
 	 * @return a list of strings separated by the separator character
 	 */
 	StringList split(const String& separator) const;
