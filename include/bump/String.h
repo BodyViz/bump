@@ -13,6 +13,9 @@
 #include <iostream>
 #include <vector>
 
+// Bump headers
+#include <bump/Export.h>
+
 namespace bump {
 
 // Forward Declarations
@@ -28,7 +31,7 @@ typedef std::vector<String> StringList;
  * of string parsing by implementing a much more straight forward syntax to make development much
  * easier and less time consuming.
  */
-class String : public std::string
+class BUMP_EXPORT String : public std::string
 {
 public:
 

@@ -10,6 +10,7 @@
 #define BUMP_EXCEPTION_H
 
 // Bump headers
+#include <bump/Exception.h>
 #include <bump/String.h>
 
 /**
@@ -32,7 +33,7 @@ namespace bump {
 /**
  * A base class exception supporting both logic and runtime errors.
  */
-class Exception
+class BUMP_EXPORT Exception
 {
 protected:
 
@@ -73,7 +74,7 @@ protected:
  * A abstract, protected exception class containing error subclasses whose error condition could be
  * detected prior to running the application.
  */
-class LogicError : public Exception
+class BUMP_EXPORT LogicError : public Exception
 {
 protected:
 
@@ -95,7 +96,7 @@ protected:
  * An abstract, protected exception class containing error subclasses whose error condition can only
  * be detected at runtime.
  */
-class RuntimeError : public Exception
+class BUMP_EXPORT RuntimeError : public Exception
 {
 protected:
 
@@ -116,7 +117,7 @@ protected:
 /**
  * A public logic error class which is used when a parameter passed into a function is invalid.
  */
-class InvalidArgumentError : public LogicError
+class BUMP_EXPORT InvalidArgumentError : public LogicError
 {
 public:
 
@@ -137,7 +138,7 @@ public:
  * A public runtime error class which is used when a container class receives an out-of-range
  * request from the runtime.
  */
-class OutOfRangeError : public RuntimeError
+class BUMP_EXPORT OutOfRangeError : public RuntimeError
 {
 public:
 
@@ -158,7 +159,7 @@ public:
  * A public runtime error class which is used when the runtime cannot type cast an object
  * as requested.
  */
-class TypeCastError : public RuntimeError
+class BUMP_EXPORT TypeCastError : public RuntimeError
 {
 public:
 
