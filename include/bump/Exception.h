@@ -35,20 +35,7 @@ namespace bump {
  */
 class BUMP_EXPORT Exception
 {
-protected:
-
-	/**
-	 * Constructor.
-	 *
-	 * @param className the class name of the sub-class exception.
-	 * @param message the message to return when calling the what() method of the exception.
-	 */
-	Exception(const String& className, const String& message) throw() :
-		_className("bump::Exception"),
-		_message(message)
-	{
-		;
-	}
+public:
 
 	/**
 	 * Destructor.
@@ -62,12 +49,40 @@ protected:
 	 */
 	virtual String what() const throw()
 	{
-		return String() << _className << ": " << _message;
+		return String() << _className << "\n\t1) " << _message;
+	}
+
+	/**
+	 * Appends the description onto a new line of the message.
+	 *
+	 * @param description the long to append onto this string.
+	 */
+	void operator << (const String& description)
+	{
+		++_throwCounter;
+		_message << "\n\t" << _throwCounter << ") " << description;
+	}
+
+protected:
+
+	/**
+	 * Constructor.
+	 *
+	 * @param className the class name of the sub-class exception.
+	 * @param message the message to return when calling the what() method of the exception.
+	 */
+	Exception(const String& className, const String& message) throw() :
+		_className(className),
+		_message(message),
+		_throwCounter(1)
+	{
+		;
 	}
 
 	/** Instance member variables. */
 	String _className;
 	String _message;
+	unsigned int _throwCounter;
 };
 
 /**
@@ -76,6 +91,13 @@ protected:
  */
 class BUMP_EXPORT LogicError : public Exception
 {
+public:
+
+	/**
+	 * Destructor.
+	 */
+	virtual ~LogicError() throw() {}
+
 protected:
 
 	/**
@@ -85,11 +107,6 @@ protected:
 	 * @param message the message to return when calling the what() method of the exception.
 	 */
 	LogicError(const String& className, const String& message) throw() : Exception(className, message) {}
-
-	/**
-	 * Destructor.
-	 */
-	virtual ~LogicError() throw() {}
 };
 
 /**
@@ -98,6 +115,13 @@ protected:
  */
 class BUMP_EXPORT RuntimeError : public Exception
 {
+public:
+
+	/**
+	 * Destructor.
+	 */
+	virtual ~RuntimeError() throw() {}
+
 protected:
 
 	/**
@@ -107,11 +131,6 @@ protected:
 	 * @param message the message to return when calling the what() method of the exception.
 	 */
 	RuntimeError(const String& className, const String& message) : Exception(className, message) {}
-
-	/**
-	 * Destructor.
-	 */
-	virtual ~RuntimeError() throw() {}
 };
 
 /**
