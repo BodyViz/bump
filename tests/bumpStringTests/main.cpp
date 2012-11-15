@@ -716,9 +716,9 @@ TEST_F(StringTest, testEndsWithString)
 	// Test empty strings
 	str1 = bump::String("");
 	str2 = bump::String();
-	EXPECT_THROW(str1.endsWith(str2), bump::InvalidArgumentError);
-	EXPECT_THROW(str1.endsWith(str2, bump::String::CaseSensitive), bump::InvalidArgumentError);
-	EXPECT_THROW(str1.endsWith(str2, bump::String::NotCaseSensitive), bump::InvalidArgumentError);
+	EXPECT_TRUE(str1.endsWith(str2));
+	EXPECT_TRUE(str1.endsWith(str2, bump::String::CaseSensitive));
+	EXPECT_TRUE(str1.endsWith(str2, bump::String::NotCaseSensitive));
 }
 
 TEST_F(StringTest, testEndsWithCString)
@@ -731,11 +731,11 @@ TEST_F(StringTest, testEndsWithCString)
 	EXPECT_TRUE(str1.endsWith(str2, bump::String::NotCaseSensitive));
 
 	// Test empty strings
-	str1 = bump::String("");
+	str1 = "";
 	str2 = "";
-	EXPECT_THROW(str1.endsWith(str2), bump::InvalidArgumentError);
-	EXPECT_THROW(str1.endsWith(str2, bump::String::CaseSensitive), bump::InvalidArgumentError);
-	EXPECT_THROW(str1.endsWith(str2, bump::String::NotCaseSensitive), bump::InvalidArgumentError);
+	EXPECT_TRUE(str1.endsWith(str2));
+	EXPECT_TRUE(str1.endsWith(str2, bump::String::CaseSensitive));
+	EXPECT_TRUE(str1.endsWith(str2, bump::String::NotCaseSensitive));
 }
 
 TEST_F(StringTest, testFill)
@@ -1590,9 +1590,9 @@ TEST_F(StringTest, testStartsWithString)
 	// Test empty strings
 	str1 = "";
 	str2 = bump::String();
-	EXPECT_THROW(str1.startsWith(str2), bump::InvalidArgumentError);
-	EXPECT_THROW(str1.startsWith(str2, bump::String::CaseSensitive), bump::InvalidArgumentError);
-	EXPECT_THROW(str1.startsWith(str2, bump::String::NotCaseSensitive), bump::InvalidArgumentError);
+	EXPECT_TRUE(str1.startsWith(str2));
+	EXPECT_TRUE(str1.startsWith(str2, bump::String::CaseSensitive));
+	EXPECT_TRUE(str1.startsWith(str2, bump::String::NotCaseSensitive));
 }
 
 TEST_F(StringTest, testStartsWithCString)
@@ -1607,9 +1607,9 @@ TEST_F(StringTest, testStartsWithCString)
 	// Test empty strings
 	str1 = "";
 	str2 = "";
-	EXPECT_THROW(str1.startsWith(str2), bump::InvalidArgumentError);
-	EXPECT_THROW(str1.startsWith(str2, bump::String::CaseSensitive), bump::InvalidArgumentError);
-	EXPECT_THROW(str1.startsWith(str2, bump::String::NotCaseSensitive), bump::InvalidArgumentError);
+	EXPECT_TRUE(str1.startsWith(str2));
+	EXPECT_TRUE(str1.startsWith(str2, bump::String::CaseSensitive));
+	EXPECT_TRUE(str1.startsWith(str2, bump::String::NotCaseSensitive));
 }
 
 TEST_F(StringTest, testSubString)

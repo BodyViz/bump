@@ -282,8 +282,6 @@ public:
 	/**
 	 * Checks whether this string ends with the given string.
 	 *
-	 * Throws an InvalidArgumentError when passed an empty end string.
-	 *
 	 * @param endString the string to check if this string ends with.
 	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
 	 * @return true if this string ends with endString, otherwise returns false.
@@ -292,8 +290,6 @@ public:
 
 	/**
 	 * Checks whether this string ends with the given string.
-	 *
-	 * Throws an InvalidArgumentError when passed an empty end string.
 	 *
 	 * @param endString the const char* to check if this string ends with.
 	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
@@ -565,8 +561,6 @@ public:
 	/**
 	 * Checks whether this string starts with the given string.
 	 *
-	 * Throws an InvalidArgumentError when the start string is empty.
-	 *
 	 * @param startString the string to check if this string starts with.
 	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
 	 * @return true if this string starts with startString, otherwise returns false.
@@ -575,8 +569,6 @@ public:
 
 	/**
 	 * Checks whether this string starts with the given string.
-	 *
-	 * Throws an InvalidArgumentError when the start string is empty.
 	 *
 	 * @param startString the const char* to check if this string starts with.
 	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.

@@ -12,6 +12,8 @@
 #include <sstream>
 
 // Boost headers
+#include <boost/algorithm/string/erase.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -208,22 +210,12 @@ void String::clear()
 
 bool String::compare(const String& otherString) const
 {
-	if (std::string::compare(otherString) == 0)
-	{
-		return true;
-	}
-
-	return false;
+	return std::string::compare(otherString) == 0;
 }
 
 bool String::compare(const char* otherString) const
 {
-	if (std::string::compare(otherString) == 0)
-	{
-		return true;
-	}
-
-	return false;
+	return std::string::compare(otherString) == 0;
 }
 
 bool String::contains(const String& containString, CaseSensitivity caseSensitivity) const
@@ -296,34 +288,12 @@ const char* String::data() const
 
 bool String::endsWith(const String& endString, CaseSensitivity caseSensitivity) const
 {
-	// Make sure the end string isn't empty
-	if (endString.isEmpty())
-	{
-		throw InvalidArgumentError("bump::String::endsWith() passed empty end string");
-	}
-
-	// Make some copies to handle case sensitivity
-	String this_copy = *this;
-	String end_string_copy = endString;
-
-	// Adjust if not case sensitive
 	if (caseSensitivity == NotCaseSensitive)
 	{
-		this_copy.toLowerCase();
-		end_string_copy.toLowerCase();
+		return boost::algorithm::iends_with(*this, endString);
 	}
 
-	// Find the end section of the current string
-	int index = this_copy.length() - end_string_copy.length();
-	String last_part(this_copy.subString(index, this_copy.length()));
-
-	// Test whether they're equal
-	if (last_part == endString)
-	{
-		return true;
-	}
-
-	return false;
+	return boost::algorithm::ends_with(*this, endString);
 }
 
 bool String::endsWith(const char* endString, CaseSensitivity caseSensitivity) const
@@ -734,33 +704,12 @@ StringList String::split(const String& separator) const
 
 bool String::startsWith(const String& startString, CaseSensitivity caseSensitivity) const
 {
-	// Make sure the start string isn't empty
-	if (startString.isEmpty())
-	{
-		throw InvalidArgumentError("bump::String::startsWith() start string cannot be empty");
-	}
-
-	// Create some copies for manipulation
-	String this_copy = *this;
-	String start_string_copy = startString;
-
-	// Adjust for case sensitivity
 	if (caseSensitivity == NotCaseSensitive)
 	{
-		this_copy.toLowerCase();
-		start_string_copy.toLowerCase();
+		return boost::algorithm::istarts_with(*this, startString);
 	}
 
-	// Find the first substring with the same length as the start string
-	String first_part(this_copy.subString(0, start_string_copy.length()));
-
-	// Test whether they're equal
-	if (first_part == start_string_copy)
-	{
-		return true;
-	}
-
-	return false;
+	return boost::algorithm::starts_with(*this, startString);
 }
 
 bool String::startsWith(const char* startString, CaseSensitivity caseSensitivity) const
@@ -862,11 +811,7 @@ long long String::toLongLong() const
 
 String& String::toLowerCase()
 {
-	for (int i = 0; i < length(); ++i)
-	{
-		(*this)[i] = tolower(at(i));
-	}
-
+	boost::algorithm::to_lower(*this);
 	return *this;
 }
 
@@ -925,11 +870,7 @@ unsigned long long String::toULongLong() const
 
 String& String::toUpperCase()
 {
-	for (int i = 0; i < length(); ++i)
-	{
-		(*this)[i] = toupper(at(i));
-	}
-
+	boost::algorithm::to_upper(*this);
 	return *this;
 }
 
