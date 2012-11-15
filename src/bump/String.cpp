@@ -97,7 +97,7 @@ String::String(float number, int precision)
 	// Make sure the precision is not less than -1
 	if (precision < -1)
 	{
-		throw InvalidArgumentError("bump::String::String(float) cannot handle a precision less than -1");
+		throw InvalidArgumentError("Cannot handle a precision less than -1", BUMP_LOCATION);
 	}
 
 	// Convert the float to the proper precision using an ostringstream
@@ -120,7 +120,7 @@ String::String(double number, int precision)
 	// Make sure the precision is not less than -1
 	if (precision < -1)
 	{
-		throw InvalidArgumentError("bump::String::String(double) cannot handle a precision less than -1");
+		throw InvalidArgumentError("Cannot handle a precision less than -1", BUMP_LOCATION);
 	}
 
 	// Convert the double to the proper precision using an ostringstream
@@ -149,6 +149,18 @@ String::~String()
 	;
 }
 
+String String::join(const StringList& strings, const String& separator)
+{
+	int last_string = strings.size() - 1;
+	String joined;
+	for (unsigned int i = 0; i < strings.size(); ++i)
+	{
+		joined = i != last_string ? joined << strings.at(i) << separator : joined << strings.at(i);
+	}
+
+	return joined;
+}
+
 String& String::append(const String& appendString)
 {
 	*this += appendString;
@@ -169,7 +181,7 @@ const char String::at(int position) const
 	}
 	catch (const std::out_of_range& e)
 	{
-		throw OutOfRangeError("bump::String::at() position is outside string bounds");
+		throw OutOfRangeError("Position is outside string bounds", BUMP_LOCATION);
 	}
 }
 
@@ -306,13 +318,13 @@ String& String::fill(const String& character, int size)
 	// Make sure they character passed in is a single character
 	if (character.length() != 1)
 	{
-		throw InvalidArgumentError("bump::String::fill() passed invalid character...must be length of one");
+		throw InvalidArgumentError("Passed invalid character...must be length of one", BUMP_LOCATION);
 	}
 
 	// Make sure the size is not less than -1
 	if (size < -1)
 	{
-		throw InvalidArgumentError("bump::String::fill() passed invalid size, must not be less than -1");
+		throw InvalidArgumentError("Passed invalid size, must not be less than -1", BUMP_LOCATION);
 	}
 
 	// Change the size of the string if necessary
@@ -337,7 +349,7 @@ int String::indexOf(const String& indexString, int startPosition, CaseSensitivit
 	// Make sure the index string passed in is not empty
 	if (indexString.empty())
 	{
-		throw InvalidArgumentError("bump::String::indexOf() passed empty index string");
+		throw InvalidArgumentError("Passed empty index string", BUMP_LOCATION);
 	}
 
 	// Make sure startPosition is inside our bounds
@@ -377,13 +389,13 @@ String& String::insert(const String& insertString, int position)
 	// Make sure the index string passed in is not empty
 	if (insertString.empty())
 	{
-		throw InvalidArgumentError("bump::String::insert() passed empty insert string");
+		throw InvalidArgumentError("Passed empty insert string", BUMP_LOCATION);
 	}
 
 	// Make sure position is inside our bounds
 	if (position > length() || position < 0)
 	{
-		throw OutOfRangeError("bump::String::insert() position outside string bounds");
+		throw OutOfRangeError("Position outside string bounds", BUMP_LOCATION);
 	}
 
 	// Split the string in two
@@ -424,7 +436,7 @@ int String::lastIndexOf(String indexString, int startPosition, CaseSensitivity c
 	// Make sure the index string passed in is not empty
 	if (indexString.empty())
 	{
-		throw InvalidArgumentError("bump::String::lastIndexOf() passed empty index string");
+		throw InvalidArgumentError("Passed empty index string", BUMP_LOCATION);
 	}
 
 	// Make sure startPosition is inside our bounds
@@ -470,7 +482,7 @@ String String::left(int n) const
 	// Make sure number is inside our bounds
 	if (n > length() || n < 1)
 	{
-		throw OutOfRangeError("bump::String::left() n is outside string bounds");
+		throw OutOfRangeError("The n parameter is outside string bounds", BUMP_LOCATION);
 	}
 
 	return subString(0, n);
@@ -512,13 +524,13 @@ String& String::remove(int position, int n)
 	// Make sure the position is valid
 	if (position < 0 || position > length() - 1)
 	{
-		throw OutOfRangeError("bump::String::remove() position is outside string bounds");
+		throw OutOfRangeError("Position is outside string bounds", BUMP_LOCATION);
 	}
 
 	// Make sure the width is valid
 	if (n < 0)
 	{
-		throw InvalidArgumentError("bump::String::remove() n cannot be negative");
+		throw InvalidArgumentError("The n parameter cannot be negative", BUMP_LOCATION);
 	}
 
 	std::string::erase(position, n);
@@ -530,7 +542,7 @@ String& String::remove(const String& removeString, CaseSensitivity caseSensitivi
 	// Make sure the remove string passed in is not empty
 	if (removeString.empty())
 	{
-		throw InvalidArgumentError("bump::String::remove() passed empty remove string");
+		throw InvalidArgumentError("Passed empty remove string", BUMP_LOCATION);
 	}
 
 	// Create some copies for manipulation
@@ -569,13 +581,13 @@ String& String::replace(int position, int n, const String& replaceString)
 	// Make sure the position is valid
 	if (position < 0 || position > length())
 	{
-		throw OutOfRangeError("bump::String::replace() position is outside string bounds");
+		throw OutOfRangeError("Position is outside string bounds", BUMP_LOCATION);
 	}
 
 	// Make sure n is positive
 	if (n < 0)
 	{
-		throw InvalidArgumentError("bump::String::replace() n cannot be negative");
+		throw InvalidArgumentError("The n parameter cannot be negative", BUMP_LOCATION);
 	}
 
 	remove(position, n);
@@ -594,7 +606,7 @@ String& String::replace(const String& before, const String& after, CaseSensitivi
 	// Make sure the before string is not empty
 	if (before.isEmpty())
 	{
-		throw InvalidArgumentError("bump::String::replace() passed an empty before string");
+		throw InvalidArgumentError("Passed an empty before string", BUMP_LOCATION);
 	}
 
 	// Ignore if the before and after strings are the same
@@ -645,7 +657,7 @@ String String::right(int n) const
 	// Make sure number is inside our bounds
 	if (n > length() || n < 1)
 	{
-		throw OutOfRangeError("bump::String::left() n is outside string bounds");
+		throw OutOfRangeError("The n parameter is outside string bounds", BUMP_LOCATION);
 	}
 
 	return subString(length() - n, length());
@@ -656,7 +668,7 @@ String String::section(int startPosition, int length) const
 	// Make sure the start position is valid
 	if (startPosition < 0 || startPosition > (int)this->length() - 1)
 	{
-		throw OutOfRangeError("bump::String::section() position is outside string bounds");
+		throw OutOfRangeError("Position is outside string bounds", BUMP_LOCATION);
 	}
 
 	// Adjust for the default length
@@ -668,7 +680,7 @@ String String::section(int startPosition, int length) const
 	// Make sure length is at least 1
 	if (length < 1)
 	{
-		throw InvalidArgumentError("bump::String::section() length must be at least one");
+		throw InvalidArgumentError("Length must be at least one", BUMP_LOCATION);
 	}
 
 	return subString(startPosition, length);
@@ -707,13 +719,13 @@ String String::subString(int startPosition, int length) const
 	// Make sure startPosition is inside our bounds
 	if (startPosition < 0 || startPosition > (int)this->length())
 	{
-		throw OutOfRangeError("bump::String::subString() start position is outside string bounds");
+		throw OutOfRangeError("Start position is outside string bounds", BUMP_LOCATION);
 	}
 
 	// Make sure length is at least 1
 	if (length < 1)
 	{
-		throw InvalidArgumentError("bump::String::subString() length must be at least one");
+		throw InvalidArgumentError("Length must be at least one", BUMP_LOCATION);
 	}
 
 	return substr(startPosition, length);
@@ -744,7 +756,7 @@ bool String::toBool() const
 	// Make sure we have a valid bool or throw an exception
 	if (this_copy != "true" && this_copy != "false")
 	{
-		throw TypeCastError("bump::String::toBool() cannot convert string to bool");
+		throw TypeCastError("Cannot convert string to bool", BUMP_LOCATION);
 	}
 
 	return this_copy == "true" ? true : false;
@@ -758,7 +770,7 @@ double String::toDouble() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw TypeCastError("bump::String::toDouble() cannot convert string to double");
+		throw TypeCastError("Cannot convert string to double", BUMP_LOCATION);
 	}
 }
 
@@ -770,7 +782,7 @@ float String::toFloat() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw TypeCastError("bump::String::toFloat() cannot convert string to float");
+		throw TypeCastError("Cannot convert string to float", BUMP_LOCATION);
 	}
 }
 
@@ -782,7 +794,7 @@ int String::toInt() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw TypeCastError("bump::String::toInt() cannot convert string to int");
+		throw TypeCastError("Cannot convert string to int", BUMP_LOCATION);
 	}
 }
 
@@ -794,7 +806,7 @@ long String::toLong() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw TypeCastError("bump::String::toLong() cannot convert string to long");
+		throw TypeCastError("Cannot convert string to long", BUMP_LOCATION);
 	}
 }
 
@@ -806,7 +818,7 @@ long long String::toLongLong() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw TypeCastError("bump::String::toLongLong() cannot convert string to long long");
+		throw TypeCastError("Cannot convert string to long long", BUMP_LOCATION);
 	}
 }
 
@@ -824,7 +836,7 @@ short String::toShort() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw TypeCastError("bump::String::toShort() cannot convert string to short");
+		throw TypeCastError("Cannot convert string to short", BUMP_LOCATION);
 	}
 }
 
@@ -841,7 +853,7 @@ unsigned int String::toUInt() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw TypeCastError("bump::String::toUInt() cannot convert string to unsigned int");
+		throw TypeCastError("Cannot convert string to unsigned int", BUMP_LOCATION);
 	}
 }
 
@@ -853,7 +865,7 @@ unsigned long String::toULong() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw TypeCastError("bump::String::toULong() cannot convert string to unsigned long");
+		throw TypeCastError("Cannot convert string to unsigned long", BUMP_LOCATION);
 	}
 }
 
@@ -865,7 +877,7 @@ unsigned long long String::toULongLong() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw TypeCastError("bump::String::toULongLong() cannot convert string to unsigned long long");
+		throw TypeCastError("Cannot convert string to unsigned long long", BUMP_LOCATION);
 	}
 }
 
@@ -883,7 +895,7 @@ unsigned short String::toUShort() const
 	}
 	catch (boost::bad_lexical_cast)
 	{
-		throw TypeCastError("bump::String::toUShort() cannot convert string to unsigned short");
+		throw TypeCastError("Cannot convert string to unsigned short", BUMP_LOCATION);
 	}
 }
 

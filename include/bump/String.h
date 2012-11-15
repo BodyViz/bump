@@ -169,6 +169,15 @@ public:
 	~String();
 
 	/**
+	 * Joins all the strings into a single string each separated by the separator string.
+	 *
+	 * @param strings a list of strings to join.
+	 * @param separator a string used to separate each of the joined strings.
+	 * @return a single string consisting of the list of string joined together by the separator string.
+	 */
+	static String join(const StringList& strings, const String& separator);
+
+	/**
 	 * Appends the given string onto the end of this string.
 	 *
 	 * @param appendString the string to add.

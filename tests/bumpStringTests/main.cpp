@@ -375,6 +375,25 @@ TEST_F(StringTest, testBoolConstructor)
 	EXPECT_STREQ("false", my_str.c_str());
 }
 
+TEST_F(StringTest, testJoin)
+{
+	// Default cases
+	bump::StringList strings;
+	strings.push_back("this");
+	strings.push_back("is");
+	strings.push_back("an");
+	strings.push_back("example");
+	strings.push_back("string");
+	EXPECT_STREQ("this is an example string", bump::String::join(strings, " ").c_str());
+	EXPECT_STREQ("thisisanexamplestring", bump::String::join(strings, "").c_str());
+	EXPECT_STREQ("this\nis\nan\nexample\nstring", bump::String::join(strings, "\n").c_str());
+
+	// Test an empty string list
+	strings = bump::StringList();
+	EXPECT_STREQ("", bump::String::join(strings, "").c_str());
+	EXPECT_STREQ("", bump::String::join(strings, " ").c_str());
+}
+
 TEST_F(StringTest, testAppendString)
 {
 	// Normal append

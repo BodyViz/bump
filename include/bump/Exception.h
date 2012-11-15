@@ -28,6 +28,8 @@
  *=============================================================================================================
  */
 
+#define BUMP_LOCATION bump::String("Function: ") + __PRETTY_FUNCTION__ + " File: " + __FILE__ + " Line: " + bump::String(__LINE__)
+
 namespace bump {
 
 /**
@@ -43,24 +45,29 @@ public:
 	virtual ~Exception() throw() {}
 
 	/**
-	 * Overrides what method for std::exception.
+	 * Creates a string representation of all known information about the exception.
 	 *
-	 * @return a string representation of the class name and message attached to the exception.
+	 * @return a string representation of all known information about the exception.
 	 */
-	virtual String what() const throw()
+	virtual String description() const throw()
 	{
-		return String() << _className << "\n\t1) " << _message;
+		return String::join(_descriptions, "\n");
 	}
 
 	/**
-	 * Appends the description onto a new line of the message.
+	 * Appends the description and location onto a new line of the message.
 	 *
-	 * @param description the long to append onto this string.
+	 * This is VERY useful when you are going to re-thrown an exception and wish
+	 * to tack on some additional information to the exception's description.
+	 *
+	 * @param description the description of the exception.
+	 * @param location the file path, line number and function name of where the exception was thrown.
 	 */
-	void operator << (const String& description)
+	void extendDescription(const String& description, const String& location)
 	{
-		++_throwCounter;
-		_message << "\n\t" << _throwCounter << ") " << description;
+		String new_description;
+		new_description << _className << ": \"" << description << "\" " << location;
+		_descriptions.push_back(new_description);
 	}
 
 protected:
@@ -69,20 +76,19 @@ protected:
 	 * Constructor.
 	 *
 	 * @param className the class name of the sub-class exception.
-	 * @param message the message to return when calling the what() method of the exception.
+	 * @param description the description of the exception.
+	 * @param location the file path, line number and function name of where the exception was thrown.
 	 */
-	Exception(const String& className, const String& message) throw() :
-		_className(className),
-		_message(message),
-		_throwCounter(1)
+	Exception(const String& className, const String& description, const String& location) throw() :
+		_className(className)
 	{
-		;
+		// Add the description
+		extendDescription(description, location);
 	}
 
 	/** Instance member variables. */
 	String _className;
-	String _message;
-	unsigned int _throwCounter;
+	StringList _descriptions;
 };
 
 /**
@@ -106,7 +112,11 @@ protected:
 	 * @param className the class name of the sub-class exception.
 	 * @param message the message to return when calling the what() method of the exception.
 	 */
-	LogicError(const String& className, const String& message) throw() : Exception(className, message) {}
+	LogicError(const String& className, const String& message, const String& location) throw() :
+		Exception(className, message, location)
+	{
+		;
+	}
 };
 
 /**
@@ -130,7 +140,11 @@ protected:
 	 * @param className the class name of the sub-class exception.
 	 * @param message the message to return when calling the what() method of the exception.
 	 */
-	RuntimeError(const String& className, const String& message) : Exception(className, message) {}
+	RuntimeError(const String& className, const String& message, const String& location) throw() :
+		Exception(className, message, location)
+	{
+		;
+	}
 };
 
 /**
@@ -145,7 +159,11 @@ public:
 	 *
 	 * @param message the message to return when calling the what() method of the exception.
 	 */
-	InvalidArgumentError(const String& message = "") : LogicError("bump::InvalidArgumentError", message) {}
+	InvalidArgumentError(const String& message, const String& location) throw() :
+		LogicError("bump::InvalidArgumentError", message, location)
+	{
+		;
+	}
 
 	/**
 	 * Destructor.
@@ -166,7 +184,11 @@ public:
 	 *
 	 * @param message the message to return when calling the what() method of the exception.
 	 */
-	OutOfRangeError(const String& message = "") : RuntimeError("bump::OutOfRangeError", message) {}
+	OutOfRangeError(const String& message, const String& location) throw() :
+		RuntimeError("bump::OutOfRangeError", message, location)
+	{
+		;
+	}
 
 	/**
 	 * Destructor.
@@ -187,7 +209,11 @@ public:
 	 *
 	 * @param message the message to return when calling the what() method of the exception.
 	 */
-	TypeCastError(const String& message = "") : RuntimeError("bump::TypeCastError", message) {}
+	TypeCastError(const String& message, const String& location) throw() :
+		RuntimeError("bump::TypeCastError", message, location)
+	{
+		;
+	}
 
 	/**
 	 * Destructor.

@@ -14,7 +14,7 @@ void valueMustBePositive(int value)
 	if (value < 0)
 	{
 		std::cout << "valueMustBePositive FAILED with a value of " << value << std::endl;
-		throw bump::InvalidArgumentError("valueMustBePositive() the value cannot be negative");
+		throw bump::InvalidArgumentError("The value cannot be negative", BUMP_LOCATION);
 	}
 
 	std::cout << "valueMustBePositive executed SUCCESSFULLY with a value of " << value << std::endl;
@@ -26,7 +26,7 @@ void removeItemFromVector(std::vector<double>& values, int itemIndex)
 	if (itemIndex < 0 || itemIndex > values.size() - 1)
 	{
 		std::cout << "removeItemFromVector FAILED with an itemIndex of " << itemIndex << std::endl;
-		throw bump::OutOfRangeError("removeItemFromVector() the item index was outside the bounds of values");
+		throw bump::OutOfRangeError("The item index was outside the bounds of values", BUMP_LOCATION);
 	}
 
 	int previous_size = values.size();
@@ -53,7 +53,7 @@ void tryToTypeCast()
 	}
 	else
 	{
-		throw bump::TypeCastError("tryToTypeCast() failed to typecast base1 to a Derived");
+		throw bump::TypeCastError("Failed to typecast base1 to a Derived", BUMP_LOCATION);
 	}
 
 	// Try to cast base2 to a Derived
@@ -64,13 +64,13 @@ void tryToTypeCast()
 	}
 	else
 	{
-		throw bump::TypeCastError("tryToTypeCast() failed to typecast base2 to a Derived");
+		throw bump::TypeCastError("Failed to typecast base2 to a Derived", BUMP_LOCATION);
 	}
 }
 
 void firstThrow()
 {
-	throw bump::InvalidArgumentError("first throw");
+	throw bump::InvalidArgumentError("First throw", BUMP_LOCATION);
 }
 
 void doubleThrow()
@@ -81,8 +81,8 @@ void doubleThrow()
 	}
 	catch (bump::Exception& e)
 	{
-		// You can use the << operator to append an additional description to the exception
-		e << "second throw";
+		// You can use the extendDescription method to append an additional description to the exception
+		e.extendDescription("Second throw", BUMP_LOCATION);
 		throw;
 	}
 }
@@ -90,14 +90,8 @@ void doubleThrow()
 /**
  * This example demonstrates how to use the bump::Exception classes.
  *
- *                                   Bump Exception Hierarchy
- *
- *	Exception - PROTECTED (base class exception supporting both logic and runtime errors)
- *	- LogicError - PROTECTED (when error condition could be detected prior to running the application)
- *		- InvalidArgumentError - PUBLIC (when parameter passed into a function is invalid)
- *	- RuntimeError - PROTECTED (when error condition can only be caught at runtime)
- *		- OutOfRangeError - PUBLIC (when container encounters an out-of-range error)
- *		- TypeCastError - PUBLIC (when runtime cannot type cast an object as requested)
+ * To view the bump::Exception hierarchy, please refer to the documentation provided in
+ * the <bump/Exception.h> header.
  *
  * Throughout the Bump library, there are certain cases guarded by exceptions when used
  * incorrectly. These safeguard crashes and give you, the user, the ability to determine
@@ -124,13 +118,13 @@ int main(int argc, char **argv)
 	}
 	catch (const bump::InvalidArgumentError& e)
 	{
-		std::cout << e.what() << std::endl;
+		std::cout << e.description() << std::endl;
 	}
 
 	// Demonstrates how to handle a bump::OutOfRangeError by catching it as a bump::Exception
 	try
 	{
-		std::cout << "\n\n=================== bump::OutOfRangeError Example ===================" << std::endl;
+		std::cout << "\n=================== bump::OutOfRangeError Example ===================" << std::endl;
 
 		// Runs just fine
 		std::vector<double> values;
@@ -146,40 +140,40 @@ int main(int argc, char **argv)
 		// This will only catch a bump::InvalidArgumentError exception. Since this is not the type of
 		// exception throw in the removeItemFromVector function, this will never actually get called
 		// unless we modify the function to also throw this type of exception.
-		std::cout << e.what() << std::endl;
+		std::cout << e.description() << std::endl;
 	}
 	catch (const bump::Exception& e)
 	{
 		// We can also catch exceptions by using base classes higher up in the bump::Exception
 		// inheritance hierarchy. This block will in fact catch any exception thrown by Bump
 		// since bump::Exception is the base class for all actual exceptions.
-		std::cout << e.what() << std::endl;
+		std::cout << e.description() << std::endl;
 	}
 
 	// Demonstrates how to handle a bump::TypeCastError.
 	try
 	{
-		std::cout << "\n\n=================== bump::TypeCastError Example ===================" << std::endl;
+		std::cout << "\n=================== bump::TypeCastError Example ===================" << std::endl;
 
 		// Throws an exception
 		tryToTypeCast();
 	}
 	catch (const bump::TypeCastError& e)
 	{
-		std::cout << e.what() << std::endl;
+		std::cout << e.description() << std::endl;
 	}
 
 	// Demonstrates how to use multiple throws to append additional info to the exception.
 	try
 	{
-		std::cout << "\n\n=================== Multiple Throws Example ===================" << std::endl;
+		std::cout << "\n=================== Multiple Throws Example ===================" << std::endl;
 
 		// Throws an exception twice
 		doubleThrow();
 	}
 	catch (const bump::Exception& e)
 	{
-		std::cout << e.what() << std::endl;
+		std::cout << e.description() << std::endl;
 	}
 
     return 0;
