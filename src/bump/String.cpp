@@ -719,6 +719,22 @@ String String::subString(int startPosition, int length) const
 	return substr(startPosition, length);
 }
 
+String String::title() const
+{
+	// Split the string by spaces, then capitalize each word
+	String title;
+	StringList split_strings = split(" ");
+	for (unsigned int i = 0; i < split_strings.size(); ++i)
+	{
+		title << split_strings.at(i).toLowerCase().capitalize() << " ";
+	}
+
+	// Trim of that pesky last space
+	title = title.trimmed();
+
+	return title;
+}
+
 bool String::toBool() const
 {
 	// Make a copy and cast make it lowercase

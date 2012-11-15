@@ -587,6 +587,13 @@ public:
 	String subString(int startPosition, int length) const;
 
 	/**
+	 * Capitalizes all the first letters of each word in the string.
+	 *
+	 * @return a new string with all the first letters of each word capitalized.
+	 */
+	String title() const;
+
+	/**
 	 * Converts this string to a boolean.
 	 *
 	 * Throws a TypeCastError when this string cannot be converted to a boolean.

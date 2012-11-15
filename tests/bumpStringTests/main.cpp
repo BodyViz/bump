@@ -1635,6 +1635,19 @@ TEST_F(StringTest, testSubString)
 	EXPECT_THROW(str.subString(2, 0), bump::InvalidArgumentError);
 }
 
+TEST_F(StringTest, testTitle)
+{
+	// Regular usage tests
+	bump::String str("my absolutely awesome book title");
+	EXPECT_STREQ("My Absolutely Awesome Book Title", str.title().c_str());
+	str = "MY ABSOLUTELY AWESOME BOOK TITLE";
+	EXPECT_STREQ("My Absolutely Awesome Book Title", str.title().c_str());
+
+	// Empty string test
+	str = "";
+	EXPECT_STREQ("", str.title().c_str());
+}
+
 TEST_F(StringTest, testToBool)
 {
 	// Regular usage tests
