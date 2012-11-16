@@ -392,14 +392,25 @@ void String::clear()
 	std::string::clear();
 }
 
-bool String::compare(const String& otherString) const
+bool String::compare(const String& otherString, CaseSensitivity caseSensitivity) const
 {
-	return std::string::compare(otherString) == 0;
+	// Make some copies to handle case sensitivity
+	String this_copy = *this;
+	String other_string_copy = otherString;
+
+	// Adjust if not case sensitive
+	if (caseSensitivity == NotCaseSensitive)
+	{
+		this_copy.toLowerCase();
+		other_string_copy.toLowerCase();
+	}
+
+	return this_copy.std::string::compare(other_string_copy) == 0;
 }
 
-bool String::compare(const char* otherString) const
+bool String::compare(const char* otherString, CaseSensitivity caseSensitivity) const
 {
-	return std::string::compare(otherString) == 0;
+	return compare(String(otherString), caseSensitivity);
 }
 
 bool String::contains(const String& containString, CaseSensitivity caseSensitivity) const

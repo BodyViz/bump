@@ -394,17 +394,19 @@ public:
 	 * Compares the content of the this string with the given string.
 	 *
 	 * @param otherString the string to compare content against with this string.
+	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
 	 * @return whether the content within both objects is the same.
 	 */
-	bool compare(const String& otherString) const;
+	bool compare(const String& otherString, CaseSensitivity caseSensitivity = CaseSensitive) const;
 
 	/**
 	 * Compares the content of the this string with the given string.
 	 *
 	 * @param otherString the const char* to compare content against with this string.
+	 * @param caseSensitivity the case sensitivity to be used, defaults to CaseSensitive.
 	 * @return whether the content within both objects is the same.
 	 */
-	bool compare(const char* otherString) const;
+	bool compare(const char* otherString, CaseSensitivity caseSensitivity = CaseSensitive) const;
 
 	/**
 	 * Finds out whether this string contains an occurrence of the given string.

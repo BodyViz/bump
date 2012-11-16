@@ -752,6 +752,12 @@ TEST_F(StringTest, testCompareString)
 	str2 = bump::String("Str1");
 	EXPECT_TRUE(str1.compare(str2));
 
+	// Test some non-case sensitive cases
+	str1 = "Str1";
+	str2 = "str1";
+	EXPECT_FALSE(str1.compare(str2, bump::String::CaseSensitive));
+	EXPECT_TRUE(str1.compare(str2, bump::String::NotCaseSensitive));
+
 	// Test empty strings
 	str1 = bump::String("");
 	str2 = bump::String();
@@ -778,6 +784,12 @@ TEST_F(StringTest, testCompareCString)
 	EXPECT_FALSE(str1.compare(str2));
 	str2 = "Str1";
 	EXPECT_TRUE(str1.compare(str2));
+
+	// Test some non-case sensitive cases
+	str1 = "Str1";
+	str2 = "str1";
+	EXPECT_FALSE(str1.compare(str2, bump::String::CaseSensitive));
+	EXPECT_TRUE(str1.compare(str2, bump::String::NotCaseSensitive));
 
 	// Test empty strings
 	str1 = bump::String("");
