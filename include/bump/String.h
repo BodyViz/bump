@@ -747,18 +747,6 @@ public:
 	bool startsWith(const char* startString, CaseSensitivity caseSensitivity = CaseSensitive) const;
 
 	/**
-	 * Creates a new string beginning at the start position with the given length.
-	 *
-	 * Throws an OutOfRangeError when the start position is outside this string's bounds.
-	 * Throws an InvalidArgumentError when length is greater than zero.
-	 *
-	 * @param startPosition the index position to start the section at in this string.
-	 * @param length the length of the section to extract from the string.
-	 * @return the string beginning at the start position with the given length.
-	 */
-	String subString(int startPosition, int length) const;
-
-	/**
 	 * Capitalizes all the first letters of each word in the string.
 	 *
 	 * @return a new string with all the first letters of each word capitalized.

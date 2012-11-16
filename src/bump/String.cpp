@@ -381,7 +381,7 @@ String& String::chop(unsigned int n)
 	}
 	else
 	{
-		*this = subString(0, length() - n);
+		*this = section(0, length() - n);
 	}
 
 	return *this;
@@ -460,7 +460,7 @@ int String::count(const String& containString, CaseSensitivity caseSensitivity) 
 	int contains_count = 0;
 	for (int i = 0; i < this_copy.length(); ++i)
 	{
-		temp_str = this_copy.subString(i, contain_string_copy.length());
+		temp_str = this_copy.section(i, contain_string_copy.length());
 		found = temp_str.find(contain_string_copy);
 		if (found != std::string::npos)
 		{
@@ -585,9 +585,9 @@ String& String::insert(const String& insertString, int position)
 	String start;
 	String end;
 	if (position > 0)
-		start = subString(0, position);
+		start = section(0, position);
 	if (length() > position)
-		end = subString(position, this->length());
+		end = section(position, this->length());
 
 	// Combine them
 	*this = start + insertString + end;
@@ -668,7 +668,7 @@ String String::left(int n) const
 		throw OutOfRangeError("The n parameter is outside string bounds", BUMP_LOCATION);
 	}
 
-	return subString(0, n);
+	return section(0, n);
 }
 
 unsigned int String::length() const
@@ -843,7 +843,7 @@ String String::right(int n) const
 		throw OutOfRangeError("The n parameter is outside string bounds", BUMP_LOCATION);
 	}
 
-	return subString(length() - n, length());
+	return section(length() - n, length());
 }
 
 String String::section(int startPosition, int length) const
@@ -866,7 +866,7 @@ String String::section(int startPosition, int length) const
 		throw InvalidArgumentError("Length must be at least one", BUMP_LOCATION);
 	}
 
-	return subString(startPosition, length);
+	return substr(startPosition, length);
 }
 
 StringList String::split(const String& separator) const
@@ -895,23 +895,6 @@ bool String::startsWith(const String& startString, CaseSensitivity caseSensitivi
 bool String::startsWith(const char* startString, CaseSensitivity caseSensitivity) const
 {
 	return startsWith(String(startString), caseSensitivity);
-}
-
-String String::subString(int startPosition, int length) const
-{
-	// Make sure startPosition is inside our bounds
-	if (startPosition < 0 || startPosition > (int)this->length())
-	{
-		throw OutOfRangeError("Start position is outside string bounds", BUMP_LOCATION);
-	}
-
-	// Make sure length is at least 1
-	if (length < 1)
-	{
-		throw InvalidArgumentError("Length must be at least one", BUMP_LOCATION);
-	}
-
-	return substr(startPosition, length);
 }
 
 String String::title() const

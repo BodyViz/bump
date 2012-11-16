@@ -1815,25 +1815,6 @@ TEST_F(StringTest, testStartsWithCString)
 	EXPECT_TRUE(str1.startsWith(str2, bump::String::NotCaseSensitive));
 }
 
-TEST_F(StringTest, testSubString)
-{
-	// Regular usage tests
-	bump::String str("a simple example string");
-	EXPECT_STREQ("simple example", str.subString(2, 14).c_str());
-	EXPECT_STREQ("a ", str.subString(0, 2).c_str());
-	EXPECT_STREQ("simple example string", str.subString(2, 100).c_str());
-	EXPECT_STREQ("a simple example string", str.subString(0, str.length()).c_str());
-
-	// Empty string tests
-	str = "";
-	EXPECT_THROW(str.subString(1, 1), bump::OutOfRangeError);
-
-	// Out-of-bounds tests
-	str = "a simple example string";
-	EXPECT_THROW(str.subString(-2, 2), bump::OutOfRangeError);
-	EXPECT_THROW(str.subString(2, 0), bump::InvalidArgumentError);
-}
-
 TEST_F(StringTest, testTitle)
 {
 	// Regular usage tests
