@@ -14,8 +14,10 @@
 // Boost headers
 #include <boost/algorithm/string/erase.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/regex.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/regex.hpp>
 
 // Bump headers
 #include <bump/Exception.h>
@@ -171,6 +173,176 @@ String& String::append(const char* appendString)
 {
 	*this += appendString;
 	return *this;
+}
+
+String String::arg(const String& argument) const
+{
+	// Find all the markers (i.e. %1 - %99)
+	boost::regex expression("%[1-9][0-9]?");
+	std::vector<std::string> markers;
+	boost::algorithm::find_all_regex(markers, *this, expression);
+
+	// Throw an arg error if we didn't find any markers
+	if (markers.empty())
+	{
+		throw SearchError("Could not find any markers (i.e. %1 - %99", BUMP_LOCATION);
+	}
+
+	// Now we need to find the lowest marker so we can replace it. We also need to store each
+	// marker's position in a multimap to be able to replace only the exact portion of the
+	// string. For example, we need to ensure we don't replace %1 and %10 at the same time.
+	// To make sure we only replace the %1 and not the %10 on this call, we use the multimap.
+	std::multimap<int, int> marker_position_map;
+	unsigned int current_index = 0;
+	unsigned int lowest_marker_value = 100;
+	String lowest_marker;
+	for (unsigned int i = 0; i < markers.size(); ++i)
+	{
+		// First find the marker index position in this string
+		String marker = markers.at(i);
+		int marker_position_index = indexOf(marker, current_index);
+
+		// Convert the marker to a value
+		unsigned int marker_value = marker.remove("%").toUInt();
+		marker = markers.at(i);
+
+		// See if the match is the lowest
+		if (marker_value < lowest_marker_value)
+		{
+			lowest_marker_value = marker_value;
+			lowest_marker = marker;
+		}
+
+		// Store the match value and position in the map
+		marker_position_map.insert(std::pair<int, int>(marker_value, marker_position_index));
+
+		// Update the current index for the next iteration
+		current_index = marker_position_index + markers.at(i).length();
+	}
+
+	// Create a copy of this string for replacement
+	String replaced = *this;
+
+	// Iterate through the marker position map and replace all the lowest markers. We need to also
+	// keep track of the difference in length between our match text and the replacement argument
+	// text as "skipped_space". Our replacement positions need to then be adjusted by the skipped
+	// space each time to map properly.
+	int skipped_space = 0;
+	std::multimap<int, int>::iterator iter = marker_position_map.find(lowest_marker_value);
+	for (iter = marker_position_map.find(lowest_marker_value); iter != marker_position_map.end(); ++iter)
+	{
+		// Stop once we're finished with the lowest markers
+		if (iter->first != lowest_marker_value)
+		{
+			break;
+		}
+
+		// Actually replace the marker with the argument using skipped_space to make sure we're
+		// in the right spot regardless of how many iterations we've gone through.
+		int start_position = iter->second;
+		replaced.replace(start_position + skipped_space, lowest_marker.length(), argument);
+
+		// Update the skipped space
+		skipped_space += (int)argument.length() - lowest_marker.length();
+	}
+
+	return replaced;
+}
+
+String String::arg(const String& a1, const String& a2) const
+{
+	String replaced = this->arg(a1);
+	replaced = replaced.arg(a2);
+
+	return replaced;
+}
+
+String String::arg(const String& a1, const String& a2, const String& a3) const
+{
+	String replaced = this->arg(a1);
+	replaced = replaced.arg(a2);
+	replaced = replaced.arg(a3);
+
+	return replaced;
+}
+
+String String::arg(const String& a1, const String& a2, const String& a3, const String& a4) const
+{
+	String replaced = this->arg(a1);
+	replaced = replaced.arg(a2);
+	replaced = replaced.arg(a3);
+	replaced = replaced.arg(a4);
+
+	return replaced;
+}
+
+String String::arg(const String& a1, const String& a2, const String& a3, const String& a4, const String& a5) const
+{
+	String replaced = this->arg(a1);
+	replaced = replaced.arg(a2);
+	replaced = replaced.arg(a3);
+	replaced = replaced.arg(a4);
+	replaced = replaced.arg(a5);
+
+	return replaced;
+}
+
+String String::arg(const String& a1, const String& a2, const String& a3, const String& a4, const String& a5,
+				   const String& a6) const
+{
+	String replaced = this->arg(a1);
+	replaced = replaced.arg(a2);
+	replaced = replaced.arg(a3);
+	replaced = replaced.arg(a4);
+	replaced = replaced.arg(a5);
+	replaced = replaced.arg(a6);
+
+	return replaced;
+}
+
+String String::arg(const String& a1, const String& a2, const String& a3, const String& a4, const String& a5,
+				   const String& a6, const String& a7) const
+{
+	String replaced = this->arg(a1);
+	replaced = replaced.arg(a2);
+	replaced = replaced.arg(a3);
+	replaced = replaced.arg(a4);
+	replaced = replaced.arg(a5);
+	replaced = replaced.arg(a6);
+	replaced = replaced.arg(a7);
+
+	return replaced;
+}
+
+String String::arg(const String& a1, const String& a2, const String& a3, const String& a4, const String& a5,
+				   const String& a6, const String& a7, const String& a8) const
+{
+	String replaced = this->arg(a1);
+	replaced = replaced.arg(a2);
+	replaced = replaced.arg(a3);
+	replaced = replaced.arg(a4);
+	replaced = replaced.arg(a5);
+	replaced = replaced.arg(a6);
+	replaced = replaced.arg(a7);
+	replaced = replaced.arg(a8);
+
+	return replaced;
+}
+
+String String::arg(const String& a1, const String& a2, const String& a3, const String& a4, const String& a5,
+				   const String& a6, const String& a7, const String& a8, const String& a9) const
+{
+	String replaced = this->arg(a1);
+	replaced = replaced.arg(a2);
+	replaced = replaced.arg(a3);
+	replaced = replaced.arg(a4);
+	replaced = replaced.arg(a5);
+	replaced = replaced.arg(a6);
+	replaced = replaced.arg(a7);
+	replaced = replaced.arg(a8);
+	replaced = replaced.arg(a9);
+
+	return replaced;
 }
 
 const char String::at(int position) const

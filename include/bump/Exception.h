@@ -202,6 +202,32 @@ public:
 };
 
 /**
+ * A public runtime error class which is used when a search algorithm is started and cannot find
+ * anything even though it should.
+ */
+class BUMP_EXPORT SearchError : public RuntimeError
+{
+public:
+
+	/**
+	 * Constructor.
+	 *
+	 * @param description the description of the exception.
+	 * @param location the file path, line number and function name of where the exception was thrown.
+	 */
+	SearchError(const String& description, const String& location) throw() :
+		RuntimeError("bump::SearchError", description, location)
+	{
+		;
+	}
+
+	/**
+	 * Destructor.
+	 */
+	~SearchError() throw() {}
+};
+
+/**
  * A public runtime error class which is used when the runtime cannot type cast an object
  * as requested.
  */

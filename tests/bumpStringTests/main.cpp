@@ -460,6 +460,189 @@ TEST_F(StringTest, testAppendCharStar)
 	EXPECT_STREQ("", str1.c_str());
 }
 
+TEST_F(StringTest, testArg1)
+{
+	// Default usage
+	bump::String str("Processing File: %1");
+	EXPECT_STREQ("Processing File: test.txt", str.arg("test.txt").c_str());
+	str = "Processing File: %1 %1";
+	EXPECT_STREQ("Processing File: test.txt test.txt", str.arg("test.txt").c_str());
+	str = "Processing File: %1 %2 %1";
+	EXPECT_STREQ("Processing File: test.txt %2 test.txt", str.arg("test.txt").c_str());
+
+	// Stacked usage
+	str = "Processing Files: %1, %2, %3";
+	EXPECT_STREQ("Processing Files: test1.txt, test2.txt, test3.txt", str.arg("test1.txt").arg("test2.txt").arg("test3.txt").c_str());
+	str = "Processing Files: %1, %2, %1";
+	EXPECT_STREQ("Processing Files: test1.txt, test2.txt, test1.txt", str.arg("test1.txt").arg("test2.txt").c_str());
+
+	// Missing %i character
+	str = "Processing File:";
+	EXPECT_THROW(str.arg("test.txt"), bump::SearchError);
+}
+
+TEST_F(StringTest, testArg2)
+{
+	// Default usage
+	bump::String str("Processing Files: %1 and %2");
+	EXPECT_STREQ("Processing Files: test1.txt and test2.txt", str.arg("test1.txt", "test2.txt").c_str());
+	str = "Processing File: %1 of %2";
+	EXPECT_STREQ("Processing File: 1 of 10", str.arg(1, 10).c_str());
+
+	// Reversed usage
+	str = "Processing File: %2 of %1";
+	EXPECT_STREQ("Processing File: 10 of 1", str.arg(1, 10).c_str());
+
+	// Stacked usage
+	str = "Processing File %1 of %2: %3";
+	EXPECT_STREQ("Processing File 1 of 10: test.txt", str.arg(1, 10).arg("test.txt").c_str());
+
+	// Missing %i character
+	str = "Processing File:";
+	EXPECT_THROW(str.arg(1, 2), bump::SearchError);
+}
+
+TEST_F(StringTest, testArg3)
+{
+	// Default usage
+	bump::String str("%1, %2 and %3");
+	EXPECT_STREQ("1, 0.987 and test", str.arg(1, 0.987, "test").c_str());
+	str = "Processing File %1 of %2: %3";
+	EXPECT_STREQ("Processing File 1 of 10: test.txt", str.arg(1, 10, "test.txt").c_str());
+
+	// Reversed usage
+	str = "Processing File %2 of %1: %3";
+	EXPECT_STREQ("Processing File 10 of 1: test.txt", str.arg(1, 10, "test.txt").c_str());
+
+	// Stacked usage
+	str = "%1, %2, %3, %4, %5 and %6";
+	EXPECT_STREQ("0.1, 0.2, 0.3, 0.4, 0.5 and 0.6", str.arg(0.1, 0.2, 0.3).arg(0.4, 0.5).arg(0.6).c_str());
+
+	// Missing %i character
+	str = "Processing File:";
+	EXPECT_THROW(str.arg(1, 2, 3), bump::SearchError);
+}
+
+TEST_F(StringTest, testArg4)
+{
+	// Default usage
+	bump::String str("%1, %2, %3 and %4");
+	EXPECT_STREQ("1, 0.987, 29 and test", str.arg(1, 0.987, 29, "test").c_str());
+
+	// Reversed usage
+	str = "%2, %4, %1 and %3";
+	EXPECT_STREQ("1, 0.987, 29 and test", str.arg(29, 1, "test", 0.987).c_str());
+
+	// Stacked usage
+	str = "%1, %2, %3, %4, %5, %6, %7, %8, %9 and %10";
+	str = str.arg(0.1, 0.2, 0.3, 0.4).arg(0.5, 0.6, 0.7).arg(0.8, 0.9).arg(bump::String(1.0, 1));
+	EXPECT_STREQ("0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 and 1.0", str.c_str());
+
+	// Missing %i character
+	str = "Processing File:";
+	EXPECT_THROW(str.arg(1, 2, 3, 4), bump::SearchError);
+}
+
+TEST_F(StringTest, testArg5)
+{
+	// Default usage
+	bump::String str("%1, %2, %3, %4 and %5");
+	EXPECT_STREQ("1, 0.987, 29, test and true", str.arg(1, 0.987, 29, "test", true).c_str());
+
+	// Reversed usage
+	str = "%2, %5, %4, %1 and %3";
+	EXPECT_STREQ("true, 0.987, test, 29 and 1", str.arg(29, true, 1, "test", 0.987).c_str());
+
+	// Stacked usage
+	str = "%1, %2, %3, %4, %5, %6, %7, %8, %9, %10, %11, %12, %13, %14 and %15";
+	str = str.arg(0.1, 0.2, 0.3, 0.4, 0.5).arg(0.6, 0.7, 0.8, 0.9).arg(bump::String(1.0, 1), 1.1, 1.2).arg(1.3, 1.4).arg(1.5);
+	EXPECT_STREQ("0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4 and 1.5", str.c_str());
+
+	// Missing %i character
+	str = "Processing File:";
+	EXPECT_THROW(str.arg(1, 2, 3, 4, 5), bump::SearchError);
+}
+
+TEST_F(StringTest, testArg6)
+{
+	// Default usage
+	bump::String str("%1, %2, %3, %4, %5 and %6");
+	EXPECT_STREQ("1, 0.987, 29, test, true and false", str.arg(1, 0.987, 29, "test", true, false).c_str());
+
+	// Reversed usage
+	str = "%6, %2, %5, %4, %1, %3";
+	EXPECT_STREQ("0.987, 29, test, 1, false, true", str.arg(false, 29, true, 1, "test", 0.987).c_str());
+
+	// Stacked usage
+	str = "%1, %2, %3, %4, %5, %6, %7";
+	EXPECT_STREQ("0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7", str.arg(0.1, 0.2, 0.3, 0.4, 0.5, 0.6).arg(0.7).c_str());
+
+	// Missing %i character
+	str = "Processing File:";
+	EXPECT_THROW(str.arg(1, 2, 3, 4, 5, 6), bump::SearchError);
+}
+
+TEST_F(StringTest, testArg7)
+{
+	// Default usage
+	bump::String str("%1, %2, %3, %4, %5, %6 and %7");
+	str = str.arg(1, 0.987, 29, "test", true, false, bump::String(1.000, 3));
+	EXPECT_STREQ("1, 0.987, 29, test, true, false and 1.000", str.c_str());
+
+	// Reversed usage
+	str = "%6, %2, %5, %4, %1, %3, %7";
+	EXPECT_STREQ("0.987, 29, test, 1, false, true, 10", str.arg(false, 29, true, 1, "test", 0.987, 10).c_str());
+
+	// Stacked usage
+	str = "%1, %2, %3, %4, %5, %6, %7, %8";
+	EXPECT_STREQ("0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8", str.arg(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7).arg(0.8).c_str());
+
+	// Missing %i character
+	str = "Processing File:";
+	EXPECT_THROW(str.arg(1, 2, 3, 4, 5, 6, 7), bump::SearchError);
+}
+
+TEST_F(StringTest, testArg8)
+{
+	// Default usage
+	bump::String str("%1, %2, %3, %4, %5, %6, %7 and %8");
+	str = str.arg(1, 0.987, 29, "test", true, false, bump::String(1.000, 3), "");
+	EXPECT_STREQ("1, 0.987, 29, test, true, false, 1.000 and ", str.c_str());
+
+	// Reversed usage
+	str = "%6, %2, %5, %8, %4, %1, %3, %7";
+	EXPECT_STREQ("0.987, 29, test, , 1, false, true, 10", str.arg(false, 29, true, 1, "test", 0.987, 10, "").c_str());
+
+	// Stacked usage
+	str = "%1, %2, %3, %4, %5, %6, %7, %8, %9";
+	EXPECT_STREQ("0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9", str.arg(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8).arg(0.9).c_str());
+
+	// Missing %i character
+	str = "Processing File:";
+	EXPECT_THROW(str.arg(1, 2, 3, 4, 5, 6, 7, 8), bump::SearchError);
+}
+
+TEST_F(StringTest, testArg9)
+{
+	// Default usage
+	bump::String str("%1, %2, %3, %4, %5, %6, %7, %8 and %9");
+	str = str.arg(1, 0.987, 29, "test", true, false, bump::String(1.000, 3), "", 19.087);
+	EXPECT_STREQ("1, 0.987, 29, test, true, false, 1.000,  and 19.087", str.c_str());
+
+	// Reversed usage
+	str = "%6, %2, %5, %8, %4, %1, %9, %3, %7";
+	EXPECT_STREQ("0.987, 29, test, , 1, false, 19.087, true, 10", str.arg(false, 29, true, 1, "test", 0.987, 10, "", 19.087).c_str());
+
+	// Stacked usage
+	str = "%1, %2, %3, %4, %5, %6, %7, %8, %9, %10";
+	str = str.arg(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9).arg(bump::String(1.0, 1));
+	EXPECT_STREQ("0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0", str.c_str());
+
+	// Missing %i character
+	str = "Processing File:";
+	EXPECT_THROW(str.arg(1, 2, 3, 4, 5, 6, 7, 8, 9), bump::SearchError);
+}
+
 TEST_F(StringTest, testAt)
 {
 	// Test all the characters

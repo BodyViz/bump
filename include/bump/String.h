@@ -194,6 +194,164 @@ public:
 	String& append(const char* appendString);
 
 	/**
+	 * Creates a copy of this string with the lowest numbered marker replaced by a1.
+	 *
+	 * Throws a SearchError when no valid valid markers are found (i.e. %1-%99).
+	 *
+	 * Here is a small example demonstrating...
+	 *
+	 * bump::String example("Copying files %1 of %2: %3");
+	 * bump::String replaced = example.arg(1).arg(10).arg(test.txt);
+	 * // replaced = "Copying files 1 of 10: test.txt"
+	 *
+	 * @param a1 a string to replace the lowest numbered marker
+	 * @return a copy of the string with the lowest numbered marker replaced.
+	 */
+	String arg(const String& a1) const;
+
+	/**
+	 * Creates a copy of this string with the two lowest numbered markers replaced by a1 and a2.
+	 *
+	 * Throws a SearchError when no valid valid markers are found (i.e. %1-%99).
+	 *
+	 * The same as str.arg(a1).arg(a2).
+	 *
+	 * Here is a small example demonstrating...
+	 *
+	 * bump::String example("Copying files %1 of %2");
+	 * bump::String replaced = example.arg(1, 10);
+	 * // replaced = "Copying files 1 of 10"
+	 *
+	 * @param a1 a string to replace the lowest numbered marker
+	 * @param a2 a string to replace the second lowest numbered marker
+	 * @return a copy of the string with the two lowest numbered markers replaced.
+	 */
+	String arg(const String& a1, const String& a2) const;
+
+	/**
+	 * Creates a copy of this string with the three lowest numbered markers replaced by a1, a2 and a3.
+	 *
+	 * Throws a SearchError when no valid valid markers are found (i.e. %1-%99).
+	 *
+	 * The same as str.arg(a1).arg(a2).arg(a3).
+	 *
+	 * @param a1 a string to replace the lowest numbered marker
+	 * @param a2 a string to replace the second lowest numbered marker
+	 * @param a3 a string to replace the third lowest numbered marker
+	 * @return a copy of the string with the three lowest numbered markers replaced.
+	 */
+	String arg(const String& a1, const String& a2, const String& a3) const;
+
+	/**
+	 * Creates a copy of this string with the four lowest numbered markers replaced.
+	 *
+	 * Throws a SearchError when no valid valid markers are found (i.e. %1-%99).
+	 *
+	 * The same as str.arg(a1).arg(a2).arg(a3).arg(a4).
+	 *
+	 * @param a1 a string to replace the lowest numbered marker
+	 * @param a2 a string to replace the second lowest numbered marker
+	 * @param a3 a string to replace the third lowest numbered marker
+	 * @param a4 a string to replace the fourth lowest numbered marker
+	 * @return a copy of the string with the four lowest numbered markers replaced.
+	 */
+	String arg(const String& a1, const String& a2, const String& a3, const String& a4) const;
+
+	/**
+	 * Creates a copy of this string with the five lowest numbered markers replaced.
+	 *
+	 * Throws a SearchError when no valid valid markers are found (i.e. %1-%99).
+	 *
+	 * The same as str.arg(a1).arg(a2).arg(a3).arg(a4).arg(a5).
+	 *
+	 * @param a1 a string to replace the lowest numbered marker
+	 * @param a2 a string to replace the second lowest numbered marker
+	 * @param a3 a string to replace the third lowest numbered marker
+	 * @param a4 a string to replace the fourth lowest numbered marker
+	 * @param a5 a string to replace the fifth lowest numbered marker
+	 * @return a copy of the string with the five lowest numbered markers replaced.
+	 */
+	String arg(const String& a1, const String& a2, const String& a3, const String& a4, const String& a5) const;
+
+	/**
+	 * Creates a copy of this string with the six lowest numbered markers replaced.
+	 *
+	 * Throws a SearchError when no valid valid markers are found (i.e. %1-%99).
+	 *
+	 * The same as str.arg(a1).arg(a2).arg(a3).arg(a4).arg(a5).arg(a6).
+	 *
+	 * @param a1 a string to replace the lowest numbered marker
+	 * @param a2 a string to replace the second lowest numbered marker
+	 * @param a3 a string to replace the third lowest numbered marker
+	 * @param a4 a string to replace the fourth lowest numbered marker
+	 * @param a5 a string to replace the fifth lowest numbered marker
+	 * @param a6 a string to replace the sixth lowest numbered marker
+	 * @return a copy of the string with the six lowest numbered markers replaced.
+	 */
+	String arg(const String& a1, const String& a2, const String& a3, const String& a4, const String& a5,
+			   const String& a6) const;
+
+	/**
+	 * Creates a copy of this string with the seven lowest numbered markers replaced.
+	 *
+	 * Throws a SearchError when no valid valid markers are found (i.e. %1-%99).
+	 *
+	 * The same as str.arg(a1).arg(a2).arg(a3).arg(a4).arg(a5).arg(a6).arg(a7).
+	 *
+	 * @param a1 a string to replace the lowest numbered marker
+	 * @param a2 a string to replace the second lowest numbered marker
+	 * @param a3 a string to replace the third lowest numbered marker
+	 * @param a4 a string to replace the fourth lowest numbered marker
+	 * @param a5 a string to replace the fifth lowest numbered marker
+	 * @param a6 a string to replace the sixth lowest numbered marker
+	 * @param a7 a string to replace the seventh lowest numbered marker
+	 * @return a copy of the string with the seven lowest numbered markers replaced.
+	 */
+	String arg(const String& a1, const String& a2, const String& a3, const String& a4, const String& a5,
+			   const String& a6, const String& a7) const;
+
+	/**
+	 * Creates a copy of this string with the eight lowest numbered markers replaced.
+	 *
+	 * Throws a SearchError when no valid valid markers are found (i.e. %1-%99).
+	 *
+	 * The same as str.arg(a1).arg(a2).arg(a3).arg(a4).arg(a5).arg(a6).arg(a7).arg(a8).
+	 *
+	 * @param a1 a string to replace the lowest numbered marker
+	 * @param a2 a string to replace the second lowest numbered marker
+	 * @param a3 a string to replace the third lowest numbered marker
+	 * @param a4 a string to replace the fourth lowest numbered marker
+	 * @param a5 a string to replace the fifth lowest numbered marker
+	 * @param a6 a string to replace the sixth lowest numbered marker
+	 * @param a7 a string to replace the seventh lowest numbered marker
+	 * @param a8 a string to replace the eighth lowest numbered marker
+	 * @return a copy of the string with the eight lowest numbered markers replaced.
+	 */
+	String arg(const String& a1, const String& a2, const String& a3, const String& a4, const String& a5,
+			   const String& a6, const String& a7, const String& a8) const;
+
+	/**
+	 * Creates a copy of this string with the nine lowest numbered markers replaced.
+	 *
+	 * Throws a SearchError when no valid valid markers are found (i.e. %1-%99).
+	 *
+	 * The same as str.arg(a1).arg(a2).arg(a3).arg(a4).arg(a5).arg(a6).arg(a7).arg(a8).arg(a9).
+	 *
+	 * @param a1 a string to replace the lowest numbered marker
+	 * @param a2 a string to replace the second lowest numbered marker
+	 * @param a3 a string to replace the third lowest numbered marker
+	 * @param a4 a string to replace the fourth lowest numbered marker
+	 * @param a5 a string to replace the fifth lowest numbered marker
+	 * @param a6 a string to replace the sixth lowest numbered marker
+	 * @param a7 a string to replace the seventh lowest numbered marker
+	 * @param a8 a string to replace the eighth lowest numbered marker
+	 * @param a9 a string to replace the ninth lowest numbered marker
+	 * @return a copy of the string with the nine lowest numbered markers replaced.
+	 */
+	String arg(const String& a1, const String& a2, const String& a3, const String& a4, const String& a5,
+			   const String& a6, const String& a7, const String& a8, const String& a9) const;
+
+	/**
 	 * Locates and returns the character at the position in this string.
 	 *
 	 * Throws an OutOfRangeError when position is outside this string's bounds.
