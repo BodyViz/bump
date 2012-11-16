@@ -108,7 +108,7 @@ FOREACH (CONF ${CMAKE_CONFIGURATION_TYPES})
 ENDFOREACH ()
 
 # Find all the dependency packages
-FIND_PACKAGE (Boost 1.52.0 REQUIRED)
+FIND_PACKAGE (Boost 1.52.0 COMPONENTS regex REQUIRED)
 FIND_PACKAGE (GTest)
 
 # Add the src subdirectory
