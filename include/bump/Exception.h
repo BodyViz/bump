@@ -23,6 +23,7 @@
  *		- InvalidArgumentError - PUBLIC (when parameter passed into a function is invalid)
  *	- RuntimeError - PROTECTED (when error condition can only be caught at runtime)
  *		- OutOfRangeError - PUBLIC (when container encounters an out-of-range error)
+ *		- SearchError - PUBLIC (when a search cannot be found)
  *		- TypeCastError - PUBLIC (when runtime cannot type cast an object as requested)
  *
  *=============================================================================================================
@@ -110,10 +111,11 @@ protected:
 	 * Constructor.
 	 *
 	 * @param className the class name of the sub-class exception.
-	 * @param message the message to return when calling the what() method of the exception.
+	 * @param description the description of the exception.
+	 * @param location the file path, line number and function name of where the exception was thrown.
 	 */
-	LogicError(const String& className, const String& message, const String& location) throw() :
-		Exception(className, message, location)
+	LogicError(const String& className, const String& description, const String& location) throw() :
+		Exception(className, description, location)
 	{
 		;
 	}
@@ -138,10 +140,11 @@ protected:
 	 * Constructor.
 	 *
 	 * @param className the class name of the sub-class exception.
-	 * @param message the message to return when calling the what() method of the exception.
+	 * @param description the description of the exception.
+	 * @param location the file path, line number and function name of where the exception was thrown.
 	 */
-	RuntimeError(const String& className, const String& message, const String& location) throw() :
-		Exception(className, message, location)
+	RuntimeError(const String& className, const String& description, const String& location) throw() :
+		Exception(className, description, location)
 	{
 		;
 	}
@@ -157,10 +160,11 @@ public:
 	/**
 	 * Constructor.
 	 *
-	 * @param message the message to return when calling the what() method of the exception.
+	 * @param description the description of the exception.
+	 * @param location the file path, line number and function name of where the exception was thrown.
 	 */
-	InvalidArgumentError(const String& message, const String& location) throw() :
-		LogicError("bump::InvalidArgumentError", message, location)
+	InvalidArgumentError(const String& description, const String& location) throw() :
+		LogicError("bump::InvalidArgumentError", description, location)
 	{
 		;
 	}
@@ -182,10 +186,11 @@ public:
 	/**
 	 * Constructor.
 	 *
-	 * @param message the message to return when calling the what() method of the exception.
+	 * @param description the description of the exception.
+	 * @param location the file path, line number and function name of where the exception was thrown.
 	 */
-	OutOfRangeError(const String& message, const String& location) throw() :
-		RuntimeError("bump::OutOfRangeError", message, location)
+	OutOfRangeError(const String& description, const String& location) throw() :
+		RuntimeError("bump::OutOfRangeError", description, location)
 	{
 		;
 	}
@@ -207,10 +212,11 @@ public:
 	/**
 	 * Constructor.
 	 *
-	 * @param message the message to return when calling the what() method of the exception.
+	 * @param description the description of the exception.
+	 * @param location the file path, line number and function name of where the exception was thrown.
 	 */
-	TypeCastError(const String& message, const String& location) throw() :
-		RuntimeError("bump::TypeCastError", message, location)
+	TypeCastError(const String& description, const String& location) throw() :
+		RuntimeError("bump::TypeCastError", description, location)
 	{
 		;
 	}
