@@ -16,6 +16,7 @@ SET (
 	${HEADER_PATH}/Exception.h
 	${HEADER_PATH}/Export.h
 	${HEADER_PATH}/String.h
+	${HEADER_PATH}/Uuid.h
 	${HEADER_PATH}/Version.h
 	${HEADER_PATH}/bump.h
 )
@@ -24,6 +25,7 @@ SET (
 SET (
 	TARGET_SRC
 	String.cpp
+	Uuid.cpp
 	Version.cpp
 )
 
