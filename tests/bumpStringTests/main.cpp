@@ -6,9 +6,6 @@
 //	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
-// C++ headers
-#include <stdexcept>
-
 // GTest headers
 #include <gtest/gtest.h>
 
