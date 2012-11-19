@@ -15,6 +15,7 @@ IF (Boost_FOUND)
 	FOREACH (BUMP_EXAMPLE
 			bumpExceptions
 			bumpStrings
+			bumpUuids
 		)
 
 		MESSAGE ("Configuring Example: " ${BUMP_EXAMPLE})
