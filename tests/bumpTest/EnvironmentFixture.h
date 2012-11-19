@@ -9,6 +9,7 @@
 #ifndef BUMPTEST_ENVIRONMENT_FIXTURE_H
 #define BUMPTEST_ENVIRONMENT_FIXTURE_H
 
+// GTest headers
 #include <gtest/gtest.h>
 
 namespace bumpTest {
@@ -25,16 +26,11 @@ public:
 	~EnvironmentFixture() {}
 
 	/** Run immediately before a test starts. Starts the timer. */
-	void SetUp();
+	void SetUp() {}
 
 	/** Invoked immediately after a test finishes. Stops the timer. */
 	void TearDown() {}
 };
-
-void EnvironmentFixture::SetUp()
-{
-	// Set up everything we need to run the test suite
-}
 
 }	// End of bumpTest namespace
 

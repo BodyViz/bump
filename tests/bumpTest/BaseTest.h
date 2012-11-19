@@ -9,6 +9,7 @@
 #ifndef BUMPTEST_BASE_TEST_H
 #define BUMPTEST_BASE_TEST_H
 
+// GTest headers
 #include <gtest/gtest.h>
 
 namespace bumpTest {
@@ -25,21 +26,11 @@ protected:
 	~BaseTest() {}
 
 	/** Run immediately before a test starts. Starts the timer. */
-	virtual void SetUp();
+	virtual void SetUp() {}
 
 	/** Invoked immediately after a test finishes. Stops the timer. */
-	virtual void TearDown();
+	virtual void TearDown() {}
 };
-
-void BaseTest::SetUp()
-{
-	;
-}
-
-void BaseTest::TearDown()
-{
-	;
-}
 
 }	// End of bumpTest namespace
 

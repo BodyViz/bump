@@ -1,6 +1,9 @@
 
 # Add the source files
-SET (TARGET_SRC main.cpp)
+SET (TARGET_SRC
+	../bumpTest/main.cpp
+	UuidTest.cpp
+)
 
 # Add the header files
 SET (TARGET_H

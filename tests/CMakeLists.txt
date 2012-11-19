@@ -2,6 +2,10 @@
 # Only compile if we found GTest and Boost
 IF (GTEST_FOUND AND Boost_FOUND)
 
+	# Set the prefixes to make it easier to find in our projects
+	SET (TARGET_DEFAULT_PREFIX "Test - ")
+	SET (TARGET_DEFAULT_LABEL_PREFIX "Tests")
+
 	# Add the GTest and Boost headers
 	INCLUDE_DIRECTORIES (${GTEST_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
 
@@ -13,6 +17,7 @@ IF (GTEST_FOUND AND Boost_FOUND)
 
 	# Add each set of tests
 	FOREACH (BUMP_TEST
+			bumpAllTests
 			bumpStringTests
 			bumpUuidTests
 		)

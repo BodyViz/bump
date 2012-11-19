@@ -1,5 +1,5 @@
 //
-//	main.cpp
+//	UuidTest.cpp
 //	Bump
 //
 //	Created by Christian Noon on 11/19/12.
@@ -16,27 +16,6 @@
 
 // bumpTest headers
 #include "../bumpTest/BaseTest.h"
-#include "../bumpTest/EnvironmentFixture.h"
-
-// GTest headers
-#include <gtest/gtest.h>
-
-/**
- * This application consists of a full coverage set of unit tests for the bump::Uuid
- * class. It uses the GTest framework to each possible runtime path of every function
- * in the Uuid class.
- */
-int main(int argc, char **argv)
-{
-	std::cout << "Begin running all tests...\n\n";
-
-	// Setup the environment
-	testing::AddGlobalTestEnvironment(new bumpTest::EnvironmentFixture);
-
-	// Initialize everything and run all the tests
-	testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
-}
 
 namespace bumpTest {
 

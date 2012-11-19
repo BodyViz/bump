@@ -2,6 +2,10 @@
 # Only compile if we found Boost
 IF (Boost_FOUND)
 
+	# Set the prefixes to make it easier to find in our projects
+	SET (TARGET_DEFAULT_PREFIX "Example - ")
+	SET (TARGET_DEFAULT_LABEL_PREFIX "Examples")
+
     # Add the Boost headers
     INCLUDE_DIRECTORIES (${Boost_INCLUDE_DIR})
 
