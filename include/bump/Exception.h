@@ -22,6 +22,7 @@
  *	- LogicError - PROTECTED (when error condition could be detected prior to running the application)
  *		- InvalidArgumentError - PUBLIC (when parameter passed into a function is invalid)
  *	- RuntimeError - PROTECTED (when error condition can only be caught at runtime)
+ *		- NotificationError - PUBLIC (when notification observers are not destructed properly)
  *		- OutOfRangeError - PUBLIC (when container encounters an out-of-range error)
  *		- SearchError - PUBLIC (when a search cannot be found)
  *		- TypeCastError - PUBLIC (when runtime cannot type cast an object as requested)
@@ -173,6 +174,33 @@ public:
 	 * Destructor.
 	 */
 	~InvalidArgumentError() throw() {}
+};
+
+/**
+ * A public runtime error class which is used when the notification center is used incorrectly. This can
+ * either involve shutting down the notification center without properly removing all the observers as well
+ * as incorrectly posting notifications.
+ */
+class BUMP_EXPORT NotificationError : public RuntimeError
+{
+public:
+
+	/**
+	 * Constructor.
+	 *
+	 * @param description the description of the exception.
+	 * @param location the file path, line number and function name of where the exception was thrown.
+	 */
+	NotificationError(const String& description, const String& location) throw() :
+		RuntimeError("bump::NotificationError", description, location)
+	{
+		;
+	}
+
+	/**
+	 * Destructor.
+	 */
+	~NotificationError() throw() {}
 };
 
 /**

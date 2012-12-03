@@ -16,6 +16,7 @@ SET (
 	${HEADER_PATH}/Environment.h
 	${HEADER_PATH}/Exception.h
 	${HEADER_PATH}/Export.h
+	${HEADER_PATH}/NotificationCenter.h
 	${HEADER_PATH}/String.h
 	${HEADER_PATH}/Uuid.h
 	${HEADER_PATH}/Version.h
@@ -26,6 +27,7 @@ SET (
 SET (
 	TARGET_SRC
 	Environment.cpp
+	NotificationCenter.cpp
 	String.cpp
 	Uuid.cpp
 	Version.cpp
