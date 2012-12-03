@@ -7,8 +7,8 @@
 //
 
 // Bump headers
-#include <bump/String.h>
 #include <bump/Environment.h>
+#include <bump/String.h>
 
 /**
  * This example demonstrates how to use the bump::Environment class.
