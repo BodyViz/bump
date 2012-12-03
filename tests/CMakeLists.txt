@@ -18,6 +18,7 @@ IF (GTEST_FOUND AND Boost_FOUND)
 	# Add each set of tests
 	FOREACH (BUMP_TEST
 			bumpAllTests
+			bumpEnvironmentTests
 			bumpStringTests
 			bumpUuidTests
 		)

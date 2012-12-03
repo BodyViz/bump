@@ -2,9 +2,7 @@
 # Add the source files
 SET (TARGET_SRC
 	../bumpTest/main.cpp
-	../bumpEnvironmentTests/EnvironmentTest.cpp
-	../bumpStringTests/StringTest.cpp
-	../bumpUuidTests/UuidTest.cpp
+	EnvironmentTest.cpp
 )
 
 # Add the header files
@@ -13,4 +11,4 @@ SET (TARGET_H
 	../bumpTest/EnvironmentFixture.h
 )
 
-SETUP_TEST (bumpAllTests)
+SETUP_TEST (bumpEnvironmentTests)
