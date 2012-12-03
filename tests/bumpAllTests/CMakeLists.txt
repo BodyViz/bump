@@ -3,6 +3,7 @@
 SET (TARGET_SRC
 	../bumpTest/main.cpp
 	../bumpEnvironmentTests/EnvironmentTest.cpp
+	../bumpNotificationTests/NotificationTest.cpp
 	../bumpStringTests/StringTest.cpp
 	../bumpUuidTests/UuidTest.cpp
 )
