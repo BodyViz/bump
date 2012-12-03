@@ -345,11 +345,20 @@ public:
 	}
 
 	/**
+	 * Determines whether the notification center contains the observer.
+	 *
+	 * @param observer the observer pointer to check against the list of internal observers stored.
+	 * @return true if the observer is registered with the notification center, false otherwise.
+	 */
+	bool containsObserver(void* observer);
+
+	/**
 	 * Calls all observer's function pointers that have registered for the posted notification.
 	 *
 	 * @param notificationName the notification to post to registered observers.
+	 * @return the number of observers that received the notification.
 	 */
-	void postNotification(const String& notificationName);
+	unsigned int postNotification(const String& notificationName);
 
 	/**
 	 * Calls all observer's function pointers that have registered for the posted notification
@@ -357,8 +366,9 @@ public:
 	 *
 	 * @param notificationName the notification to post to registered observers.
 	 * @param object the object to send to the registered observers.
+	 * @return the number of observers that received the notification.
 	 */
-	void postNotificationWithObject(const String& notificationName, boost::any object);
+	unsigned int postNotificationWithObject(const String& notificationName, boost::any object);
 
 	/**
 	 * Removes the observer from the notification center.
