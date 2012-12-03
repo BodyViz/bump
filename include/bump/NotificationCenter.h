@@ -385,6 +385,7 @@ protected:
 
 /** Convenience macros for posting notifications. */
 #define ADD_OBSERVER(o, c, k) bump::NotificationCenter::instance()->addObserver(o, c, k)
+#define NOTIFICATION_CENTER() bump::NotificationCenter::instance()
 #define REMOVE_OBSERVER(o) bump::NotificationCenter::instance()->removeObserver(o)
 #define POST_NOTIFICATION(k) bump::NotificationCenter::instance()->postNotification(k)
 #define POST_NOTIFICATION_WITH_OBJECT(k, o) bump::NotificationCenter::instance()->postNotificationWithObject(k, o)
