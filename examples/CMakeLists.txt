@@ -17,6 +17,7 @@ IF (Boost_FOUND)
 
 	# Add all the examples
 	FOREACH (BUMP_EXAMPLE
+			bumpEnvironment
 			bumpExceptions
 			bumpStrings
 			bumpUuids
