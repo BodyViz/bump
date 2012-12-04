@@ -19,6 +19,7 @@ SET (
 	${HEADER_PATH}/Log.h
 	${HEADER_PATH}/NotificationCenter.h
 	${HEADER_PATH}/String.h
+	${HEADER_PATH}/Timer.h
 	${HEADER_PATH}/Uuid.h
 	${HEADER_PATH}/Version.h
 	${HEADER_PATH}/bump.h
@@ -31,6 +32,7 @@ SET (
 	Log.cpp
 	NotificationCenter.cpp
 	String.cpp
+	Timer.cpp
 	Uuid.cpp
 	Version.cpp
 )
