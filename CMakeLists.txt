@@ -108,7 +108,7 @@ FOREACH (CONF ${CMAKE_CONFIGURATION_TYPES})
 ENDFOREACH ()
 
 # Find all the dependency packages
-FIND_PACKAGE (Boost 1.52.0 COMPONENTS date_time regex system REQUIRED)
+FIND_PACKAGE (Boost 1.52.0 COMPONENTS chrono date_time filesystem regex system timer REQUIRED)
 FIND_PACKAGE (GTest)
 
 # Add the src subdirectory
