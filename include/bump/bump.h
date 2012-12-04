@@ -9,8 +9,13 @@
 #ifndef BUMP_BUMP_H
 #define BUMP_BUMP_H
 
+#include <bump/Environment.h>
+#include <bump/Exception.h>
 #include <bump/Export.h>
+#include <bump/Log.h>
+#include <bump/NotificationCenter.h>
 #include <bump/String.h>
+#include <bump/Uuid.h>
 #include <bump/Version.h>
 
 #endif  // End of BUMP_BUMP_H
