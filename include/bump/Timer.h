@@ -80,6 +80,9 @@ protected:
 	boost::timer::cpu_timer _timer;
 };
 
+/** Convenience macro for the timer singleton. */
+#define TIMER() bump::Timer::instance()
+
 }	// End of bump namespace
 
 #endif	// End of BUMP_TIMER_H
