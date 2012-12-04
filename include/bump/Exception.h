@@ -22,6 +22,7 @@
  *	- LogicError - PROTECTED (when error condition could be detected prior to running the application)
  *		- InvalidArgumentError - PUBLIC (when parameter passed into a function is invalid)
  *	- RuntimeError - PROTECTED (when error condition can only be caught at runtime)
+ *		- FileSystemError - PUBLIC (when a file system access error occurs)
  *		- NotificationError - PUBLIC (when notification observers are not destructed properly)
  *		- OutOfRangeError - PUBLIC (when container encounters an out-of-range error)
  *		- SearchError - PUBLIC (when a search cannot be found)
@@ -174,6 +175,33 @@ public:
 	 * Destructor.
 	 */
 	~InvalidArgumentError() throw() {}
+};
+
+/**
+ * A public runtime error class which is used when the file system tries to access a resource which is not
+ * valid. This can happen in situations such as trying to remove a file that doesn't exist or setting the
+ * current path to an invalid path.
+ */
+class BUMP_EXPORT FileSystemError : public RuntimeError
+{
+public:
+	
+	/**
+	 * Constructor.
+	 *
+	 * @param description the description of the exception.
+	 * @param location the file path, line number and function name of where the exception was thrown.
+	 */
+	FileSystemError(const String& description, const String& location) throw() :
+		RuntimeError("bump::FileSystemError", description, location)
+	{
+		;
+	}
+	
+	/**
+	 * Destructor.
+	 */
+	~FileSystemError() throw() {}
 };
 
 /**
