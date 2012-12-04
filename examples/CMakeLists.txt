@@ -19,6 +19,7 @@ IF (Boost_FOUND)
 	FOREACH (BUMP_EXAMPLE
 			bumpEnvironment
 			bumpExceptions
+			bumpLog
 			bumpNotifications
 			bumpStrings
 			bumpUuids
