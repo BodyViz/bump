@@ -13,6 +13,8 @@
 #include <bump/Environment.h>
 #include <bump/Exception.h>
 #include <bump/Export.h>
+#include <bump/FileInfo.h>
+#include <bump/FileSystem.h>
 #include <bump/Log.h>
 #include <bump/NotificationCenter.h>
 #include <bump/String.h>
