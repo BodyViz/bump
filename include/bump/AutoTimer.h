@@ -10,6 +10,7 @@
 #define BUMP_AUTO_TIMER_H
 
 // Bump headers
+#include <bump/Export.h>
 #include <bump/Timer.h>
 
 namespace bump {
@@ -19,7 +20,7 @@ namespace bump {
  * scope. When the AutoTimer is destructed, it will print out the elapsed
  * time to std::cout.
  */
-class AutoTimer
+class BUMP_EXPORT AutoTimer
 {
 public:
 

@@ -10,6 +10,7 @@
 #define BUMP_TIMELINE_H
 
 // Bump headers
+#include <bump/Export.h>
 #include <bump/Timer.h>
 
 namespace bump {
@@ -23,7 +24,7 @@ namespace bump {
  * update method. After the timeline has been updated, use the stepValue or
  * stepIncrement values to update the animations.
  */
-class Timeline
+class BUMP_EXPORT Timeline
 {
 public:
 

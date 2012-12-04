@@ -12,12 +12,15 @@
 // Boost headers
 #include <boost/timer/timer.hpp>
 
+// Bump headers
+#include <bump/Export.h>
+
 namespace bump {
 
 /**
  * Timer class used for measuring elapsed time between two events.
  */
-class Timer
+class BUMP_EXPORT Timer
 {
 public:
 
