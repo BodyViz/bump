@@ -151,7 +151,7 @@ public:
 	 * @param enabled whether the date time formatting display is enabled.
 	 */
 	void setIsDateTimeFormattingEnabled(bool enabled);
-	
+
 	/**
 	 * Determines whether the date time formatting display is enabled.
 	 *
