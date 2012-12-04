@@ -26,27 +26,6 @@
 
 namespace bump {
 
-/** The various levels of log message verbosity. */
-enum LogLevel
-{
-	ALWAYS_LVL,
-	ERROR_LVL,
-	WARNING_LVL,
-	INFO_LVL,
-	DEBUG_LVL
-};
-
-/** The various date time formats. */
-enum DateTimeFormat
-{
-	DATE_TIME_DEFAULT,
-	DATE_TIME_WITH_AM_PM,
-	DATE_TIME_PRECISE,
-	TIME_DEFAULT,
-	TIME_WITH_AM_PM,
-	TIME_PRECISE
-};
-
 /**
  * The Log class handles all logging.
  *
@@ -101,6 +80,27 @@ enum DateTimeFormat
 class BUMP_EXPORT Log
 {
 public:
+
+	/** The various levels of log message verbosity. */
+	enum LogLevel
+	{
+		ALWAYS_LVL,
+		ERROR_LVL,
+		WARNING_LVL,
+		INFO_LVL,
+		DEBUG_LVL
+	};
+
+	/** The various date time formats. */
+	enum DateTimeFormat
+	{
+		DATE_TIME_DEFAULT,
+		DATE_TIME_WITH_AM_PM,
+		DATE_TIME_PRECISE,
+		TIME_DEFAULT,
+		TIME_WITH_AM_PM,
+		TIME_PRECISE
+	};
 
 	/**
 	 * Creates a singleton instance.
@@ -246,11 +246,11 @@ public:
  * LOG_ERROR() << "ERROR: Look at what happened!" << std::endl;
  * - Would log: "ERROR: Look at what happened!" << std::endl;
  */
-#define LOG_ALWAYS() log(bump::ALWAYS_LVL)
-#define LOG_ERROR() log(bump::ERROR_LVL)
-#define LOG_WARNING() log(bump::WARNING_LVL)
-#define LOG_INFO() log(bump::INFO_LVL)
-#define LOG_DEBUG() log(bump::DEBUG_LVL)
+#define LOG_ALWAYS() log(bump::Log::ALWAYS_LVL)
+#define LOG_ERROR() log(bump::Log::ERROR_LVL)
+#define LOG_WARNING() log(bump::Log::WARNING_LVL)
+#define LOG_INFO() log(bump::Log::INFO_LVL)
+#define LOG_DEBUG() log(bump::Log::DEBUG_LVL)
 
 /**
  * Logs a message with the defined prefix. Below are a couple examples:
@@ -261,11 +261,11 @@ public:
  * LOG_ERROR_P(bumpPrefix) << "This output uses the preprocessor definition bumpPrefix" << std::endl;
  * - Would log: "[bump] This output uses the preprocessor definition bumpPrefix"
  */
-#define LOG_ALWAYS_P(prefix) logWithPrefix(bump::ALWAYS_LVL, prefix)
-#define LOG_ERROR_P(prefix) logWithPrefix(bump::ERROR_LVL, prefix)
-#define LOG_WARNING_P(prefix) logWithPrefix(bump::WARNING_LVL, prefix)
-#define LOG_INFO_P(prefix) logWithPrefix(bump::INFO_LVL, prefix)
-#define LOG_DEBUG_P(prefix) logWithPrefix(bump::DEBUG_LVL, prefix)
+#define LOG_ALWAYS_P(prefix) logWithPrefix(bump::Log::ALWAYS_LVL, prefix)
+#define LOG_ERROR_P(prefix) logWithPrefix(bump::Log::ERROR_LVL, prefix)
+#define LOG_WARNING_P(prefix) logWithPrefix(bump::Log::WARNING_LVL, prefix)
+#define LOG_INFO_P(prefix) logWithPrefix(bump::Log::INFO_LVL, prefix)
+#define LOG_DEBUG_P(prefix) logWithPrefix(bump::Log::DEBUG_LVL, prefix)
 
 /**
  * DO NOT USE THESE MACROS!!!

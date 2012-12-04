@@ -133,7 +133,7 @@ void Log::setLogLevel(LogLevel logLevel)
 	_logLevel = logLevel;
 }
 
-LogLevel Log::logLevel()
+Log::LogLevel Log::logLevel()
 {
 	boost::mutex::scoped_lock lock(_mutex);
 	return _logLevel;
@@ -157,7 +157,7 @@ bool Log::isDateTimeFormattingEnabled()
 	return _isDateTimeFormatEnabled;
 }
 
-DateTimeFormat Log::dateTimeFormat()
+Log::DateTimeFormat Log::dateTimeFormat()
 {
 	boost::mutex::scoped_lock lock(_mutex);
 	return _dateTimeFormat;
@@ -247,5 +247,12 @@ String Log::_convertTimeToString()
 	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
 	ostream << now;
 
-	return ostream.str();
+	// Trim the result as it can sometimes have whitespace at the beginning
+	String time_str = ostream.str();
+	time_str = time_str.trimmed();
+
+	// Replace all double spaces with single spaces
+	time_str = time_str.replace("  ", " ");
+
+	return time_str;
 }

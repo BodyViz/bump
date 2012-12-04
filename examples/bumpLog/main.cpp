@@ -93,27 +93,27 @@ int main(int argc, char **argv)
 	//=======================================================================
 
 	// Set the log level to "ALWAYS"
-	bump::Log::instance()->setLogLevel(bump::ALWAYS_LVL);
+	bump::Log::instance()->setLogLevel(bump::Log::ALWAYS_LVL);
 	LOG_ALWAYS() << "Setting LogLevel to ALWAYS:" << std::endl;
 	pushAllLogMessageTypes();
 
 	// Set the log level to "ERROR"
-	bump::Log::instance()->setLogLevel(bump::ERROR_LVL);
+	bump::Log::instance()->setLogLevel(bump::Log::ERROR_LVL);
 	LOG_ALWAYS() << "\nSetting LogLevel to ERROR:" << std::endl;
 	pushAllLogMessageTypes();
 
 	// Set the log level to "WARNING"
-	bump::Log::instance()->setLogLevel(bump::WARNING_LVL);
+	bump::Log::instance()->setLogLevel(bump::Log::WARNING_LVL);
 	LOG_ALWAYS() << "\nSetting LogLevel to WARNING:" << std::endl;
 	pushAllLogMessageTypes();
 
 	// Set the log level to "INFO"
-	bump::Log::instance()->setLogLevel(bump::INFO_LVL);
+	bump::Log::instance()->setLogLevel(bump::Log::INFO_LVL);
 	LOG_ALWAYS() << "\nSetting LogLevel to INFO:" << std::endl;
 	pushAllLogMessageTypes();
 
 	// Set the log level to "DEBUG"
-	bump::Log::instance()->setLogLevel(bump::DEBUG_LVL);
+	bump::Log::instance()->setLogLevel(bump::Log::DEBUG_LVL);
 	LOG_ALWAYS() << "\nSetting LogLevel to DEBUG:" << std::endl;
 	pushAllLogMessageTypes();
 
@@ -141,19 +141,19 @@ int main(int argc, char **argv)
 	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"DATE_TIME_DEFAULT\" date time formatting" << std::endl;
 
 	// From here, you can customize the output format using the date time format enumeration
-	LOG()->setDateTimeFormat(bump::DATE_TIME_WITH_AM_PM);
+	LOG()->setDateTimeFormat(bump::Log::DATE_TIME_WITH_AM_PM);
 	LOG_ALWAYS() << "Example message with \"DATE_TIME_WITH_AM_PM\" date time formatting" << std::endl;
 	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"DATE_TIME_WITH_AM_PM\" date time formatting" << std::endl;
-	LOG()->setDateTimeFormat(bump::DATE_TIME_PRECISE);
+	LOG()->setDateTimeFormat(bump::Log::DATE_TIME_PRECISE);
 	LOG_ALWAYS() << "Example message with \"DATE_TIME_PRECISE\" date time formatting" << std::endl;
 	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"DATE_TIME_PRECISE\" date time formatting" << std::endl;
-	LOG()->setDateTimeFormat(bump::TIME_DEFAULT);
+	LOG()->setDateTimeFormat(bump::Log::TIME_DEFAULT);
 	LOG_ALWAYS() << "Example message with \"TIME_DEFAULT\" date time formatting" << std::endl;
 	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"TIME_DEFAULT\" date time formatting" << std::endl;
-	LOG()->setDateTimeFormat(bump::TIME_WITH_AM_PM);
+	LOG()->setDateTimeFormat(bump::Log::TIME_WITH_AM_PM);
 	LOG_ALWAYS() << "Example message with \"TIME_WITH_AM_PM\" date time formatting" << std::endl;
 	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"TIME_WITH_AM_PM\" date time formatting" << std::endl;
-	LOG()->setDateTimeFormat(bump::TIME_PRECISE);
+	LOG()->setDateTimeFormat(bump::Log::TIME_PRECISE);
 	LOG_ALWAYS() << "Example message with \"TIME_PRECISE\" date time formatting" << std::endl;
 	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"TIME_PRECISE\" date time formatting" << std::endl;
 
