@@ -17,6 +17,7 @@ SET (
 	${HEADER_PATH}/Environment.h
 	${HEADER_PATH}/Exception.h
 	${HEADER_PATH}/Export.h
+	${HEADER_PATH}/FileInfo.h
 	${HEADER_PATH}/Log.h
 	${HEADER_PATH}/NotificationCenter.h
 	${HEADER_PATH}/String.h
@@ -32,6 +33,7 @@ SET (
 	TARGET_SRC
 	AutoTimer.cpp
 	Environment.cpp
+	FileInfo.cpp
 	Log.cpp
 	NotificationCenter.cpp
 	String.cpp
