@@ -20,6 +20,7 @@
 
 // Bump headers
 #include <bump/Exception.h>
+#include <bump/Export.h>
 #include <bump/String.h>
 
 namespace bump {
@@ -27,7 +28,7 @@ namespace bump {
 /**
  * Functor abstract base class.
  */
-class AbstractFunctor
+class BUMP_EXPORT AbstractFunctor
 {
 public:
 
@@ -73,7 +74,7 @@ protected:
  * notifications with objects.
  */
 template <class T>
-class NotificationFunctor : public AbstractFunctor
+class BUMP_EXPORT NotificationFunctor : public AbstractFunctor
 {
 public:
 
@@ -137,7 +138,7 @@ protected:
  * passed through the notification center.
  */
 template <class T1, class T2>
-class NotificationWithObjectFunctor : public AbstractFunctor
+class BUMP_EXPORT NotificationWithObjectFunctor : public AbstractFunctor
 {
 public:
 
@@ -207,7 +208,7 @@ protected:
  * passed through the notification center.
  */
 template <class T1, class T2>
-class NotificationWithPointerFunctor : public AbstractFunctor
+class BUMP_EXPORT NotificationWithPointerFunctor : public AbstractFunctor
 {
 public:
 
@@ -291,7 +292,7 @@ protected:
  *
  * And that's all there is to it! For more information, please see the bumpNotificationCenter example.
  */
-class NotificationCenter
+class BUMP_EXPORT NotificationCenter
 {
 public:
 
