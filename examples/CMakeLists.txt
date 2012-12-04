@@ -23,6 +23,7 @@ IF (Boost_FOUND)
 			bumpLog
 			bumpNotifications
 			bumpStrings
+			bumpTimeline
 			bumpTimer
 			bumpUuids
 		)
