@@ -16,6 +16,7 @@
 #include <bump/Log.h>
 #include <bump/NotificationCenter.h>
 #include <bump/String.h>
+#include <bump/Timeline.h>
 #include <bump/Timer.h>
 #include <bump/Uuid.h>
 #include <bump/Version.h>
