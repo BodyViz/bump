@@ -28,10 +28,19 @@ void Timer::start()
 	_timer.start();
 }
 
+void Timer::pause()
+{
+	_timer.stop();
+}
+
+void Timer::unpause()
+{
+	_timer.resume();
+}
+
 void Timer::restart()
 {
-	_timer = boost::timer::cpu_timer();
-	_timer.start();
+	_timer.resume();
 }
 
 double Timer::secondsElapsed() const

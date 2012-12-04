@@ -42,6 +42,16 @@ public:
 	void start();
 
 	/**
+	 * Pauses the timer.
+	 */
+	void pause();
+	
+	/**
+	 * Unpauses the timer.
+	 */
+	void unpause();
+
+	/**
 	 * Restarts the timer by resetting the start time.
 	 */
 	void restart();
