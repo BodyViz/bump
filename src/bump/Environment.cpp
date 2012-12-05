@@ -18,16 +18,6 @@
 
 using namespace bump;
 
-Environment::Environment()
-{
-	;
-}
-
-Environment::~Environment()
-{
-	;
-}
-
 String Environment::environmentVariable(const String& name)
 {
 	char* value = getenv(name.c_str());
