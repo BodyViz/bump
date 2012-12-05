@@ -2,13 +2,14 @@
 //	Version.h
 //	Bump
 //
-//	Created by Christian Noon on 11/7/11.
+//	Created by Christian Noon on 11/7/12.
 //	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
 #ifndef BUMP_VERSION_H
 #define BUMP_VERSION_H
 
+// Bump headers
 #include <bump/Export.h>
 #include <bump/String.h>
 
@@ -32,16 +33,5 @@ extern BUMP_EXPORT String bumpGetSOVersion();
 extern BUMP_EXPORT String bumpGetLibraryName();
 
 }	// End of bump namespace
-
-/**
-
- \namespace bump
-
- The bump library is a collection of helpful C++ addons meant to extend
- beyond the basic abilities of the C++ language. Things such as intelligent
- strings, logging systems, environment and file system management and even
- cross-code abstract notifications can be found in bump.
-
- */
 
 #endif	// End of BUMP_VERSION_H

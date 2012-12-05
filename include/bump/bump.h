@@ -23,4 +23,12 @@
 #include <bump/Uuid.h>
 #include <bump/Version.h>
 
+/**
+ * The Bump library is a collection of helpful C++ addons. The main purpose of
+ * Bump is to extend beyond the basic abilities of the C++ languange. Things
+ * such as intelligent strings, logging systems, environment and file system
+ * management and even cross-code abstract notifications can be found in bump.
+ */
+namespace bump {}
+
 #endif  // End of BUMP_BUMP_H
