@@ -15,6 +15,96 @@
 
 using namespace bump;
 
+String FileSystem::join(const String& path1, const String& path2)
+{
+	boost::filesystem::path joined_path(path1);
+	joined_path /= path2;
+	return joined_path.string();
+}
+
+String FileSystem::join(const String& path1, const String& path2, const String& path3)
+{
+	boost::filesystem::path joined_path(path1);
+	joined_path /= path2;
+	joined_path /= path3;
+	return joined_path.string();
+}
+
+String FileSystem::join(const String& path1, const String& path2, const String& path3, const String& path4)
+{
+	boost::filesystem::path joined_path(path1);
+	joined_path /= path2;
+	joined_path /= path3;
+	joined_path /= path4;
+	return joined_path.string();
+}
+
+String FileSystem::join(const String& path1, const String& path2, const String& path3, const String& path4,
+						const String& path5)
+{
+	boost::filesystem::path joined_path(path1);
+	joined_path /= path2;
+	joined_path /= path3;
+	joined_path /= path4;
+	joined_path /= path5;
+	return joined_path.string();
+}
+
+String FileSystem::join(const String& path1, const String& path2, const String& path3, const String& path4,
+						const String& path5, const String& path6)
+{
+	boost::filesystem::path joined_path(path1);
+	joined_path /= path2;
+	joined_path /= path3;
+	joined_path /= path4;
+	joined_path /= path5;
+	joined_path /= path6;
+	return joined_path.string();
+}
+
+String FileSystem::join(const String& path1, const String& path2, const String& path3, const String& path4,
+						const String& path5, const String& path6, const String& path7)
+{
+	boost::filesystem::path joined_path(path1);
+	joined_path /= path2;
+	joined_path /= path3;
+	joined_path /= path4;
+	joined_path /= path5;
+	joined_path /= path6;
+	joined_path /= path7;
+	return joined_path.string();
+}
+
+String FileSystem::join(const String& path1, const String& path2, const String& path3, const String& path4,
+						const String& path5, const String& path6, const String& path7, const String& path8)
+{
+	boost::filesystem::path joined_path(path1);
+	joined_path /= path2;
+	joined_path /= path3;
+	joined_path /= path4;
+	joined_path /= path5;
+	joined_path /= path6;
+	joined_path /= path7;
+	joined_path /= path8;
+	return joined_path.string();
+}
+
+String FileSystem::join(const String& path1, const String& path2, const String& path3, const String& path4,
+						const String& path5, const String& path6, const String& path7, const String& path8,
+						const String& path9)
+{
+	boost::filesystem::path joined_path(path1);
+	joined_path /= path2;
+	joined_path /= path3;
+	joined_path /= path4;
+	joined_path /= path5;
+	joined_path /= path6;
+	joined_path /= path7;
+	joined_path /= path8;
+	joined_path /= path9;
+	return joined_path.string();
+}
+
 void FileSystem::setCurrentPath(const String& path)
 {
 	// Make sure the path is valid
