@@ -10,8 +10,16 @@
 #include <boost/filesystem.hpp>
 
 // Bump headers
+#include <bump/Environment.h>
 #include <bump/Exception.h>
 #include <bump/FileInfo.h>
+
+// Unix headers
+#ifndef _WIN32
+#include <pwd.h>
+#include <grp.h>
+#include <sys/stat.h>
+#endif
 
 using namespace bump;
 
@@ -25,6 +33,10 @@ FileInfo::~FileInfo()
 {
 	;
 }
+
+//====================================================================================
+//                              Path Query Methods
+//====================================================================================
 
 bool FileInfo::exists() const
 {
@@ -88,6 +100,10 @@ bool FileInfo::isHidden() const
 
 	return false;
 }
+
+//====================================================================================
+//                          Path Decomposition Methods
+//====================================================================================
 
 String FileInfo::absolutePath() const
 {
@@ -183,6 +199,223 @@ String FileInfo::filename() const
 	return _path.filename().string();
 }
 
+//====================================================================================
+//                           Permissions Query Methods
+//====================================================================================
+
+bool FileInfo::isReadableByUser() const
+{
+	// If on windows, simply return the owner permissions
+#ifdef _WIN32
+	return this->isReadableByOwner();
+#endif
+
+	// Since we're not on windows, we need to figure out if we're the owner of the file
+	String owner = this->owner();
+	String current_user = Environment::currentUsername();
+	if (owner == current_user)
+	{
+		return this->isReadableByOwner();
+	}
+	else
+	{
+		return this->isReadableByAnyone();
+	}
+}
+
+bool FileInfo::isWritableByUser() const
+{
+	// If on windows, simply return the owner permissions
+#ifdef _WIN32
+	return this->isWritableByOwner();
+#endif
+
+	// Since we're not on windows, we need to figure out if we're the owner of the file
+	String owner = this->owner();
+	String current_user = Environment::currentUsername();
+	if (owner == current_user)
+	{
+		return this->isWritableByOwner();
+	}
+	else
+	{
+		return this->isWritableByAnyone();
+	}
+}
+
+bool FileInfo::isExecutableByUser() const
+{
+	// If on windows, simply return the owner permissions
+#ifdef _WIN32
+	return this->isExecutableByOwner();
+#endif
+
+	// Since we're not on windows, we need to figure out if we're the owner of the file
+	String owner = this->owner();
+	String current_user = Environment::currentUsername();
+	if (owner == current_user)
+	{
+		return this->isExecutableByOwner();
+	}
+	else
+	{
+		return this->isExecutableByAnyone();
+	}
+}
+
+bool FileInfo::isReadableByOwner() const
+{
+	boost::filesystem::file_status status = boost::filesystem::status(_path);
+	boost::filesystem::perms permissions = status.permissions();
+	bool is_readable = permissions & boost::filesystem::owner_read;
+
+	return is_readable;
+}
+
+bool FileInfo::isWritableByOwner() const
+{
+	boost::filesystem::file_status status = boost::filesystem::status(_path);
+	boost::filesystem::perms permissions = status.permissions();
+	bool is_writable = permissions & boost::filesystem::owner_write;
+
+	return is_writable;
+}
+
+bool FileInfo::isExecutableByOwner() const
+{
+	boost::filesystem::file_status status = boost::filesystem::status(_path);
+	boost::filesystem::perms permissions = status.permissions();
+	bool is_executable = permissions & boost::filesystem::owner_exe;
+
+	return is_executable;
+}
+
+bool FileInfo::isReadableByGroup() const
+{
+	boost::filesystem::file_status status = boost::filesystem::status(_path);
+	boost::filesystem::perms permissions = status.permissions();
+	bool is_readable = permissions & boost::filesystem::group_read;
+
+	return is_readable;
+}
+
+bool FileInfo::isWritableByGroup() const
+{
+	boost::filesystem::file_status status = boost::filesystem::status(_path);
+	boost::filesystem::perms permissions = status.permissions();
+	bool is_writable = permissions & boost::filesystem::group_write;
+
+	return is_writable;
+}
+
+bool FileInfo::isExecutableByGroup() const
+{
+	boost::filesystem::file_status status = boost::filesystem::status(_path);
+	boost::filesystem::perms permissions = status.permissions();
+	bool is_executable = permissions & boost::filesystem::group_exe;
+
+	return is_executable;
+}
+
+bool FileInfo::isReadableByAnyone() const
+{
+	boost::filesystem::file_status status = boost::filesystem::status(_path);
+	boost::filesystem::perms permissions = status.permissions();
+	bool is_readable = permissions & boost::filesystem::others_read;
+
+	return is_readable;
+}
+
+bool FileInfo::isWritableByAnyone() const
+{
+	boost::filesystem::file_status status = boost::filesystem::status(_path);
+	boost::filesystem::perms permissions = status.permissions();
+	bool is_writable = permissions & boost::filesystem::others_write;
+
+	return is_writable;
+}
+
+bool FileInfo::isExecutableByAnyone() const
+{
+	boost::filesystem::file_status status = boost::filesystem::status(_path);
+	boost::filesystem::perms permissions = status.permissions();
+	bool is_executable = permissions & boost::filesystem::others_exe;
+
+	return is_executable;
+}
+
+String FileInfo::owner() const
+{
+	// Send back an empty string if we're on windows
+#ifdef _WIN32
+	return String();
+#endif
+
+	// Make sure we have a valid path
+	_validatePath();
+
+	// Since we're on unix, use the native unix calls to dig out the username
+	String filepath = this->canonicalPath();
+	struct stat info;
+	stat(filepath.c_str(), &info);
+	struct passwd* password_uid = getpwuid(info.st_uid);
+	return password_uid->pw_name;
+}
+
+unsigned int FileInfo::ownerId() const
+{
+	// Send back -1 if we're on windows
+#ifdef _WIN32
+	return -1;
+#endif
+
+	// Make sure we have a valid path
+	_validatePath();
+
+	// Since we're on unix, use the native unix calls to dig out the user id
+	String filepath = this->canonicalPath();
+	struct stat info;
+	stat(filepath.c_str(), &info);
+	struct passwd* password_uid = getpwuid(info.st_uid);
+	return password_uid->pw_uid;
+}
+
+String FileInfo::group() const
+{
+	// Send back an empty string if we're on windows
+#ifdef _WIN32
+	return String();
+#endif
+
+	// Make sure we have a valid path
+	_validatePath();
+
+	// Since we're on unix, use the native unix calls to dig out the group name
+	String filepath = this->canonicalPath();
+	struct stat info;
+	stat(filepath.c_str(), &info);
+	struct group* group_uid = getgrgid(info.st_gid);
+	return group_uid->gr_name;
+}
+
+unsigned int FileInfo::groupId() const
+{
+	// Send back -1 if we're on windows
+#ifdef _WIN32
+	return -1;
+#endif
+
+	// Make sure we have a valid path
+	_validatePath();
+
+	// Since we're on unix, use the native unix calls to dig out the group id
+	String filepath = this->canonicalPath();
+	struct stat info;
+	stat(filepath.c_str(), &info);
+	struct group* group_uid = getgrgid(info.st_gid);
+	return group_uid->gr_gid;
+}
+
 void FileInfo::_validatePath() const
 {
 	if (!boost::filesystem::exists(_path))
@@ -190,4 +423,14 @@ void FileInfo::_validatePath() const
 		String msg = String("The following path is invalid: %1").arg(_path.string());
 		throw FileSystemError(msg, BUMP_LOCATION);
 	}
+}
+
+//====================================================================================
+//                              Date Query Methods
+//====================================================================================
+
+std::time_t FileInfo::dateModified() const
+{
+	_validatePath();
+	return boost::filesystem::last_write_time(_path);
 }
