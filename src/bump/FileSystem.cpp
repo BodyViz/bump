@@ -15,23 +15,13 @@
 
 using namespace bump;
 
-FileSystem::FileSystem()
-{
-	;
-}
-
-FileSystem::~FileSystem()
-{
-	;
-}
-
 void FileSystem::setCurrentPath(const String& path)
 {
 	// Make sure the path is valid
 	boost::filesystem::path new_path(path);
 	if (!boost::filesystem::exists(new_path))
 	{
-		String msg = String("The following path is invalid and could not be set as the current path: %1").arg(path);
+		String msg = String("The following path is invalid: %1").arg(path);
 		throw FileSystemError(msg, BUMP_LOCATION);
 	}
 
@@ -42,4 +32,9 @@ void FileSystem::setCurrentPath(const String& path)
 String FileSystem::currentPath()
 {
 	return boost::filesystem::current_path().string();
+}
+
+String FileSystem::temporaryPath()
+{
+	return boost::filesystem::temp_directory_path().string();
 }

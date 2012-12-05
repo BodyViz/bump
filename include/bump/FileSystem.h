@@ -16,36 +16,39 @@
 namespace bump {
 
 /**
- * TODO
+ * The FileSystem allows users to modify the file system in almost every
+ * way possible. The following is a breakdown of the functionality of the
+ * FileSystem API:
+ *
+ *    - Directory Modification (createDirectory, removeDirectory, directoryInfoList, etc.)
+ *    - File Modification (createFile, renameFile, removeFile, copyFile, etc.)
+ *    - Permissions Modification (setIsReadableByUser, setIsExecutableByOwner, etc.)
+ *    - Date Modification (setDateModified, etc.)
  */
-class BUMP_EXPORT FileSystem
-{
-public:
+namespace FileSystem {
 
-	/**
-	 * Constructor.
-	 */
-	FileSystem();
+/**
+ * Sets the current working directory path.
+ *
+ * @param The path to set the current working directory to.
+ */
+extern BUMP_EXPORT void setCurrentPath(const String& path);
 
-	/**
-	 * Destructor.
-	 */
-	~FileSystem();
+/**
+ * Returns the current working directory path.
+ *
+ * @return The absolute path of the current working directory.
+ */
+extern BUMP_EXPORT String currentPath();
 
-	/**
-	 * Sets the current working directory path.
-	 *
-	 * @param the path to set the current working directory to.
-	 */
-	static void setCurrentPath(const String& path);
+/**
+ * Returns the temporary path for the operating system.
+ *
+ * @return The temporary path for the operating system.
+ */
+extern BUMP_EXPORT String temporaryPath();
 
-	/**
-	 * Returns the current working directory path.
-	 *
-	 * @return the absolute path of the current working directory.
-	 */
-	static String currentPath();
-};
+}	// End of FileSystem namespace
 
 }	// End of bump namespace
 
