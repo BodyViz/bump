@@ -6,6 +6,12 @@
 //	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
+// Windows headers
+#ifdef _WIN32
+#include <windows.h>
+#include <Lmcons.h>
+#endif
+
 // Bump headers
 #include <bump/Environment.h>
 #include <bump/String.h>
@@ -38,4 +44,25 @@ bool Environment::unsetEnvironmentVariable(const String& name)
 {
 	int result = unsetenv(name.c_str());
 	return result == 0;
+}
+
+String Environment::currentUsername()
+{
+#ifdef _WIN32
+	// On windows, use the windows calls
+	char username[UNLEN+1];
+	GetUserName(username, UNLEN+1);
+	return username;
+#else
+	// On unix, we use the "USER" and "USERNAME" environment variables. First try the "USER" environment variable.
+	String username = environmentVariable("USER");
+	if (!username.isEmpty())
+	{
+		return username;
+	}
+
+	// Now try the "USERNAME" environment variable since the "USER" environment variable was empty
+	username = environmentVariable("USERNAME");
+	return username;
+#endif
 }

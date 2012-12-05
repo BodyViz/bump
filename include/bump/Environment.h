@@ -64,6 +64,13 @@ public:
 	 * @return true if the operation was successful, false otherwise.
 	 */
 	static bool unsetEnvironmentVariable(const String& name);
+
+	/**
+	 * Returns the username of the current user.
+	 *
+	 * @return the username of the current user.
+	 */
+	static String currentUsername();
 };
 
 }	// End of bump namespace
