@@ -36,39 +36,53 @@ public:
 	~FileInfo();
 
 	/**
+	 * Returns whether the path exists.
+	 *
+	 * @return true if the path exists, false otherwise.
+	 */
+	bool exists() const;
+
+	/**
 	 * Returns whether the path is an absolute path.
 	 *
 	 * @return true if the path is an absolute path, false otherwise.
 	 */
-	bool isAbsolute();
+	bool isAbsolute() const;
 
 	/**
 	 * Returns whether the path is a relative path.
 	 *
 	 * @return true if the path is an relative path, false otherwise.
 	 */
-	bool isRelative();
+	bool isRelative() const;
 
 	/**
 	 * Returns whether the path points to a directory.
 	 *
 	 * @return true if the path points to a directory, false othwerwise.
 	 */
-	bool isDirectory();
+	bool isDirectory() const;
 
 	/**
 	 * Returns whether the path points to a file.
 	 *
 	 * @return true if the path points to a file, false othwerwise.
 	 */
-	bool isFile();
+	bool isFile() const;
 
 	/**
 	 * Returns whether the path points to a symbolic link.
 	 *
 	 * @return true if the path points to a symbolic link, false othwerwise.
 	 */
-	bool isSymbolicLink();
+	bool isSymbolicLink() const;
+
+	/**
+	 * Returns whether the path points to a hidden file.
+	 *
+	 * @return true if the path points to a hidden file, false othwerwise.
+	 */
+	bool isHidden() const;
 
 protected:
 
