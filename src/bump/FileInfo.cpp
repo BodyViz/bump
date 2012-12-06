@@ -230,7 +230,7 @@ bool FileInfo::isReadableByUser() const
 	}
 	else
 	{
-		return this->isReadableByAnyone();
+		return this->isReadableByOthers();
 	}
 }
 
@@ -250,7 +250,7 @@ bool FileInfo::isWritableByUser() const
 	}
 	else
 	{
-		return this->isWritableByAnyone();
+		return this->isWritableByOthers();
 	}
 }
 
@@ -270,7 +270,7 @@ bool FileInfo::isExecutableByUser() const
 	}
 	else
 	{
-		return this->isExecutableByAnyone();
+		return this->isExecutableByOthers();
 	}
 }
 
@@ -328,7 +328,7 @@ bool FileInfo::isExecutableByGroup() const
 	return is_executable;
 }
 
-bool FileInfo::isReadableByAnyone() const
+bool FileInfo::isReadableByOthers() const
 {
 	boost::filesystem::file_status status = boost::filesystem::status(_path);
 	boost::filesystem::perms permissions = status.permissions();
@@ -337,7 +337,7 @@ bool FileInfo::isReadableByAnyone() const
 	return is_readable;
 }
 
-bool FileInfo::isWritableByAnyone() const
+bool FileInfo::isWritableByOthers() const
 {
 	boost::filesystem::file_status status = boost::filesystem::status(_path);
 	boost::filesystem::perms permissions = status.permissions();
@@ -346,7 +346,7 @@ bool FileInfo::isWritableByAnyone() const
 	return is_writable;
 }
 
-bool FileInfo::isExecutableByAnyone() const
+bool FileInfo::isExecutableByOthers() const
 {
 	boost::filesystem::file_status status = boost::filesystem::status(_path);
 	boost::filesystem::perms permissions = status.permissions();
@@ -427,6 +427,16 @@ unsigned int FileInfo::groupId() const
 	return group_uid->gr_gid;
 }
 
+//====================================================================================
+//                              Date Query Methods
+//====================================================================================
+
+std::time_t FileInfo::modifiedDate() const
+{
+	_validatePath();
+	return boost::filesystem::last_write_time(_path);
+}
+
 void FileInfo::_validatePath() const
 {
 	if (!boost::filesystem::exists(_path))
@@ -434,14 +444,4 @@ void FileInfo::_validatePath() const
 		String msg = String("The following path is invalid: %1").arg(_path.string());
 		throw FileSystemError(msg, BUMP_LOCATION);
 	}
-}
-
-//====================================================================================
-//                              Date Query Methods
-//====================================================================================
-
-std::time_t FileInfo::dateModified() const
-{
-	_validatePath();
-	return boost::filesystem::last_write_time(_path);
 }

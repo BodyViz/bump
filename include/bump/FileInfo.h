@@ -22,14 +22,13 @@ namespace bump {
 class FileInfo;
 
 // Typedefs
-typedef std::vector<FileInfo> FileInfoList;
+typedef std::vector<FileInfo> FileInfoList; /**< Shortcut for creating vectors of file info objects. */
 
 /**
  * The FileInfo class is useful when you need information about a file system object.
  *
  * The various types of file system objects support are files, directories and symbolic
  * links. The four types of methods supported are:
- *
  *     - Path Query (fileSize, isRelative, isFile, etc.)
  *     - Path Decomposition (absolutePath, basename, filename, extension, etc.)
  *     - Permissions Query (isReadableByUser, owner, group, etc.)
@@ -115,6 +114,7 @@ public:
 	 * Returns whether the path points an empty directory or empty file.
 	 *
 	 * @throw bump::FileSystemError When the path does not exist.
+	 * @throw bump::FileSystemError When the path does not have permissions allowing the path to be checked.
 	 * @return True if the path points to an empty directory or empty file, false othwerwise.
 	 */
 	bool isEmpty() const;
@@ -286,29 +286,30 @@ public:
 	bool isExecutableByGroup() const;
 
 	/**
-	 * Returns whether the path is readable by the anyone based on the path's permissions.
+	 * Returns whether the path is readable by others based on the path's permissions.
 	 *
-	 * @return True if the path is readable by the anyone, false otherwise.
+	 * @return True if the path is readable by others, false otherwise.
 	 */
-	bool isReadableByAnyone() const;
+	bool isReadableByOthers() const;
 
 	/**
-	 * Returns whether the path is writable by the anyone based on the path's permissions.
+	 * Returns whether the path is writable by others based on the path's permissions.
 	 *
-	 * @return True if the path is writable by the anyone, false otherwise.
+	 * @return True if the path is writable by others, false otherwise.
 	 */
-	bool isWritableByAnyone() const;
+	bool isWritableByOthers() const;
 
 	/**
-	 * Returns whether the path is executable by the anyone based on the path's permissions.
+	 * Returns whether the path is executable by others based on the path's permissions.
 	 *
-	 * @return True if the path is executable by the anyone, false otherwise.
+	 * @return True if the path is executable by others, false otherwise.
 	 */
-	bool isExecutableByAnyone() const;
+	bool isExecutableByOthers() const;
 
 	/**
 	 * Returns the owner of the path. On Windows the return value is empty.
 	 *
+	 * @todo Extend to properly support Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 * @return The owner of the path.
 	 */
@@ -317,6 +318,7 @@ public:
 	/**
 	 * Returns the owner id of the path. On Windows the return value is -1.
 	 *
+	 * @todo Extend to properly support Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 * @return The owner of the path.
 	 */
@@ -325,6 +327,7 @@ public:
 	/**
 	 * Returns the group of the path. On Windows the return value is empty.
 	 *
+	 * @todo Extend to properly support Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 * @return The group of the path.
 	 */
@@ -333,6 +336,7 @@ public:
 	/**
 	 * Returns the group id of the path. On Windows the return value is -1.
 	 *
+	 * @todo Extend to properly support Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 * @return The group of the path.
 	 */
@@ -348,7 +352,7 @@ public:
 	 * @throw bump::FileSystemError When the path does not exist.
 	 * @return The date the file system object was last modified.
 	 */
-	std::time_t dateModified() const;
+	std::time_t modifiedDate() const;
 
 protected:
 
