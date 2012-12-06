@@ -11,6 +11,7 @@
 
 // C++ headers
 #include <iostream>
+#include <set>
 #include <vector>
 
 // Bump headers
@@ -23,6 +24,7 @@ class String;
 
 // Typedefs
 typedef std::vector<String> StringList;
+typedef std::set<String> StringSet;
 
 /**
  * A string class which adds lots of useful string methods ontop of the std::string class. These
