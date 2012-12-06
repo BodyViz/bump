@@ -18,6 +18,12 @@
 
 namespace bump {
 
+// Forward declarations
+class FileInfo;
+
+// Typedefs
+typedef std::vector<FileInfo> FileInfoList;
+
 /**
  * The FileInfo class is useful when you need information about a file system object.
  *
