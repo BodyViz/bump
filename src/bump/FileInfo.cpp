@@ -85,8 +85,19 @@ bool FileInfo::isSymbolicLink() const
 
 bool FileInfo::isEmpty() const
 {
+	// Make sure the path is valid
 	_validatePath();
-	return boost::filesystem::is_empty(_path);
+
+	// Try to check if the path is empty. This can fail in the event that we don't have
+	// the proper permissions to read the file system object.
+	try
+	{
+		return boost::filesystem::is_empty(_path);
+	}
+	catch (const boost::filesystem::filesystem_error& e)
+	{
+		throw FileSystemError("Do not have permission to check if empty", BUMP_LOCATION);
+	}
 }
 
 bool FileInfo::isHidden() const
