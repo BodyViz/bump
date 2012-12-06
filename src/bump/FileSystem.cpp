@@ -18,16 +18,18 @@
 // C++ headers
 #include <fstream>
 
-using namespace bump;
+namespace bump {
 
-String FileSystem::join(const String& path1, const String& path2)
+namespace FileSystem {
+
+String join(const String& path1, const String& path2)
 {
 	boost::filesystem::path joined_path(path1);
 	joined_path /= path2;
 	return joined_path.string();
 }
 
-String FileSystem::join(const String& path1, const String& path2, const String& path3)
+String join(const String& path1, const String& path2, const String& path3)
 {
 	boost::filesystem::path joined_path(path1);
 	joined_path /= path2;
@@ -35,7 +37,7 @@ String FileSystem::join(const String& path1, const String& path2, const String& 
 	return joined_path.string();
 }
 
-String FileSystem::join(const String& path1, const String& path2, const String& path3, const String& path4)
+String join(const String& path1, const String& path2, const String& path3, const String& path4)
 {
 	boost::filesystem::path joined_path(path1);
 	joined_path /= path2;
@@ -44,8 +46,7 @@ String FileSystem::join(const String& path1, const String& path2, const String& 
 	return joined_path.string();
 }
 
-String FileSystem::join(const String& path1, const String& path2, const String& path3, const String& path4,
-						const String& path5)
+String join(const String& path1, const String& path2, const String& path3, const String& path4, const String& path5)
 {
 	boost::filesystem::path joined_path(path1);
 	joined_path /= path2;
@@ -55,8 +56,8 @@ String FileSystem::join(const String& path1, const String& path2, const String& 
 	return joined_path.string();
 }
 
-String FileSystem::join(const String& path1, const String& path2, const String& path3, const String& path4,
-						const String& path5, const String& path6)
+String join(const String& path1, const String& path2, const String& path3, const String& path4, const String& path5,
+			const String& path6)
 {
 	boost::filesystem::path joined_path(path1);
 	joined_path /= path2;
@@ -67,8 +68,8 @@ String FileSystem::join(const String& path1, const String& path2, const String& 
 	return joined_path.string();
 }
 
-String FileSystem::join(const String& path1, const String& path2, const String& path3, const String& path4,
-						const String& path5, const String& path6, const String& path7)
+String join(const String& path1, const String& path2, const String& path3, const String& path4, const String& path5,
+			const String& path6, const String& path7)
 {
 	boost::filesystem::path joined_path(path1);
 	joined_path /= path2;
@@ -80,8 +81,8 @@ String FileSystem::join(const String& path1, const String& path2, const String& 
 	return joined_path.string();
 }
 
-String FileSystem::join(const String& path1, const String& path2, const String& path3, const String& path4,
-						const String& path5, const String& path6, const String& path7, const String& path8)
+String join(const String& path1, const String& path2, const String& path3, const String& path4, const String& path5,
+			const String& path6, const String& path7, const String& path8)
 {
 	boost::filesystem::path joined_path(path1);
 	joined_path /= path2;
@@ -94,9 +95,8 @@ String FileSystem::join(const String& path1, const String& path2, const String& 
 	return joined_path.string();
 }
 
-String FileSystem::join(const String& path1, const String& path2, const String& path3, const String& path4,
-						const String& path5, const String& path6, const String& path7, const String& path8,
-						const String& path9)
+String join(const String& path1, const String& path2, const String& path3, const String& path4, const String& path5,
+			const String& path6, const String& path7, const String& path8, const String& path9)
 {
 	boost::filesystem::path joined_path(path1);
 	joined_path /= path2;
@@ -114,7 +114,7 @@ String FileSystem::join(const String& path1, const String& path2, const String& 
 //                                System Path Methods
 //====================================================================================
 
-void FileSystem::setCurrentPath(const String& path)
+void setCurrentPath(const String& path)
 {
 	// Make sure the path is valid
 	boost::filesystem::path new_path(path);
@@ -128,12 +128,12 @@ void FileSystem::setCurrentPath(const String& path)
 	boost::filesystem::current_path(boost::filesystem::path(path));
 }
 
-String FileSystem::currentPath()
+String currentPath()
 {
 	return boost::filesystem::current_path().string();
 }
 
-String FileSystem::temporaryPath()
+String temporaryPath()
 {
 	return boost::filesystem::temp_directory_path().string();
 }
@@ -142,25 +142,25 @@ String FileSystem::temporaryPath()
 //                               Path Query Methods
 //====================================================================================
 
-bool FileSystem::exists(const String& path)
+bool exists(const String& path)
 {
 	FileInfo path_info(path);
 	return path_info.exists();
 }
 
-bool FileSystem::isDirectory(const String& path)
+bool isDirectory(const String& path)
 {
 	FileInfo path_info(path);
 	return path_info.isDirectory();
 }
 
-bool FileSystem::isFile(const String& path)
+bool isFile(const String& path)
 {
 	FileInfo path_info(path);
 	return path_info.isFile();
 }
 
-bool FileSystem::isSymbolicLink(const String& path)
+bool isSymbolicLink(const String& path)
 {
 	FileInfo path_info(path);
 	return path_info.isSymbolicLink();
@@ -170,41 +170,41 @@ bool FileSystem::isSymbolicLink(const String& path)
 //                                 Directory Methods
 //====================================================================================
 
-bool FileSystem::createDirectory(const String& path)
+bool createDirectory(const String& path)
 {
 	return boost::filesystem::create_directory(boost::filesystem::path(path));
 }
 
-bool FileSystem::createFullDirectoryPath(const String& path)
+bool createFullDirectoryPath(const String& path)
 {
 	return boost::filesystem::create_directories(boost::filesystem::path(path));
 }
 
-bool FileSystem::removeDirectory(const String& path)
+bool removeDirectory(const String& path)
 {
 	try
 	{
 		return boost::filesystem::remove(boost::filesystem::path(path));
 	}
-	catch (boost::filesystem::filesystem_error& e)
+	catch (const boost::filesystem::filesystem_error& e)
 	{
 		return false;
 	}
 }
 
-bool FileSystem::removeDirectoryAndContents(const String& path)
+bool removeDirectoryAndContents(const String& path)
 {
 	try
 	{
 		return boost::filesystem::remove_all(boost::filesystem::path(path));
 	}
-	catch (boost::filesystem::filesystem_error& e)
+	catch (const boost::filesystem::filesystem_error& e)
 	{
 		return false;
 	}
 }
 
-bool FileSystem::copyDirectory(const String& source, const String& destination)
+bool copyDirectory(const String& source, const String& destination)
 {
 	try
 	{
@@ -213,13 +213,13 @@ bool FileSystem::copyDirectory(const String& source, const String& destination)
 		boost::filesystem::copy(source_path, destination_path);
 		return true;
 	}
-	catch (boost::filesystem::filesystem_error& e)
+	catch (const boost::filesystem::filesystem_error& e)
 	{
 		return false;
 	}
 }
 
-bool FileSystem::copyDirectoryAndContents(const String& source, const String& destination)
+bool copyDirectoryAndContents(const String& source, const String& destination)
 {
 	// Create a FileInfo objects for the source and destination
 	FileInfo source_info(source);
@@ -244,14 +244,14 @@ bool FileSystem::copyDirectoryAndContents(const String& source, const String& de
 	}
 
 	// Create the destination directory
-	bool created_destination_directory = FileSystem::createFullDirectoryPath(destination);
+	bool created_destination_directory = createFullDirectoryPath(destination);
 	if (!created_destination_directory)
 	{
 		return false;
 	}
 
 	// Iterate through the local source directory
-	FileInfoList local_source_files = FileSystem::directoryInfoList(source);
+	FileInfoList local_source_files = directoryInfoList(source);
 	BOOST_FOREACH(const FileInfo& local_source_file, local_source_files)
 	{
 		bool copied_successfully;
@@ -261,28 +261,28 @@ bool FileSystem::copyDirectoryAndContents(const String& source, const String& de
 		{
 			// Create the local destination directory path
 			String filename = local_source_file.filename();
-			String local_destination_directory = FileSystem::join(destination, filename);
+			String local_destination_directory = join(destination, filename);
 
 			// Copy the local source directory to the local destination directory
-			copied_successfully = FileSystem::copyDirectoryAndContents(local_source_file.absolutePath(), local_destination_directory);
+			copied_successfully = copyDirectoryAndContents(local_source_file.absolutePath(), local_destination_directory);
 		}
 		else if (local_source_file.isSymbolicLink())
 		{
 			// Create the local destination symbolic link
 			String filename = local_source_file.filename();
-			String local_destination_file = FileSystem::join(destination, filename);
+			String local_destination_file = join(destination, filename);
 
 			// Copy the local source symbolic link to the local destination
-			copied_successfully = FileSystem::copySymbolicLink(local_source_file.absolutePath(), local_destination_file);
+			copied_successfully = copySymbolicLink(local_source_file.absolutePath(), local_destination_file);
 		}
 		else // local_source_info.isFile()
 		{
 			// Create the local destination filepath
 			String filename = local_source_file.filename();
-			String local_destination_file = FileSystem::join(destination, filename);
+			String local_destination_file = join(destination, filename);
 
 			// Copy the local source file to the local destination
-			copied_successfully = FileSystem::copyFile(local_source_file.absolutePath(), local_destination_file);
+			copied_successfully = copyFile(local_source_file.absolutePath(), local_destination_file);
 		}
 
 		// Fail if we did not copy the file system object successfully
@@ -295,7 +295,7 @@ bool FileSystem::copyDirectoryAndContents(const String& source, const String& de
 	return true;
 }
 
-bool FileSystem::renameDirectory(const String& source, const String& destination)
+bool renameDirectory(const String& source, const String& destination)
 {
 	try
 	{
@@ -304,13 +304,13 @@ bool FileSystem::renameDirectory(const String& source, const String& destination
 		boost::filesystem::rename(source_path, destination_path);
 		return true;
 	}
-	catch (boost::filesystem::filesystem_error& e)
+	catch (const boost::filesystem::filesystem_error& e)
 	{
 		return false;
 	}
 }
 
-StringList FileSystem::directoryList(const String& path)
+StringList directoryList(const String& path)
 {
 	// Throw an exception if the path does not exist
 	if (!FileInfo(path).exists())
@@ -348,7 +348,7 @@ StringList FileSystem::directoryList(const String& path)
 	return directory_list;
 }
 
-FileInfoList FileSystem::directoryInfoList(const String& path)
+FileInfoList directoryInfoList(const String& path)
 {
 	// Throw an exception if the path does not exist
 	if (!FileInfo(path).exists())
@@ -391,7 +391,7 @@ FileInfoList FileSystem::directoryInfoList(const String& path)
 //                                   File Methods
 //====================================================================================
 
-bool FileSystem::createFile(const String& path)
+bool createFile(const String& path)
 {
 	// Make sure the file doesn't already exist
 	FileInfo path_info(path);
@@ -407,12 +407,12 @@ bool FileSystem::createFile(const String& path)
 	return true;
 }
 
-bool FileSystem::removeFile(const String& path)
+bool removeFile(const String& path)
 {
 	return boost::filesystem::remove(boost::filesystem::path(path));
 }
 
-bool FileSystem::copyFile(const String& source, const String& destination)
+bool copyFile(const String& source, const String& destination)
 {
 	try
 	{
@@ -421,13 +421,13 @@ bool FileSystem::copyFile(const String& source, const String& destination)
 		boost::filesystem::copy(source_path, destination_path);
 		return true;
 	}
-	catch (boost::filesystem::filesystem_error& e)
+	catch (const boost::filesystem::filesystem_error& e)
 	{
 		return false;
 	}
 }
 
-bool FileSystem::renameFile(const String& source, const String& destination)
+bool renameFile(const String& source, const String& destination)
 {
 	try
 	{
@@ -436,7 +436,7 @@ bool FileSystem::renameFile(const String& source, const String& destination)
 		boost::filesystem::rename(source_path, destination_path);
 		return true;
 	}
-	catch (boost::filesystem::filesystem_error& e)
+	catch (const boost::filesystem::filesystem_error& e)
 	{
 		return false;
 	}
@@ -446,7 +446,7 @@ bool FileSystem::renameFile(const String& source, const String& destination)
 //                               Symbolic Link Methods
 //====================================================================================
 
-bool FileSystem::createSymbolicLink(const String& source, const String& destination)
+bool createSymbolicLink(const String& source, const String& destination)
 {
 	try
 	{
@@ -463,25 +463,25 @@ bool FileSystem::createSymbolicLink(const String& source, const String& destinat
 
 		return true;
 	}
-	catch (boost::filesystem::filesystem_error& e)
+	catch (const boost::filesystem::filesystem_error& e)
 	{
 		return false;
 	}
 }
 
-bool FileSystem::removeSymbolicLink(const String& path)
+bool removeSymbolicLink(const String& path)
 {
 	try
 	{
 		return boost::filesystem::remove(boost::filesystem::path(path));
 	}
-	catch (boost::filesystem::filesystem_error& e)
+	catch (const boost::filesystem::filesystem_error& e)
 	{
 		return false;
 	}
 }
 
-bool FileSystem::copySymbolicLink(const String& source, const String& destination)
+bool copySymbolicLink(const String& source, const String& destination)
 {
 	try
 	{
@@ -490,13 +490,13 @@ bool FileSystem::copySymbolicLink(const String& source, const String& destinatio
 		boost::filesystem::copy_symlink(source_path, destination_path);
 		return true;
 	}
-	catch (boost::filesystem::filesystem_error& e)
+	catch (const boost::filesystem::filesystem_error& e)
 	{
 		return false;
 	}
 }
 
-bool FileSystem::renameSymbolicLink(const String& source, const String& destination)
+bool renameSymbolicLink(const String& source, const String& destination)
 {
 	try
 	{
@@ -505,8 +505,221 @@ bool FileSystem::renameSymbolicLink(const String& source, const String& destinat
 		boost::filesystem::rename(source_path, destination_path);
 		return true;
 	}
-	catch (boost::filesystem::filesystem_error& e)
+	catch (const boost::filesystem::filesystem_error& e)
 	{
 		return false;
 	}
 }
+
+//====================================================================================
+//                                Permissions Methods
+//====================================================================================
+
+bool setPermissions(const String& path, Permissions permissions)
+{
+	// Make sure the path exists or throw an exception
+	FileInfo path_info(path);
+	if (!path_info.exists())
+	{
+		String msg = String("The following path is not valid: %1").arg(path);
+		throw FileSystemError(msg, BUMP_LOCATION);
+	}
+
+	// Create a new set of boost permissions matching the bump permissions
+	boost::filesystem::perms boost_permissions = boost::filesystem::no_perms;
+	if (permissions & OWNER_READ)
+	{
+        boost_permissions |= boost::filesystem::owner_read;
+	}
+    if (permissions & OWNER_WRITE)
+	{
+        boost_permissions |= boost::filesystem::owner_write;
+	}
+    if (permissions & OWNER_EXE)
+	{
+        boost_permissions |= boost::filesystem::owner_exe;
+	}
+    if (permissions & GROUP_READ)
+	{
+        boost_permissions |= boost::filesystem::group_read;
+	}
+    if (permissions & GROUP_WRITE)
+	{
+        boost_permissions |= boost::filesystem::group_write;
+	}
+    if (permissions & GROUP_EXE)
+	{
+        boost_permissions |= boost::filesystem::group_exe;
+	}
+    if (permissions & OTHERS_READ)
+	{
+        boost_permissions |= boost::filesystem::others_read;
+	}
+    if (permissions & OTHERS_WRITE)
+	{
+        boost_permissions |= boost::filesystem::others_write;
+	}
+    if (permissions & OTHERS_EXE)
+	{
+        boost_permissions |= boost::filesystem::others_exe;
+	}
+
+	// Use the boost filesystem to modify the permissions
+	try
+	{
+		boost::filesystem::permissions(boost::filesystem::path(path), boost_permissions);
+		return true;
+	}
+	catch (const boost::filesystem::filesystem_error& e)
+	{
+		return false;
+	}
+}
+
+Permissions permissions(const String& path)
+{
+	// Make sure the path exists or throw an exception
+	FileInfo path_info(path);
+	if (!path_info.exists())
+	{
+		String msg = String("The following path is not valid: %1").arg(path);
+		throw FileSystemError(msg, BUMP_LOCATION);
+	}
+
+	// Get the permissions using boost
+	boost::filesystem::file_status status = boost::filesystem::status(boost::filesystem::path(path));
+	boost::filesystem::perms boost_permissions = status.permissions();
+
+	// Create a bump permissions object by or'ing in all the boost permissions
+	Permissions permissions = 0;
+	if (boost_permissions & boost::filesystem::owner_read)
+	{
+        permissions |= OWNER_READ;
+	}
+	if (boost_permissions & boost::filesystem::owner_write)
+	{
+        permissions |= OWNER_WRITE;
+	}
+	if (boost_permissions & boost::filesystem::owner_exe)
+	{
+        permissions |= OWNER_EXE;
+	}
+	if (boost_permissions & boost::filesystem::group_read)
+	{
+        permissions |= GROUP_READ;
+	}
+	if (boost_permissions & boost::filesystem::group_write)
+	{
+        permissions |= GROUP_WRITE;
+	}
+	if (boost_permissions & boost::filesystem::group_exe)
+	{
+        permissions |= GROUP_EXE;
+	}
+	if (boost_permissions & boost::filesystem::others_read)
+	{
+        permissions |= OTHERS_READ;
+	}
+	if (boost_permissions & boost::filesystem::others_write)
+	{
+        permissions |= OTHERS_WRITE;
+	}
+	if (boost_permissions & boost::filesystem::others_exe)
+	{
+        permissions |= OTHERS_EXE;
+	}
+
+	return permissions;
+}
+
+bool setIsReadableByOwner(const String& path, bool isReadable)
+{
+	Permissions permissions = FileSystem::permissions(path);
+	isReadable ? permissions |= OWNER_READ : permissions &= ~OWNER_READ;
+	return setPermissions(path, permissions);
+}
+
+bool setIsWritableByOwner(const String& path, bool isWritable)
+{
+	Permissions permissions = FileSystem::permissions(path);
+	isWritable ? permissions |= OWNER_WRITE : permissions &= ~OWNER_WRITE;
+	return setPermissions(path, permissions);
+}
+
+bool setIsExecutableByOwner(const String& path, bool isExecutable)
+{
+	Permissions permissions = FileSystem::permissions(path);
+	isExecutable ? permissions |= OWNER_EXE : permissions &= ~OWNER_EXE;
+	return setPermissions(path, permissions);
+}
+
+bool setIsReadableByGroup(const String& path, bool isReadable)
+{
+	Permissions permissions = FileSystem::permissions(path);
+	isReadable ? permissions |= GROUP_READ : permissions &= ~GROUP_READ;
+	return setPermissions(path, permissions);
+}
+
+bool setIsWritableByGroup(const String& path, bool isWritable)
+{
+	Permissions permissions = FileSystem::permissions(path);
+	isWritable ? permissions |= GROUP_WRITE : permissions &= ~GROUP_WRITE;
+	return setPermissions(path, permissions);
+}
+
+bool setIsExecutableByGroup(const String& path, bool isExecutable)
+{
+	Permissions permissions = FileSystem::permissions(path);
+	isExecutable ? permissions |= GROUP_EXE : permissions &= ~GROUP_EXE;
+	return setPermissions(path, permissions);
+}
+
+bool setIsReadableByOthers(const String& path, bool isReadable)
+{
+	Permissions permissions = FileSystem::permissions(path);
+	isReadable ? permissions |= OTHERS_READ : permissions &= ~OTHERS_READ;
+	return setPermissions(path, permissions);
+}
+
+bool setIsWritableByOthers(const String& path, bool isWritable)
+{
+	Permissions permissions = FileSystem::permissions(path);
+	isWritable ? permissions |= OTHERS_WRITE : permissions &= ~OTHERS_WRITE;
+	return setPermissions(path, permissions);
+}
+
+bool setIsExecutableByOthers(const String& path, bool isExecutable)
+{
+	Permissions permissions = FileSystem::permissions(path);
+	isExecutable ? permissions |= OTHERS_EXE : permissions &= ~OTHERS_EXE;
+	return setPermissions(path, permissions);
+}
+
+//====================================================================================
+//                                  Date Methods
+//====================================================================================
+
+bool setModifiedDate(const String& path, const std::time_t& date)
+{
+	// Make sure the path exists or throw an exception
+	FileInfo path_info(path);
+	if (!path_info.exists())
+	{
+		String msg = String("The following path is not valid: %1").arg(path);
+		throw FileSystemError(msg, BUMP_LOCATION);
+	}
+
+	try
+	{
+		boost::filesystem::last_write_time(boost::filesystem::path(path), date);
+		return true;
+	}
+	catch (const boost::filesystem::filesystem_error& e)
+	{
+		return false;
+	}
+}
+
+}	// End of FileSystem namespace
+
+}	// End of bump namespace
