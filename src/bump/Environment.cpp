@@ -6,37 +6,39 @@
 //	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
+// Bump headers
+#include <bump/Environment.h>
+#include <bump/String.h>
+
 // Windows headers
 #ifdef _WIN32
 #include <windows.h>
 #include <Lmcons.h>
 #endif
 
-// Bump headers
-#include <bump/Environment.h>
-#include <bump/String.h>
+namespace bump {
 
-using namespace bump;
+namespace Environment {
 
-String Environment::environmentVariable(const String& name)
+String environmentVariable(const String& name)
 {
 	char* value = getenv(name.c_str());
 	return value == NULL ? String("") : String(value);
 }
 
-bool Environment::setEnvironmentVariable(const String& name, const String& value, bool overwrite)
+bool setEnvironmentVariable(const String& name, const String& value, bool overwrite)
 {
 	int result = setenv(name.c_str(), value.c_str(), overwrite);
 	return result == 0;
 }
 
-bool Environment::unsetEnvironmentVariable(const String& name)
+bool unsetEnvironmentVariable(const String& name)
 {
 	int result = unsetenv(name.c_str());
 	return result == 0;
 }
 
-String Environment::currentUsername()
+String currentUsername()
 {
 #ifdef _WIN32
 	// On windows, use the windows calls
@@ -56,3 +58,7 @@ String Environment::currentUsername()
 	return username;
 #endif
 }
+
+}	// End of Environment namespace
+
+}	// End of bump namespace

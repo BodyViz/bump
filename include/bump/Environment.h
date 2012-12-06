@@ -29,7 +29,7 @@ namespace Environment {
  * @param name the environment variable's name you wish to find the value for.
  * @return the enviroment variable's value as a string.
  */
-extern BUMP_EXPORT String environmentVariable(const String& name);
+BUMP_EXPORT String environmentVariable(const String& name);
 
 /**
  * Sets the environment variable to the given value.
@@ -43,7 +43,7 @@ extern BUMP_EXPORT String environmentVariable(const String& name);
  * @param overwrite whether to reset the value by overwritting the previous value with the new one.
  * @return true if the operation was successful, false otherwise.
  */
-extern BUMP_EXPORT bool setEnvironmentVariable(const String& name, const String& value, bool overwrite = true);
+BUMP_EXPORT bool setEnvironmentVariable(const String& name, const String& value, bool overwrite = true);
 
 /**
  * Removes all instances of the variable name.
@@ -51,14 +51,14 @@ extern BUMP_EXPORT bool setEnvironmentVariable(const String& name, const String&
  * @param name the environment variable's name you wish to unset.
  * @return true if the operation was successful, false otherwise.
  */
-extern BUMP_EXPORT bool unsetEnvironmentVariable(const String& name);
+BUMP_EXPORT bool unsetEnvironmentVariable(const String& name);
 
 /**
  * Returns the username of the current user.
  *
  * @return the username of the current user.
  */
-extern BUMP_EXPORT String currentUsername();
+BUMP_EXPORT String currentUsername();
 
 }	// End of Environment namespace
 
