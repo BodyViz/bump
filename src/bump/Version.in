@@ -22,15 +22,27 @@ namespace bump {
 
 /**
  * Returns the library version number.
- * Numbering convention: Bump-1.0.2 will return 1.0.2 from bumpGetVersion.
+ *
+ * The number convention is as follows:
+ *    - Bump-1.0.2 will return 1.0.2 from bumpGetVersion.
+ *
+ * @return The version of the bump library as a string.
  */
-extern BUMP_EXPORT String bumpGetVersion();
+BUMP_EXPORT String bumpGetVersion();
 
-/** Returns the bump shared object version number. */
-extern BUMP_EXPORT String bumpGetSOVersion();
+/**
+ * Returns the bump shared object version number.
+ *
+ * @return The bump shared object version number as a string.
+ */
+BUMP_EXPORT String bumpGetSOVersion();
 
-/** Returns the library name in human-friendly form. */
-extern BUMP_EXPORT String bumpGetLibraryName();
+/**
+ * Returns the library name in human-friendly form.
+ *
+ * @return The library name in human-friendly form.
+ */
+BUMP_EXPORT String bumpGetLibraryName();
 
 }	// End of bump namespace
 

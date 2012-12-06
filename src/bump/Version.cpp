@@ -8,7 +8,9 @@
 
 #include <bump/Version.h>
 
-bump::String bump::bumpGetVersion()
+namespace bump {
+
+String bumpGetVersion()
 {
 	static bool shouldInitialize = true;
 	static bump::String bumpVersion;
@@ -29,7 +31,7 @@ bump::String bump::bumpGetVersion()
 	return bumpVersion;
 }
 
-bump::String bump::bumpGetSOVersion()
+String bumpGetSOVersion()
 {
 	static bool shouldInitialize = true;
 	static bump::String bumpSOVersion;
@@ -42,7 +44,9 @@ bump::String bump::bumpGetSOVersion()
 	return bumpSOVersion;
 }
 
-bump::String bump::bumpGetLibraryName()
+String bumpGetLibraryName()
 {
 	return "Bump Library";
 }
+
+}	// End of bump namespace
