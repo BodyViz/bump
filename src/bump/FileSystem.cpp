@@ -172,7 +172,14 @@ bool isSymbolicLink(const String& path)
 
 bool createDirectory(const String& path)
 {
-	return boost::filesystem::create_directory(boost::filesystem::path(path));
+	try
+	{
+		return boost::filesystem::create_directory(boost::filesystem::path(path));
+	}
+	catch (const boost::filesystem::filesystem_error& e)
+	{
+		return false;
+	}
 }
 
 bool createFullDirectoryPath(const String& path)
