@@ -11,6 +11,7 @@
 
 // Bump headers
 #include <bump/Export.h>
+#include <bump/FileInfo.h>
 #include <bump/String.h>
 
 namespace bump {
@@ -247,6 +248,8 @@ BUMP_EXPORT bool createFullDirectoryPath(const String& path);
  * Removes the specified directory if it is empty.
  *
  * @see removeDirectoryAndContents() can remove a directory that is not empty.
+ *
+ * @throw bump::FileSystemError When the path is not a valid directory.
  * @param path The path of the directory to remove.
  * @return True if the directory was removed successfully, false otherwise.
  */
@@ -255,6 +258,7 @@ BUMP_EXPORT bool removeDirectory(const String& path);
 /**
  * Removes the specified directory's contents recursively, then removes the directory itself.
  *
+ * @throw bump::FileSystemError When the path is not a valid directory.
  * @param path The path of the directory to remove.
  * @return True if the directory and it's contents were removed successfully, false otherwise.
  */
@@ -267,6 +271,8 @@ BUMP_EXPORT bool removeDirectoryAndContents(const String& path);
  * to the destination directory using this method.
  *
  * @see copyDirectoryAndContents() can copy a directory along with all it's contents.
+ *
+ * @throw bump::FileSystemError When the source is not a valid directory.
  * @param source The source directory to copy.
  * @param destination The destination directory to copy the source directory to.
  * @return True if the source directory was copied successfully, false otherwise.
@@ -276,6 +282,7 @@ BUMP_EXPORT bool copyDirectory(const String& source, const String& destination);
 /**
  * Copies the source directory and all contents over to the destination directory.
  *
+ * @throw bump::FileSystemError When the source is not a valid directory.
  * @param source The source directory to copy.
  * @param destination The destination directory to copy the source directory to.
  * @return True if the source directory and all contents were copied successfully, false otherwise.
@@ -285,6 +292,7 @@ BUMP_EXPORT bool copyDirectoryAndContents(const String& source, const String& de
 /**
  * Renames the source directory to the destination directory.
  *
+ * @throw bump::FileSystemError When the source is not a valid directory.
  * @param source The source directory to rename.
  * @param destination The destination directory to rename the source directory to.
  * @return True if the source directory was renamed successfully, false otherwise.

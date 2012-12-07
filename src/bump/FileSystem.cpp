@@ -12,7 +12,6 @@
 
 // Bump headers
 #include <bump/Exception.h>
-#include <bump/FileInfo.h>
 #include <bump/FileSystem.h>
 
 // C++ headers
@@ -189,6 +188,13 @@ bool createFullDirectoryPath(const String& path)
 
 bool removeDirectory(const String& path)
 {
+	// Throw an exception if the path is not a directory
+	if (!FileInfo(path).isDirectory())
+	{
+		String msg = String("The following path is not a directory: %1").arg(path);
+		throw FileSystemError(msg, BUMP_LOCATION);
+	}
+
 	try
 	{
 		return boost::filesystem::remove(boost::filesystem::path(path));
@@ -201,6 +207,13 @@ bool removeDirectory(const String& path)
 
 bool removeDirectoryAndContents(const String& path)
 {
+	// Throw an exception if the path is not a directory
+	if (!FileInfo(path).isDirectory())
+	{
+		String msg = String("The following path is not a directory: %1").arg(path);
+		throw FileSystemError(msg, BUMP_LOCATION);
+	}
+
 	try
 	{
 		return boost::filesystem::remove_all(boost::filesystem::path(path));
@@ -213,6 +226,13 @@ bool removeDirectoryAndContents(const String& path)
 
 bool copyDirectory(const String& source, const String& destination)
 {
+	// Throw an exception if the source is not a directory
+	if (!FileInfo(source).isDirectory())
+	{
+		String msg = String("The following path is not a directory: %1").arg(source);
+		throw FileSystemError(msg, BUMP_LOCATION);
+	}
+
 	try
 	{
 		boost::filesystem::path source_path(source);
@@ -228,21 +248,16 @@ bool copyDirectory(const String& source, const String& destination)
 
 bool copyDirectoryAndContents(const String& source, const String& destination)
 {
+	// Throw an exception if the source is not a directory
+	if (!FileInfo(source).isDirectory())
+	{
+		String msg = String("The following path is not a directory: %1").arg(source);
+		throw FileSystemError(msg, BUMP_LOCATION);
+	}
+
 	// Create a FileInfo objects for the source and destination
 	FileInfo source_info(source);
 	FileInfo destination_info(destination);
-
-	// Make sure the source is a directory
-	if (!source_info.isDirectory())
-	{
-		return false;
-	}
-
-	// Make sure the source exists
-	if (!source_info.exists())
-	{
-		return false;
-	}
 
 	// Make sure the destination does not exist
 	if (destination_info.exists())
@@ -304,6 +319,13 @@ bool copyDirectoryAndContents(const String& source, const String& destination)
 
 bool renameDirectory(const String& source, const String& destination)
 {
+	// Throw an exception if the source is not a directory
+	if (!FileInfo(source).isDirectory())
+	{
+		String msg = String("The following path is not a directory: %1").arg(source);
+		throw FileSystemError(msg, BUMP_LOCATION);
+	}
+
 	try
 	{
 		boost::filesystem::path source_path(source);
