@@ -131,7 +131,12 @@ public:
 	//====================================================================================
 
 	/**
-	 * Returns the absolute path without cleaning the path or resolving symbolic links.
+	 * Returns the absolute path without resolving the path.
+	 *
+	 * If the path is absolute to begin with, the path will not be cleaned of duplicate
+	 * forwards and backwards slashes or have it's symbolic links resolved. If the path is
+	 * relative, then the result of this call is the currentPath() joined with the relative
+	 * path. Therefore, the path returned here is never checked again the exists() method.
 	 *
 	 * @return The absolute path without cleaning the path or resolving symbolic links.
 	 */
