@@ -219,8 +219,15 @@ String FileInfo::completeExtension() const
 	else
 	{
 		String filename = this->filename();
-		String basename = this->basename() << ".";
-		return filename.remove(basename);
+		if (filename.contains("."))
+		{
+			String basename = this->basename() << ".";
+			return filename.remove(basename);
+		}
+		else
+		{
+			return String();
+		}
 	}
 }
 
