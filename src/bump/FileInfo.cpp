@@ -146,6 +146,11 @@ String FileInfo::parentPath() const
 	return _path.parent_path().string();
 }
 
+String FileInfo::path() const
+{
+	return _path.string();
+}
+
 String FileInfo::basename() const
 {
 	if (isDirectory())

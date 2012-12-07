@@ -156,6 +156,18 @@ public:
 	String parentPath() const;
 
 	/**
+	 * Returns the same path passed into the constructor.
+	 *
+	 * NOTE: If a relative path was passed into the constructor, then a relative path
+	 * will be returned.
+	 *
+	 * @see The absolutePath() and canonicalPath() methods for alternative queries.
+	 *
+	 * @return The path passed into the constructor.
+	 */
+	String path() const;
+
+	/**
 	 * Returns the basename of the file.
 	 *
 	 * @code
