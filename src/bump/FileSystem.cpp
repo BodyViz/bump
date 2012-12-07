@@ -113,18 +113,18 @@ String join(const String& path1, const String& path2, const String& path3, const
 //                                System Path Methods
 //====================================================================================
 
-void setCurrentPath(const String& path)
+bool setCurrentPath(const String& path)
 {
-	// Make sure the path is valid
-	boost::filesystem::path new_path(path);
-	if (!boost::filesystem::exists(new_path))
-	{
-		String msg = String("The following path is invalid: %1").arg(path);
-		throw FileSystemError(msg, BUMP_LOCATION);
-	}
-
 	// Set the current path
-	boost::filesystem::current_path(boost::filesystem::path(path));
+	try
+	{
+		boost::filesystem::current_path(boost::filesystem::path(path));
+		return true;
+	}
+	catch (const boost::filesystem::filesystem_error& e)
+	{
+		return false;
+	}
 }
 
 String currentPath()
@@ -188,11 +188,10 @@ bool createFullDirectoryPath(const String& path)
 
 bool removeDirectory(const String& path)
 {
-	// Throw an exception if the path is not a directory
+	// Fail if the path is not a directory
 	if (!FileInfo(path).isDirectory())
 	{
-		String msg = String("The following path is not a directory: %1").arg(path);
-		throw FileSystemError(msg, BUMP_LOCATION);
+		return false;
 	}
 
 	try
@@ -207,11 +206,10 @@ bool removeDirectory(const String& path)
 
 bool removeDirectoryAndContents(const String& path)
 {
-	// Throw an exception if the path is not a directory
+	// Fail if the path is not a directory
 	if (!FileInfo(path).isDirectory())
 	{
-		String msg = String("The following path is not a directory: %1").arg(path);
-		throw FileSystemError(msg, BUMP_LOCATION);
+		return false;
 	}
 
 	try
@@ -226,11 +224,10 @@ bool removeDirectoryAndContents(const String& path)
 
 bool copyDirectory(const String& source, const String& destination)
 {
-	// Throw an exception if the source is not a directory
+	// Fail if the source path is not a directory
 	if (!FileInfo(source).isDirectory())
 	{
-		String msg = String("The following path is not a directory: %1").arg(source);
-		throw FileSystemError(msg, BUMP_LOCATION);
+		return false;
 	}
 
 	try
@@ -248,11 +245,10 @@ bool copyDirectory(const String& source, const String& destination)
 
 bool copyDirectoryAndContents(const String& source, const String& destination)
 {
-	// Throw an exception if the source is not a directory
+	// Fail if the source path is not a directory
 	if (!FileInfo(source).isDirectory())
 	{
-		String msg = String("The following path is not a directory: %1").arg(source);
-		throw FileSystemError(msg, BUMP_LOCATION);
+		return false;
 	}
 
 	// Create a FileInfo objects for the source and destination
@@ -319,11 +315,10 @@ bool copyDirectoryAndContents(const String& source, const String& destination)
 
 bool renameDirectory(const String& source, const String& destination)
 {
-	// Throw an exception if the source is not a directory
+	// Fail if the source path is not a directory
 	if (!FileInfo(source).isDirectory())
 	{
-		String msg = String("The following path is not a directory: %1").arg(source);
-		throw FileSystemError(msg, BUMP_LOCATION);
+		return false;
 	}
 
 	try
@@ -439,11 +434,23 @@ bool createFile(const String& path)
 
 bool removeFile(const String& path)
 {
+	// Fail if path is not a file
+	if (!FileInfo(path).isFile())
+	{
+		return false;
+	}
+
 	return boost::filesystem::remove(boost::filesystem::path(path));
 }
 
 bool copyFile(const String& source, const String& destination)
 {
+	// Fail if source is not a file
+	if (!FileInfo(source).isFile())
+	{
+		return false;
+	}
+
 	try
 	{
 		boost::filesystem::path source_path(source);
@@ -459,6 +466,12 @@ bool copyFile(const String& source, const String& destination)
 
 bool renameFile(const String& source, const String& destination)
 {
+	// Fail if source is not a file
+	if (!FileInfo(source).isFile())
+	{
+		return false;
+	}
+
 	try
 	{
 		boost::filesystem::path source_path(source);
@@ -501,6 +514,12 @@ bool createSymbolicLink(const String& source, const String& destination)
 
 bool removeSymbolicLink(const String& path)
 {
+	// Fail if path is not a symbolic link
+	if (!FileInfo(path).isSymbolicLink())
+	{
+		return false;
+	}
+
 	try
 	{
 		return boost::filesystem::remove(boost::filesystem::path(path));
@@ -513,6 +532,12 @@ bool removeSymbolicLink(const String& path)
 
 bool copySymbolicLink(const String& source, const String& destination)
 {
+	// Fail if source is not a symbolic link
+	if (!FileInfo(source).isSymbolicLink())
+	{
+		return false;
+	}
+
 	try
 	{
 		boost::filesystem::path source_path(source);
@@ -528,6 +553,12 @@ bool copySymbolicLink(const String& source, const String& destination)
 
 bool renameSymbolicLink(const String& source, const String& destination)
 {
+	// Fail if source is not a symbolic link
+	if (!FileInfo(source).isSymbolicLink())
+	{
+		return false;
+	}
+
 	try
 	{
 		boost::filesystem::path source_path(source);
@@ -547,12 +578,10 @@ bool renameSymbolicLink(const String& source, const String& destination)
 
 bool setPermissions(const String& path, Permissions permissions)
 {
-	// Make sure the path exists or throw an exception
-	FileInfo path_info(path);
-	if (!path_info.exists())
+	// Fail if the path does NOT exist
+	if (!exists(path))
 	{
-		String msg = String("The following path is not valid: %1").arg(path);
-		throw FileSystemError(msg, BUMP_LOCATION);
+		return false;
 	}
 
 	// Create a new set of boost permissions matching the bump permissions
@@ -609,8 +638,7 @@ bool setPermissions(const String& path, Permissions permissions)
 Permissions permissions(const String& path)
 {
 	// Make sure the path exists or throw an exception
-	FileInfo path_info(path);
-	if (!path_info.exists())
+	if (!exists(path))
 	{
 		String msg = String("The following path is not valid: %1").arg(path);
 		throw FileSystemError(msg, BUMP_LOCATION);
@@ -664,63 +692,144 @@ Permissions permissions(const String& path)
 
 bool setIsReadableByOwner(const String& path, bool isReadable)
 {
-	Permissions permissions = FileSystem::permissions(path);
+	Permissions permissions;
+	try
+	{
+		permissions = FileSystem::permissions(path);
+	}
+	catch (const FileSystemError& e)
+	{
+		return false;
+	}
+
 	isReadable ? permissions |= OWNER_READ : permissions &= ~OWNER_READ;
 	return setPermissions(path, permissions);
 }
 
 bool setIsWritableByOwner(const String& path, bool isWritable)
 {
-	Permissions permissions = FileSystem::permissions(path);
+	Permissions permissions;
+	try
+	{
+		permissions = FileSystem::permissions(path);
+	}
+	catch (const FileSystemError& e)
+	{
+		return false;
+	}
+
 	isWritable ? permissions |= OWNER_WRITE : permissions &= ~OWNER_WRITE;
 	return setPermissions(path, permissions);
 }
 
 bool setIsExecutableByOwner(const String& path, bool isExecutable)
 {
-	Permissions permissions = FileSystem::permissions(path);
+	Permissions permissions;
+	try
+	{
+		permissions = FileSystem::permissions(path);
+	}
+	catch (const FileSystemError& e)
+	{
+		return false;
+	}
+
 	isExecutable ? permissions |= OWNER_EXE : permissions &= ~OWNER_EXE;
 	return setPermissions(path, permissions);
 }
 
 bool setIsReadableByGroup(const String& path, bool isReadable)
 {
-	Permissions permissions = FileSystem::permissions(path);
+	Permissions permissions;
+	try
+	{
+		permissions = FileSystem::permissions(path);
+	}
+	catch (const FileSystemError& e)
+	{
+		return false;
+	}
+
 	isReadable ? permissions |= GROUP_READ : permissions &= ~GROUP_READ;
 	return setPermissions(path, permissions);
 }
 
 bool setIsWritableByGroup(const String& path, bool isWritable)
 {
-	Permissions permissions = FileSystem::permissions(path);
+	Permissions permissions;
+	try
+	{
+		permissions = FileSystem::permissions(path);
+	}
+	catch (const FileSystemError& e)
+	{
+		return false;
+	}
+
 	isWritable ? permissions |= GROUP_WRITE : permissions &= ~GROUP_WRITE;
 	return setPermissions(path, permissions);
 }
 
 bool setIsExecutableByGroup(const String& path, bool isExecutable)
 {
-	Permissions permissions = FileSystem::permissions(path);
+	Permissions permissions;
+	try
+	{
+		permissions = FileSystem::permissions(path);
+	}
+	catch (const FileSystemError& e)
+	{
+		return false;
+	}
+
 	isExecutable ? permissions |= GROUP_EXE : permissions &= ~GROUP_EXE;
 	return setPermissions(path, permissions);
 }
 
 bool setIsReadableByOthers(const String& path, bool isReadable)
 {
-	Permissions permissions = FileSystem::permissions(path);
+	Permissions permissions;
+	try
+	{
+		permissions = FileSystem::permissions(path);
+	}
+	catch (const FileSystemError& e)
+	{
+		return false;
+	}
+
 	isReadable ? permissions |= OTHERS_READ : permissions &= ~OTHERS_READ;
 	return setPermissions(path, permissions);
 }
 
 bool setIsWritableByOthers(const String& path, bool isWritable)
 {
-	Permissions permissions = FileSystem::permissions(path);
+	Permissions permissions;
+	try
+	{
+		permissions = FileSystem::permissions(path);
+	}
+	catch (const FileSystemError& e)
+	{
+		return false;
+	}
+
 	isWritable ? permissions |= OTHERS_WRITE : permissions &= ~OTHERS_WRITE;
 	return setPermissions(path, permissions);
 }
 
 bool setIsExecutableByOthers(const String& path, bool isExecutable)
 {
-	Permissions permissions = FileSystem::permissions(path);
+	Permissions permissions;
+	try
+	{
+		permissions = FileSystem::permissions(path);
+	}
+	catch (const FileSystemError& e)
+	{
+		return false;
+	}
+
 	isExecutable ? permissions |= OTHERS_EXE : permissions &= ~OTHERS_EXE;
 	return setPermissions(path, permissions);
 }
@@ -731,12 +840,10 @@ bool setIsExecutableByOthers(const String& path, bool isExecutable)
 
 bool setModifiedDate(const String& path, const std::time_t& date)
 {
-	// Make sure the path exists or throw an exception
-	FileInfo path_info(path);
-	if (!path_info.exists())
+	// Fail if path does NOT exist
+	if (!exists(path))
 	{
-		String msg = String("The following path is not valid: %1").arg(path);
-		throw FileSystemError(msg, BUMP_LOCATION);
+		return false;
 	}
 
 	try

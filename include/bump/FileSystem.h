@@ -167,10 +167,10 @@ BUMP_EXPORT String join(const String& path1, const String& path2, const String& 
 /**
  * Sets the current working directory path.
  *
- * @throw bump::FileSystemError When the path does not exist.
  * @param path The path to set the current working directory to.
+ * @return True if the current path was changed successfully, false otherwise.
  */
-BUMP_EXPORT void setCurrentPath(const String& path);
+BUMP_EXPORT bool setCurrentPath(const String& path);
 
 /**
  * Returns the current working directory path.
@@ -249,7 +249,6 @@ BUMP_EXPORT bool createFullDirectoryPath(const String& path);
  *
  * @see removeDirectoryAndContents() can remove a directory that is not empty.
  *
- * @throw bump::FileSystemError When the path is not a valid directory.
  * @param path The path of the directory to remove.
  * @return True if the directory was removed successfully, false otherwise.
  */
@@ -258,7 +257,6 @@ BUMP_EXPORT bool removeDirectory(const String& path);
 /**
  * Removes the specified directory's contents recursively, then removes the directory itself.
  *
- * @throw bump::FileSystemError When the path is not a valid directory.
  * @param path The path of the directory to remove.
  * @return True if the directory and it's contents were removed successfully, false otherwise.
  */
@@ -272,7 +270,6 @@ BUMP_EXPORT bool removeDirectoryAndContents(const String& path);
  *
  * @see copyDirectoryAndContents() can copy a directory along with all it's contents.
  *
- * @throw bump::FileSystemError When the source is not a valid directory.
  * @param source The source directory to copy.
  * @param destination The destination directory to copy the source directory to.
  * @return True if the source directory was copied successfully, false otherwise.
@@ -282,7 +279,6 @@ BUMP_EXPORT bool copyDirectory(const String& source, const String& destination);
 /**
  * Copies the source directory and all contents over to the destination directory.
  *
- * @throw bump::FileSystemError When the source is not a valid directory.
  * @param source The source directory to copy.
  * @param destination The destination directory to copy the source directory to.
  * @return True if the source directory and all contents were copied successfully, false otherwise.
@@ -292,7 +288,6 @@ BUMP_EXPORT bool copyDirectoryAndContents(const String& source, const String& de
 /**
  * Renames the source directory to the destination directory.
  *
- * @throw bump::FileSystemError When the source is not a valid directory.
  * @param source The source directory to rename.
  * @param destination The destination directory to rename the source directory to.
  * @return True if the source directory was renamed successfully, false otherwise.
@@ -364,6 +359,11 @@ BUMP_EXPORT bool renameFile(const String& source, const String& destination);
 /**
  * Creates the symbolic link from the specified source file or directory.
  *
+ * This method works best and is easiest to use when both source and destination are
+ * absolute paths. When they are relative, things are a bit trickier. Make sure that
+ * the destination path is relative to the current path. Then the source path needs
+ * to be relative to the destination path, not the current path.
+ *
  * @param source The path of the original file or directory.
  * @param destination The path of the symbolic link to create.
  * @return True if the symbolic link was created successfully, false otherwise.
@@ -409,7 +409,6 @@ BUMP_EXPORT bool renameSymbolicLink(const String& source, const String& destinat
  * permissions are actually modified. However, this should be a very rare case though
  * since modifying permissions of a symbolic link should not need to happen very often.
  *
- * @throw bump::FileSystemError When the path does not exist.
  * @param path The path of the file or directory to change the permissions on.
  * @param permissions The permissions to change on the file or directory that path points to.
  * @return True if the permissions were changed successfully, false otherwise.
@@ -428,7 +427,6 @@ BUMP_EXPORT Permissions permissions(const String& path);
 /**
  * Enables/disables the owner readable permission's bit for the file or directory at path.
  *
- * @throw bump::FileSystemError When the path does not exist.
  * @param path The path of the file or directory to set the permissions on.
  * @return True if the permissions were changed successfully, false otherwise.
  */
@@ -437,7 +435,6 @@ BUMP_EXPORT bool setIsReadableByOwner(const String& path, bool isReadable);
 /**
  * Enables/disables the owner writable permission's bit for the file or directory at path.
  *
- * @throw bump::FileSystemError When the path does not exist.
  * @param path The path of the file or directory to set the permissions on.
  * @return True if the permissions were changed successfully, false otherwise.
  */
@@ -446,7 +443,6 @@ BUMP_EXPORT bool setIsWritableByOwner(const String& path, bool isWritable);
 /**
  * Enables/disables the owner executable permission's bit for the file or directory at path.
  *
- * @throw bump::FileSystemError When the path does not exist.
  * @param path The path of the file or directory to set the permissions on.
  * @return True if the permissions were changed successfully, false otherwise.
  */
@@ -455,7 +451,6 @@ BUMP_EXPORT bool setIsExecutableByOwner(const String& path, bool isExecutable);
 /**
  * Enables/disables the group readable permission's bit for the file or directory at path.
  *
- * @throw bump::FileSystemError When the path does not exist.
  * @param path The path of the file or directory to set the permissions on.
  * @return True if the permissions were changed successfully, false otherwise.
  */
@@ -464,7 +459,6 @@ BUMP_EXPORT bool setIsReadableByGroup(const String& path, bool isReadable);
 /**
  * Enables/disables the group writable permission's bit for the file or directory at path.
  *
- * @throw bump::FileSystemError When the path does not exist.
  * @param path The path of the file or directory to set the permissions on.
  * @return True if the permissions were changed successfully, false otherwise.
  */
@@ -473,7 +467,6 @@ BUMP_EXPORT bool setIsWritableByGroup(const String& path, bool isWritable);
 /**
  * Enables/disables the group executable permission's bit for the file or directory at path.
  *
- * @throw bump::FileSystemError When the path does not exist.
  * @param path The path of the file or directory to set the permissions on.
  * @return True if the permissions were changed successfully, false otherwise.
  */
@@ -482,7 +475,6 @@ BUMP_EXPORT bool setIsExecutableByGroup(const String& path, bool isExecutable);
 /**
  * Enables/disables the others readable permission's bit for the file or directory at path.
  *
- * @throw bump::FileSystemError When the path does not exist.
  * @param path The path of the file or directory to set the permissions on.
  * @return True if the permissions were changed successfully, false otherwise.
  */
@@ -491,7 +483,6 @@ BUMP_EXPORT bool setIsReadableByOthers(const String& path, bool isReadable);
 /**
  * Enables/disables the others writable permission's bit for the file or directory at path.
  *
- * @throw bump::FileSystemError When the path does not exist.
  * @param path The path of the file or directory to set the permissions on.
  * @return True if the permissions were changed successfully, false otherwise.
  */
@@ -500,7 +491,6 @@ BUMP_EXPORT bool setIsWritableByOthers(const String& path, bool isWritable);
 /**
  * Enables/disables the others executable permission's bit for the file or directory at path.
  *
- * @throw bump::FileSystemError When the path does not exist.
  * @param path The path of the file or directory to set the permissions on.
  * @return True if the permissions were changed successfully, false otherwise.
  */
@@ -513,7 +503,6 @@ BUMP_EXPORT bool setIsExecutableByOthers(const String& path, bool isExecutable);
 /**
  * Sets the modified date for the file or directory at path.
  *
- * @throw bump::FileSystemError When the path does not exist.
  * @param path The path of the file or directory to set the modified date for.
  * @param date The new modified date as a time to set the file or directory to.
  * @return True if the modified date was changed successfully, false otherwise.
