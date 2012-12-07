@@ -40,7 +40,21 @@ FileInfo::~FileInfo()
 
 bool FileInfo::exists() const
 {
-	return boost::filesystem::exists(_path);
+	// First use the exists function
+	bool exists = boost::filesystem::exists(_path);
+	if (exists)
+	{
+		return true;
+	}
+
+	// Sometimes the exists function doesn't work properly for symbolic links, so
+	// let's use the symlink check as well.
+	if (isSymbolicLink())
+	{
+		return true;
+	}
+
+	return false;
 }
 
 unsigned long long FileInfo::fileSize() const
