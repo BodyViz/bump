@@ -248,7 +248,17 @@ bool FileInfo::isReadableByUser() const
 #endif
 
 	// Since we're not on windows, we need to figure out if we're the owner of the file
-	String owner = this->owner();
+	String owner;
+	try
+	{
+		owner = this->owner();
+	}
+	catch (const bump::FileSystemError& e)
+	{
+		return false;
+	}
+
+	// Find the current user and compare against the owner
 	String current_user = Environment::currentUsername();
 	if (owner == current_user)
 	{
@@ -268,7 +278,17 @@ bool FileInfo::isWritableByUser() const
 #endif
 
 	// Since we're not on windows, we need to figure out if we're the owner of the file
-	String owner = this->owner();
+	String owner;
+	try
+	{
+		owner = this->owner();
+	}
+	catch (const bump::FileSystemError& e)
+	{
+		return false;
+	}
+
+	// Find the current user and compare against the owner
 	String current_user = Environment::currentUsername();
 	if (owner == current_user)
 	{
@@ -288,7 +308,17 @@ bool FileInfo::isExecutableByUser() const
 #endif
 
 	// Since we're not on windows, we need to figure out if we're the owner of the file
-	String owner = this->owner();
+	String owner;
+	try
+	{
+		owner = this->owner();
+	}
+	catch (const bump::FileSystemError& e)
+	{
+		return false;
+	}
+
+	// Find the current user and compare against the owner
 	String current_user = Environment::currentUsername();
 	if (owner == current_user)
 	{
