@@ -431,9 +431,10 @@ bool createFile(const String& path)
 
 	// Create the file and close it
 	std::ofstream stream(path.c_str());
+	bool success = !stream.fail();
 	stream.close();
 
-	return true;
+	return success;
 }
 
 bool removeFile(const String& path)
