@@ -3,6 +3,7 @@
 SET (TARGET_SRC
 	../bumpTest/main.cpp
 	../bumpEnvironmentTests/EnvironmentTest.cpp
+	../bumpFileInfoTests/FileInfoTest.cpp
 	../bumpFileSystemTests/FileSystemTest.cpp
 	../bumpNotificationTests/NotificationTest.cpp
 	../bumpStringTests/StringTest.cpp

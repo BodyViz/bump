@@ -19,6 +19,7 @@ IF (GTEST_FOUND AND Boost_FOUND)
 	FOREACH (BUMP_TEST
 			bumpAllTests
 			bumpEnvironmentTests
+			bumpFileInfoTests
 			bumpFileSystemTests
 			bumpNotificationTests
 			bumpStringTests
