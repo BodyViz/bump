@@ -86,7 +86,7 @@ void massiveMethod()
 /**
  * This example demonstrates how to use the Bump auto timer API.
  *
- * The AutoTimer class used for easily measuring elapsed time in a particular
+ * The AutoTimer class is used for easily measuring elapsed time in a particular
  * scope. When the AutoTimer is destructed, it will print out the elapsed
  * time to std::cout.
  */
