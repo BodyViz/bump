@@ -20,6 +20,7 @@ IF (Boost_FOUND)
 			bumpAutoTimer
 			bumpEnvironment
 			bumpExceptions
+			bumpFileInfo
 			bumpLog
 			bumpNotifications
 			bumpStrings
