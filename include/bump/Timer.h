@@ -36,6 +36,8 @@ public:
 
 	/**
 	 * Creates a singleton Timer instance.
+	 *
+	 * @return The singleton timer instance.
 	 */
 	static Timer* instance() { static Timer s_timer; return &s_timer; }
 
@@ -48,7 +50,7 @@ public:
 	 * Pauses the timer.
 	 */
 	void pause();
-	
+
 	/**
 	 * Unpauses the timer.
 	 */
@@ -62,38 +64,40 @@ public:
 	/**
 	 * Calculates the elapsed time in seconds between the start time and now.
 	 *
-	 * @return the elapsed time between the start time and now.
+	 * @return The elapsed time between the start time and now.
 	 */
 	double secondsElapsed() const;
 
 	/**
 	 * Calculates the elapsed time in milliseconds between the start time and now.
 	 *
-	 * @return the elapsed time between the start time and now.
+	 * @return The elapsed time between the start time and now.
 	 */
 	double millisecondsElapsed() const;
 
 	/**
 	 * Calculates the elapsed time in microseconds between the start time and now.
 	 *
-	 * @return the elapsed time between the start time and now.
+	 * @return The elapsed time between the start time and now.
 	 */
 	double microsecondsElapsed() const;
 
 	/**
 	 * Calculates the elapsed time in nanoseconds between the start time and now.
 	 *
-	 * @return the elapsed time between the start time and now.
+	 * @return The elapsed time between the start time and now.
 	 */
 	double nanosecondsElapsed() const;
 
 protected:
 
-	/** Instance member variables. */
-	boost::timer::cpu_timer _timer;
+	// Instance member variables
+	boost::timer::cpu_timer _timer;		/**< The boost cpu timer used to compute the elapsed times. */
 };
 
-/** Convenience macro for the timer singleton. */
+/**
+ * Convenience macro for accessing the timer singleton.
+ */
 #define TIMER() bump::Timer::instance()
 
 }	// End of bump namespace
