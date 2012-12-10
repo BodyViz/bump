@@ -27,7 +27,7 @@ namespace bump {
  *    - Files (createFile, renameFile, removeFile, copyFile, etc.)
  *    - Symbolic Links (createSymbolicLink, removeSymbolicLink, renameSymbolicLink, etc.)
  *    - Permissions (setPermissions, permissions, setIsReadableByUser, setIsExecutableByOwner, etc.)
- *    - Dates (setDateModified, etc.)
+ *    - Dates (setModifiedDate, modifiedDate, etc.)
  */
 namespace FileSystem {
 
@@ -512,6 +512,15 @@ BUMP_EXPORT bool setIsExecutableByOthers(const String& path, bool isExecutable);
  * @return True if the modified date was changed successfully, false otherwise.
  */
 BUMP_EXPORT bool setModifiedDate(const String& path, const std::time_t& date);
+
+/**
+ * Returns the modified date for the file or directory at path.
+ *
+ * @throw bump::FileSystemError When the path does not exist.
+ * @param path The path of the file or directory to set the modified date for.
+ * @return The date the file system object was last modified.
+ */
+BUMP_EXPORT std::time_t modifiedDate(const String& path);
 
 }	// End of FileSystem namespace
 

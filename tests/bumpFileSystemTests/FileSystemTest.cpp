@@ -1639,4 +1639,42 @@ TEST_F(FileSystemTest, testSetModifiedDate)
 	EXPECT_FALSE(bump::FileSystem::setModifiedDate(path, time));
 }
 
+TEST_F(FileSystemTest, testModifiedDate)
+{
+	// Create a time object
+	std::tm time_obj;
+	time_obj.tm_sec = 42;
+	time_obj.tm_min = 11;
+	time_obj.tm_hour = 21;
+	time_obj.tm_mday = 19;
+	time_obj.tm_mon = 10;
+	time_obj.tm_year = 89;
+	time_obj.tm_wday = 3;
+	std::time_t time = std::mktime(&time_obj);
+
+	// Test a file
+	bump::String path = "unittest/files/output.txt";
+	EXPECT_TRUE(bump::FileSystem::setModifiedDate(path, time));
+	std::time_t modified_date = bump::FileSystem::modifiedDate(path);
+	EXPECT_EQ(time, modified_date);
+
+	// Test a directory
+	path = "unittest/files";
+	EXPECT_TRUE(bump::FileSystem::setModifiedDate(path, time));
+	modified_date = modified_date = bump::FileSystem::modifiedDate(path);
+	EXPECT_EQ(time, modified_date);
+
+	// Test a file symlink
+	path = "unittest/symlink_files/output.txt";
+	EXPECT_TRUE(bump::FileSystem::setModifiedDate(path, time));
+	modified_date = modified_date = bump::FileSystem::modifiedDate(path);
+	EXPECT_EQ(time, modified_date);
+
+	// Test a directory symlink
+	path = "unittest/symlink_directory";
+	EXPECT_TRUE(bump::FileSystem::setModifiedDate(path, time));
+	modified_date = modified_date = bump::FileSystem::modifiedDate(path);
+	EXPECT_EQ(time, modified_date);
+}
+
 }	// End of bumpTest namespace

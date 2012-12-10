@@ -857,6 +857,12 @@ bool setModifiedDate(const String& path, const std::time_t& date)
 	}
 }
 
+std::time_t modifiedDate(const String& path)
+{
+	FileInfo info(path);
+	return info.modifiedDate();
+}
+
 }	// End of FileSystem namespace
 
 }	// End of bump namespace
