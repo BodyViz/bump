@@ -71,6 +71,7 @@ public:
 	 *
 	 * @throw bump::FileSystemError When the path does not exist.
 	 * @throw bump::FileSystemError When the path is not a file.
+	 *
 	 * @return File size of path if exists and is file, otherwise returns -1.
 	 */
 	unsigned long long fileSize() const;
@@ -115,6 +116,7 @@ public:
 	 *
 	 * @throw bump::FileSystemError When the path does not exist.
 	 * @throw bump::FileSystemError When the path does not have permissions allowing the path to be checked.
+	 *
 	 * @return True if the path points to an empty directory or empty file, false othwerwise.
 	 */
 	bool isEmpty() const;
@@ -240,6 +242,7 @@ public:
 	 * Returns whether the path is readable by the current user based on the path's permissions.
 	 *
 	 * @throw bump::FileSystemError When the path does not exist.
+	 *
 	 * @return True if the path is readable by the current user, false otherwise.
 	 */
 	bool isReadableByUser() const;
@@ -248,6 +251,7 @@ public:
 	 * Returns whether the path is writable by the current user based on the path's permissions.
 	 *
 	 * @throw bump::FileSystemError When the path does not exist.
+	 *
 	 * @return True if the path is writable by the current user, false otherwise.
 	 */
 	bool isWritableByUser() const;
@@ -256,6 +260,7 @@ public:
 	 * Returns whether the path is executable by the current user based on the path's permissions.
 	 *
 	 * @throw bump::FileSystemError When the path does not exist.
+	 *
 	 * @return True if the path is executable by the current user, false otherwise.
 	 */
 	bool isExecutableByUser() const;
@@ -327,7 +332,9 @@ public:
 	 * Returns the owner of the path. On Windows the return value is empty.
 	 *
 	 * @todo Extend to properly support Windows.
+	 *
 	 * @throw bump::FileSystemError When the path does not exist.
+	 *
 	 * @return The owner of the path.
 	 */
 	String owner() const;
@@ -336,7 +343,9 @@ public:
 	 * Returns the owner id of the path. On Windows the return value is -1.
 	 *
 	 * @todo Extend to properly support Windows.
+	 *
 	 * @throw bump::FileSystemError When the path does not exist.
+	 *
 	 * @return The owner of the path.
 	 */
 	unsigned int ownerId() const;
@@ -345,7 +354,9 @@ public:
 	 * Returns the group of the path. On Windows the return value is empty.
 	 *
 	 * @todo Extend to properly support Windows.
+	 *
 	 * @throw bump::FileSystemError When the path does not exist.
+	 *
 	 * @return The group of the path.
 	 */
 	String group() const;
@@ -354,7 +365,9 @@ public:
 	 * Returns the group id of the path. On Windows the return value is -1.
 	 *
 	 * @todo Extend to properly support Windows.
+	 *
 	 * @throw bump::FileSystemError When the path does not exist.
+	 *
 	 * @return The group of the path.
 	 */
 	unsigned int groupId() const;
@@ -367,6 +380,7 @@ public:
 	 * Returns the date the file system object was last modified.
 	 *
 	 * @throw bump::FileSystemError When the path does not exist.
+	 *
 	 * @return The date the file system object was last modified.
 	 */
 	std::time_t modifiedDate() const;

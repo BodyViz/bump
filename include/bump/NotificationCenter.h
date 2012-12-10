@@ -215,6 +215,7 @@ public:
 	 * Calls the function pointer on the observer instance with the given object.
 	 *
 	 * @throw A bump::NotificationError When the object has an invalid type for the bound callback.
+	 *
 	 * @param object The object to send to the notification's observer.
 	 */
 	virtual void notify(const boost::any& object)

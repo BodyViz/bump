@@ -303,6 +303,7 @@ BUMP_EXPORT bool renameDirectory(const String& source, const String& destination
  *
  * @throw bump::FileSystemError When the path does not exist.
  * @throw bump::FileSystemError When the path is not a directory.
+ *
  * @param path The path of the directory.
  * @return A string list of all the file system object paths contained within the directory.
  */
@@ -313,6 +314,7 @@ BUMP_EXPORT StringList directoryList(const String& path);
  *
  * @throw bump::FileSystemError When the path does not exist.
  * @throw bump::FileSystemError When the path is not a directory.
+ *
  * @param path The path of the directory.
  * @return A file info list of all the objects contained within the directory.
  */
@@ -423,6 +425,7 @@ BUMP_EXPORT bool setPermissions(const String& path, Permissions permissions);
  * Returns the permissions for the file or directory at path.
  *
  * @throw bump::FileSystemError When the path does not exist.
+ *
  * @param path The path of the file or directory to get the permissions for.
  * @return The permissions of the file or directory that path points to.
  */
@@ -526,6 +529,7 @@ BUMP_EXPORT bool setModifiedDate(const String& path, const std::time_t& date);
  * Returns the modified date for the file or directory at path.
  *
  * @throw bump::FileSystemError When the path does not exist.
+ *
  * @param path The path of the file or directory to set the modified date for.
  * @return The date the file system object was last modified.
  */
