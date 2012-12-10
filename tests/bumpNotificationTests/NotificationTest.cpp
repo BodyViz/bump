@@ -8,8 +8,8 @@
 
 // Bump headers
 #include <bump/Environment.h>
-#include <bump/Exception.h>
 #include <bump/NotificationCenter.h>
+#include <bump/NotificationError.h>
 #include <bump/String.h>
 
 // bumpTest headers

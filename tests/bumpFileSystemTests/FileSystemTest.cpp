@@ -10,8 +10,8 @@
 #include <boost/foreach.hpp>
 
 // Bump headers
-#include <bump/Exception.h>
 #include <bump/FileSystem.h>
+#include <bump/FileSystemError.h>
 #include <bump/String.h>
 
 // bumpTest headers

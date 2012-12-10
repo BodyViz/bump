@@ -15,8 +15,8 @@
 #include <boost/function.hpp>
 
 // Bump headers
-#include <bump/Exception.h>
 #include <bump/Export.h>
+#include <bump/NotificationError.h>
 #include <bump/String.h>
 
 namespace bump {

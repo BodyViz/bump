@@ -11,8 +11,8 @@
 
 // Bump headers
 #include <bump/Environment.h>
-#include <bump/Exception.h>
 #include <bump/FileInfo.h>
+#include <bump/FileSystemError.h>
 
 // Unix headers
 #ifndef _WIN32

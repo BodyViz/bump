@@ -11,9 +11,9 @@
 
 // Bump headers
 #include <bump/Environment.h>
-#include <bump/Exception.h>
 #include <bump/FileInfo.h>
 #include <bump/FileSystem.h>
+#include <bump/FileSystemError.h>
 #include <bump/String.h>
 
 // bumpTest headers

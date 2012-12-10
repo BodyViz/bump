@@ -7,8 +7,8 @@
 //
 
 // Bump headers
-#include <bump/Exception.h>
 #include <bump/String.h>
+#include <bump/StringSearchError.h>
 
 // bumpTest headers
 #include "../bumpTest/BaseTest.h"
@@ -454,7 +454,7 @@ TEST_F(StringTest, testArg1)
 
 	// Missing %i character
 	str = "Processing File:";
-	EXPECT_THROW(str.arg("test.txt"), bump::SearchError);
+	EXPECT_THROW(str.arg("test.txt"), bump::StringSearchError);
 }
 
 TEST_F(StringTest, testArg2)
@@ -475,7 +475,7 @@ TEST_F(StringTest, testArg2)
 
 	// Missing %i character
 	str = "Processing File:";
-	EXPECT_THROW(str.arg(1, 2), bump::SearchError);
+	EXPECT_THROW(str.arg(1, 2), bump::StringSearchError);
 }
 
 TEST_F(StringTest, testArg3)
@@ -496,7 +496,7 @@ TEST_F(StringTest, testArg3)
 
 	// Missing %i character
 	str = "Processing File:";
-	EXPECT_THROW(str.arg(1, 2, 3), bump::SearchError);
+	EXPECT_THROW(str.arg(1, 2, 3), bump::StringSearchError);
 }
 
 TEST_F(StringTest, testArg4)
@@ -516,7 +516,7 @@ TEST_F(StringTest, testArg4)
 
 	// Missing %i character
 	str = "Processing File:";
-	EXPECT_THROW(str.arg(1, 2, 3, 4), bump::SearchError);
+	EXPECT_THROW(str.arg(1, 2, 3, 4), bump::StringSearchError);
 }
 
 TEST_F(StringTest, testArg5)
@@ -536,7 +536,7 @@ TEST_F(StringTest, testArg5)
 
 	// Missing %i character
 	str = "Processing File:";
-	EXPECT_THROW(str.arg(1, 2, 3, 4, 5), bump::SearchError);
+	EXPECT_THROW(str.arg(1, 2, 3, 4, 5), bump::StringSearchError);
 }
 
 TEST_F(StringTest, testArg6)
@@ -555,7 +555,7 @@ TEST_F(StringTest, testArg6)
 
 	// Missing %i character
 	str = "Processing File:";
-	EXPECT_THROW(str.arg(1, 2, 3, 4, 5, 6), bump::SearchError);
+	EXPECT_THROW(str.arg(1, 2, 3, 4, 5, 6), bump::StringSearchError);
 }
 
 TEST_F(StringTest, testArg7)
@@ -575,7 +575,7 @@ TEST_F(StringTest, testArg7)
 
 	// Missing %i character
 	str = "Processing File:";
-	EXPECT_THROW(str.arg(1, 2, 3, 4, 5, 6, 7), bump::SearchError);
+	EXPECT_THROW(str.arg(1, 2, 3, 4, 5, 6, 7), bump::StringSearchError);
 }
 
 TEST_F(StringTest, testArg8)
@@ -595,7 +595,7 @@ TEST_F(StringTest, testArg8)
 
 	// Missing %i character
 	str = "Processing File:";
-	EXPECT_THROW(str.arg(1, 2, 3, 4, 5, 6, 7, 8), bump::SearchError);
+	EXPECT_THROW(str.arg(1, 2, 3, 4, 5, 6, 7, 8), bump::StringSearchError);
 }
 
 TEST_F(StringTest, testArg9)
@@ -616,7 +616,7 @@ TEST_F(StringTest, testArg9)
 
 	// Missing %i character
 	str = "Processing File:";
-	EXPECT_THROW(str.arg(1, 2, 3, 4, 5, 6, 7, 8, 9), bump::SearchError);
+	EXPECT_THROW(str.arg(1, 2, 3, 4, 5, 6, 7, 8, 9), bump::StringSearchError);
 }
 
 TEST_F(StringTest, testAt)

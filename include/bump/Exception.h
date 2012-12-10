@@ -22,10 +22,7 @@
  *	- LogicError - PROTECTED (when error condition could be detected prior to running the application)
  *		- InvalidArgumentError - PUBLIC (when parameter passed into a function is invalid)
  *	- RuntimeError - PROTECTED (when error condition can only be caught at runtime)
- *		- FileSystemError - PUBLIC (when a file system access error occurs)
- *		- NotificationError - PUBLIC (when notification observers are not destructed properly)
  *		- OutOfRangeError - PUBLIC (when container encounters an out-of-range error)
- *		- SearchError - PUBLIC (when a search cannot be found)
  *		- TypeCastError - PUBLIC (when runtime cannot type cast an object as requested)
  *
  *=============================================================================================================
@@ -178,60 +175,6 @@ public:
 };
 
 /**
- * A public runtime error class which is used when the file system tries to access a resource which is not
- * valid. This can happen in situations such as trying to remove a file that doesn't exist or setting the
- * current path to an invalid path.
- */
-class BUMP_EXPORT FileSystemError : public RuntimeError
-{
-public:
-	
-	/**
-	 * Constructor.
-	 *
-	 * @param description the description of the exception.
-	 * @param location the file path, line number and function name of where the exception was thrown.
-	 */
-	FileSystemError(const String& description, const String& location) throw() :
-		RuntimeError("bump::FileSystemError", description, location)
-	{
-		;
-	}
-	
-	/**
-	 * Destructor.
-	 */
-	~FileSystemError() throw() {}
-};
-
-/**
- * A public runtime error class which is used when the notification center is used incorrectly. This can
- * either involve shutting down the notification center without properly removing all the observers as well
- * as incorrectly posting notifications.
- */
-class BUMP_EXPORT NotificationError : public RuntimeError
-{
-public:
-
-	/**
-	 * Constructor.
-	 *
-	 * @param description the description of the exception.
-	 * @param location the file path, line number and function name of where the exception was thrown.
-	 */
-	NotificationError(const String& description, const String& location) throw() :
-		RuntimeError("bump::NotificationError", description, location)
-	{
-		;
-	}
-
-	/**
-	 * Destructor.
-	 */
-	~NotificationError() throw() {}
-};
-
-/**
  * A public runtime error class which is used when a container class receives an out-of-range
  * request from the runtime.
  */
@@ -255,32 +198,6 @@ public:
 	 * Destructor.
 	 */
 	~OutOfRangeError() throw() {}
-};
-
-/**
- * A public runtime error class which is used when a search algorithm is started and cannot find
- * anything even though it should.
- */
-class BUMP_EXPORT SearchError : public RuntimeError
-{
-public:
-
-	/**
-	 * Constructor.
-	 *
-	 * @param description the description of the exception.
-	 * @param location the file path, line number and function name of where the exception was thrown.
-	 */
-	SearchError(const String& description, const String& location) throw() :
-		RuntimeError("bump::SearchError", description, location)
-	{
-		;
-	}
-
-	/**
-	 * Destructor.
-	 */
-	~SearchError() throw() {}
 };
 
 /**

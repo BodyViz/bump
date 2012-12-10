@@ -20,8 +20,8 @@
 #include <boost/regex.hpp>
 
 // Bump headers
-#include <bump/Exception.h>
 #include <bump/String.h>
+#include <bump/StringSearchError.h>
 
 using namespace bump;
 
@@ -185,7 +185,7 @@ String String::arg(const String& argument) const
 	// Throw an arg error if we didn't find any markers
 	if (markers.empty())
 	{
-		throw SearchError("Could not find any markers (i.e. %1 - %99", BUMP_LOCATION);
+		throw StringSearchError("Could not find any markers (i.e. %1 - %99", BUMP_LOCATION);
 	}
 
 	// Now we need to find the lowest marker so we can replace it. We also need to store each

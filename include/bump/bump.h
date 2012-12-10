@@ -15,9 +15,12 @@
 #include <bump/Export.h>
 #include <bump/FileInfo.h>
 #include <bump/FileSystem.h>
+#include <bump/FileSystemError.h>
 #include <bump/Log.h>
 #include <bump/NotificationCenter.h>
+#include <bump/NotificationError.h>
 #include <bump/String.h>
+#include <bump/StringSearchError.h>
 #include <bump/Timeline.h>
 #include <bump/Timer.h>
 #include <bump/Uuid.h>

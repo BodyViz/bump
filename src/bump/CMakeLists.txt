@@ -19,8 +19,11 @@ SET (
 	${HEADER_PATH}/Export.h
 	${HEADER_PATH}/FileInfo.h
 	${HEADER_PATH}/FileSystem.h
+	${HEADER_PATH}/FileSystemError.h
 	${HEADER_PATH}/Log.h
 	${HEADER_PATH}/NotificationCenter.h
+	${HEADER_PATH}/NotificationError.h
+	${HEADER_PATH}/StringSearchError.h
 	${HEADER_PATH}/String.h
 	${HEADER_PATH}/Timeline.h
 	${HEADER_PATH}/Timer.h
