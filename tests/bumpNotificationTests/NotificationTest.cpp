@@ -357,6 +357,9 @@ TEST_F(NotificationTest, testPostNotificationWithObject)
 	observers_notified = POST_NOTIFICATION_WITH_OBJECT("ChangeNameWithString", new_name_str);
 	EXPECT_EQ(2, observers_notified);
 	EXPECT_STREQ("Renderer 2", _r1->name().c_str());
+
+	// Test pushing an incorrect type
+	EXPECT_THROW(POST_NOTIFICATION_WITH_OBJECT("ChangeNameWithString", 10), bump::NotificationError);
 }
 
 TEST_F(NotificationTest, testRemoveObserver)
