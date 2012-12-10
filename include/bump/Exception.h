@@ -34,6 +34,14 @@ namespace bump {
 
 /**
  * A base class exception supporting both logic and runtime errors.
+ *
+ * The following is a list of the common Bump Exception Hierarchy:
+ * - Exception - PROTECTED (base class exception supporting both logic and runtime errors)
+ *     - LogicError - PROTECTED (when error condition could be detected prior to running the application)
+ *         - InvalidArgumentError - PUBLIC (when parameter passed into a function is invalid)
+ *     - RuntimeError - PROTECTED (when error condition can only be caught at runtime)
+ *         - OutOfRangeError - PUBLIC (when container encounters an out-of-range error)
+ *         - TypeCastError - PUBLIC (when runtime cannot type cast an object as requested)
  */
 class BUMP_EXPORT Exception
 {
@@ -47,7 +55,7 @@ public:
 	/**
 	 * Creates a string representation of all known information about the exception.
 	 *
-	 * @return a string representation of all known information about the exception.
+	 * @return A string representation of all known information about the exception.
 	 */
 	virtual String description() const throw()
 	{
@@ -60,8 +68,8 @@ public:
 	 * This is VERY useful when you are going to re-thrown an exception and wish
 	 * to tack on some additional information to the exception's description.
 	 *
-	 * @param description the description of the exception.
-	 * @param location the file path, line number and function name of where the exception was thrown.
+	 * @param description The description of the exception.
+	 * @param location The file path, line number and function name of where the exception was thrown.
 	 */
 	void extendDescription(const String& description, const String& location)
 	{
@@ -75,9 +83,9 @@ protected:
 	/**
 	 * Constructor.
 	 *
-	 * @param className the class name of the sub-class exception.
-	 * @param description the description of the exception.
-	 * @param location the file path, line number and function name of where the exception was thrown.
+	 * @param className The class name of the sub-class exception.
+	 * @param description The description of the exception.
+	 * @param location The file path, line number and function name of where the exception was thrown.
 	 */
 	Exception(const String& className, const String& description, const String& location) throw() :
 		_className(className)
@@ -86,9 +94,9 @@ protected:
 		extendDescription(description, location);
 	}
 
-	/** Instance member variables. */
-	String _className;
-	StringList _descriptions;
+	// Instance member variables
+	String			_className;			/**< The class name of the exception. */
+	StringList		_descriptions;		/**< A list of descriptions each time an exception is thrown or re-thrown. */
 };
 
 /**
@@ -109,9 +117,9 @@ protected:
 	/**
 	 * Constructor.
 	 *
-	 * @param className the class name of the sub-class exception.
-	 * @param description the description of the exception.
-	 * @param location the file path, line number and function name of where the exception was thrown.
+	 * @param className The class name of the sub-class exception.
+	 * @param description The description of the exception.
+	 * @param location The file path, line number and function name of where the exception was thrown.
 	 */
 	LogicError(const String& className, const String& description, const String& location) throw() :
 		Exception(className, description, location)
@@ -138,9 +146,9 @@ protected:
 	/**
 	 * Constructor.
 	 *
-	 * @param className the class name of the sub-class exception.
-	 * @param description the description of the exception.
-	 * @param location the file path, line number and function name of where the exception was thrown.
+	 * @param className The class name of the sub-class exception.
+	 * @param description The description of the exception.
+	 * @param location The file path, line number and function name of where the exception was thrown.
 	 */
 	RuntimeError(const String& className, const String& description, const String& location) throw() :
 		Exception(className, description, location)
@@ -159,8 +167,8 @@ public:
 	/**
 	 * Constructor.
 	 *
-	 * @param description the description of the exception.
-	 * @param location the file path, line number and function name of where the exception was thrown.
+	 * @param description The description of the exception.
+	 * @param location The file path, line number and function name of where the exception was thrown.
 	 */
 	InvalidArgumentError(const String& description, const String& location) throw() :
 		LogicError("bump::InvalidArgumentError", description, location)
@@ -185,8 +193,8 @@ public:
 	/**
 	 * Constructor.
 	 *
-	 * @param description the description of the exception.
-	 * @param location the file path, line number and function name of where the exception was thrown.
+	 * @param description The description of the exception.
+	 * @param location The file path, line number and function name of where the exception was thrown.
 	 */
 	OutOfRangeError(const String& description, const String& location) throw() :
 		RuntimeError("bump::OutOfRangeError", description, location)
@@ -211,8 +219,8 @@ public:
 	/**
 	 * Constructor.
 	 *
-	 * @param description the description of the exception.
-	 * @param location the file path, line number and function name of where the exception was thrown.
+	 * @param description The description of the exception.
+	 * @param location The file path, line number and function name of where the exception was thrown.
 	 */
 	TypeCastError(const String& description, const String& location) throw() :
 		RuntimeError("bump::TypeCastError", description, location)
