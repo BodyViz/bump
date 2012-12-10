@@ -21,6 +21,7 @@ IF (Boost_FOUND)
 			bumpEnvironment
 			bumpExceptions
 			bumpFileInfo
+			bumpFileSystem
 			bumpLog
 			bumpNotifications
 			bumpStrings
