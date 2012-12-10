@@ -25,7 +25,7 @@ class BUMP_EXPORT AutoTimer
 public:
 
 	/**
-	 * Defines the types of output.
+	 * Defines the possible types of output formatting to be printed to std::cout.
 	 */
 	enum OutputType
 	{
@@ -37,6 +37,8 @@ public:
 
 	/**
 	 * Constructor.
+	 *
+	 * @param outputType The output format of the time printed to std::cout.
 	 */
 	AutoTimer(const OutputType& outputType = SECONDS);
 
@@ -47,9 +49,9 @@ public:
 
 protected:
 
-	/** Instance member variables. */
-	OutputType		_outputType;
-	Timer			_timer;
+	// Instance member variables
+	OutputType		_outputType;	/**< The output format to be printed to std::cout. */
+	Timer			_timer;			/**< The timer used to print out the elapsed time. */
 };
 
 }	// End of bump namespace
