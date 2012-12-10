@@ -26,8 +26,8 @@ public:
 	/**
 	 * Constructor.
 	 *
-	 * @param description the description of the exception.
-	 * @param location the file path, line number and function name of where the exception was thrown.
+	 * @param description The description of the exception.
+	 * @param location The file path, line number and function name of where the exception was thrown.
 	 */
 	FileSystemError(const String& description, const String& location) throw() :
 		RuntimeError("bump::FileSystemError", description, location)
@@ -43,4 +43,4 @@ public:
 
 }	// End of bump namespace
 
-#endif	// End of BUMP_EXCEPTION_H
+#endif	// End of BUMP_FILE_SYSTEM_ERROR_H
