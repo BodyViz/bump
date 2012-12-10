@@ -27,7 +27,7 @@ namespace bump {
  * Observer objects to handle forwarding all notifications to the appropriate
  * Observer instances.
  */
-class Observer
+class BUMP_EXPORT Observer
 {
 public:
 
@@ -114,7 +114,7 @@ public:
 	KeyObserver(T* observer, void (T::*functionPointer)(), const String& notificationName)
 	{
 		_observer = observer;
-		_boostFuncPointer = boost::bind(functionPointer, observer);
+		_functionPointer = boost::bind(functionPointer, observer);
 		_notificationName = notificationName;
 		_observerType = KEY_OBSERVER;
 	}
@@ -124,7 +124,7 @@ public:
 	 */
 	virtual void notify()
 	{
-		_boostFuncPointer();
+		_functionPointer();
 	}
 
 protected:
@@ -135,7 +135,7 @@ protected:
 	~KeyObserver() {}
 
 	// Instance member variables
-	boost::function<void ()>	_boostFuncPointer;	/**< The function pointer called on the observer instance when notified. */
+	boost::function<void ()> _functionPointer;	/**< The function pointer called on the observer instance when notified. */
 };
 
 /**
@@ -214,6 +214,7 @@ public:
 	/**
 	 * Calls the function pointer on the observer instance with the given object.
 	 *
+	 * @throw A bump::NotificationError When the object has an invalid type for the bound callback.
 	 * @param object The object to send to the notification's observer.
 	 */
 	virtual void notify(const boost::any& object)
@@ -260,14 +261,26 @@ protected:
  * to create such a notification, follow these steps:
  *
  * 1) Register all objects as observers with the NotificationCenter
- *		 - bump::AbstractObserver* observer = new bump::ObjectObserver<ObjectType, Event*>(this, &ObjectType::eventCompleted, "EventCompleted");
- *		 - bump::NotificationCenter::instance()->addObserver(this, eventCompletedCallback, "EventCompleted");
+ *
+ * @code
+ *   bump::AbstractObserver* observer = new bump::ObjectObserver<ObjectType, Event*>(this, &ObjectType::eventCompleted, "EventCompleted");
+ *   bump::NotificationCenter::instance()->addObserver(observer);
+ *   ADD_OBSERVER(observer); // convenience macro
+ * @endcode
  *
  * 2) Make sure to remove the observer from the NotificationCenter in its destructor
- *		 - bump::NotificationCenter::instance()->removeObserver(this);
+ *
+ * @code
+ *   bump::NotificationCenter::instance()->removeObserver(this);
+ *   REMOVE_OBSERVER(observer); // convenience macro
+ * @endcode
  *
  * 3) When the event completes, post a notification that the event completed with a matching name
- *		 - bump::NotificationCenter::instance()->postNotificationWithObject("EventCompleted", event);
+ *
+ * @code
+ *   bump::NotificationCenter::instance()->postNotificationWithObject("EventCompleted", event);
+ *   POST_NOTIFICATION_WITH_OBJECT("EventCompleted", event); // convenience macro
+ * @endcode
  *
  * And that's all there is to it! For more information, please see the bumpNotificationCenter example.
  */
@@ -278,7 +291,7 @@ public:
 	/**
 	 * Creates a singleton instance.
 	 *
-	 * @return the singleton NotificationCenter instance.
+	 * @return The singleton NotificationCenter instance.
 	 */
 	static NotificationCenter* instance() { static NotificationCenter nc; return &nc; }
 
@@ -302,16 +315,16 @@ public:
 	/**
 	 * Determines whether the notification center contains the observer.
 	 *
-	 * @param observer the observer pointer to check against the list of internal observers stored.
-	 * @return true if the observer is registered with the notification center, false otherwise.
+	 * @param observer The observer pointer to check against the list of internal observers stored.
+	 * @return True if the observer is registered with the notification center, false otherwise.
 	 */
 	bool containsObserver(void* observer);
 
 	/**
 	 * Calls all observer's function pointers that have registered for the posted notification.
 	 *
-	 * @param notificationName the notification to post to registered observers.
-	 * @return the number of observers that received the notification.
+	 * @param notificationName The notification to post to registered observers.
+	 * @return The number of observers that received the notification.
 	 */
 	unsigned int postNotification(const String& notificationName);
 
@@ -319,16 +332,16 @@ public:
 	 * Calls all observer's function pointers that have registered for the posted notification
 	 * with the given object.
 	 *
-	 * @param notificationName the notification to post to registered observers.
-	 * @param object the object to send to the registered observers.
-	 * @return the number of observers that received the notification.
+	 * @param notificationName The notification to post to registered observers.
+	 * @param object The object to send to the registered observers.
+	 * @return The number of observers that received the notification.
 	 */
 	unsigned int postNotificationWithObject(const String& notificationName, boost::any object);
 
 	/**
 	 * Removes the observer from the notification center.
 	 *
-	 * @param observer the observer instance to remove from the notification center.
+	 * @param observer The observer instance to remove from the notification center.
 	 */
 	void removeObserver(void* observer);
 
@@ -344,16 +357,34 @@ protected:
 	 */
 	~NotificationCenter();
 
-	/** Instance member variables. */
-	std::vector<Observer*> _keyObservers;
-	std::vector<Observer*> _objectObservers;
+	// Instance member variables
+	std::vector<Observer*> _keyObservers;		/**< The list of key observers registered with the NotificationCenter. */
+	std::vector<Observer*> _objectObservers;	/**< The list of object observers registered with the NotificationCenter. */
 };
 
-// Convenience macros for posting notifications
+/**
+ * Convenience macro for accessing the NotificationCenter singleton.
+ */
 #define NOTIFICATION_CENTER() bump::NotificationCenter::instance()
+
+/**
+ * Convenience macro for accessing the NotificationCenter singleton's addObserver() method.
+ */
 #define ADD_OBSERVER(c) NOTIFICATION_CENTER()->addObserver(c)
+
+/**
+ * Convenience macro for accessing the NotificationCenter singleton's removeObserver() method.
+ */
 #define REMOVE_OBSERVER(o) NOTIFICATION_CENTER()->removeObserver(o)
+
+/**
+ * Convenience macro for accessing the NotificationCenter singleton's postNotification() method.
+ */
 #define POST_NOTIFICATION(k) NOTIFICATION_CENTER()->postNotification(k)
+
+/**
+ * Convenience macro for accessing the NotificationCenter singleton's postNotificationWithObject() method.
+ */
 #define POST_NOTIFICATION_WITH_OBJECT(k, o) NOTIFICATION_CENTER()->postNotificationWithObject(k, o)
 
 }	// End of bump namespace
