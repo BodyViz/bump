@@ -36,6 +36,8 @@ public:
 
 	/**
 	 * Copy constructor creates a new uuid from a bump::Uuid uuid.
+	 *
+	 * @param uuid The bump::Uuid to create a copy of.
 	 */
 	Uuid(const Uuid& uuid);
 
@@ -52,31 +54,31 @@ public:
 	/**
 	 * Generates a random uuid by automatically seedings a random number generator.
 	 *
-	 * @return a random uuid.
+	 * @return A random uuid.
 	 */
 	static Uuid genarateRandom();
 
 	/**
 	 * Generates a uuid from the given string (i.e. "00000000-0000-0000-0000-000000000000").
 	 *
-	 * Throw an TypeCastError when string cannot be converted to uuid.
+	 * @throw A bump::TypeCastError when string cannot be converted to uuid.
 	 *
-	 * @param uuidString a string formatted as a uuid to create the uuid from.
-	 * @return a new uuid based on the uuid string parameter.
+	 * @param uuidString A string formatted as a uuid to create the uuid from.
+	 * @return A new uuid based on the uuid string parameter.
 	 */
 	static Uuid fromString(const String& uuidString);
 
 	/**
 	 * Determines whether the uuid is null or equal to "00000000-0000-0000-0000-000000000000".
 	 *
-	 * @return whether the uuid is null or equal to "00000000-0000-0000-0000-000000000000".
+	 * @return Whether the uuid is null or equal to "00000000-0000-0000-0000-000000000000".
 	 */
 	bool isNull() const;
 
 	/**
 	 * Converts the uuid to a string.
 	 *
-	 * @return a string representation of the uuid.
+	 * @return A string representation of the uuid.
 	 */
 	String toString() const;
 };
@@ -84,9 +86,9 @@ public:
 /**
  * Determines whether the left-hand side and right-hand side uuids are equal.
  *
- * @param lhs the left-hand side uuid.
- * @param rhs the right-hand side uuid.
- * @return true if the left and right side uuids are equal, otherwise returns false.
+ * @param lhs The left-hand side uuid.
+ * @param rhs The right-hand side uuid.
+ * @return True if the left and right side uuids are equal, otherwise returns false.
  */
 bool operator == (const Uuid& lhs, const Uuid& rhs)
 {
@@ -96,9 +98,9 @@ bool operator == (const Uuid& lhs, const Uuid& rhs)
 /**
  * Determines whether the left-hand side and right-hand side uuids are not equal.
  *
- * @param lhs the left-hand side uuid.
- * @param rhs the right-hand side uuid.
- * @return true if the left and right side uuids are not equal, otherwise returns false.
+ * @param lhs The left-hand side uuid.
+ * @param rhs The right-hand side uuid.
+ * @return True if the left and right side uuids are not equal, otherwise returns false.
  */
 bool operator != (const Uuid& lhs, const Uuid& rhs)
 {
@@ -108,9 +110,9 @@ bool operator != (const Uuid& lhs, const Uuid& rhs)
 /**
  * Determines whether the left-hand side uuid is less than the right-hand side uuid.
  *
- * @param lhs the left-hand side uuid.
- * @param rhs the right-hand side uuid.
- * @return true if the left-hand side uuid is less than the right-side uuid, otherwise returns false.
+ * @param lhs The left-hand side uuid.
+ * @param rhs The right-hand side uuid.
+ * @return True if the left-hand side uuid is less than the right-side uuid, otherwise returns false.
  */
 bool operator < (const Uuid& lhs, const Uuid& rhs)
 {
@@ -120,9 +122,9 @@ bool operator < (const Uuid& lhs, const Uuid& rhs)
 /**
  * Determines whether the left-hand side uuid is greater than the right-hand side uuid.
  *
- * @param lhs the left-hand side uuid.
- * @param rhs the right-hand side uuid.
- * @return true if the left-hand side uuid is greater than the right-side uuid, otherwise returns false.
+ * @param lhs The left-hand side uuid.
+ * @param rhs The right-hand side uuid.
+ * @return True if the left-hand side uuid is greater than the right-side uuid, otherwise returns false.
  */
 bool operator > (const Uuid& lhs, const Uuid& rhs)
 {
@@ -132,9 +134,9 @@ bool operator > (const Uuid& lhs, const Uuid& rhs)
 /**
  * Determines whether the left-hand side uuid is less than or equal to the right-hand side uuid.
  *
- * @param lhs the left-hand side uuid.
- * @param rhs the right-hand side uuid.
- * @return true if the left-hand side uuid is less than or equal to the right-side uuid, otherwise returns false.
+ * @param lhs The left-hand side uuid.
+ * @param rhs The right-hand side uuid.
+ * @return True if the left-hand side uuid is less than or equal to the right-side uuid, otherwise returns false.
  */
 bool operator <= (const Uuid& lhs, const Uuid& rhs)
 {
@@ -144,9 +146,9 @@ bool operator <= (const Uuid& lhs, const Uuid& rhs)
 /**
  * Determines whether the left-hand side uuid is greater than or equal to the right-hand side uuid.
  *
- * @param lhs the left-hand side uuid.
- * @param rhs the right-hand side uuid.
- * @return true if the left-hand side uuid is greater than or equal to the right-side uuid, otherwise returns false.
+ * @param lhs The left-hand side uuid.
+ * @param rhs The right-hand side uuid.
+ * @return True if the left-hand side uuid is greater than or equal to the right-side uuid, otherwise returns false.
  */
 bool operator >= (const Uuid& lhs, const Uuid& rhs)
 {
