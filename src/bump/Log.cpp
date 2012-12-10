@@ -187,7 +187,7 @@ void Log::setLogStream(std::ostream& stream)
 	_logStream = &stream;
 }
 
-std::ostream& Log::logStream(LogLevel level, const String& prefix)
+std::ostream& Log::logStream(const String& prefix)
 {
 	boost::mutex::scoped_lock lock(_mutex);
 
