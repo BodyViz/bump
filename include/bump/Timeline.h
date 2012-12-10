@@ -66,6 +66,10 @@ public:
 
 	/**
 	 * Convenience constructor.
+	 *
+	 * @param duration The duration of timeline execution.
+	 * @param direction The direction of the timeline output.
+	 * @param curveShape The curve shape defining the acceleration of the timeline output.
 	 */
 	Timeline(double duration, const Direction& direction = FORWARDS, const CurveShape& curveShape = LINEAR_CURVE);
 
@@ -111,8 +115,8 @@ public:
 	/**
 	 * Sets the range of output values from the timeline.
 	 *
-	 * @param startOutput the starting output value for the timeline.
-	 * @param endOutput the ending output value for the timeline.
+	 * @param startOutput The starting output value for the timeline.
+	 * @param endOutput The ending output value for the timeline.
 	 */
 	inline void setOutputRange(double startOutput, double endOutput)
 	{
@@ -123,49 +127,49 @@ public:
 	/**
 	 * Sets the direction of the timeline.
 	 *
-	 * @param direction the direction to set for the timeline.
+	 * @param direction The direction to set for the timeline.
 	 */
 	inline void setDirection(const Direction& direction) { _direction = direction; }
 
 	/**
 	 * Determines the direction of the timeline.
 	 *
-	 * @return the direction of the timeline.
+	 * @return The direction of the timeline.
 	 */
 	inline Direction direction() { return _direction; }
 
 	/**
 	 * Sets the curve shape of the timeline.
 	 *
-	 * @param curveShape the curve shape to set for the timeline.
+	 * @param curveShape The curve shape to set for the timeline.
 	 */
 	inline void setCurveShape(const CurveShape& curveShape) { _curveShape = curveShape; }
 
 	/**
 	 * Returns the curve shape for the timeline.
 	 *
-	 * @return the curve shape for the timeline.
+	 * @return The curve shape for the timeline.
 	 */
 	inline CurveShape curveShape() { return _curveShape; }
 
 	/**
 	 * Sets the duration of the timeline.
 	 *
-	 * @param duration the duration to set for the timeline.
+	 * @param duration The duration to set for the timeline.
 	 */
 	inline void setDuration(double duration) { _duration = duration; }
 
 	/**
 	 * Returns the duration of the timeline.
 	 *
-	 * @return the duration of the timeline.
+	 * @return The duration of the timeline.
 	 */
 	inline double duration() { return _duration; }
 
 	/**
 	 * Returns the state of the timeline.
 	 *
-	 * @return the state of the timeline.
+	 * @return The state of the timeline.
 	 */
 	inline State state() { return _state; }
 
@@ -176,7 +180,7 @@ public:
 	 * outputs. This value moves along the curve shape between the
 	 * start and end output values as the timeline is run.
 	 *
-	 * @return the step value of the timeline.
+	 * @return The step value of the timeline.
 	 */
 	inline double stepValue() { return _stepValue; }
 
@@ -186,7 +190,7 @@ public:
 	 * The step increment is the difference between the value previous
 	 * step value and the current step value.
 	 *
-	 * @return the step increment of the timeline.
+	 * @return The step increment of the timeline.
 	 */
 	inline double stepIncrement() { return _stepIncrement; }
 
