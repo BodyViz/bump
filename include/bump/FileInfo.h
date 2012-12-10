@@ -29,10 +29,10 @@ typedef std::vector<FileInfo> FileInfoList; /**< Shortcut for creating vectors o
  *
  * The various types of file system objects support are files, directories and symbolic
  * links. The four types of methods supported are:
- *     - Path Query (fileSize, isRelative, isFile, etc.)
- *     - Path Decomposition (absolutePath, basename, filename, extension, etc.)
- *     - Permissions Query (isReadableByUser, owner, group, etc.)
- *     - Date Query (dateModified, etc.)
+ *     - Path Query (fileSize(), isRelative(), isFile(), etc.)
+ *     - Path Decomposition (absolutePath(), basename(), filename(), extension(), etc.)
+ *     - Permissions Query (isReadableByUser(), owner(), group(), etc.)
+ *     - Date Query (modifiedDate(), etc.)
  *
  * It is important to note that all these methods are read-only. You cannot make changes to
  * file system objects using the FileInfo API. It is merely for investigative purposes.
