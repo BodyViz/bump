@@ -34,17 +34,17 @@ public:
 	{
 		// Normally we would add the this pointer as an observer to the notification center here...
 
-//		// Create all the function pointers for notification callbacks
-//		boost::function<void (Renderer*)> redrawCallback(&Renderer::requestRedraw);
-//		boost::function<void (Renderer*, unsigned int)> updateCallback(&Renderer::updateNumRenderPasses);
-//		boost::function<void (Renderer*, const char*)> changeNameCallback(&Renderer::changeName);
-//		boost::function<void (Renderer*, bump::String)> changeNameWithStringCallback(&Renderer::changeNameWithString);
+//		// Create a key observer for the requestRedraw() method
+//		bump::Observer* redraw = new bump::KeyObserver<Renderer>(this, &Renderer::requestRedraw, "RequestRedraw");
+//		ADD_OBSERVER(redraw);
 //
-//		// Register all the callbacks with the NotificationCenter
-//		ADD_OBSERVER(this, redrawCallback, "RequestRedraw");
-//		ADD_OBSERVER(this, updateCallback, "UpdateNumRenderPasses");
-//		ADD_OBSERVER(this, changeNameCallback, "ChangeRendererName");
-//		ADD_OBSERVER(this, changeNameWithStringCallback, "ChangeRendererNameWithString");
+//		// Create object observers for the updateNumRenderPasses(), changeName() and changeNameWithString() methods
+//		bump::Observer* update = new bump::ObjectObserver<Renderer, unsigned int>(this, &Renderer::updateNumRenderPasses, "UpdateNumRenderPasses");
+//		bump::Observer* change_name = new bump::ObjectObserver<Renderer, const char*>(this, &Renderer::changeName, "ChangeName");
+//		bump::Observer* change_name_str = new bump::ObjectObserver<Renderer, bump::String>(this, &Renderer::changeNameWithString, "ChangeNameWithString");
+//		ADD_OBSERVER(update);
+//		ADD_OBSERVER(change_name);
+//		ADD_OBSERVER(change_name_str);
 	}
 
 	/**
@@ -176,9 +176,9 @@ protected:
 
 TEST_F(NotificationTest, testAddObserver1)
 {
-	// Add the observer for the requestRedraw method
-	boost::function<void (Renderer*)> redrawCallback(&Renderer::requestRedraw);
-	ADD_OBSERVER(_r1, redrawCallback, "RequestRedraw");
+	// Add the key observer for the requestRedraw method
+	bump::Observer* redraw = new bump::KeyObserver<Renderer>(_r1, &Renderer::requestRedraw, "RequestRedraw");
+	ADD_OBSERVER(redraw);
 
 	// Test the default value
 	EXPECT_EQ(0, _r1->requestRedrawCount());
@@ -196,9 +196,9 @@ TEST_F(NotificationTest, testAddObserver1)
 
 TEST_F(NotificationTest, testAddObserver2)
 {
-	// Add the observer for the updateNumRenderPasses method
-	boost::function<void (Renderer*, unsigned int)> updateCallback(&Renderer::updateNumRenderPasses);
-	ADD_OBSERVER(_r1, updateCallback, "UpdateNumRenderPasses");
+	// Add the object observer for the updateNumRenderPasses method
+	bump::Observer* update = new bump::ObjectObserver<Renderer, unsigned int>(_r1, &Renderer::updateNumRenderPasses, "UpdateNumRenderPasses");
+	ADD_OBSERVER(update);
 
 	// Test the default value
 	EXPECT_EQ(2, _r1->numRenderPasses());
@@ -218,22 +218,22 @@ TEST_F(NotificationTest, testAddObserver2)
 
 TEST_F(NotificationTest, testAddObserver3)
 {
-	// Add the observer for the changeName method
-	boost::function<void (Renderer*, const char*)> changeNameCallback(&Renderer::changeName);
-	ADD_OBSERVER(_r1, changeNameCallback, "ChangeRendererName");
+	// Add the object observer for the changeName method
+	bump::Observer* change_name = new bump::ObjectObserver<Renderer, const char*>(_r1, &Renderer::changeName, "ChangeName");
+	ADD_OBSERVER(change_name);
 
 	// Test the default value
 	EXPECT_STREQ("Renderer 1", _r1->name().c_str());
 
 	// Push a notification and make sure it went through
 	const char* new_name = "Renderer 2";
-	unsigned int observers_notified = POST_NOTIFICATION_WITH_OBJECT("ChangeRendererName", new_name);
+	unsigned int observers_notified = POST_NOTIFICATION_WITH_OBJECT("ChangeName", new_name);
 	EXPECT_EQ(1, observers_notified);
 	EXPECT_STREQ("Renderer 2", _r1->name().c_str());
 
 	// Push another notification
 	new_name = "Renderer 3";
-	observers_notified = POST_NOTIFICATION_WITH_OBJECT("ChangeRendererName", new_name);
+	observers_notified = POST_NOTIFICATION_WITH_OBJECT("ChangeName", new_name);
 	EXPECT_EQ(1, observers_notified);
 	EXPECT_STREQ("Renderer 3", _r1->name().c_str());
 }
@@ -241,9 +241,10 @@ TEST_F(NotificationTest, testAddObserver3)
 TEST_F(NotificationTest, testContainsObserver)
 {
 	// Add some observers
-	boost::function<void (Renderer*, unsigned int)> updateCallback(&Renderer::updateNumRenderPasses);
-	ADD_OBSERVER(_r1, updateCallback, "UpdateNumRenderPasses");
-	ADD_OBSERVER(&_r3, updateCallback, "UpdateNumRenderPasses");
+	bump::Observer* update1 = new bump::ObjectObserver<Renderer, unsigned int>(_r1, &Renderer::updateNumRenderPasses, "UpdateNumRenderPasses");
+	bump::Observer* update3 = new bump::ObjectObserver<Renderer, unsigned int>(&_r3, &Renderer::updateNumRenderPasses, "UpdateNumRenderPasses");
+	ADD_OBSERVER(update1);
+	ADD_OBSERVER(update3);
 
 	// Test the containsObserver method
 	EXPECT_TRUE(NOTIFICATION_CENTER()->containsObserver(_r1));
@@ -254,23 +255,28 @@ TEST_F(NotificationTest, testContainsObserver)
 TEST_F(NotificationTest, testPostNotification)
 {
 	// Register several notifications for "Renderer 1"
-	boost::function<void (Renderer*)> redrawCallback(&Renderer::requestRedraw);
-	boost::function<void (Renderer*, unsigned int)> updateCallback(&Renderer::updateNumRenderPasses);
-	boost::function<void (Renderer*, const char*)> changeNameCallback(&Renderer::changeName);
-	boost::function<void (Renderer*, bump::String)> changeNameWithStringCallback(&Renderer::changeNameWithString);
-	ADD_OBSERVER(_r1, redrawCallback, "RequestRedraw");
-	ADD_OBSERVER(_r1, updateCallback, "UpdateNumRenderPasses");
-	ADD_OBSERVER(_r1, changeNameCallback, "ChangeRendererName");
-	ADD_OBSERVER(_r1, changeNameWithStringCallback, "ChangeRendererNameWithString");
+	bump::Observer* redraw = new bump::KeyObserver<Renderer>(_r1, &Renderer::requestRedraw, "RequestRedraw");
+	bump::Observer* update = new bump::ObjectObserver<Renderer, unsigned int>(_r1, &Renderer::updateNumRenderPasses, "UpdateNumRenderPasses");
+	bump::Observer* change_name = new bump::ObjectObserver<Renderer, const char*>(_r1, &Renderer::changeName, "ChangeName");
+	bump::Observer* change_name_str = new bump::ObjectObserver<Renderer, bump::String>(_r1, &Renderer::changeNameWithString, "ChangeNameWithString");
+	ADD_OBSERVER(redraw);
+	ADD_OBSERVER(update);
+	ADD_OBSERVER(change_name);
+	ADD_OBSERVER(change_name_str);
 
 	// Register a couple notifications for "Renderer 2"
-	ADD_OBSERVER(_r2, redrawCallback, "RequestRedraw");
-	ADD_OBSERVER(_r2, updateCallback, "UpdateNumRenderPasses");
-	ADD_OBSERVER(_r2, changeNameCallback, "ChangeRendererName");
+	redraw = new bump::KeyObserver<Renderer>(_r2, &Renderer::requestRedraw, "RequestRedraw");
+	update = new bump::ObjectObserver<Renderer, unsigned int>(_r2, &Renderer::updateNumRenderPasses, "UpdateNumRenderPasses");
+	change_name = new bump::ObjectObserver<Renderer, const char*>(_r2, &Renderer::changeName, "ChangeName");
+	ADD_OBSERVER(redraw);
+	ADD_OBSERVER(update);
+	ADD_OBSERVER(change_name);
 
 	// Register a couple notifications for "Renderer 3"
-	ADD_OBSERVER(&_r3, changeNameCallback, "ChangeRendererName");
-	ADD_OBSERVER(&_r3, changeNameWithStringCallback, "ChangeRendererNameWithString");
+	change_name = new bump::ObjectObserver<Renderer, const char*>(&_r3, &Renderer::changeName, "ChangeName");
+	change_name_str = new bump::ObjectObserver<Renderer, bump::String>(&_r3, &Renderer::changeNameWithString, "ChangeNameWithString");
+	ADD_OBSERVER(change_name);
+	ADD_OBSERVER(change_name_str);
 
 	// Test the redraw callback
 	EXPECT_EQ(0, _r1->requestRedrawCount());
@@ -278,56 +284,69 @@ TEST_F(NotificationTest, testPostNotification)
 	EXPECT_EQ(2, observers_notified);
 	EXPECT_EQ(1, _r1->requestRedrawCount());
 
-	// Test the update callback
+	// Test the update callback (no observers b/c tied to ObjectObserver)
 	EXPECT_EQ(2, _r1->numRenderPasses());
-	EXPECT_THROW(POST_NOTIFICATION("UpdateNumRenderPasses"), bump::NotificationError);
+	observers_notified = POST_NOTIFICATION("UpdateNumRenderPasses");
+	EXPECT_EQ(0, observers_notified);
+	EXPECT_EQ(2, _r1->numRenderPasses());
 
-	// Test the change name callback
+	// Test the change name callback (no observers b/c tied to ObjectObserver)
 	EXPECT_STREQ("Renderer 1", _r1->name().c_str());
-	EXPECT_THROW(POST_NOTIFICATION("ChangeRendererName"), bump::NotificationError);
+	observers_notified = POST_NOTIFICATION("ChangeName");
+	EXPECT_EQ(0, observers_notified);
+	EXPECT_STREQ("Renderer 1", _r1->name().c_str());
 
-	// Test the change name with string callback
+	// Test the change name with string callback (no observers b/c tied to ObjectObserver)
 	_r1->changeName("Renderer 1");
 	EXPECT_STREQ("Renderer 1", _r1->name().c_str());
-	EXPECT_THROW(POST_NOTIFICATION("ChangeRendererNameWithString"), bump::NotificationError);
+	observers_notified = POST_NOTIFICATION("ChangeNameWithString");
+	EXPECT_EQ(0, observers_notified);
+	EXPECT_STREQ("Renderer 1", _r1->name().c_str());
 }
 
 TEST_F(NotificationTest, testPostNotificationWithObject)
 {
 	// Register several notifications for "Renderer 1"
-	boost::function<void (Renderer*)> redrawCallback(&Renderer::requestRedraw);
-	boost::function<void (Renderer*, unsigned int)> updateCallback(&Renderer::updateNumRenderPasses);
-	boost::function<void (Renderer*, const char*)> changeNameCallback(&Renderer::changeName);
-	boost::function<void (Renderer*, bump::String)> changeNameWithStringCallback(&Renderer::changeNameWithString);
-	ADD_OBSERVER(_r1, redrawCallback, "RequestRedraw");
-	ADD_OBSERVER(_r1, updateCallback, "UpdateNumRenderPasses");
-	ADD_OBSERVER(_r1, changeNameCallback, "ChangeRendererName");
-	ADD_OBSERVER(_r1, changeNameWithStringCallback, "ChangeRendererNameWithString");
+	bump::Observer* redraw = new bump::KeyObserver<Renderer>(_r1, &Renderer::requestRedraw, "RequestRedraw");
+	bump::Observer* update = new bump::ObjectObserver<Renderer, unsigned int>(_r1, &Renderer::updateNumRenderPasses, "UpdateNumRenderPasses");
+	bump::Observer* change_name = new bump::ObjectObserver<Renderer, const char*>(_r1, &Renderer::changeName, "ChangeName");
+	bump::Observer* change_name_str = new bump::ObjectObserver<Renderer, bump::String>(_r1, &Renderer::changeNameWithString, "ChangeNameWithString");
+	ADD_OBSERVER(redraw);
+	ADD_OBSERVER(update);
+	ADD_OBSERVER(change_name);
+	ADD_OBSERVER(change_name_str);
 
 	// Register a couple notifications for "Renderer 2"
-	ADD_OBSERVER(_r2, redrawCallback, "RequestRedraw");
-	ADD_OBSERVER(_r2, updateCallback, "UpdateNumRenderPasses");
-	ADD_OBSERVER(_r2, changeNameCallback, "ChangeRendererName");
+	redraw = new bump::KeyObserver<Renderer>(_r2, &Renderer::requestRedraw, "RequestRedraw");
+	update = new bump::ObjectObserver<Renderer, unsigned int>(_r2, &Renderer::updateNumRenderPasses, "UpdateNumRenderPasses");
+	change_name = new bump::ObjectObserver<Renderer, const char*>(_r2, &Renderer::changeName, "ChangeName");
+	ADD_OBSERVER(redraw);
+	ADD_OBSERVER(update);
+	ADD_OBSERVER(change_name);
 
 	// Register a couple notifications for "Renderer 3"
-	ADD_OBSERVER(&_r3, changeNameCallback, "ChangeRendererName");
-	ADD_OBSERVER(&_r3, changeNameWithStringCallback, "ChangeRendererNameWithString");
+	change_name = new bump::ObjectObserver<Renderer, const char*>(&_r3, &Renderer::changeName, "ChangeName");
+	change_name_str = new bump::ObjectObserver<Renderer, bump::String>(&_r3, &Renderer::changeNameWithString, "ChangeNameWithString");
+	ADD_OBSERVER(change_name);
+	ADD_OBSERVER(change_name_str);
 
-	// Test the redraw callback
+	// Test the redraw callback (no observers b/c tied to KeyObserver)
 	EXPECT_EQ(0, _r1->requestRedrawCount());
-	EXPECT_THROW(POST_NOTIFICATION_WITH_OBJECT("RequestRedraw", 10), bump::NotificationError);
+	unsigned int observers_notified = POST_NOTIFICATION_WITH_OBJECT("RequestRedraw", 10);
+	EXPECT_EQ(0, observers_notified);
+	EXPECT_EQ(0, _r1->requestRedrawCount());
 
 	// Test the update callback
 	unsigned int num_render_passes = 4;
 	EXPECT_EQ(2, _r1->numRenderPasses());
-	unsigned int observers_notified = POST_NOTIFICATION_WITH_OBJECT("UpdateNumRenderPasses", num_render_passes);
+	observers_notified = POST_NOTIFICATION_WITH_OBJECT("UpdateNumRenderPasses", num_render_passes);
 	EXPECT_EQ(2, observers_notified);
 	EXPECT_EQ(4, _r1->numRenderPasses());
 
 	// Test the change name callback
 	const char* new_name = "Renderer 2";
 	EXPECT_STREQ("Renderer 1", _r1->name().c_str());
-	observers_notified = POST_NOTIFICATION_WITH_OBJECT("ChangeRendererName", new_name);
+	observers_notified = POST_NOTIFICATION_WITH_OBJECT("ChangeName", new_name);
 	EXPECT_EQ(3, observers_notified);
 	EXPECT_STREQ("Renderer 2", _r1->name().c_str());
 
@@ -335,7 +354,7 @@ TEST_F(NotificationTest, testPostNotificationWithObject)
 	_r1->changeName("Renderer 1");
 	EXPECT_STREQ("Renderer 1", _r1->name().c_str());
 	bump::String new_name_str = "Renderer 2";
-	observers_notified = POST_NOTIFICATION_WITH_OBJECT("ChangeRendererNameWithString", new_name_str);
+	observers_notified = POST_NOTIFICATION_WITH_OBJECT("ChangeNameWithString", new_name_str);
 	EXPECT_EQ(2, observers_notified);
 	EXPECT_STREQ("Renderer 2", _r1->name().c_str());
 }
@@ -343,9 +362,10 @@ TEST_F(NotificationTest, testPostNotificationWithObject)
 TEST_F(NotificationTest, testRemoveObserver)
 {
 	// Add some observers
-	boost::function<void (Renderer*, unsigned int)> updateCallback(&Renderer::updateNumRenderPasses);
-	ADD_OBSERVER(_r1, updateCallback, "UpdateNumRenderPasses");
-	ADD_OBSERVER(&_r3, updateCallback, "UpdateNumRenderPasses");
+	bump::Observer* update1 = new bump::ObjectObserver<Renderer, unsigned int>(_r1, &Renderer::updateNumRenderPasses, "UpdateNumRenderPasses");
+	bump::Observer* update3 = new bump::ObjectObserver<Renderer, unsigned int>(&_r3, &Renderer::updateNumRenderPasses, "UpdateNumRenderPasses");
+	ADD_OBSERVER(update1);
+	ADD_OBSERVER(update3);
 
 	// Test to make sure the notification center registered the observers
 	EXPECT_TRUE(NOTIFICATION_CENTER()->containsObserver(_r1));

@@ -6,6 +6,9 @@
 //	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
+// Boost headers
+#include <boost/foreach.hpp>
+
 // Bump headers
 #include <bump/NotificationCenter.h>
 
@@ -18,19 +21,29 @@ NotificationCenter::NotificationCenter()
 
 NotificationCenter::~NotificationCenter()
 {
-	if (!_observers.empty())
+	if (!_keyObservers.empty() || !_objectObservers.empty())
 	{
-		String msg = String("bump::NotificationCenter has %1 observers that were not properly destructed!").arg(_observers.size());
+		unsigned int total_observers = _keyObservers.size() + _objectObservers.size();
+		String msg = String("bump::NotificationCenter has %1 observers that were not properly destructed!").arg(total_observers);
 		throw NotificationError(msg, BUMP_LOCATION);
 	}
 }
 
 bool NotificationCenter::containsObserver(void* observer)
 {
-	std::multimap<AbstractFunctor*, String>::iterator iter;
-	for (iter = _observers.begin(); iter != _observers.end(); ++iter)
+	// Iterate through the observers
+	BOOST_FOREACH(Observer* abs_observer, _keyObservers)
 	{
-		if (iter->first->isEqual(observer))
+		if (abs_observer->containsObserver(observer))
+		{
+			return true;
+		}
+	}
+
+	// Iterate through the object observers
+	BOOST_FOREACH(Observer* abs_observer, _objectObservers)
+	{
+		if (abs_observer->containsObserver(observer))
 		{
 			return true;
 		}
@@ -42,16 +55,13 @@ bool NotificationCenter::containsObserver(void* observer)
 unsigned int NotificationCenter::postNotification(const String& notificationName)
 {
 	unsigned int notification_count = 0;
-	std::multimap<AbstractFunctor*, String>::iterator iter = _observers.begin();
-	while (iter != _observers.end())
+	BOOST_FOREACH(Observer* abs_observer, _keyObservers)
 	{
-		if (iter->second == notificationName)
+		if (abs_observer->notificationName() == notificationName)
 		{
-			iter->first->notify(notificationName);
+			abs_observer->notify();
 			++notification_count;
 		}
-
-		++iter;
 	}
 
 	return notification_count;
@@ -60,12 +70,11 @@ unsigned int NotificationCenter::postNotification(const String& notificationName
 unsigned int NotificationCenter::postNotificationWithObject(const String& notificationName, boost::any object)
 {
 	unsigned int notification_count = 0;
-	std::multimap<AbstractFunctor*, String>::iterator iter;
-	for (iter = _observers.begin(); iter != _observers.end(); ++iter)
+	BOOST_FOREACH(Observer* abs_observer, _objectObservers)
 	{
-		if (iter->second == notificationName)
+		if (abs_observer->notificationName() == notificationName)
 		{
-			iter->first->notify(object, notificationName);
+			abs_observer->notify(object);
 			++notification_count;
 		}
 	}
@@ -75,28 +84,35 @@ unsigned int NotificationCenter::postNotificationWithObject(const String& notifi
 
 void NotificationCenter::removeObserver(void* observer)
 {
-	// First collect all the observers to remove
-	std::vector<AbstractFunctor*> matches;
-	std::multimap<AbstractFunctor*, String>::iterator iter;
-	for (iter = _observers.begin(); iter != _observers.end(); ++iter)
+	// Remove all the observers that match observer
+	std::vector<Observer*> key_observers_to_keep;
+	BOOST_FOREACH(Observer* abs_observer, _keyObservers)
 	{
-		if (iter->first->isEqual(observer))
+		if (abs_observer->containsObserver(observer))
 		{
-			matches.push_back(iter->first);
+			delete abs_observer;
+			abs_observer = NULL;
+		}
+		else
+		{
+			key_observers_to_keep.push_back(abs_observer);
 		}
 	}
+	_keyObservers = key_observers_to_keep;
 
-	// Now remove them
-	for (unsigned int i = 0; i < matches.size(); ++i)
+	// Remove all the object observers that match observer
+	std::vector<Observer*> object_observers_to_keep;
+	BOOST_FOREACH(Observer* abs_observer, _objectObservers)
 	{
-		_observers.erase(_observers.find(matches.at(i)));
+		if (abs_observer->containsObserver(observer))
+		{
+			delete abs_observer;
+			abs_observer = NULL;
+		}
+		else
+		{
+			object_observers_to_keep.push_back(abs_observer);
+		}
 	}
-
-	// Delete all the match pointers since they aren't reference counted
-	for (unsigned int i = 0; i < matches.size(); ++i)
-	{
-		AbstractFunctor* f = matches.at(i);
-		delete f;
-		f = NULL;
-	}
+	_objectObservers = object_observers_to_keep;
 }

@@ -9,13 +9,9 @@
 #ifndef BUMP_NOTIFICATION_CENTER_H
 #define BUMP_NOTIFICATION_CENTER_H
 
-// C++ headers
-#include <iostream>
-#include <map>
-#include <vector>
-
 // Boost headers
 #include <boost/any.hpp>
+#include <boost/bind.hpp>
 #include <boost/function.hpp>
 
 // Bump headers
@@ -26,249 +22,232 @@
 namespace bump {
 
 /**
- * Functor abstract base class.
+ * The base observer class defines the notify() interface as well as contains the
+ * observer pointer and the notification name. The notification center uses only
+ * Observer objects to handle forwarding all notifications to the appropriate
+ * Observer instances.
  */
-class BUMP_EXPORT AbstractFunctor
+class Observer
 {
 public:
+
+	/**
+	 * Defines what type of observer the observer is.
+	 */
+	enum ObserverType
+	{
+		KEY_OBSERVER,
+		OBJECT_OBSERVER
+	};
 
 	/**
 	 * Destructor.
 	 */
-	virtual ~AbstractFunctor() {}
+	virtual ~Observer() {}
 
 	/**
-	 * Notification callback for the functor with no object.
-	 *
-	 * @param notificationName the name of the notification being sent.
+	 * Calls the function pointer on the observer instance.
 	 */
-	virtual void notify(const String& notificationName) = 0;
+	virtual void notify() {}
 
 	/**
-	 * Notification callback for the functor with an object.
+	 * Calls the function pointer on the observer instance with the given object.
 	 *
-	 * @param object the object to send to the notification's observers.
-	 * @param notificationName the name of the notification being sent.
+	 * @param object The object to send to the notification's observer.
 	 */
-	virtual void notify(const boost::any& object, const String& notificationName) = 0;
+	virtual void notify(const boost::any& object) {}
 
 	/**
-	 * Checks whether the given object is equal to the functor's internal object pointer.
+	 * Returns the name of the notification that the observer is attached to.
 	 *
-	 * @param object the object to check whether it is equal to the functor's internal object pointer.
-	 * @return true if the given object equals the functor's internal object pointer, otherwise returns false.
+	 * @return The name of the notification that the observer is attached to.
 	 */
-	virtual bool isEqual(void* object) = 0;
+	inline const String& notificationName() { return _notificationName; }
+
+	/**
+	 * Returns the type of the observer.
+	 *
+	 * @return The type of the observer.
+	 */
+	inline const ObserverType& observerType() { return _observerType; }
+
+	/**
+	 * Returns whether the given observer is the same as the internal observer.
+	 *
+	 * param observer An observer pointer to match against the internal observer pointer.
+	 * @return True if the internal observer matches the given observer, false otherwise.
+	 */
+	bool containsObserver(void* observer)
+	{
+		return observer == _observer;
+	}
 
 protected:
 
 	/**
 	 * Constructor.
 	 */
-	AbstractFunctor() {}
+	Observer() {}
+
+	// Instance member variables
+	void*						_observer;			/**< The observer instance used to send notifications. */
+	bump::String				_notificationName;	/**< The notification name the observer is observing. */
+	ObserverType				_observerType;		/**< The type of observer the observer is. */
 };
 
 /**
- * The notification functor class stores the observer object along with its function pointer to be
- * executed when a matching notification is posted. The notification functor class does not support
- * notifications with objects.
+ * The KeyObserver subclass is used to send an observers notifications without objects based strictly
+ * on the key. This subclass is used with the POST_NOIFICATION macro.
  */
 template <class T>
-class BUMP_EXPORT NotificationFunctor : public AbstractFunctor
+class BUMP_EXPORT KeyObserver : public Observer
 {
 public:
 
 	/**
 	 * Constructor.
 	 *
-	 * @param objectPointer the observer instance associated with the function pointer.
-	 * @param functionPointer the function to call on the observer instance.
+	 * @param observer The observer instance used to send notifications.
+	 * @param functionPointer The function pointer called on the observer instance when notified.
+	 * @param notificationName The name of the notification the observer is observing.
 	 */
-	NotificationFunctor(T* objectPointer, boost::function<void (T*)> functionPointer) :
-		_objectPointer(objectPointer),
-		_functionPointer(functionPointer)
+	KeyObserver(T* observer, void (T::*functionPointer)(), const String& notificationName)
 	{
-		;
+		_observer = observer;
+		_boostFuncPointer = boost::bind(functionPointer, observer);
+		_notificationName = notificationName;
+		_observerType = KEY_OBSERVER;
 	}
 
 	/**
-	 * Notification callback for the functor with no object.
-	 *
-	 * @param notificationName the name of the notification being sent.
+	 * Calls the function pointer on the observer instance.
 	 */
-	void notify(const String& notificationName)
+	virtual void notify()
 	{
-		_functionPointer(_objectPointer);
-	}
-
-	/**
-	 * Notification callback for the functor with an object.
-	 *
-	 * @param object the object to send to the notification's observers.
-	 * @param notificationName the name of the notification being sent.
-	 */
-	void notify(const boost::any& /*object*/, const String& notificationName)
-	{
-		String msg = String("Notification callback for \"%1\" was sent notification object "
-							"but should not have been.").arg(notificationName);
-		throw NotificationError(msg, BUMP_LOCATION);
-	}
-
-	/**
-	 * Checks whether the given object is equal to the functor's internal object pointer.
-	 *
-	 * @param object the object to check whether it is equal to the functor's internal object pointer.
-	 * @return true if the given object equals the functor's internal object pointer, otherwise returns false.
-	 */
-	virtual bool isEqual(void* object)
-	{
-		return object == _objectPointer;
+		_boostFuncPointer();
 	}
 
 protected:
 
-	/** Instance member variables. */
-	T* _objectPointer;
-	boost::function<void (T*)> _functionPointer;
+	/**
+	 * Destructor.
+	 */
+	~KeyObserver() {}
+
+	// Instance member variables
+	boost::function<void ()>	_boostFuncPointer;	/**< The function pointer called on the observer instance when notified. */
 };
 
 /**
- * The notification with object functor class stores the observer object along with its function pointer to be
- * executed when a matching notification is posted. This functor allows notifications with objects to be
- * passed through the notification center.
+ * The ObjectObserver subclass is used to send an observers notifications with objects based
+ * on the key. This subclass is used with the POST_NOIFICATION_WITH_OBJECT macro.
  */
 template <class T1, class T2>
-class BUMP_EXPORT NotificationWithObjectFunctor : public AbstractFunctor
+class BUMP_EXPORT ObjectObserver : public Observer
 {
 public:
 
 	/**
 	 * Constructor.
+	 *
+	 * @param observer The observer instance used to send notifications.
+	 * @param functionPointer The function pointer called on the observer instance when notified.
+	 * @param notificationName The name of the notification the observer is observing.
 	 */
-	NotificationWithObjectFunctor(T1* objectPointer, boost::function<void (T1*, T2)> functionPointer) :
-		_objectPointer(objectPointer),
-		_functionPointer(functionPointer)
+	ObjectObserver(T1* observer, void (T1::*functionPointer)(T2), const String& notificationName)
 	{
-		;
+		_observer = observer;
+		_functionPointerWithObject = boost::bind(functionPointer, observer, _1);
+		_functionPointerWithPointer = NULL;
+		_notificationName = notificationName;
+		_observerType = OBJECT_OBSERVER;
 	}
 
 	/**
-	 * Notification callback for the functor with no object.
+	 * Constructor.
 	 *
-	 * @param notificationName the name of the notification being sent.
+	 * @param observer The observer instance used to send notifications.
+	 * @param functionPointer The function pointer called on the observer instance when notified.
+	 * @param notificationName The name of the notification the observer is observing.
 	 */
-	void notify(const String& notificationName)
+	ObjectObserver(T1* observer, void (T1::*functionPointer)(const T2&), const String& notificationName)
 	{
-		String msg = String("Notification callback for \"%1\" takes an object but was not sent one.").arg(notificationName);
-		throw NotificationError(msg, BUMP_LOCATION);
+		_observer = observer;
+		_functionPointerWithObject = boost::bind(functionPointer, observer, _1);
+		_functionPointerWithPointer = NULL;
+		_notificationName = notificationName;
+		_observerType = OBJECT_OBSERVER;
 	}
 
 	/**
-	 * Notification callback for the functor with an object.
+	 * Constructor.
 	 *
-	 * @param object the object to send to the notification's observers.
-	 * @param notificationName the name of the notification being sent.
+	 * @param observer The observer instance used to send notifications.
+	 * @param functionPointer The function pointer called on the observer instance when notified.
+	 * @param notificationName The name of the notification the observer is observing.
 	 */
-	void notify(const boost::any& object, const String& notificationName)
+	ObjectObserver(T1* observer, void (T1::*functionPointer)(T2*), const String& notificationName)
+	{
+		_observer = observer;
+		_functionPointerWithObject = NULL;
+		_functionPointerWithPointer = boost::bind(functionPointer, observer, _1);
+		_notificationName = notificationName;
+		_observerType = OBJECT_OBSERVER;
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param observer The observer instance used to send notifications.
+	 * @param functionPointer The function pointer called on the observer instance when notified.
+	 * @param notificationName The name of the notification the observer is observing.
+	 */
+	ObjectObserver(T1* observer, void (T1::*functionPointer)(const T2*), const String& notificationName)
+	{
+		_observer = observer;
+		_functionPointerWithObject = NULL;
+		_functionPointerWithPointer = boost::bind(functionPointer, observer, _1);
+		_notificationName = notificationName;
+		_observerType = OBJECT_OBSERVER;
+	}
+
+	/**
+	 * Calls the function pointer on the observer instance with the given object.
+	 *
+	 * @param object The object to send to the notification's observer.
+	 */
+	virtual void notify(const boost::any& object)
 	{
 		try
 		{
-			const T2& castObject = boost::any_cast<T2>(object);
-			_functionPointer(_objectPointer, castObject);
+			if (_functionPointerWithObject)
+			{
+				const T2& castObject = boost::any_cast<T2>(object);
+				_functionPointerWithObject(castObject);
+			}
+			else // _functionPointerWithPointer
+			{
+				T2* castObject = boost::any_cast<T2*>(object);
+				_functionPointerWithPointer(castObject);
+			}
 		}
-		catch (const boost::bad_any_cast& /*e*/)
+		catch (const boost::bad_any_cast& e)
 		{
-			String msg = String("Notification object for \"%1\" has invalid type for bound callback.").arg(notificationName);
+			String msg = String("Notification object for \"%1\" has invalid type for bound callback.").arg(_notificationName);
 			throw NotificationError(msg, BUMP_LOCATION);
 		}
 	}
 
-	/**
-	 * Checks whether the given object is equal to the functor's internal object pointer.
-	 *
-	 * @param object the object to check whether it is equal to the functor's internal object pointer.
-	 * @return true if the given object equals the functor's internal object pointer, otherwise returns false.
-	 */
-	virtual bool isEqual(void* object)
-	{
-		return object == _objectPointer;
-	}
-
 protected:
 
-	/** Instance member variables. */
-	T1* _objectPointer;
-	boost::function<void (T1*, T2)> _functionPointer;
-};
-
-
-/**
- * The notification with pointer functor class stores the observer object along with its function pointer to be
- * executed when a matching notification is posted. This functor allows notifications with pointers to be
- * passed through the notification center.
- */
-template <class T1, class T2>
-class BUMP_EXPORT NotificationWithPointerFunctor : public AbstractFunctor
-{
-public:
-
 	/**
-	 * Constructor.
+	 * Destructor.
 	 */
-	NotificationWithPointerFunctor(T1* objectPointer, boost::function<void (T1*, T2*)> functionPointer) :
-		_objectPointer(objectPointer),
-		_functionPointer(functionPointer)
-	{
-		;
-	}
+	~ObjectObserver() {}
 
-	/**
-	 * Notification callback for the functor with no object.
-	 *
-	 * @param notificationName the name of the notification being sent.
-	 */
-	void notify(const String& notificationName)
-	{
-		String msg = String("Notification object for \"%1\" takes an object but was not sent one.").arg(notificationName);
-		throw NotificationError(msg, BUMP_LOCATION);
-	}
-
-	/**
-	 * Notification callback for the functor with a pointer.
-	 *
-	 * @param object the object to send to the notification's observers.
-	 * @param notificationName the name of the notification being sent.
-	 */
-	void notify(const boost::any& object, const String& notificationName)
-	{
-		try
-		{
-			T2* castObject = boost::any_cast<T2*>(object);
-			_functionPointer(_objectPointer, castObject);
-		}
-		catch (const boost::bad_any_cast& /*e*/)
-		{
-			String msg = String("Notification object for \"%1\" has invalid type for bound callback.").arg(notificationName);
-			throw NotificationError(msg, BUMP_LOCATION);
-		}
-	}
-
-	/**
-	 * Checks whether the given object is equal to the functor's internal object pointer.
-	 *
-	 * @param object the object to check whether it is equal to the functor's internal object pointer.
-	 * @return true if the given object equals the functor's internal object pointer, otherwise returns false.
-	 */
-	virtual bool isEqual(void* object)
-	{
-		return object == _objectPointer;
-	}
-
-protected:
-
-	/** Instance member variables. */
-	T1* _objectPointer;
-	boost::function<void (T1*, T2*)> _functionPointer;
+	// Instance member variables
+	boost::function<void (T2)>	_functionPointerWithObject;		/**< The function pointer that has an object signature. */
+	boost::function<void (T2*)>	_functionPointerWithPointer;	/**< The function pointer that has a pointer signature. */
 };
 
 /**
@@ -281,7 +260,7 @@ protected:
  * to create such a notification, follow these steps:
  *
  * 1) Register all objects as observers with the NotificationCenter
- *		 - boost::function<void (ObjectType1*) Event*> eventCompletedCallback(&ObjectType1::eventCompleted);
+ *		 - bump::AbstractObserver* observer = new bump::ObjectObserver<ObjectType, Event*>(this, &ObjectType::eventCompleted, "EventCompleted");
  *		 - bump::NotificationCenter::instance()->addObserver(this, eventCompletedCallback, "EventCompleted");
  *
  * 2) Make sure to remove the observer from the NotificationCenter in its destructor
@@ -304,45 +283,20 @@ public:
 	static NotificationCenter* instance() { static NotificationCenter nc; return &nc; }
 
 	/**
-	 * Registers the observer's function pointer without an object with the notification name.
+	 * Adds the observer to the list of observers to send notifications.
 	 *
-	 * @param observer the observer instance being registered to receive notifications.
-	 * @param function the function pointer to be called on observer.
-	 * @param notificationName the identifying string used to trigger the function pointer on observer.
+	 * @param observer The observer to add to the list of observers to send notifications.
 	 */
-	template<typename T>
-	void addObserver(T* observer, boost::function<void (T*)> function, const String& notificationName)
+	void addObserver(Observer* observer)
 	{
-		NotificationFunctor<T>* functor = new NotificationFunctor<T>(observer, function);
-		_observers.insert(std::pair<AbstractFunctor*, String>(functor, notificationName));
-	}
-
-	/**
-	 * Registers the observer's function pointer with an object with the notification name.
-	 *
-	 * @param observer the observer instance being registered to receive notifications.
-	 * @param function the function pointer to be called on observer.
-	 * @param notificationName the identifying string used to trigger the function pointer on observer.
-	 */
-	template<typename T1, typename T2>
-	void addObserver(T1* observer, boost::function<void (T1*, T2)> function, const String& notificationName)
-	{
-		NotificationWithObjectFunctor<T1, T2>* functor = new NotificationWithObjectFunctor<T1, T2>(observer, function);
-		_observers.insert(std::pair<AbstractFunctor*, String>(functor, notificationName));
-	}
-
-	/**
-	 * Registers the observer's function pointer with a pointer object with the notification name.
-	 *
-	 * @param observer the observer instance being registered to receive notifications.
-	 * @param function the function pointer to be called on observer.
-	 * @param notificationName the identifying string used to trigger the function pointer on observer.
-	 */
-	template<typename T1, typename T2>
-	void addObserver(T1* observer, boost::function<void (T1*, T2*)> function, const String& notificationName)
-	{
-		NotificationWithPointerFunctor<T1, T2>* functor = new NotificationWithPointerFunctor<T1, T2>(observer, function);
-		_observers.insert(std::pair<AbstractFunctor*, String>(functor, notificationName));
+		if (observer->observerType() == bump::Observer::KEY_OBSERVER)
+		{
+			_keyObservers.push_back(observer);
+		}
+		else
+		{
+			_objectObservers.push_back(observer);
+		}
 	}
 
 	/**
@@ -391,15 +345,16 @@ protected:
 	~NotificationCenter();
 
 	/** Instance member variables. */
-	std::multimap<AbstractFunctor*, String> _observers;
+	std::vector<Observer*> _keyObservers;
+	std::vector<Observer*> _objectObservers;
 };
 
-/** Convenience macros for posting notifications. */
-#define ADD_OBSERVER(o, c, k) bump::NotificationCenter::instance()->addObserver(o, c, k)
+// Convenience macros for posting notifications
 #define NOTIFICATION_CENTER() bump::NotificationCenter::instance()
-#define REMOVE_OBSERVER(o) bump::NotificationCenter::instance()->removeObserver(o)
-#define POST_NOTIFICATION(k) bump::NotificationCenter::instance()->postNotification(k)
-#define POST_NOTIFICATION_WITH_OBJECT(k, o) bump::NotificationCenter::instance()->postNotificationWithObject(k, o)
+#define ADD_OBSERVER(c) NOTIFICATION_CENTER()->addObserver(c)
+#define REMOVE_OBSERVER(o) NOTIFICATION_CENTER()->removeObserver(o)
+#define POST_NOTIFICATION(k) NOTIFICATION_CENTER()->postNotification(k)
+#define POST_NOTIFICATION_WITH_OBJECT(k, o) NOTIFICATION_CENTER()->postNotificationWithObject(k, o)
 
 }	// End of bump namespace
 

@@ -24,17 +24,21 @@ public:
 		_numRenderPasses(2),
 		_redrawRequestCount(0)
 	{
-		// Create all the function pointers for notification callbacks
-		boost::function<void (Renderer*)> redrawCallback(&Renderer::requestRedraw);
-		boost::function<void (Renderer*, unsigned int)> updateCallback(&Renderer::updateNumRenderPasses);
-		boost::function<void (Renderer*, const char*)> changeNameCallback(&Renderer::changeName);
-		boost::function<void (Renderer*, bump::String)> changeNameWithStringCallback(&Renderer::changeNameWithString);
+		// Create a key observer for the requestRedraw() method
+		// This looks daunting, but is really quite easy. Just following this example...
+		//    - bump::Observer* name = new bump::KeyObserver<this_type>(this, &func_pointer, notification_name);
+		bump::Observer* redraw = new bump::KeyObserver<Renderer>(this, &Renderer::requestRedraw, "RequestRedraw");
+		ADD_OBSERVER(redraw);
 
-		// Register all the callbacks with the NotificationCenter
-		ADD_OBSERVER(this, redrawCallback, "RequestRedraw");
-		ADD_OBSERVER(this, updateCallback, "UpdateNumRenderPasses");
-		ADD_OBSERVER(this, changeNameCallback, "ChangeRendererName");
-		ADD_OBSERVER(this, changeNameWithStringCallback, "ChangeRendererNameWithString");
+		// Create object observers for the updateNumRenderPasses(), changeName() and changeNameWithString() methods
+		// This looks daunting, but is really quite easy. Just following this example...
+		//    - bump::Observer* name = new bump::ObjectObserver<this_type, object_type>(this, &func_pointer, notification_name);
+		bump::Observer* update = new bump::ObjectObserver<Renderer, unsigned int>(this, &Renderer::updateNumRenderPasses, "UpdateNumRenderPasses");
+		bump::Observer* change_name = new bump::ObjectObserver<Renderer, const char*>(this, &Renderer::changeName, "ChangeName");
+		bump::Observer* change_name_str = new bump::ObjectObserver<Renderer, bump::String>(this, &Renderer::changeNameWithString, "ChangeNameWithString");
+		ADD_OBSERVER(update);
+		ADD_OBSERVER(change_name);
+		ADD_OBSERVER(change_name_str);
 	}
 
 	/**
@@ -136,9 +140,9 @@ protected:
  * to create such a notification, follow these steps:
  *
  * 1) Register all objects as observers with the NotificationCenter
- *       - boost::function<void (ObjectType1 *) Event *> eventCompletedCallback(&ObjectType1::eventCompleted);
- *       - bump::NotificationCenter::instance()->addObserver(this, eventCompletedCallback, "EventCompleted");
- *       - ADD_OBSERVER(this, eventCompletedCallback, "EventCompleted"); // convenience macro
+ *       - bump::AbstractObserver* observer = new bump::ObjectObserver<ObjectType, Event*>(this, &ObjectType::eventCompleted, "EventCompleted");
+ *       - bump::NotificationCenter::instance()->addObjectObserver(observer);
+ *       - ADD_OBSERVER(observer); // convenience macro
  *
  * 2) Make sure to remove the observer from the NotificationCenter in its destructor
  *       - bump::NotificationCenter::instance()->removeObserver(this);
@@ -192,14 +196,14 @@ int main(int argc, char **argv)
 	}
 
 	// Change the renderer names using the const char* method
-	std::cout << "\nPosting \"ChangeRendererName\" notification" << std::endl;
+	std::cout << "\nPosting \"ChangeName\" notification" << std::endl;
 	const char* name1 = "Custom Renderer";
-	POST_NOTIFICATION_WITH_OBJECT("ChangeRendererName", name1);
+	POST_NOTIFICATION_WITH_OBJECT("ChangeName", name1);
 
 	// Change the renderer names using the bump::String method
 	bump::String name2 = "Ultimate Renderer";
-	std::cout << "\nPosting \"ChangeRendererNameWithString\" notification" << std::endl;
-	POST_NOTIFICATION_WITH_OBJECT("ChangeRendererNameWithString", name2);
+	std::cout << "\nPosting \"ChangeNameWithString\" notification" << std::endl;
+	POST_NOTIFICATION_WITH_OBJECT("ChangeNameWithString", name2);
 
 	// Cleanup the heap renderer instance
 	std::cout << "\nCleaning up the renderers" << std::endl;
