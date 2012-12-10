@@ -12,15 +12,6 @@
 // Bump headers
 #include <bump/String.h>
 
-#define CREATION_AND_CASTING_SECTION_ENABLED		true
-#define FORMATTING_SECTION_ENABLED					true
-#define COMPARISON_SECTION_ENABLED					true
-#define MANIPULATION_SECTION_ENABLED				true
-#define EXTRACTION_SECTION_ENABLED					true
-#define CAPITALIZATION_SECTION_ENABLED				true
-#define FIND_REPLACE_SECTION_ENABLED				true
-#define JOIN_SPLIT_SECTION_ENABLED					true
-
 // Forward declarations
 void creationAndCasting();
 void formatting();
@@ -45,53 +36,18 @@ void joinSplit();
  *		Section 6 - Capitalization (toLowerCase, toUpperCase, capitalize, title)
  *		Section 7 - Find/Replace (indexOf, lastIndexOf, replace)
  *		Section 8 - Join/Split
- *
- * Running this example application will execute each of these sections. If you wish
- * to disable any of them, simply disable the preprocessor defines at the top of this
- * file.
  */
 int main(int argc, char **argv)
 {
-	// Run each example if they're enabled
-	if (CREATION_AND_CASTING_SECTION_ENABLED)
-	{
-		creationAndCasting();
-	}
-
-	if (FORMATTING_SECTION_ENABLED)
-	{
-		formatting();
-	}
-
-	if (COMPARISON_SECTION_ENABLED)
-	{
-		comparison();
-	}
-
-	if (MANIPULATION_SECTION_ENABLED)
-	{
-		manipulation();
-	}
-
-	if (EXTRACTION_SECTION_ENABLED)
-	{
-		extraction();
-	}
-
-	if (CAPITALIZATION_SECTION_ENABLED)
-	{
-		capitalization();
-	}
-
-	if (FIND_REPLACE_SECTION_ENABLED)
-	{
-		findReplace();
-	}
-
-	if (JOIN_SPLIT_SECTION_ENABLED)
-	{
-		joinSplit();
-	}
+	// Run each example
+	creationAndCasting();
+	formatting();
+	comparison();
+	manipulation();
+	extraction();
+	capitalization();
+	findReplace();
+	joinSplit();
 
     return 0;
 }
