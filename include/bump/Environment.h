@@ -26,8 +26,8 @@ namespace Environment {
 /**
  * Finds the string value for the given enviroment variable.
  *
- * @param name the environment variable's name you wish to find the value for.
- * @return the enviroment variable's value as a string.
+ * @param name The environment variable's name you wish to find the value for.
+ * @return The enviroment variable's value as a string.
  */
 BUMP_EXPORT String environmentVariable(const String& name);
 
@@ -38,25 +38,25 @@ BUMP_EXPORT String environmentVariable(const String& name);
  * overwrite flag is true. If the environment variable does not exist, then the environment
  * variable is added to the runtime and set to the given value.
  *
- * @param name the environment variable's name you wish to set.
- * @param value the value of the environment variable you wish to set.
- * @param overwrite whether to reset the value by overwritting the previous value with the new one.
- * @return true if the operation was successful, false otherwise.
+ * @param name The environment variable's name you wish to set.
+ * @param value The value of the environment variable you wish to set.
+ * @param overwrite Whether to reset the value by overwritting the previous value with the new one.
+ * @return True if the operation was successful, false otherwise.
  */
 BUMP_EXPORT bool setEnvironmentVariable(const String& name, const String& value, bool overwrite = true);
 
 /**
  * Removes all instances of the variable name.
  *
- * @param name the environment variable's name you wish to unset.
- * @return true if the operation was successful, false otherwise.
+ * @param name The environment variable's name you wish to unset.
+ * @return True if the operation was successful, false otherwise.
  */
 BUMP_EXPORT bool unsetEnvironmentVariable(const String& name);
 
 /**
  * Returns the username of the current user.
  *
- * @return the username of the current user.
+ * @return The username of the current user.
  */
 BUMP_EXPORT String currentUsername();
 
