@@ -202,7 +202,7 @@ protected:
 	 */
 	void _generateStep();
 
-	/** Instance member variables. */
+	// Instance member variables
 	State			_state;				/**< Timeline run-time status. */
 	Direction		_direction;			/**< Timeline forwards or backwards direction. */
 	CurveShape		_curveShape;		/**< Timeline curve shape interpolation. */
