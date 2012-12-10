@@ -20,14 +20,14 @@ namespace bump {
  * The FileSystem allows users to modify the file system in almost every
  * way possible. The following is a breakdown of the functionality of the
  * FileSystem API:
- *    - Join Paths (join, etc.)
- *    - System Paths (currentPath, setCurrentPath, temporaryPath, etc.)
- *    - Path Queries (exists, isDirectory, isFile, isSymbolicLink, etc.)
- *    - Directories (createDirectory, removeDirectory, directoryInfoList, etc.)
- *    - Files (createFile, renameFile, removeFile, copyFile, etc.)
- *    - Symbolic Links (createSymbolicLink, removeSymbolicLink, renameSymbolicLink, etc.)
- *    - Permissions (setPermissions, permissions, setIsReadableByUser, setIsExecutableByOwner, etc.)
- *    - Dates (setModifiedDate, modifiedDate, etc.)
+ *    - Join Paths (join(), etc.)
+ *    - System Paths (currentPath(), setCurrentPath(), temporaryPath(), etc.)
+ *    - Path Queries (exists(), isDirectory(), isFile(), isSymbolicLink(), etc.)
+ *    - Directories (createDirectory(), removeDirectory(), directoryInfoList(), etc.)
+ *    - Files (createFile(), renameFile(), removeFile(), copyFile(), etc.)
+ *    - Symbolic Links (createSymbolicLink(), removeSymbolicLink(), renameSymbolicLink(), etc.)
+ *    - Permissions (setPermissions(), permissions(), setIsReadableByUser(), setIsExecutableByOwner(), etc.)
+ *    - Dates (setModifiedDate(), modifiedDate(), etc.)
  */
 namespace FileSystem {
 
@@ -432,6 +432,7 @@ BUMP_EXPORT Permissions permissions(const String& path);
  * Enables/disables the owner readable permission's bit for the file or directory at path.
  *
  * @param path The path of the file or directory to set the permissions on.
+ * @param isReadable Whether to set the path to be readable or not.
  * @return True if the permissions were changed successfully, false otherwise.
  */
 BUMP_EXPORT bool setIsReadableByOwner(const String& path, bool isReadable);
@@ -440,6 +441,7 @@ BUMP_EXPORT bool setIsReadableByOwner(const String& path, bool isReadable);
  * Enables/disables the owner writable permission's bit for the file or directory at path.
  *
  * @param path The path of the file or directory to set the permissions on.
+ * @param isWritable Whether to set the path to be writable or not.
  * @return True if the permissions were changed successfully, false otherwise.
  */
 BUMP_EXPORT bool setIsWritableByOwner(const String& path, bool isWritable);
@@ -448,6 +450,7 @@ BUMP_EXPORT bool setIsWritableByOwner(const String& path, bool isWritable);
  * Enables/disables the owner executable permission's bit for the file or directory at path.
  *
  * @param path The path of the file or directory to set the permissions on.
+ * @param isExecutable Whether to set the path to be executable or not.
  * @return True if the permissions were changed successfully, false otherwise.
  */
 BUMP_EXPORT bool setIsExecutableByOwner(const String& path, bool isExecutable);
@@ -456,6 +459,7 @@ BUMP_EXPORT bool setIsExecutableByOwner(const String& path, bool isExecutable);
  * Enables/disables the group readable permission's bit for the file or directory at path.
  *
  * @param path The path of the file or directory to set the permissions on.
+ * @param isReadable Whether to set the path to be readable or not.
  * @return True if the permissions were changed successfully, false otherwise.
  */
 BUMP_EXPORT bool setIsReadableByGroup(const String& path, bool isReadable);
@@ -464,6 +468,7 @@ BUMP_EXPORT bool setIsReadableByGroup(const String& path, bool isReadable);
  * Enables/disables the group writable permission's bit for the file or directory at path.
  *
  * @param path The path of the file or directory to set the permissions on.
+ * @param isWritable Whether to set the path to be writable or not.
  * @return True if the permissions were changed successfully, false otherwise.
  */
 BUMP_EXPORT bool setIsWritableByGroup(const String& path, bool isWritable);
@@ -472,6 +477,7 @@ BUMP_EXPORT bool setIsWritableByGroup(const String& path, bool isWritable);
  * Enables/disables the group executable permission's bit for the file or directory at path.
  *
  * @param path The path of the file or directory to set the permissions on.
+ * @param isExecutable Whether to set the path to be executable or not.
  * @return True if the permissions were changed successfully, false otherwise.
  */
 BUMP_EXPORT bool setIsExecutableByGroup(const String& path, bool isExecutable);
@@ -480,6 +486,7 @@ BUMP_EXPORT bool setIsExecutableByGroup(const String& path, bool isExecutable);
  * Enables/disables the others readable permission's bit for the file or directory at path.
  *
  * @param path The path of the file or directory to set the permissions on.
+ * @param isReadable Whether to set the path to be readable or not.
  * @return True if the permissions were changed successfully, false otherwise.
  */
 BUMP_EXPORT bool setIsReadableByOthers(const String& path, bool isReadable);
@@ -488,6 +495,7 @@ BUMP_EXPORT bool setIsReadableByOthers(const String& path, bool isReadable);
  * Enables/disables the others writable permission's bit for the file or directory at path.
  *
  * @param path The path of the file or directory to set the permissions on.
+ * @param isWritable Whether to set the path to be writable or not.
  * @return True if the permissions were changed successfully, false otherwise.
  */
 BUMP_EXPORT bool setIsWritableByOthers(const String& path, bool isWritable);
@@ -496,6 +504,7 @@ BUMP_EXPORT bool setIsWritableByOthers(const String& path, bool isWritable);
  * Enables/disables the others executable permission's bit for the file or directory at path.
  *
  * @param path The path of the file or directory to set the permissions on.
+ * @param isExecutable Whether to set the path to be executable or not.
  * @return True if the permissions were changed successfully, false otherwise.
  */
 BUMP_EXPORT bool setIsExecutableByOthers(const String& path, bool isExecutable);
