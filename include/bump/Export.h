@@ -9,8 +9,11 @@
 #ifndef BUMP_EXPORT_H
 #define BUMP_EXPORT_H
 
+// Boost headers
+#include <boost/config.hpp>
+
 // Disable VisualStudio warnings
-#if defined(_MSC_VER) && defined(BUMP_DISABLE_MSVC_WARNINGS)
+#ifdef BOOST_MSVC
 	#pragma warning(disable:4244)
 	#pragma warning(disable:4251)
 	#pragma warning(disable:4275)
@@ -20,17 +23,13 @@
 	#pragma warning(disable:4511)
 #endif
 
-// Define the dllexport and dllimports for Windows
-#if defined(_MSC_VER) || defined(__CYGWIN__) || defined(__MINGW32__) || defined( __BCPLUSPLUS__) || defined( __MWERKS__)
-	#if defined(BUMP_LIBRARY_STATIC)
-		#define BUMP_EXPORT
-	#elif defined(BUMP_LIBRARY)
-		#define BUMP_EXPORT __declspec(dllexport)
-	#else
-		#define BUMP_EXPORT __declspec(dllimport)
-#endif
-#else
+// Define the symbol import/export
+#if defined(Bump_LIBRARY_STATIC)
 	#define BUMP_EXPORT
+#elif defined(Bump_LIBRARY)
+	#define BUMP_EXPORT BOOST_SYMBOL_EXPORT
+#else
+	#define BUMP_EXPORT BOOST_SYMBOL_IMPORT
 #endif
 
 // Set up define for whether member templates are supported by VisualStudio compilers
