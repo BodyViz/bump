@@ -15,6 +15,13 @@ IF (Boost_FOUND)
 	# Add the bump library
 	SET (TARGET_COMMON_LIBRARIES bump)
 
+	# Add definitions for shared or static builds
+	IF (Bump_DYNAMIC_LINKING)
+		ADD_DEFINITIONS(-DBump_LIBRARY)
+	ELSE ()
+		ADD_DEFINITIONS(-DBump_LIBRARY_STATIC)
+	ENDIF ()
+
 	# Add all the examples
 	FOREACH (BUMP_EXAMPLE
 			bumpAutoTimer
