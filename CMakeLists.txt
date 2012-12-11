@@ -3,7 +3,7 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
 # Enable folders inside Visual Studio and Xcode
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set_property (GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Project settings
 PROJECT (Bump)
@@ -20,7 +20,7 @@ INCLUDE_DIRECTORIES (
 
 # Make the headers visible to everything
 IF (NOT ${PROJECT_BINARY_DIR} EQUAL ${PROJECT_SOURCE_DIR})
-   INCLUDE_DIRECTORIES(${PROJECT_BINARY_DIR}/include)
+   INCLUDE_DIRECTORIES (${PROJECT_BINARY_DIR}/include)
 ENDIF()
 
 # Set up the Bump Version file
