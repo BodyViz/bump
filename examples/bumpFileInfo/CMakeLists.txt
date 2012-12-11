@@ -1,3 +1,3 @@
 
-SET (TARGET_SRC main.cpp)
+SET (TARGET_SRC bumpFileInfo.cpp)
 SETUP_EXAMPLE (bumpFileInfo)

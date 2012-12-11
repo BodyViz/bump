@@ -1,5 +1,5 @@
 //
-//  main.cpp
+//  bumpTimeline.cpp
 //  Bump
 //
 //  Created by Christian Noon on 12/4/12.

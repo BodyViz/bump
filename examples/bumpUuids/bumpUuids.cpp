@@ -1,5 +1,5 @@
 //
-//  main.cpp
+//  bumpUuids.cpp
 //  Bump
 //
 //  Created by Christian Noon on 11/19/12.

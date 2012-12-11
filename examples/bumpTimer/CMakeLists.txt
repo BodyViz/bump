@@ -1,3 +1,3 @@
 
-SET (TARGET_SRC main.cpp)
+SET (TARGET_SRC bumpTimer.cpp)
 SETUP_EXAMPLE (bumpTimer)

@@ -1,5 +1,5 @@
 //
-//  main.cpp
+//  bumpLog.cpp
 //  Bump
 //
 //  Created by Christian Noon on 12/3/12.

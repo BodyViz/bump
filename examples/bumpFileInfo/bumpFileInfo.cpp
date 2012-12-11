@@ -1,5 +1,5 @@
 //
-//  main.cpp
+//  bumpFileInfo.cpp
 //  Bump
 //
 //  Created by Christian Noon on 12/7/12.

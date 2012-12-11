@@ -1,3 +1,3 @@
 
-SET (TARGET_SRC main.cpp)
+SET (TARGET_SRC bumpStrings.cpp)
 SETUP_EXAMPLE (bumpStrings)

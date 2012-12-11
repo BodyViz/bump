@@ -1,3 +1,3 @@
 
-SET (TARGET_SRC main.cpp)
+SET (TARGET_SRC bumpExceptions.cpp)
 SETUP_EXAMPLE (bumpExceptions)

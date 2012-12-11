@@ -1,5 +1,5 @@
 //
-//  main.cpp
+//  bumpStrings.cpp
 //  Bump
 //
 //  Created by Christian Noon on 11/16/12.
