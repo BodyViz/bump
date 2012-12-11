@@ -12,6 +12,7 @@
 // C++ headers
 #include <iostream>
 #include <set>
+#include <string>
 #include <vector>
 
 // Bump headers
