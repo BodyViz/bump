@@ -233,7 +233,7 @@ public:
 				_functionPointerWithPointer(castObject);
 			}
 		}
-		catch (const boost::bad_any_cast& e)
+		catch (const boost::bad_any_cast& /*e*/)
 		{
 			String msg = String("Notification object for \"%1\" has invalid type for bound callback.").arg(_notificationName);
 			throw NotificationError(msg, BUMP_LOCATION);

@@ -53,7 +53,7 @@ Uuid Uuid::fromString(const String& uuidString)
 		boost::uuids::string_generator generator;
 		return generator(uuidString);
 	}
-	catch (const std::exception& e)
+	catch (const std::exception& /*e*/)
 	{
 		throw TypeCastError(String("Could not convert %1 to uuid").arg(uuidString), BUMP_LOCATION);
 	}
