@@ -220,7 +220,7 @@ public:
 	 *
 	 * @code
 	 *   str.arg(a1).arg(a2);
-	 * @encode
+	 * @endcode
 	 *
 	 * Here is a small example demonstrating how to use this method:
 	 *
@@ -245,7 +245,7 @@ public:
 	 *
 	 * @code
 	 *   str.arg(a1).arg(a2).arg(a3);
-	 * @encode
+	 * @endcode
 	 *
 	 * @throw A bump::StringSearchError when no valid valid markers are found (i.e. %1-%99).
 	 *
@@ -263,7 +263,7 @@ public:
 	 *
 	 * @code
 	 *   str.arg(a1).arg(a2).arg(a3).arg(a4);
-	 * @encode
+	 * @endcode
 	 *
 	 * @throw A bump::StringSearchError when no valid valid markers are found (i.e. %1-%99).
 	 *
@@ -282,7 +282,7 @@ public:
 	 *
 	 * @code
 	 *   str.arg(a1).arg(a2).arg(a3).arg(a4).arg(a5);
-	 * @encode
+	 * @endcode
 	 *
 	 * @throw A bump::StringSearchError when no valid valid markers are found (i.e. %1-%99).
 	 *
@@ -302,7 +302,7 @@ public:
 	 *
 	 * @code
 	 *   str.arg(a1).arg(a2).arg(a3).arg(a4).arg(a5).arg(a6);
-	 * @encode
+	 * @endcode
 	 *
 	 * @throw A bump::StringSearchError when no valid valid markers are found (i.e. %1-%99).
 	 *
@@ -324,7 +324,7 @@ public:
 	 *
 	 * @code
 	 *   str.arg(a1).arg(a2).arg(a3).arg(a4).arg(a5).arg(a6).arg(a7);
-	 * @encode
+	 * @endcode
 	 *
 	 * @throw A bump::StringSearchError when no valid valid markers are found (i.e. %1-%99).
 	 *
@@ -347,7 +347,7 @@ public:
 	 *
 	 * @code
 	 *   str.arg(a1).arg(a2).arg(a3).arg(a4).arg(a5).arg(a6).arg(a7).arg(a8);
-	 * @encode
+	 * @endcode
 	 *
 	 * @throw A bump::StringSearchError when no valid valid markers are found (i.e. %1-%99).
 	 *
@@ -371,7 +371,7 @@ public:
 	 *
 	 * @code
 	 *   str.arg(a1).arg(a2).arg(a3).arg(a4).arg(a5).arg(a6).arg(a7).arg(a8).arg(a9);
-	 * @encode
+	 * @endcode
 	 *
 	 * @throw A bump::StringSearchError when no valid valid markers are found (i.e. %1-%99).
 	 *
