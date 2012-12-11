@@ -6,6 +6,9 @@
 //	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
+// C++ headers
+#include <limits>
+
 // Bump headers
 #include <bump/String.h>
 #include <bump/StringSearchError.h>
@@ -78,7 +81,7 @@ TEST_F(StringTest, testUnsignedCharConstructor)
 	EXPECT_STRNE("-100", my_str.c_str());
 
 	// Check out-of-range positive case
-	my_char = 260;
+	my_char = (unsigned char)260;
 	my_str = bump::String(my_char);
 	EXPECT_STRNE("260", my_str.c_str());
 }
@@ -96,12 +99,12 @@ TEST_F(StringTest, testCharConstructor)
 	EXPECT_STREQ("-50", my_str.c_str());
 
 	// Check out-of-range negative case
-	my_char = -220;
+	my_char = (char)-220;
 	my_str = bump::String(my_char);
 	EXPECT_STRNE("-220", my_str.c_str());
 
 	// Check out-of-range positive case
-	my_char = 220;
+	my_char = (char)220;
 	my_str = bump::String(my_char);
 	EXPECT_STRNE("220", my_str.c_str());
 }
@@ -119,7 +122,7 @@ TEST_F(StringTest, testUnsignedShortConstructor)
 	EXPECT_STRNE("-220", my_str.c_str());
 
 	// Check out-of-range positive case
-	my_short = 69000;
+	my_short = (unsigned short)69000;
 	my_str = bump::String(my_short);
 	EXPECT_STRNE("220", my_str.c_str());
 }
@@ -137,12 +140,12 @@ TEST_F(StringTest, testShortConstructor)
 	EXPECT_STREQ("-29324", my_str.c_str());
 
 	// Check out-of-range negative case
-	my_short = -39465;
+	my_short = (short)-39465;
 	my_str = bump::String(my_short);
 	EXPECT_STRNE("-39465", my_str.c_str());
 
 	// Check out-of-range positive case
-	my_short = 44258;
+	my_short = (short)44258;
 	my_str = bump::String(my_short);
 	EXPECT_STRNE("44258", my_str.c_str());
 }
@@ -160,7 +163,7 @@ TEST_F(StringTest, testUnsignedIntConstructor)
 	EXPECT_STRNE("-220", my_str.c_str());
 
 	// Check out-of-range positive case
-	my_int = 5000000000;
+	my_int = (unsigned int)5000000000;
 	my_str = bump::String(my_int);
 	EXPECT_STRNE("5000000000", my_str.c_str());
 }
@@ -178,7 +181,7 @@ TEST_F(StringTest, testIntConstructor)
 	EXPECT_STREQ("-214748364", my_str.c_str());
 
 	// Check out-of-range negative case
-	my_int = -3000000000;
+	my_int = -((int)3000000000);
 	my_str = bump::String(my_int);
 	EXPECT_STRNE("-3000000000", my_str.c_str());
 
@@ -204,14 +207,14 @@ TEST_F(StringTest, testUnsignedLongConstructor)
 TEST_F(StringTest, testLongConstructor)
 {
 	// Check positive in-range case
-	long my_long = 214748364000;
+	long my_long = 2147483647;
 	bump::String my_str(my_long);
-	EXPECT_STREQ("214748364000", my_str.c_str());
+	EXPECT_STREQ("2147483647", my_str.c_str());
 
 	// Check negative in-range case
-	my_long = -214748364000;
+	my_long = -2147483647;
 	my_str = bump::String(my_long);
-	EXPECT_STREQ("-214748364000", my_str.c_str());
+	EXPECT_STREQ("-2147483647", my_str.c_str());
 }
 
 TEST_F(StringTest, testLongLongConstructor)
@@ -255,7 +258,7 @@ TEST_F(StringTest, testFloatConstructor)
 	my_str = bump::String(my_float);
 	EXPECT_STREQ("2569891", my_str.c_str());
 
-	my_float = 232.2345;
+	my_float = 232.2345f;
 	my_str = bump::String(my_float);
 	EXPECT_STREQ("232.2345", my_str.c_str());
 
@@ -264,7 +267,7 @@ TEST_F(StringTest, testFloatConstructor)
 	my_str = bump::String(my_float);
 	EXPECT_STREQ("-42569", my_str.c_str());
 
-	my_float = -39.64589;
+	my_float = -39.64589f;
 	my_str = bump::String(my_float);
 	EXPECT_STREQ("-39.64589", my_str.c_str());
 
@@ -273,17 +276,17 @@ TEST_F(StringTest, testFloatConstructor)
 	//========================================================
 
 	// Make sure we properly handle zero decimal places
-	my_float = 121.98734;
+	my_float = 121.98734f;
 	my_str = bump::String(my_float, 0);
 	EXPECT_STREQ("122", my_str.c_str());
 
 	// Negative rounding
-	my_float = -4200.599963;
+	my_float = -4200.599963f;
 	my_str = bump::String(my_float, 4);
 	EXPECT_STREQ("-4200.6001", my_str.c_str());
 
 	// Positive rounding
-	my_float = 9.3215648;
+	my_float = 9.3215648f;
 	my_str = bump::String(my_float, 2);
 	EXPECT_STREQ("9.32", my_str.c_str());
 }
@@ -1389,7 +1392,7 @@ TEST_F(StringTest, testRemovePositionWidth)
 
 	// Try removing outside the bounds with valid arguments
 	str = bump::String("i love programming");
-	EXPECT_THROW(str.remove(18, 0), bump::OutOfRangeError);
+	EXPECT_THROW(str.remove(19, 0), bump::OutOfRangeError);
 	str.remove(6, 1000);
 	EXPECT_STREQ("i love", str.c_str());
 }
@@ -1864,15 +1867,15 @@ TEST_F(StringTest, testToFloat)
 {
 	// Regular usage tests
 	bump::String str(9.0987, 4);
-	EXPECT_FLOAT_EQ(9.0987, str.toFloat());
+	EXPECT_FLOAT_EQ(9.0987f, str.toFloat());
 	str = bump::String(10.0, 4);
 	EXPECT_FLOAT_EQ(10.0, str.toFloat());
 	str = bump::String(0.56897845, 6);
-	EXPECT_FLOAT_EQ(0.568978, str.toFloat());
+	EXPECT_FLOAT_EQ(0.568978f, str.toFloat());
 	str = bump::String(20);
 	EXPECT_FLOAT_EQ(20, str.toFloat());
 	str = bump::String(-90.895623, 2);
-	EXPECT_FLOAT_EQ(-90.90, str.toFloat());
+	EXPECT_FLOAT_EQ(-90.90f, str.toFloat());
 
 	// Invalid usage tests
 	str = "test";
@@ -1909,10 +1912,10 @@ TEST_F(StringTest, testToInt)
 TEST_F(StringTest, testToLong)
 {
 	// Regular usage tests
-	bump::String str(214748364000);
-	EXPECT_EQ(214748364000, str.toLong());
-	str = -214748364000;
-	EXPECT_EQ(-214748364000, str.toLong());
+	bump::String str(2147483647);
+	EXPECT_EQ(2147483647, str.toLong());
+	str = -2147483647;
+	EXPECT_EQ(-2147483647, str.toLong());
 
 	// Invalid usage tests
 	str = 400.980;
@@ -2307,7 +2310,7 @@ TEST_F(StringTest, testOperatorLTLTInt)
 {
 	// Normal append
 	bump::String str("example string ");
-	int num1 = -2147483648;
+	int num1 = -((int)2147483648);
 	str << num1;
 	EXPECT_STREQ("example string -2147483648", str.c_str());
 	str = "example string ";
@@ -2359,7 +2362,7 @@ TEST_F(StringTest, testOperatorLTLTLong)
 {
 	// Normal append
 	bump::String str("example string ");
-	long num1 = -2147483648;
+	long num1 = -((int)2147483648);
 	str << num1;
 	EXPECT_STREQ("example string -2147483648", str.c_str());
 	str = "example string ";
@@ -2437,24 +2440,24 @@ TEST_F(StringTest, testOperatorLTLTFloat)
 {
 	// Normal append
 	bump::String str("example string ");
-	float num1 = -92.3015;
+	float num1 = -92.3015f;
 	str << num1;
 	EXPECT_STREQ("example string -92.3015", str.c_str());
 	str = "example string ";
-	num1 = 4068.983;
+	num1 = 4068.983f;
 	str << num1;
 	EXPECT_STREQ("example string 4068.983", str.c_str());
 
 	// Double append
 	str = "a ";
-	num1 = -10.01001;
-	float num2 = 20.2385;
+	num1 = -10.01001f;
+	float num2 = 20.2385f;
 	str << num1 << " and " << num2;
 	EXPECT_STREQ("a -10.01001 and 20.2385", str.c_str());
 
 	// Append to empty string
 	str = "";
-	num1 = 40.1;
+	num1 = 40.1f;
 	str << num1;
 	EXPECT_STREQ("40.1", str.c_str());
 }

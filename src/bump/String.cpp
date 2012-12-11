@@ -243,7 +243,7 @@ String String::arg(const String& argument) const
 		replaced.replace(start_position + skipped_space, lowest_marker.length(), argument);
 
 		// Update the skipped space
-		skipped_space += (int)argument.length() - lowest_marker.length();
+		skipped_space += argument.length() - lowest_marker.length();
 	}
 
 	return replaced;
@@ -351,7 +351,7 @@ const char String::at(int position) const
 	{
 		return std::string::at(position);
 	}
-	catch (const std::out_of_range& e)
+	catch (const std::out_of_range& /*e*/)
 	{
 		throw OutOfRangeError("Position is outside string bounds", BUMP_LOCATION);
 	}
@@ -375,7 +375,7 @@ String& String::capitalize()
 String& String::chop(unsigned int n)
 {
 	// If n is greater than or equal to length(), clear the string
-	if (n >= length())
+	if ((int)n >= length())
 	{
 		clear();
 	}
@@ -519,7 +519,7 @@ String& String::fill(const String& character, int size)
 	// Perform the actual fill
 	String character_copy = character;
 	char fill_character = character_copy.at(0);
-	for (int i = 0; i < this->size(); ++i)
+	for (unsigned int i = 0; i < this->size(); ++i)
 	{
 		(*this)[i] = fill_character;
 	}
@@ -623,7 +623,7 @@ int String::lastIndexOf(String indexString, int startPosition, CaseSensitivity c
 	}
 
 	// Make sure startPosition is inside our bounds
-	if (startPosition > (int)length() - 1 || startPosition < -1)
+	if (startPosition > length() - 1 || startPosition < -1)
 	{
 		return -1;
 	}
@@ -671,7 +671,7 @@ String String::left(int n) const
 	return section(0, n);
 }
 
-unsigned int String::length() const
+int String::length() const
 {
 	return std::string::length();
 }
@@ -705,7 +705,7 @@ String String::repeated(unsigned int times) const
 String& String::remove(int position, int n)
 {
 	// Make sure the position is valid
-	if (position < 0 || position > length() - 1)
+	if (position < 0 || position > length())
 	{
 		throw OutOfRangeError("Position is outside string bounds", BUMP_LOCATION);
 	}
@@ -849,7 +849,7 @@ String String::right(int n) const
 String String::section(int startPosition, int length) const
 {
 	// Make sure the start position is valid
-	if (startPosition < 0 || startPosition > (int)this->length() - 1)
+	if (startPosition < 0 || startPosition > this->length() - 1)
 	{
 		throw OutOfRangeError("Position is outside string bounds", BUMP_LOCATION);
 	}

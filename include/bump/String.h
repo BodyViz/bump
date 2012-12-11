@@ -624,7 +624,7 @@ public:
 	 *
 	 * @return The total number of characters in this string.
 	 */
-	unsigned int length() const;
+	int length() const;
 
 	/**
 	 * Adds the given string to the beginning of this string.
