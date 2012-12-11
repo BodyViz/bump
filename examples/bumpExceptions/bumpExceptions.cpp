@@ -23,7 +23,7 @@ void valueMustBePositive(int value)
 void removeItemFromVector(std::vector<double>& values, int itemIndex)
 {
 	// Make sure item index falls inside the values bounds
-	if (itemIndex < 0 || itemIndex > values.size() - 1)
+	if (itemIndex < 0 || itemIndex > (int)values.size() - 1)
 	{
 		std::cout << "removeItemFromVector FAILED with an itemIndex of " << itemIndex << std::endl;
 		throw bump::OutOfRangeError("The item index was outside the bounds of values", BUMP_LOCATION);
