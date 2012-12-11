@@ -9,8 +9,11 @@
 #ifndef BUMP_EXCEPTION_H
 #define BUMP_EXCEPTION_H
 
+// Boost headers
+#include <boost/current_function.hpp>
+
 // Bump headers
-#include <bump/Exception.h>
+#include <bump/Export.h>
 #include <bump/String.h>
 
 /**
@@ -28,7 +31,7 @@
  *=============================================================================================================
  */
 
-#define BUMP_LOCATION bump::String("Function: ") + __PRETTY_FUNCTION__ + " File: " + __FILE__ + " Line: " + bump::String(__LINE__)
+#define BUMP_LOCATION bump::String("Function: ") + BOOST_CURRENT_FUNCTION + " File: " + __FILE__ + " Line: " + bump::String(__LINE__)
 
 namespace bump {
 
