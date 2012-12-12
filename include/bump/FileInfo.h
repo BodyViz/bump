@@ -247,6 +247,9 @@ public:
 	/**
 	 * Returns whether the path is readable by the current user based on the path's permissions.
 	 *
+	 * @todo Add support for Windows.
+	 *
+	 * @throw A bump::NotImplementedError on Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 *
 	 * @return True if the path is readable by the current user, false otherwise.
@@ -256,6 +259,9 @@ public:
 	/**
 	 * Returns whether the path is writable by the current user based on the path's permissions.
 	 *
+	 * @todo Add support for Windows.
+	 *
+	 * @throw A bump::NotImplementedError on Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 *
 	 * @return True if the path is writable by the current user, false otherwise.
@@ -265,6 +271,9 @@ public:
 	/**
 	 * Returns whether the path is executable by the current user based on the path's permissions.
 	 *
+	 * @todo Add support for Windows.
+	 *
+	 * @throw A bump::NotImplementedError on Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 *
 	 * @return True if the path is executable by the current user, false otherwise.
@@ -274,12 +283,20 @@ public:
 	/**
 	 * Returns whether the path is readable by the owner based on the path's permissions.
 	 *
+	 * @todo Add support for Windows.
+	 *
+	 * @throw A bump::NotImplementedError on Windows.
+	 *
 	 * @return True if the path is readable by the owner, false otherwise.
 	 */
 	bool isReadableByOwner() const;
 
 	/**
 	 * Returns whether the path is writable by the owner based on the path's permissions.
+	 *
+	 * @todo Add support for Windows.
+	 *
+	 * @throw A bump::NotImplementedError on Windows.
 	 *
 	 * @return True if the path is writable by the owner, false otherwise.
 	 */
@@ -288,12 +305,20 @@ public:
 	/**
 	 * Returns whether the path is executable by the owner based on the path's permissions.
 	 *
+	 * @todo Add support for Windows.
+	 *
+	 * @throw A bump::NotImplementedError on Windows.
+	 *
 	 * @return True if the path is executable by the owner, false otherwise.
 	 */
 	bool isExecutableByOwner() const;
 
 	/**
 	 * Returns whether the path is readable by the group based on the path's permissions.
+	 *
+	 * @todo Add support for Windows.
+	 *
+	 * @throw A bump::NotImplementedError on Windows.
 	 *
 	 * @return True if the path is readable by the group, false otherwise.
 	 */
@@ -302,12 +327,20 @@ public:
 	/**
 	 * Returns whether the path is writable by the group based on the path's permissions.
 	 *
+	 * @todo Add support for Windows.
+	 *
+	 * @throw A bump::NotImplementedError on Windows.
+	 *
 	 * @return True if the path is writable by the group, false otherwise.
 	 */
 	bool isWritableByGroup() const;
 
 	/**
 	 * Returns whether the path is executable by the group based on the path's permissions.
+	 *
+	 * @todo Add support for Windows.
+	 *
+	 * @throw A bump::NotImplementedError on Windows.
 	 *
 	 * @return True if the path is executable by the group, false otherwise.
 	 */
@@ -316,12 +349,20 @@ public:
 	/**
 	 * Returns whether the path is readable by others based on the path's permissions.
 	 *
+	 * @todo Add support for Windows.
+	 *
+	 * @throw A bump::NotImplementedError on Windows.
+	 *
 	 * @return True if the path is readable by others, false otherwise.
 	 */
 	bool isReadableByOthers() const;
 
 	/**
 	 * Returns whether the path is writable by others based on the path's permissions.
+	 *
+	 * @todo Add support for Windows.
+	 *
+	 * @throw A bump::NotImplementedError on Windows.
 	 *
 	 * @return True if the path is writable by others, false otherwise.
 	 */
@@ -330,6 +371,10 @@ public:
 	/**
 	 * Returns whether the path is executable by others based on the path's permissions.
 	 *
+	 * @todo Add support for Windows.
+	 *
+	 * @throw A bump::NotImplementedError on Windows.
+	 *
 	 * @return True if the path is executable by others, false otherwise.
 	 */
 	bool isExecutableByOthers() const;
@@ -337,8 +382,9 @@ public:
 	/**
 	 * Returns the owner of the path. On Windows the return value is empty.
 	 *
-	 * @todo Extend to properly support Windows.
+	 * @todo Add support for Windows.
 	 *
+	 * @throw A bump::NotImplementedError on Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 *
 	 * @return The owner of the path.
@@ -348,8 +394,9 @@ public:
 	/**
 	 * Returns the owner id of the path. On Windows the return value is -1.
 	 *
-	 * @todo Extend to properly support Windows.
+	 * @todo Add support for Windows.
 	 *
+	 * @throw A bump::NotImplementedError on Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 *
 	 * @return The owner of the path.
@@ -359,8 +406,9 @@ public:
 	/**
 	 * Returns the group of the path. On Windows the return value is empty.
 	 *
-	 * @todo Extend to properly support Windows.
+	 * @todo Add support for Windows.
 	 *
+	 * @throw A bump::NotImplementedError on Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 *
 	 * @return The group of the path.
@@ -370,8 +418,9 @@ public:
 	/**
 	 * Returns the group id of the path. On Windows the return value is -1.
 	 *
-	 * @todo Extend to properly support Windows.
+	 * @todo Add support for Windows.
 	 *
+	 * @throw A bump::NotImplementedError on Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 *
 	 * @return The group of the path.
