@@ -275,8 +275,8 @@ void symbolicLinksDemo()
 	// Remove the symbolic links
 	bump::FileSystem::removeSymbolicLink("output_symlink_renamed.txt");
 	bump::FileSystem::removeSymbolicLink("output_symlink_copied.txt");
-	bump::FileSystem::removeSymbolicLink("Files Renamed");
-	bump::FileSystem::removeSymbolicLink("Files Copied");
+	bump::FileSystem::removeSymbolicLink("Files Symlink Renamed");
+	bump::FileSystem::removeSymbolicLink("Files Symlink Copied");
 	std::cout << "- Removed Symlink: \"output_symlink_renamed.txt\"" << std::endl;
 	std::cout << "- Removed Symlink: \"output_symlink_copied.txt\"" << std::endl;
 	std::cout << "- Removed Symlink: \"Files Renamed\"" << std::endl;
