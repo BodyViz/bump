@@ -212,47 +212,53 @@ std::ostream& Log::logStream(const String& prefix)
 
 String Log::_convertTimeToString()
 {
-	// Create a time facet for date formatting purposes
-	boost::posix_time::time_facet* facet;
+	// Get the time using boost
+	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
+
+	// Build strings for each time value from the boost ptime value
+	String year = static_cast<long>(now.date().year());
+	String month = static_cast<long>(now.date().month());
+	String day = static_cast<long>(now.date().day());
+	String hours = static_cast<long>(now.time_of_day().hours());
+	String minutes = static_cast<long>(now.time_of_day().minutes());
+	String seconds = static_cast<long>(now.time_of_day().seconds());
+
+	// Figure out if we're AM or PM
+	String am_pm = hours.toInt() < 13 ? "AM" : "PM";
+
+	// Correct the hours if larger than 12
+	if (hours.toInt() > 12)
+	{
+		hours = hours.toInt() - 12;
+	}
+
+	// Pad the minutes
+	while (minutes.length() < 2)
+	{
+		minutes.append("0");
+	}
+
+	// Pad the seconds
+	while (seconds.length() < 2)
+	{
+		seconds.append("0");
+	}
+
+	// Now create a string representation of the time based on the date/time format
 	if (_dateTimeFormat == DATE_TIME_DEFAULT)
 	{
-		facet = new boost::posix_time::time_facet("%Y-%m-%d %l:%M:%S");
+		return String("%1-%2-%3 %4:%5:%6").arg(year, month, day, hours, minutes, seconds);
 	}
 	else if (_dateTimeFormat == DATE_TIME_WITH_AM_PM)
 	{
-		facet = new boost::posix_time::time_facet("%Y-%m-%d %l:%M:%S %p");
-	}
-	else if (_dateTimeFormat == DATE_TIME_PRECISE)
-	{
-		facet = new boost::posix_time::time_facet("%Y-%m-%d %l:%M:%s");
+		return String("%1-%2-%3 %4:%5:%6 %7").arg(year, month, day, hours, minutes, seconds, am_pm);
 	}
 	else if (_dateTimeFormat == TIME_DEFAULT)
 	{
-		facet = new boost::posix_time::time_facet("%l:%M:%S");
+		return String("%1:%2:%3").arg(hours, minutes, seconds);
 	}
-	else if (_dateTimeFormat == TIME_WITH_AM_PM)
+	else // _dateTimeFormat == TIME_WITH_AM_PM
 	{
-		facet = new boost::posix_time::time_facet("%l:%M:%S %p");
+		return String("%1:%2:%3 %4").arg(hours, minutes, seconds, am_pm);
 	}
-	else // _dateTimeFormat == TIME_PRECISE
-	{
-		facet = new boost::posix_time::time_facet("%l:%M:%s");
-	}
-
-	// Create an ostringstream and imbue it with the local locale and facet
-	std::ostringstream ostream;
-	ostream.imbue(std::locale(ostream.getloc(), facet));
-
-	// Push the current local time into the ostringstream and return the string version
-	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-	ostream << now;
-
-	// Trim the result as it can sometimes have whitespace at the beginning
-	String time_str = ostream.str();
-	time_str = time_str.trimmed();
-
-	// Replace all double spaces with single spaces
-	time_str = time_str.replace("  ", " ");
-
-	return time_str;
 }

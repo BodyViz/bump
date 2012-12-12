@@ -138,24 +138,20 @@ int main(int argc, char **argv)
 	LOG_ALWAYS() << std::endl;
 	LOG()->setIsDateTimeFormattingEnabled(true);
 	LOG_ALWAYS() << "Example message with \"DATE_TIME_DEFAULT\" date time formatting" << std::endl;
-	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"DATE_TIME_DEFAULT\" date time formatting" << std::endl;
+	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"DATE_TIME_DEFAULT\" date time formatting\n" << std::endl;
 
 	// From here, you can customize the output format using the date time format enumeration
 	LOG()->setDateTimeFormat(bump::Log::DATE_TIME_WITH_AM_PM);
 	LOG_ALWAYS() << "Example message with \"DATE_TIME_WITH_AM_PM\" date time formatting" << std::endl;
-	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"DATE_TIME_WITH_AM_PM\" date time formatting" << std::endl;
-	LOG()->setDateTimeFormat(bump::Log::DATE_TIME_PRECISE);
-	LOG_ALWAYS() << "Example message with \"DATE_TIME_PRECISE\" date time formatting" << std::endl;
-	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"DATE_TIME_PRECISE\" date time formatting" << std::endl;
+	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"DATE_TIME_WITH_AM_PM\" date time formatting\n" << std::endl;
+
 	LOG()->setDateTimeFormat(bump::Log::TIME_DEFAULT);
 	LOG_ALWAYS() << "Example message with \"TIME_DEFAULT\" date time formatting" << std::endl;
-	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"TIME_DEFAULT\" date time formatting" << std::endl;
+	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"TIME_DEFAULT\" date time formatting\n" << std::endl;
+
 	LOG()->setDateTimeFormat(bump::Log::TIME_WITH_AM_PM);
 	LOG_ALWAYS() << "Example message with \"TIME_WITH_AM_PM\" date time formatting" << std::endl;
-	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"TIME_WITH_AM_PM\" date time formatting" << std::endl;
-	LOG()->setDateTimeFormat(bump::Log::TIME_PRECISE);
-	LOG_ALWAYS() << "Example message with \"TIME_PRECISE\" date time formatting" << std::endl;
-	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"TIME_PRECISE\" date time formatting" << std::endl;
+	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"TIME_WITH_AM_PM\" date time formatting\n" << std::endl;
 
 	// Then to turn it back off, simply disable it.
 	LOG()->setIsDateTimeFormattingEnabled(false);
