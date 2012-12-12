@@ -108,7 +108,7 @@ void creationAndCasting()
 	// You can even specify the precision for the floats and doubles. The bump::String class will
 	// handle all the rounding properly as you can see below.
 	std::cout << "\nSpecify float and double precision:" << std::endl;
-	value_float = 3.1456;
+	value_float = 3.1456f;
 	value_double = 97.008930487;
 	bump::String str_float_precise(value_float, 2);
 	bump::String str_double_precise(value_double, 4);
