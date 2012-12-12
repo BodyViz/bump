@@ -142,7 +142,7 @@ public:
 	/**
 	 * Constructor that takes a float.
 	 *
-	 * @throw A bump::InvalidArgumentError when precision is less than -1.
+	 * @throw bump::InvalidArgumentError When precision is less than -1.
 	 *
 	 * @param number The number to convert to a string.
 	 * @param precision The number of decimal places, default is -1 which uses full decimal representation.
@@ -152,7 +152,7 @@ public:
 	/**
 	 * Constructor that takes a double.
 	 *
-	 * @throw A bump::InvalidArgumentError when precision is less than -1.
+	 * @throw bump::InvalidArgumentError When precision is less than -1.
 	 *
 	 * @param number The number to convert to a string.
 	 * @param precision The number of decimal places, default is -1 which uses full decimal representation.
@@ -207,7 +207,7 @@ public:
 	 *   // replaced = "Copying files 1 of 10: test.txt"
 	 * @endcode
 	 *
-	 * @throw A bump::StringSearchError when no valid valid markers are found (i.e. %1-%99).
+	 * @throw bump::StringSearchError When no valid valid markers are found (i.e. %1-%99).
 	 *
 	 * @param a1 A string to replace the lowest numbered marker.
 	 * @return A copy of the string with the lowest numbered marker replaced.
@@ -231,7 +231,7 @@ public:
 	 *   // replaced = "Copying files 1 of 10"
 	 * @endcode
 	 *
-	 * @throw A bump::StringSearchError when no valid valid markers are found (i.e. %1-%99).
+	 * @throw bump::StringSearchError When no valid valid markers are found (i.e. %1-%99).
 	 *
 	 * @param a1 A string to replace the lowest numbered marker.
 	 * @param a2 A string to replace the second lowest numbered marker.
@@ -248,7 +248,7 @@ public:
 	 *   str.arg(a1).arg(a2).arg(a3);
 	 * @endcode
 	 *
-	 * @throw A bump::StringSearchError when no valid valid markers are found (i.e. %1-%99).
+	 * @throw bump::StringSearchError When no valid valid markers are found (i.e. %1-%99).
 	 *
 	 * @param a1 a string to replace the lowest numbered marker.
 	 * @param a2 a string to replace the second lowest numbered marker.
@@ -266,7 +266,7 @@ public:
 	 *   str.arg(a1).arg(a2).arg(a3).arg(a4);
 	 * @endcode
 	 *
-	 * @throw A bump::StringSearchError when no valid valid markers are found (i.e. %1-%99).
+	 * @throw bump::StringSearchError When no valid valid markers are found (i.e. %1-%99).
 	 *
 	 * @param a1 a string to replace the lowest numbered marker.
 	 * @param a2 a string to replace the second lowest numbered marker.
@@ -285,7 +285,7 @@ public:
 	 *   str.arg(a1).arg(a2).arg(a3).arg(a4).arg(a5);
 	 * @endcode
 	 *
-	 * @throw A bump::StringSearchError when no valid valid markers are found (i.e. %1-%99).
+	 * @throw bump::StringSearchError When no valid valid markers are found (i.e. %1-%99).
 	 *
 	 * @param a1 a string to replace the lowest numbered marker.
 	 * @param a2 a string to replace the second lowest numbered marker.
@@ -305,7 +305,7 @@ public:
 	 *   str.arg(a1).arg(a2).arg(a3).arg(a4).arg(a5).arg(a6);
 	 * @endcode
 	 *
-	 * @throw A bump::StringSearchError when no valid valid markers are found (i.e. %1-%99).
+	 * @throw bump::StringSearchError When no valid valid markers are found (i.e. %1-%99).
 	 *
 	 * @param a1 a string to replace the lowest numbered marker.
 	 * @param a2 a string to replace the second lowest numbered marker.
@@ -327,7 +327,7 @@ public:
 	 *   str.arg(a1).arg(a2).arg(a3).arg(a4).arg(a5).arg(a6).arg(a7);
 	 * @endcode
 	 *
-	 * @throw A bump::StringSearchError when no valid valid markers are found (i.e. %1-%99).
+	 * @throw bump::StringSearchError When no valid valid markers are found (i.e. %1-%99).
 	 *
 	 * @param a1 a string to replace the lowest numbered marker.
 	 * @param a2 a string to replace the second lowest numbered marker.
@@ -350,7 +350,7 @@ public:
 	 *   str.arg(a1).arg(a2).arg(a3).arg(a4).arg(a5).arg(a6).arg(a7).arg(a8);
 	 * @endcode
 	 *
-	 * @throw A bump::StringSearchError when no valid valid markers are found (i.e. %1-%99).
+	 * @throw bump::StringSearchError When no valid valid markers are found (i.e. %1-%99).
 	 *
 	 * @param a1 a string to replace the lowest numbered marker.
 	 * @param a2 a string to replace the second lowest numbered marker.
@@ -374,7 +374,7 @@ public:
 	 *   str.arg(a1).arg(a2).arg(a3).arg(a4).arg(a5).arg(a6).arg(a7).arg(a8).arg(a9);
 	 * @endcode
 	 *
-	 * @throw A bump::StringSearchError when no valid valid markers are found (i.e. %1-%99).
+	 * @throw bump::StringSearchError When no valid valid markers are found (i.e. %1-%99).
 	 *
 	 * @param a1 a string to replace the lowest numbered marker.
 	 * @param a2 a string to replace the second lowest numbered marker.
@@ -393,7 +393,7 @@ public:
 	/**
 	 * Locates and returns the character at the position in this string.
 	 *
-	 * @throw A bump::OutOfRangeError when position is outside this string's bounds.
+	 * @throw bump::OutOfRangeError When position is outside this string's bounds.
 	 *
 	 * @param position The position of the character to return of this string.
 	 * @return The character at the given position.
@@ -512,8 +512,8 @@ public:
 	 * Sets every character in the string to character. If size is different from -1 (default),
 	 * the string is resized to size beforehand.
 	 *
-	 * @throw A bump::InvalidArgumentError when passed a character string with length not equal to one.
-	 * @throw A bump::InvalidArgumentError when passed a size less than -1.
+	 * @throw bump::InvalidArgumentError When passed a character string with length not equal to one.
+	 * @throw bump::InvalidArgumentError When passed a size less than -1.
 	 *
 	 * @param character The character to fill this string with.
 	 * @param size The size to resize this string to be filling.
@@ -525,7 +525,7 @@ public:
 	 * Finds the position of the first occurrence of indexString in this string by searching
 	 * forward from the startPosition.
 	 *
-	 * @throw A bump::InvalidArgumentError when passed an empty index string.
+	 * @throw bump::InvalidArgumentError When passed an empty index string.
 	 *
 	 * @param indexString The String to find the first occurence of in this string.
 	 * @param startPosition The index of the string to start searching at.
@@ -538,7 +538,7 @@ public:
 	 * Finds the position of the first occurrence of indexString in this string by searching
 	 * forward from the startPosition.
 	 *
-	 * @throw A bump::InvalidArgumentError when passed an empty index string.
+	 * @throw bump::InvalidArgumentError When passed an empty index string.
 	 *
 	 * @param indexString The const char* to find the first occurence of in this string.
 	 * @param startPosition The index of the string to start searching at.
@@ -550,8 +550,8 @@ public:
 	/**
 	 * Inserts the insertString at the given position.
 	 *
-	 * @throw A bump::InvalidArgumentError when passed an empty insert string.
-	 * @throw A bump::OutOfRangeError when position is outside this string's bounds.
+	 * @throw bump::InvalidArgumentError When passed an empty insert string.
+	 * @throw bump::OutOfRangeError When position is outside this string's bounds.
 	 *
 	 * @param position The index position of the string to start inserting at.
 	 * @param insertString The String to insert at the given index position in this string.
@@ -587,7 +587,7 @@ public:
 	 * backwards from the startPosition. If startPosition is -1 (default), the search starts
 	 * at the last character.
 	 *
-	 * @throw A bump::InvalidArgumentError when passed an empty index string.
+	 * @throw bump::InvalidArgumentError When passed an empty index string.
 	 *
 	 * @param indexString The string to find the last occurence of in this string.
 	 * @param startPosition The index of the string to start searching at.
@@ -601,7 +601,7 @@ public:
 	 * backwards from the startPosition. If startPosition is -1 (default), the search starts
 	 * at the last character.
 	 *
-	 * @throw A bump::InvalidArgumentError when passed an empty index string.
+	 * @throw bump::InvalidArgumentError When passed an empty index string.
 	 *
 	 * @param indexString The const char* to find the last occurence of in this string.
 	 * @param startPosition The index of the string to start searching at.
@@ -613,7 +613,7 @@ public:
 	/**
 	 * Finds the substring that contains the number of leftmost characters of this string.
 	 *
-	 * @throw A bump::OutOfRangeError when n is outside this string's bounds.
+	 * @throw bump::OutOfRangeError When n is outside this string's bounds.
 	 *
 	 * @param n The number of characters to return.
 	 * @return The substring of the leftmost number of characters of this string.
@@ -646,8 +646,8 @@ public:
 	/**
 	 * Removes the given width of characters starting at the given position.
 	 *
-	 * @throw A bump::OutOfRangeError when position is outside this string's bounds.
-	 * @throw A bump::InvalidArgumentError when n is negative.
+	 * @throw bump::OutOfRangeError When position is outside this string's bounds.
+	 * @throw bump::InvalidArgumentError When n is negative.
 	 *
 	 * @param position The index position to start removing characters at from this string.
 	 * @param n The number of characters to remove from this string.
@@ -658,7 +658,7 @@ public:
 	/**
 	 * Removes every occurrence of the given in this string.
 	 *
-	 * @throw A bump::InvalidArgumentError when the remove string is empty.
+	 * @throw bump::InvalidArgumentError When the remove string is empty.
 	 *
 	 * @param removeString The string to remove from this string.
 	 * @param caseSensitivity The case sensitivity to be used, defaults to String::CaseSensitive.
@@ -669,7 +669,7 @@ public:
 	/**
 	 * Removes every occurrence of the given in this string.
 	 *
-	 * @throw A bump::InvalidArgumentError when the remove string is empty.
+	 * @throw bump::InvalidArgumentError When the remove string is empty.
 	 *
 	 * @param removeString The const char* to remove from this string.
 	 * @param caseSensitivity The case sensitivity to be used, defaults to String::CaseSensitive.
@@ -690,8 +690,8 @@ public:
 	/**
 	 * Replaces n characters starting at position with the replace string.
 	 *
-	 * @throw A bump::OutOfRangeError when position is outside this string's bounds.
-	 * @throw A bump::InvalidArgumentError when n is negative.
+	 * @throw bump::OutOfRangeError When position is outside this string's bounds.
+	 * @throw bump::InvalidArgumentError When n is negative.
 	 *
 	 * @param position The index of this string to start replacing at.
 	 * @param n The number of characters to replace in this string.
@@ -703,8 +703,8 @@ public:
 	/**
 	 * Replaces n characters starting at position with the replace string.
 	 *
-	 * @throw A bump::OutOfRangeError when position is outside this string's bounds.
-	 * @throw A bump::InvalidArgumentError when n is negative.
+	 * @throw bump::OutOfRangeError When position is outside this string's bounds.
+	 * @throw bump::InvalidArgumentError When n is negative.
 	 *
 	 * @param position The index of this string to start replacing at.
 	 * @param n The number of characters to replace in this string.
@@ -716,7 +716,7 @@ public:
 	/**
 	 * Replaces every occurrence of the before string with the after string.
 	 *
-	 * @throw A bump::InvalidArgumentError when passed an empty before string.
+	 * @throw bump::InvalidArgumentError When passed an empty before string.
 	 *
 	 * @param before The string to be replaced.
 	 * @param after The string to replace the before string.
@@ -728,7 +728,7 @@ public:
 	/**
 	 * Replaces every occurrence of the before string with the after string.
 	 *
-	 * @throw A bump::InvalidArgumentError when passed an empty before string.
+	 * @throw bump::InvalidArgumentError When passed an empty before string.
 	 *
 	 * @param before The const char* to be replaced.
 	 * @param after The const char* to replace the before string.
@@ -740,7 +740,7 @@ public:
 	/**
 	 * Finds the substring that contains the number of rightmost characters of this string.
 	 *
-	 * @throw A bump::OutOfRangeError when n is outside this string's bounds.
+	 * @throw bump::OutOfRangeError When n is outside this string's bounds.
 	 *
 	 * @param n The number of characters to return.
 	 * @return The substring of the rightmost number of characters of this string.
@@ -750,8 +750,8 @@ public:
 	/**
 	 * Creates a substring of the given length beginning at the start position.
 	 *
-	 * @throw A bump::OutOfRangeError when position is outside this string's bounds.
-	 * @throw A bump::InvalidArgumentError when length is less than one.
+	 * @throw bump::OutOfRangeError When position is outside this string's bounds.
+	 * @throw bump::InvalidArgumentError When length is less than one.
 	 *
 	 * @param startPosition The starting position in this string to begin the section.
 	 * @param length The length of the section to extract from the string.
@@ -795,7 +795,7 @@ public:
 	/**
 	 * Converts this string to a boolean.
 	 *
-	 * @throw A bump::TypeCastError when this string cannot be converted to a boolean.
+	 * @throw bump::TypeCastError When this string cannot be converted to a boolean.
 	 *
 	 * @return The bool value of the string.
 	 */
@@ -804,7 +804,7 @@ public:
 	/**
 	 * Converts this string to a double.
 	 *
-	 * @throw A bump::TypeCastError when this string cannot be converted to a double.
+	 * @throw bump::TypeCastError When this string cannot be converted to a double.
 	 *
 	 * @return The double value of the string.
 	 */
@@ -813,7 +813,7 @@ public:
 	/**
 	 * Converts this string to a float.
 	 *
-	 * @throw A bump::TypeCastError when this string cannot be converted to a float.
+	 * @throw bump::TypeCastError When this string cannot be converted to a float.
 	 *
 	 * @return The float value of the string.
 	 */
@@ -822,7 +822,7 @@ public:
 	/**
 	 * Converts this string to an int.
 	 *
-	 * @throw A bump::TypeCastError when this string cannot be converted to an int.
+	 * @throw bump::TypeCastError When this string cannot be converted to an int.
 	 *
 	 * @return The int value of the string.
 	 */
@@ -831,7 +831,7 @@ public:
 	/**
 	 * Converts this string to a long.
 	 *
-	 * @throw A bump::TypeCastError when this string cannot be converted to a long.
+	 * @throw bump::TypeCastError When this string cannot be converted to a long.
 	 *
 	 * @return The long value of the string.
 	 */
@@ -840,7 +840,7 @@ public:
 	/**
 	 * Converts this string to a long long.
 	 *
-	 * @throw A bump::TypeCastError when this string cannot be converted to a long long.
+	 * @throw bump::TypeCastError When this string cannot be converted to a long long.
 	 *
 	 * @return The long long value of the string.
 	 */
@@ -856,7 +856,7 @@ public:
 	/**
 	 * Converts this string to a short.
 	 *
-	 * @throw A bump::TypeCastError when this string cannot be converted to a short.
+	 * @throw bump::TypeCastError When this string cannot be converted to a short.
 	 *
 	 * @return The short value of the string.
 	 */
@@ -872,7 +872,7 @@ public:
 	/**
 	 * Converts this string to an unsigned int.
 	 *
-	 * @throw A bump::TypeCastError when this string cannot be converted to an unsigned int.
+	 * @throw bump::TypeCastError When this string cannot be converted to an unsigned int.
 	 *
 	 * @return The unsigned int value of the string.
 	 */
@@ -881,7 +881,7 @@ public:
 	/**
 	 * Converts this string to an unsigned long.
 	 *
-	 * @throw A bump::TypeCastError when this string cannot be converted to an unsigned long.
+	 * @throw bump::TypeCastError When this string cannot be converted to an unsigned long.
 	 *
 	 * @return The unsigned long value of the string.
 	 */
@@ -890,7 +890,7 @@ public:
 	/**
 	 * Converts this string to an unsigned long long.
 	 *
-	 * @throw A bump::TypeCastError when this string cannot be converted to an unsigned long long.
+	 * @throw bump::TypeCastError When this string cannot be converted to an unsigned long long.
 	 *
 	 * @return The unsigned long long value of the string.
 	 */
@@ -906,7 +906,7 @@ public:
 	/**
 	 * Converts this string to an unsigned short.
 	 *
-	 * @throw A bump::TypeCastError when this string cannot be converted to an unsigned short.
+	 * @throw bump::TypeCastError When this string cannot be converted to an unsigned short.
 	 *
 	 * @return The unsigned short value of the string.
 	 */

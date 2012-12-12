@@ -61,7 +61,7 @@ public:
 	/**
 	 * Generates a uuid from the given string (i.e. "00000000-0000-0000-0000-000000000000").
 	 *
-	 * @throw A bump::TypeCastError when string cannot be converted to uuid.
+	 * @throw bump::TypeCastError When string cannot be converted to uuid.
 	 *
 	 * @param uuidString A string formatted as a uuid to create the uuid from.
 	 * @return A new uuid based on the uuid string parameter.

@@ -249,7 +249,7 @@ public:
 	 *
 	 * @todo Add support for Windows.
 	 *
-	 * @throw A bump::NotImplementedError on Windows.
+	 * @throw bump::NotImplementedError When running on Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 *
 	 * @return True if the path is readable by the current user, false otherwise.
@@ -261,7 +261,7 @@ public:
 	 *
 	 * @todo Add support for Windows.
 	 *
-	 * @throw A bump::NotImplementedError on Windows.
+	 * @throw bump::NotImplementedError When running on Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 *
 	 * @return True if the path is writable by the current user, false otherwise.
@@ -273,7 +273,7 @@ public:
 	 *
 	 * @todo Add support for Windows.
 	 *
-	 * @throw A bump::NotImplementedError on Windows.
+	 * @throw bump::NotImplementedError When running on Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 *
 	 * @return True if the path is executable by the current user, false otherwise.
@@ -285,7 +285,7 @@ public:
 	 *
 	 * @todo Add support for Windows.
 	 *
-	 * @throw A bump::NotImplementedError on Windows.
+	 * @throw bump::NotImplementedError When running on Windows.
 	 *
 	 * @return True if the path is readable by the owner, false otherwise.
 	 */
@@ -296,7 +296,7 @@ public:
 	 *
 	 * @todo Add support for Windows.
 	 *
-	 * @throw A bump::NotImplementedError on Windows.
+	 * @throw bump::NotImplementedError When running on Windows.
 	 *
 	 * @return True if the path is writable by the owner, false otherwise.
 	 */
@@ -307,7 +307,7 @@ public:
 	 *
 	 * @todo Add support for Windows.
 	 *
-	 * @throw A bump::NotImplementedError on Windows.
+	 * @throw bump::NotImplementedError When running on Windows.
 	 *
 	 * @return True if the path is executable by the owner, false otherwise.
 	 */
@@ -318,7 +318,7 @@ public:
 	 *
 	 * @todo Add support for Windows.
 	 *
-	 * @throw A bump::NotImplementedError on Windows.
+	 * @throw bump::NotImplementedError When running on Windows.
 	 *
 	 * @return True if the path is readable by the group, false otherwise.
 	 */
@@ -329,7 +329,7 @@ public:
 	 *
 	 * @todo Add support for Windows.
 	 *
-	 * @throw A bump::NotImplementedError on Windows.
+	 * @throw bump::NotImplementedError When running on Windows.
 	 *
 	 * @return True if the path is writable by the group, false otherwise.
 	 */
@@ -340,7 +340,7 @@ public:
 	 *
 	 * @todo Add support for Windows.
 	 *
-	 * @throw A bump::NotImplementedError on Windows.
+	 * @throw bump::NotImplementedError When running on Windows.
 	 *
 	 * @return True if the path is executable by the group, false otherwise.
 	 */
@@ -351,7 +351,7 @@ public:
 	 *
 	 * @todo Add support for Windows.
 	 *
-	 * @throw A bump::NotImplementedError on Windows.
+	 * @throw bump::NotImplementedError When running on Windows.
 	 *
 	 * @return True if the path is readable by others, false otherwise.
 	 */
@@ -362,7 +362,7 @@ public:
 	 *
 	 * @todo Add support for Windows.
 	 *
-	 * @throw A bump::NotImplementedError on Windows.
+	 * @throw bump::NotImplementedError When running on Windows.
 	 *
 	 * @return True if the path is writable by others, false otherwise.
 	 */
@@ -373,7 +373,7 @@ public:
 	 *
 	 * @todo Add support for Windows.
 	 *
-	 * @throw A bump::NotImplementedError on Windows.
+	 * @throw bump::NotImplementedError When running on Windows.
 	 *
 	 * @return True if the path is executable by others, false otherwise.
 	 */
@@ -384,7 +384,7 @@ public:
 	 *
 	 * @todo Add support for Windows.
 	 *
-	 * @throw A bump::NotImplementedError on Windows.
+	 * @throw bump::NotImplementedError When running on Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 *
 	 * @return The owner of the path.
@@ -396,7 +396,7 @@ public:
 	 *
 	 * @todo Add support for Windows.
 	 *
-	 * @throw A bump::NotImplementedError on Windows.
+	 * @throw bump::NotImplementedError When running on Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 *
 	 * @return The owner of the path.
@@ -408,7 +408,7 @@ public:
 	 *
 	 * @todo Add support for Windows.
 	 *
-	 * @throw A bump::NotImplementedError on Windows.
+	 * @throw bump::NotImplementedError When running on Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 *
 	 * @return The group of the path.
@@ -420,7 +420,7 @@ public:
 	 *
 	 * @todo Add support for Windows.
 	 *
-	 * @throw A bump::NotImplementedError on Windows.
+	 * @throw bump::NotImplementedError When running on Windows.
 	 * @throw bump::FileSystemError When the path does not exist.
 	 *
 	 * @return The group of the path.
