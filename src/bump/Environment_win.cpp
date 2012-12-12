@@ -38,8 +38,9 @@ bool unsetEnvironmentVariable(const String& name)
 
 String currentUsername()
 {
-	char username[UNLEN+1];
-	GetUserName(username, (LPDWORD)UNLEN+1);
+	char username[UNLEN + 1];
+	DWORD size = UNLEN + 1;
+	GetUserName((char*)username, &size);
 	return username;
 }
 

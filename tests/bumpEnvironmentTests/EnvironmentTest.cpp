@@ -98,4 +98,9 @@ TEST_F(EnvironmentTest, testUnsetEnvironmentVariable)
 	EXPECT_STREQ("", actual_value.c_str());
 }
 
+TEST_F(EnvironmentTest, testCurrentUsername)
+{
+	EXPECT_FALSE(bump::Environment::currentUsername().isEmpty());
+}
+
 }	// End of bumpTest namespace
