@@ -48,5 +48,20 @@ SET (
 	Version.cpp
 )
 
+# Add all the platform dependent source files
+IF (WIN32)
+	SET (
+		TARGET_SRC
+		${TARGET_SRC}
+		Environment_win.cpp
+	)
+ELSE (WIN32)
+	SET (
+		TARGET_SRC
+		${TARGET_SRC}
+		Environment_unix.cpp
+	)
+ENDIF (WIN32)
+
 # Finish setting up the library
 SETUP_LIBRARY (${LIB_NAME})
