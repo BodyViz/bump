@@ -19,6 +19,7 @@
 #include <bump/Log.h>
 #include <bump/NotificationCenter.h>
 #include <bump/NotificationError.h>
+#include <bump/NotImplementedError.h>
 #include <bump/String.h>
 #include <bump/StringSearchError.h>
 #include <bump/Timeline.h>
