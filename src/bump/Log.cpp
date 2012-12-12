@@ -247,18 +247,18 @@ String Log::_convertTimeToString()
 	// Now create a string representation of the time based on the date/time format
 	if (_dateTimeFormat == DATE_TIME_DEFAULT)
 	{
-		return String("%1-%2-%3 %4:%5:%6").arg(year, month, day, hours, minutes, seconds);
+		return String("%1-%2-%3 %4:%5:%6:").arg(year, month, day, hours, minutes, seconds);
 	}
 	else if (_dateTimeFormat == DATE_TIME_WITH_AM_PM)
 	{
-		return String("%1-%2-%3 %4:%5:%6 %7").arg(year, month, day, hours, minutes, seconds, am_pm);
+		return String("%1-%2-%3 %4:%5:%6 %7:").arg(year, month, day, hours, minutes, seconds, am_pm);
 	}
 	else if (_dateTimeFormat == TIME_DEFAULT)
 	{
-		return String("%1:%2:%3").arg(hours, minutes, seconds);
+		return String("%1:%2:%3:").arg(hours, minutes, seconds);
 	}
 	else // _dateTimeFormat == TIME_WITH_AM_PM
 	{
-		return String("%1:%2:%3 %4").arg(hours, minutes, seconds, am_pm);
+		return String("%1:%2:%3 %4:").arg(hours, minutes, seconds, am_pm);
 	}
 }
