@@ -140,12 +140,16 @@ public:
 	 * relative, then the result of this call is the currentPath() joined with the relative
 	 * path. Therefore, the path returned here is never checked again the exists() method.
 	 *
+	 * Important to note that a unix style path is returned.
+	 *
 	 * @return The absolute path without cleaning the path or resolving symbolic links.
 	 */
 	String absolutePath() const;
 
 	/**
 	 * Returns the absolute path by resolving symbolic links, removing dot and dot-dot elements.
+	 *
+	 * Important to note that a unix style path is returned.
 	 *
 	 * @return The cleaned absolute path.
 	 */
@@ -158,6 +162,8 @@ public:
 	 *   bump::FileInfo("/home/users/user/output.txt").parentPath(); // returns "/home/users/user"
 	 * @endcode
 	 *
+	 * Important to note that a unix style path is returned.
+	 *
 	 * @return The parent path.
 	 */
 	String parentPath() const;
@@ -166,7 +172,7 @@ public:
 	 * Returns the same path passed into the constructor.
 	 *
 	 * NOTE: If a relative path was passed into the constructor, then a relative path
-	 * will be returned.
+	 * will be returned. Also, the path returned will be a unix style path.
 	 *
 	 * @see The absolutePath() and canonicalPath() methods for alternative queries.
 	 *

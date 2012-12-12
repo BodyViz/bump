@@ -6,6 +6,9 @@
 //  Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
+// Boost headers
+#include <boost/config.hpp>
+
 // Bump headers
 #include <bump/FileInfo.h>
 #include <bump/FileSystem.h>
@@ -41,7 +44,9 @@ void printInfo(const bump::FileInfo& fileInfo)
 	std::cout << "- CompleteExtension:       " << fileInfo.completeExtension() << std::endl;
 	std::cout << "- Filename:                " << fileInfo.filename() << std::endl;
 
-	// Permissions query methods
+#ifndef BOOST_WINDOWS
+	
+	// Permissions query methods (NOT implemented on Windows)
 	std::cout << "\nPermissions Queries" << std::endl;
 	std::cout << "- Is readable by user:     " << fileInfo.isReadableByUser() << std::endl;
 	std::cout << "- Is writable by user:     " << fileInfo.isWritableByUser() << std::endl;
@@ -59,6 +64,8 @@ void printInfo(const bump::FileInfo& fileInfo)
 	std::cout << "- Owner ID:                " << fileInfo.ownerId() << std::endl;
 	std::cout << "- Group:                   " << fileInfo.group() << std::endl;
 	std::cout << "- Group ID:                " << fileInfo.groupId() << std::endl;
+
+#endif
 
 	// Date query methods
 	std::cout << "\nDate Queries" << std::endl;
@@ -91,12 +98,12 @@ int main(int argc, char **argv)
 	printInfo(directory_info);
 
 	// Create a file symbolic link and print out all the information about it
-	bump::FileSystem::createSymbolicLink("basic_file.txt", "basic_file_symlink.txt");
+	bump::FileSystem::createFileSymbolicLink("basic_file.txt", "basic_file_symlink.txt");
 	bump::FileInfo file_symlink_info("basic_file_symlink.txt");
 	printInfo(file_symlink_info);
 
 	// Create a directory symbolic link and print out all the information about it
-	bump::FileSystem::createSymbolicLink("Test Directory", "Test Directory Symlink");
+	bump::FileSystem::createDirectorySymbolicLink("Test Directory", "Test Directory Symlink");
 	bump::FileInfo directory_symlink_info("Test Directory Symlink");
 	printInfo(directory_symlink_info);
 

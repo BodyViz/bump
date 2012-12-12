@@ -23,6 +23,7 @@ SET (
 	${HEADER_PATH}/Log.h
 	${HEADER_PATH}/NotificationCenter.h
 	${HEADER_PATH}/NotificationError.h
+	${HEADER_PATH}/NotImplementedError.h
 	${HEADER_PATH}/StringSearchError.h
 	${HEADER_PATH}/String.h
 	${HEADER_PATH}/Timeline.h
@@ -54,12 +55,16 @@ IF (WIN32)
 		TARGET_SRC
 		${TARGET_SRC}
 		Environment_win.cpp
+		FileInfo_win.cpp
+		FileSystem_win.cpp
 	)
 ELSE (WIN32)
 	SET (
 		TARGET_SRC
 		${TARGET_SRC}
 		Environment_unix.cpp
+		FileInfo_unix.cpp
+		FileSystem_unix.cpp
 	)
 ENDIF (WIN32)
 

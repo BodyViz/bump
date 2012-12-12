@@ -55,11 +55,39 @@ enum Permission
 typedef unsigned int Permissions; /**< Defines a Permissions wrapper allowing Permission objects to be OR'd together. */
 
 //====================================================================================
+//                               Path Coversion Methods
+//====================================================================================
+
+/**
+ * Converts the path to a Windows path by replacing forward slashes with backslashes.
+ *
+ * @param path The path to convert to a Windows path.
+ * @return The converted Windows path.
+ */
+BUMP_EXPORT String convertToWindowsPath(String path);
+
+/**
+ * Converts the path to a Unix path by replacing backslashes with forward slashes.
+ *
+ * @param path The path to convert to a Unix path.
+ * @return The converted Unix path.
+ */
+BUMP_EXPORT String convertToUnixPath(String path);
+
+//====================================================================================
 //                                 Join Path Methods
 //====================================================================================
 
 /**
  * Joins the two strings together to form a single path.
+ *
+ * Important to note that a unix style path is returned. For example:
+ *
+ * @code
+ *   bump::FileSystem::join("/home/username", "Desktop");          // returns "/home/username/Desktop"
+ *   bump::FileSystem::join("C:/Program Files", "Visual Studio");  // returns "C:/Program Files/Visual Studio"
+ *   bump::FileSystem::join("C:\\Program Files", "Visual Studio"); // returns "C:/Program Files/Visual Studio"
+ * @endcode
  *
  * @param path1 The first portion of the path.
  * @param path2 The second portion of the path.
@@ -69,6 +97,8 @@ BUMP_EXPORT String join(const String& path1, const String& path2);
 
 /**
  * Joins the three strings together to form a single path.
+ *
+ * Important to note that a unix style path is returned.
  *
  * @param path1 The first portion of the path.
  * @param path2 The second portion of the path.
@@ -80,6 +110,8 @@ BUMP_EXPORT String join(const String& path1, const String& path2, const String& 
 /**
  * Joins the four strings together to form a single path.
  *
+ * Important to note that a unix style path is returned.
+ *
  * @param path1 The first portion of the path.
  * @param path2 The second portion of the path.
  * @param path3 The third portion of the path.
@@ -90,6 +122,8 @@ BUMP_EXPORT String join(const String& path1, const String& path2, const String& 
 
 /**
  * Joins the five strings together to form a single path.
+ *
+ * Important to note that a unix style path is returned.
  *
  * @param path1 The first portion of the path.
  * @param path2 The second portion of the path.
@@ -104,6 +138,8 @@ BUMP_EXPORT String join(const String& path1, const String& path2, const String& 
 /**
  * Joins the six strings together to form a single path.
  *
+ * Important to note that a unix style path is returned.
+ *
  * @param path1 The first portion of the path.
  * @param path2 The second portion of the path.
  * @param path3 The third portion of the path.
@@ -117,6 +153,8 @@ BUMP_EXPORT String join(const String& path1, const String& path2, const String& 
 
 /**
  * Joins the seven strings together to form a single path.
+ *
+ * Important to note that a unix style path is returned.
  *
  * @param path1 The first portion of the path.
  * @param path2 The second portion of the path.
@@ -133,6 +171,8 @@ BUMP_EXPORT String join(const String& path1, const String& path2, const String& 
 /**
  * Joins the eight strings together to form a single path.
  *
+ * Important to note that a unix style path is returned.
+ *
  * @param path1 The first portion of the path.
  * @param path2 The second portion of the path.
  * @param path3 The third portion of the path.
@@ -148,6 +188,8 @@ BUMP_EXPORT String join(const String& path1, const String& path2, const String& 
 
 /**
  * Joins the nine strings together to form a single path.
+ *
+ * Important to note that a unix style path is returned.
  *
  * @param path1 The first portion of the path.
  * @param path2 The second portion of the path.
@@ -177,14 +219,14 @@ BUMP_EXPORT String join(const String& path1, const String& path2, const String& 
 BUMP_EXPORT bool setCurrentPath(const String& path);
 
 /**
- * Returns the current working directory path.
+ * Returns the current working directory path as a unix path.
  *
  * @return path The absolute path of the current working directory.
  */
 BUMP_EXPORT String currentPath();
 
 /**
- * Returns the temporary path for the operating system.
+ * Returns the temporary path for the operating system as a unix path.
  *
  * @return The temporary path for the operating system.
  */
@@ -363,18 +405,32 @@ BUMP_EXPORT bool renameFile(const String& source, const String& destination);
 //====================================================================================
 
 /**
- * Creates the symbolic link from the specified source file or directory.
+ * Creates the symbolic link from the specified directory.
  *
  * This method works best and is easiest to use when both source and destination are
  * absolute paths. When they are relative, things are a bit trickier. Make sure that
  * the destination path is relative to the current path. Then the source path needs
  * to be relative to the destination path, not the current path.
  *
- * @param source The path of the original file or directory.
+ * @param source The path of the original directory.
  * @param destination The path of the symbolic link to create.
  * @return True if the symbolic link was created successfully, false otherwise.
  */
-BUMP_EXPORT bool createSymbolicLink(const String& source, const String& destination);
+BUMP_EXPORT bool createDirectorySymbolicLink(const String& source, const String& destination);
+
+/**
+ * Creates the symbolic link from the specified source file.
+ *
+ * This method works best and is easiest to use when both source and destination are
+ * absolute paths. When they are relative, things are a bit trickier. Make sure that
+ * the destination path is relative to the current path. Then the source path needs
+ * to be relative to the destination path, not the current path.
+ *
+ * @param source The path of the original file.
+ * @param destination The path of the symbolic link to create.
+ * @return True if the symbolic link was created successfully, false otherwise.
+ */
+BUMP_EXPORT bool createFileSymbolicLink(const String& source, const String& destination);
 
 /**
  * Removes the symbolic link.
@@ -415,6 +471,10 @@ BUMP_EXPORT bool renameSymbolicLink(const String& source, const String& destinat
  * permissions are actually modified. However, this should be a very rare case though
  * since modifying permissions of a symbolic link should not need to happen very often.
  *
+ * @todo Add support for Windows.
+ *
+ * @throw A bump::NotImplementedError on Windows.
+ *
  * @param path The path of the file or directory to change the permissions on.
  * @param permissions The permissions to change on the file or directory that path points to.
  * @return True if the permissions were changed successfully, false otherwise.
@@ -424,7 +484,10 @@ BUMP_EXPORT bool setPermissions(const String& path, Permissions permissions);
 /**
  * Returns the permissions for the file or directory at path.
  *
+ * @todo Add support for Windows.
+ *
  * @throw bump::FileSystemError When the path does not exist.
+ * @throw A bump::NotImplementedError on Windows.
  *
  * @param path The path of the file or directory to get the permissions for.
  * @return The permissions of the file or directory that path points to.
@@ -433,6 +496,10 @@ BUMP_EXPORT Permissions permissions(const String& path);
 
 /**
  * Enables/disables the owner readable permission's bit for the file or directory at path.
+ *
+ * @todo Add support for Windows.
+ *
+ * @throw A bump::NotImplementedError on Windows.
  *
  * @param path The path of the file or directory to set the permissions on.
  * @param isReadable Whether to set the path to be readable or not.
@@ -443,6 +510,10 @@ BUMP_EXPORT bool setIsReadableByOwner(const String& path, bool isReadable);
 /**
  * Enables/disables the owner writable permission's bit for the file or directory at path.
  *
+ * @todo Add support for Windows.
+ *
+ * @throw A bump::NotImplementedError on Windows.
+ *
  * @param path The path of the file or directory to set the permissions on.
  * @param isWritable Whether to set the path to be writable or not.
  * @return True if the permissions were changed successfully, false otherwise.
@@ -451,6 +522,10 @@ BUMP_EXPORT bool setIsWritableByOwner(const String& path, bool isWritable);
 
 /**
  * Enables/disables the owner executable permission's bit for the file or directory at path.
+ *
+ * @todo Add support for Windows.
+ *
+ * @throw A bump::NotImplementedError on Windows.
  *
  * @param path The path of the file or directory to set the permissions on.
  * @param isExecutable Whether to set the path to be executable or not.
@@ -461,6 +536,10 @@ BUMP_EXPORT bool setIsExecutableByOwner(const String& path, bool isExecutable);
 /**
  * Enables/disables the group readable permission's bit for the file or directory at path.
  *
+ * @todo Add support for Windows.
+ *
+ * @throw A bump::NotImplementedError on Windows.
+ *
  * @param path The path of the file or directory to set the permissions on.
  * @param isReadable Whether to set the path to be readable or not.
  * @return True if the permissions were changed successfully, false otherwise.
@@ -469,6 +548,10 @@ BUMP_EXPORT bool setIsReadableByGroup(const String& path, bool isReadable);
 
 /**
  * Enables/disables the group writable permission's bit for the file or directory at path.
+ *
+ * @todo Add support for Windows.
+ *
+ * @throw A bump::NotImplementedError on Windows.
  *
  * @param path The path of the file or directory to set the permissions on.
  * @param isWritable Whether to set the path to be writable or not.
@@ -479,6 +562,10 @@ BUMP_EXPORT bool setIsWritableByGroup(const String& path, bool isWritable);
 /**
  * Enables/disables the group executable permission's bit for the file or directory at path.
  *
+ * @todo Add support for Windows.
+ *
+ * @throw A bump::NotImplementedError on Windows.
+ *
  * @param path The path of the file or directory to set the permissions on.
  * @param isExecutable Whether to set the path to be executable or not.
  * @return True if the permissions were changed successfully, false otherwise.
@@ -487,6 +574,10 @@ BUMP_EXPORT bool setIsExecutableByGroup(const String& path, bool isExecutable);
 
 /**
  * Enables/disables the others readable permission's bit for the file or directory at path.
+ *
+ * @todo Add support for Windows.
+ *
+ * @throw A bump::NotImplementedError on Windows.
  *
  * @param path The path of the file or directory to set the permissions on.
  * @param isReadable Whether to set the path to be readable or not.
@@ -497,6 +588,10 @@ BUMP_EXPORT bool setIsReadableByOthers(const String& path, bool isReadable);
 /**
  * Enables/disables the others writable permission's bit for the file or directory at path.
  *
+ * @todo Add support for Windows.
+ *
+ * @throw A bump::NotImplementedError on Windows.
+ *
  * @param path The path of the file or directory to set the permissions on.
  * @param isWritable Whether to set the path to be writable or not.
  * @return True if the permissions were changed successfully, false otherwise.
@@ -506,6 +601,10 @@ BUMP_EXPORT bool setIsWritableByOthers(const String& path, bool isWritable);
 /**
  * Enables/disables the others executable permission's bit for the file or directory at path.
  *
+ * @todo Add support for Windows.
+ *
+ * @throw A bump::NotImplementedError on Windows.
+ * 
  * @param path The path of the file or directory to set the permissions on.
  * @param isExecutable Whether to set the path to be executable or not.
  * @return True if the permissions were changed successfully, false otherwise.

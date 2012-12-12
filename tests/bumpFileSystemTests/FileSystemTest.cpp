@@ -12,102 +12,134 @@
 // Bump headers
 #include <bump/FileSystem.h>
 #include <bump/FileSystemError.h>
-#include <bump/String.h>
 
 // bumpTest headers
-#include "../bumpTest/BaseTest.h"
+#include "FileSystemTest.h"
 
 namespace bumpTest {
 
-/**
- * This is our main file system testing class. The SetUp and TearDown methods are
- * executed before the test runs and after it completes. This is where we can
- * add any custom set up for each test without having to add this to "every"
- * test individually.
- */
-class FileSystemTest : public BaseTest
+void FileSystemTest::SetUp()
 {
-protected:
+	// Call the parent setup method
+	BaseTest::SetUp();
 
-	/** Run immediately before a test starts. Starts the timer. */
-	void SetUp()
-	{
-		// Call the parent setup method
-		BaseTest::SetUp();
+	// Save the current path so we can always put it back after a test modifies it
+	_currentPath = bump::FileSystem::currentPath();
 
-		// Save the current path so we can always put it back after a test modifies it
-		_currentPath = bump::FileSystem::currentPath();
+	// Create the following directory structures as relative paths to the executable.
+	// This way they aren't hard-coded to any specified computer or file system.
+	// - unittest
+	//     |- files
+	//     |   |- output.txt
+	//     |   |- archive.tar.gz
+	//     |   |- .hidden_file.txt
+	//     |- regular_directory
+	//     |   |- paper.doc
+	//     |   |- help.pdf
+	//     |- symlink_directory -> regular_directory
+	//     |   |- paper.doc
+	//     |   |- help.pdf
+	//     |- symlink_files
+	//     |   |- output.txt -> ../files/output.txt
+	//     |   |- archive.tar.gz -> ../files/archive.tar.gz
+	//     |   |- .hidden_symlink.txt -> ../files/.hidden_file.txt
 
-		// Create the following directory structures as relative paths to the executable.
-		// This way they aren't hard-coded to any specified computer or file system.
-		// - unittest
-		//     |- files
-		//     |   |- output.txt
-		//     |   |- archive.tar.gz
-		//     |   |- .hidden_file.txt
-		//     |- regular_directory
-		//     |   |- paper.doc
-		//     |   |- help.pdf
-		//     |- symlink_directory -> regular_directory
-		//     |   |- paper.doc
-		//     |   |- help.pdf
-		//     |- symlink_files
-		//     |   |- output.txt -> ../files/output.txt
-		//     |   |- archive.tar.gz -> ../files/archive.tar.gz
-		//     |   |- .hidden_symlink.txt -> ../files/.hidden_file.txt
+	// Set up the class ivars
+	_unittestDirectory = bump::String("unittest");
+	_filesDirectory = bump::String("unittest/files");
+	_regularDirectory = bump::String("unittest/regular_directory");
+	_symlinkDirectory = bump::String("unittest/symlink_directory");
+	_symlinkFilesDirectory = bump::String("unittest/symlink_files");
 
-		// Set up the class ivars
-		_unittestDirectory = bump::String("unittest");
-		_filesDirectory = bump::String("unittest/files");
-		_regularDirectory = bump::String("unittest/regular_directory");
-		_symlinkDirectory = bump::String("unittest/symlink_directory");
-		_symlinkFilesDirectory = bump::String("unittest/symlink_files");
+	// unittest
+	bump::FileSystem::createDirectory(_unittestDirectory);
 
-		// unittest
-		bump::FileSystem::createDirectory(_unittestDirectory);
+	// unittest/files
+	bump::FileSystem::createDirectory(_filesDirectory);
+	bump::FileSystem::createFile("unittest/files/output.txt");
+	bump::FileSystem::createFile("unittest/files/archive.tar.gz");
+	bump::FileSystem::createFile("unittest/files/.hidden_file.txt");
+	bump::FileSystem::createDirectory(_regularDirectory);
+	bump::FileSystem::createFile("unittest/regular_directory/paper.doc");
+	bump::FileSystem::createFile("unittest/regular_directory/help.pdf");
 
-		// unittest/files
-		bump::FileSystem::createDirectory(_filesDirectory);
-		bump::FileSystem::createFile("unittest/files/output.txt");
-		bump::FileSystem::createFile("unittest/files/archive.tar.gz");
-		bump::FileSystem::createFile("unittest/files/.hidden_file.txt");
-		bump::FileSystem::createDirectory(_regularDirectory);
-		bump::FileSystem::createFile("unittest/regular_directory/paper.doc");
-		bump::FileSystem::createFile("unittest/regular_directory/help.pdf");
+	// unittest/symlink_directory
+	// NOTE: the source is relative to the destination directory
+	bump::FileSystem::createDirectorySymbolicLink("regular_directory", _symlinkDirectory);
 
-		// unittest/symlink_directory
-		// NOTE: the source is relative to the destination directory
-		bump::FileSystem::createSymbolicLink("regular_directory", _symlinkDirectory);
+	// unittest/symlink_files
+	// NOTE: the source is relative to the destination directory
+	bump::FileSystem::createDirectory(_symlinkFilesDirectory);
+	bump::FileSystem::createFileSymbolicLink("../files/output.txt", "unittest/symlink_files/output.txt");
+	bump::FileSystem::createFileSymbolicLink("../files/archive.tar.gz", "unittest/symlink_files/archive.tar.gz");
+	bump::FileSystem::createFileSymbolicLink("../files/.hidden_file.txt", "unittest/symlink_files/.hidden_file.txt");
+}
 
-		// unittest/symlink_files
-		// NOTE: the source is relative to the destination directory
-		bump::FileSystem::createDirectory(_symlinkFilesDirectory);
-		bump::FileSystem::createSymbolicLink("../files/output.txt", "unittest/symlink_files/output.txt");
-		bump::FileSystem::createSymbolicLink("../files/archive.tar.gz", "unittest/symlink_files/archive.tar.gz");
-		bump::FileSystem::createSymbolicLink("../files/.hidden_file.txt", "unittest/symlink_files/.hidden_file.txt");
-	}
+void FileSystemTest::TearDown()
+{
+	// Call the parent tear down method
+	BaseTest::TearDown();
 
-	/** Invoked immediately after a test finishes. Stops the timer. */
-	void TearDown()
-	{
-		// Call the parent tear down method
-		BaseTest::TearDown();
+	// Put the current path back to what it was originally
+	bump::FileSystem::setCurrentPath(_currentPath);
 
-		// Put the current path back to what it was originally
-		bump::FileSystem::setCurrentPath(_currentPath);
+	// Remove the entire directory structure that was built
+	bump::FileSystem::removeDirectoryAndContents("unittest");
+}
 
-		// Remove the entire directory structure that was built
-		bump::FileSystem::removeDirectoryAndContents("unittest");
-	}
+TEST_F(FileSystemTest, testConvertToWindowsPath)
+{
+	// Test converting a unix path to windows
+	bump::String converted = bump::FileSystem::convertToWindowsPath("/home/username/Desktop");
+	EXPECT_STREQ("\\home\\username\\Desktop", converted.c_str());
 
-	/** Instance member variables. */
-	bump::String _unittestDirectory;
-	bump::String _filesDirectory;
-	bump::String _regularDirectory;
-	bump::String _symlinkDirectory;
-	bump::String _symlinkFilesDirectory;
-	bump::String _currentPath;
-};
+	// Test converting a windows path to windows
+	converted = bump::FileSystem::convertToWindowsPath("C:\\Program Files\\Visual Studio");
+	EXPECT_STREQ("C:\\Program Files\\Visual Studio", converted.c_str());
+
+	// Test a mix
+	converted = bump::FileSystem::convertToWindowsPath("/home\\username/Desktop\\Test");
+	EXPECT_STREQ("\\home\\username\\Desktop\\Test", converted.c_str());
+	converted = bump::FileSystem::convertToWindowsPath("C:\\Program Files/Visual Studio\\Test");
+	EXPECT_STREQ("C:\\Program Files\\Visual Studio\\Test", converted.c_str());
+
+	// Test removing duplicates
+	converted = bump::FileSystem::convertToWindowsPath("//home\\\\username///Desktop\\\\\\Test");
+	EXPECT_STREQ("\\home\\username\\Desktop\\Test", converted.c_str());
+	converted = bump::FileSystem::convertToWindowsPath("/\\/home\\//username\\Desktop/\\Test");
+	EXPECT_STREQ("\\home\\username\\Desktop\\Test", converted.c_str());
+
+	// Test an empty path
+	converted = bump::FileSystem::convertToWindowsPath("");
+	EXPECT_STREQ("", converted.c_str());
+}
+
+TEST_F(FileSystemTest, testConvertToUnixPath)
+{
+	// Test converting a unix path to unix
+	bump::String converted = bump::FileSystem::convertToUnixPath("/home/username/Desktop");
+	EXPECT_STREQ("/home/username/Desktop", converted.c_str());
+
+	// Test converting a windows path to unix
+	converted = bump::FileSystem::convertToUnixPath("C:\\Program Files\\Visual Studio");
+	EXPECT_STREQ("C:/Program Files/Visual Studio", converted.c_str());
+
+	// Test a mix
+	converted = bump::FileSystem::convertToUnixPath("/home\\username/Desktop\\Test");
+	EXPECT_STREQ("/home/username/Desktop/Test", converted.c_str());
+	converted = bump::FileSystem::convertToUnixPath("C:\\Program Files/Visual Studio\\Test");
+	EXPECT_STREQ("C:/Program Files/Visual Studio/Test", converted.c_str());
+
+	// Test removing duplicates
+	converted = bump::FileSystem::convertToUnixPath("//home\\\\username///Desktop\\\\\\Test");
+	EXPECT_STREQ("/home/username/Desktop/Test", converted.c_str());
+	converted = bump::FileSystem::convertToUnixPath("/\\/home\\//username\\Desktop/\\Test");
+	EXPECT_STREQ("/home/username/Desktop/Test", converted.c_str());
+
+	// Test an empty path
+	converted = bump::FileSystem::convertToUnixPath("");
+	EXPECT_STREQ("", converted.c_str());
+}
 
 TEST_F(FileSystemTest, join2)
 {
@@ -116,6 +148,8 @@ TEST_F(FileSystemTest, join2)
 	EXPECT_STREQ("/home/username/Desktop", joined.c_str());
 	joined = bump::FileSystem::join("/", "usr");
 	EXPECT_STREQ("/usr", joined.c_str());
+	joined = bump::FileSystem::join("C:/", "Program Files");
+	EXPECT_STREQ("C:/Program Files", joined.c_str());
 
 	// Test the empty cases
 	joined = bump::FileSystem::join("", "usr");
@@ -131,9 +165,9 @@ TEST_F(FileSystemTest, join2)
 	joined = bump::FileSystem::join("/opt/local", "/sbin");
 	EXPECT_STREQ("/opt/local/sbin", joined.c_str());
 
-	// Test a case where it can't remove all the slashes
+	// Test a case with duplicate slashes
 	joined = bump::FileSystem::join("/opt//local/", "/sbin/");
-	EXPECT_STREQ("/opt//local//sbin/", joined.c_str());
+	EXPECT_STREQ("/opt/local/sbin/", joined.c_str());
 }
 
 TEST_F(FileSystemTest, join3)
@@ -143,6 +177,8 @@ TEST_F(FileSystemTest, join3)
 	EXPECT_STREQ("/home/username/Desktop", joined.c_str());
 	joined = bump::FileSystem::join("/", "usr", "/local");
 	EXPECT_STREQ("/usr/local", joined.c_str());
+	joined = bump::FileSystem::join("C:/", "Program Files", "\\Visual Studio");
+	EXPECT_STREQ("C:/Program Files/Visual Studio", joined.c_str());
 
 	// Test the empty cases
 	joined = bump::FileSystem::join("", "usr", "local");
@@ -158,9 +194,9 @@ TEST_F(FileSystemTest, join3)
 	joined = bump::FileSystem::join("/opt/", "local", "/sbin");
 	EXPECT_STREQ("/opt/local/sbin", joined.c_str());
 
-	// Test a case where it can't remove all the slashes
+	// Test a case with duplicate slashes
 	joined = bump::FileSystem::join("/opt/", "/local/", "/sbin/");
-	EXPECT_STREQ("/opt//local//sbin/", joined.c_str());
+	EXPECT_STREQ("/opt/local/sbin/", joined.c_str());
 }
 
 TEST_F(FileSystemTest, join4)
@@ -170,6 +206,8 @@ TEST_F(FileSystemTest, join4)
 	EXPECT_STREQ("/home/username/Desktop", joined.c_str());
 	joined = bump::FileSystem::join("/", "usr", "/local", "sbin");
 	EXPECT_STREQ("/usr/local/sbin", joined.c_str());
+	joined = bump::FileSystem::join("C:/", "Program Files", "\\Visual Studio", "Applications");
+	EXPECT_STREQ("C:/Program Files/Visual Studio/Applications", joined.c_str());
 
 	// Test the empty cases
 	joined = bump::FileSystem::join("", "usr", "local", "");
@@ -185,9 +223,9 @@ TEST_F(FileSystemTest, join4)
 	joined = bump::FileSystem::join("/", "opt/", "local", "/sbin");
 	EXPECT_STREQ("/opt/local/sbin", joined.c_str());
 
-	// Test a case where it can't remove all the slashes
+	// Test a case with duplicate slashes
 	joined = bump::FileSystem::join("/", "/opt/", "/local/", "/sbin/");
-	EXPECT_STREQ("//opt//local//sbin/", joined.c_str());
+	EXPECT_STREQ("/opt/local/sbin/", joined.c_str());
 }
 
 TEST_F(FileSystemTest, join5)
@@ -197,6 +235,8 @@ TEST_F(FileSystemTest, join5)
 	EXPECT_STREQ("/home/username/Desktop/test", joined.c_str());
 	joined = bump::FileSystem::join("/", "usr", "/local", "sbin", "app");
 	EXPECT_STREQ("/usr/local/sbin/app", joined.c_str());
+	joined = bump::FileSystem::join("C:/", "Program Files", "\\Visual Studio", "Applications", "/x86_64");
+	EXPECT_STREQ("C:/Program Files/Visual Studio/Applications/x86_64", joined.c_str());
 
 	// Test the empty cases
 	joined = bump::FileSystem::join("", "usr", "local", "", "sbin");
@@ -212,9 +252,9 @@ TEST_F(FileSystemTest, join5)
 	joined = bump::FileSystem::join("/", "opt/", "local", "/sbin", "app");
 	EXPECT_STREQ("/opt/local/sbin/app", joined.c_str());
 
-	// Test a case where it can't remove all the slashes
+	// Test a case with duplicate slashes
 	joined = bump::FileSystem::join("/", "/opt/", "/local/", "/sbin/", "app/");
-	EXPECT_STREQ("//opt//local//sbin/app/", joined.c_str());
+	EXPECT_STREQ("/opt/local/sbin/app/", joined.c_str());
 }
 
 TEST_F(FileSystemTest, join6)
@@ -222,8 +262,8 @@ TEST_F(FileSystemTest, join6)
 	// Test the default usage
 	bump::String joined = bump::FileSystem::join("/", "home", "username", "Desktop", "test", "default");
 	EXPECT_STREQ("/home/username/Desktop/test/default", joined.c_str());
-	joined = bump::FileSystem::join("/", "usr", "/local", "sbin", "app", "bundle");
-	EXPECT_STREQ("/usr/local/sbin/app/bundle", joined.c_str());
+	joined = bump::FileSystem::join("C:/", "Program Files", "\\Visual Studio", "Applications", "/x86_64", "VC6");
+	EXPECT_STREQ("C:/Program Files/Visual Studio/Applications/x86_64/VC6", joined.c_str());
 
 	// Test the empty cases
 	joined = bump::FileSystem::join("", "usr", "local", "", "sbin", "");
@@ -239,9 +279,9 @@ TEST_F(FileSystemTest, join6)
 	joined = bump::FileSystem::join("/", "opt/", "local", "/sbin", "app", "/bundle");
 	EXPECT_STREQ("/opt/local/sbin/app/bundle", joined.c_str());
 
-	// Test a case where it can't remove all the slashes
+	// Test a case with duplicate slashes
 	joined = bump::FileSystem::join("/", "/opt/", "/local/", "/sbin/", "app/", "/bundle/");
-	EXPECT_STREQ("//opt//local//sbin/app//bundle/", joined.c_str());
+	EXPECT_STREQ("/opt/local/sbin/app/bundle/", joined.c_str());
 }
 
 TEST_F(FileSystemTest, join7)
@@ -251,6 +291,8 @@ TEST_F(FileSystemTest, join7)
 	EXPECT_STREQ("/home/username/Desktop/test/default/folder", joined.c_str());
 	joined = bump::FileSystem::join("/", "usr", "/local", "sbin", "app", "bundle", "exe");
 	EXPECT_STREQ("/usr/local/sbin/app/bundle/exe", joined.c_str());
+	joined = bump::FileSystem::join("C:/", "Program Files", "\\Visual Studio", "Applications", "/x86_64", "VC6", "Temp");
+	EXPECT_STREQ("C:/Program Files/Visual Studio/Applications/x86_64/VC6/Temp", joined.c_str());
 
 	// Test the empty cases
 	joined = bump::FileSystem::join("", "usr", "local", "", "sbin", "", "/exe");
@@ -266,9 +308,9 @@ TEST_F(FileSystemTest, join7)
 	joined = bump::FileSystem::join("/", "opt/", "local", "/sbin", "app", "/bundle", "exe");
 	EXPECT_STREQ("/opt/local/sbin/app/bundle/exe", joined.c_str());
 
-	// Test a case where it can't remove all the slashes
+	// Test a case with duplicate slashes
 	joined = bump::FileSystem::join("/", "/opt/", "/local/", "/sbin/", "app/", "/bundle/", "/exe/");
-	EXPECT_STREQ("//opt//local//sbin/app//bundle//exe/", joined.c_str());
+	EXPECT_STREQ("/opt/local/sbin/app/bundle/exe/", joined.c_str());
 }
 
 TEST_F(FileSystemTest, join8)
@@ -278,6 +320,8 @@ TEST_F(FileSystemTest, join8)
 	EXPECT_STREQ("/home/username/Desktop/test/default/folder/sa", joined.c_str());
 	joined = bump::FileSystem::join("/", "usr", "/local", "sbin", "app", "bundle", "exe", "sa");
 	EXPECT_STREQ("/usr/local/sbin/app/bundle/exe/sa", joined.c_str());
+	joined = bump::FileSystem::join("C:/", "Program Files", "\\Visual Studio", "Applications", "/x86_64", "VC6", "Temp", "sa");
+	EXPECT_STREQ("C:/Program Files/Visual Studio/Applications/x86_64/VC6/Temp/sa", joined.c_str());
 
 	// Test the empty cases
 	joined = bump::FileSystem::join("", "usr", "local", "", "sbin", "", "/exe", "/so/");
@@ -293,9 +337,9 @@ TEST_F(FileSystemTest, join8)
 	joined = bump::FileSystem::join("/", "opt/", "local", "/sbin", "app", "/bundle", "exe", "/so");
 	EXPECT_STREQ("/opt/local/sbin/app/bundle/exe/so", joined.c_str());
 
-	// Test a case where it can't remove all the slashes
+	// Test a case with duplicate slashes
 	joined = bump::FileSystem::join("/", "/opt/", "/local/", "/sbin/", "app/", "/bundle/", "/exe/", "/so");
-	EXPECT_STREQ("//opt//local//sbin/app//bundle//exe//so", joined.c_str());
+	EXPECT_STREQ("/opt/local/sbin/app/bundle/exe/so", joined.c_str());
 }
 
 TEST_F(FileSystemTest, join9)
@@ -305,6 +349,8 @@ TEST_F(FileSystemTest, join9)
 	EXPECT_STREQ("/home/username/Desktop/test/default/folder/sa/temp", joined.c_str());
 	joined = bump::FileSystem::join("/", "usr", "/local", "sbin", "app", "bundle", "exe", "sa", "temp");
 	EXPECT_STREQ("/usr/local/sbin/app/bundle/exe/sa/temp", joined.c_str());
+	joined = bump::FileSystem::join("C:/", "Program Files", "\\Visual Studio", "Applications", "/x86_64", "VC6", "Temp", "sa", "aa");
+	EXPECT_STREQ("C:/Program Files/Visual Studio/Applications/x86_64/VC6/Temp/sa/aa", joined.c_str());
 
 	// Test the empty cases
 	joined = bump::FileSystem::join("", "usr", "local", "", "sbin", "", "/exe", "/so/", "temp/");
@@ -320,9 +366,9 @@ TEST_F(FileSystemTest, join9)
 	joined = bump::FileSystem::join("/", "opt/", "local", "/sbin", "app", "/bundle", "exe", "/so", "/temp");
 	EXPECT_STREQ("/opt/local/sbin/app/bundle/exe/so/temp", joined.c_str());
 
-	// Test a case where it can't remove all the slashes
+	// Test a case with duplicate slashes
 	joined = bump::FileSystem::join("/", "/opt/", "/local/", "/sbin/", "app/", "/bundle/", "/exe/", "/so", "temp/");
-	EXPECT_STREQ("//opt//local//sbin/app//bundle//exe//so/temp/", joined.c_str());
+	EXPECT_STREQ("/opt/local/sbin/app/bundle/exe/so/temp/", joined.c_str());
 }
 
 TEST_F(FileSystemTest, testSetCurrentPath)
@@ -609,7 +655,7 @@ TEST_F(FileSystemTest, testCreateDirectoryPath)
 	EXPECT_TRUE(bump::FileSystem::isDirectory("unittest/Long/Example/Path"));
 
 	// Even wacky paths should work just fine
-	path = "unittest/this\t\n\\///is////not/////valid";
+	path = "unittest/this\\///is////not/////valid";
 	EXPECT_TRUE(bump::FileSystem::createFullDirectoryPath(path));
 }
 
@@ -953,65 +999,14 @@ TEST_F(FileSystemTest, testRenameFile)
 	EXPECT_TRUE(bump::FileSystem::renameFile(source, destination));
 }
 
-TEST_F(FileSystemTest, testCreateSymbolicLink)
+TEST_F(FileSystemTest, testCreateDirectorySymbolicLink)
 {
-	//=====================================================================================
-	//									   FILES
-	//=====================================================================================
-
-	// Create a valid relative path file symlink
-	EXPECT_TRUE(bump::FileSystem::createDirectory("unittest/files/new_symlinks"));
-	bump::String source = "unittest/files/output.txt";
-	bump::String relative_source = "../output.txt";
-	bump::String destination = "unittest/files/new_symlinks/output_copy.txt";
-	EXPECT_TRUE(bump::FileSystem::createSymbolicLink(relative_source, destination));
-	EXPECT_TRUE(bump::FileSystem::exists(destination));
-	EXPECT_TRUE(bump::FileSystem::isSymbolicLink(destination));
-	EXPECT_TRUE(bump::FileSystem::exists(source));
-	EXPECT_TRUE(bump::FileSystem::isFile(source));
-	EXPECT_TRUE(bump::FileSystem::exists(bump::FileInfo(destination).canonicalPath()));
-
-	// Test an incorrectly built relative path file symlink. It is really important
-	// to note that all the tests will pass except for the last one. We get the canonical
-	// path to the symlink's target to see if the symlink is actually valid.
-	source = "unittest/files/archive.tar.gz";
-	destination = "unittest/files/new_symlinks/archive_copy.tar.gz";
-	EXPECT_TRUE(bump::FileSystem::createSymbolicLink(source, destination));
-	EXPECT_TRUE(bump::FileSystem::exists(destination));
-	EXPECT_TRUE(bump::FileSystem::isSymbolicLink(destination));
-	EXPECT_TRUE(bump::FileSystem::exists(source));
-	EXPECT_TRUE(bump::FileSystem::isFile(source));
-	EXPECT_THROW(bump::FileInfo(destination).canonicalPath(), bump::FileSystemError);
-
-	// Try to create some symlink files with bad source paths (creation will succeed but
-	// the target path will be invalid)
-	source = "unittest/not valid/archive.tar.gz";
-	destination = "unittest/files/new_symlinks/my_new_archive.tar.gz";
-	EXPECT_TRUE(bump::FileSystem::createSymbolicLink(source, destination));
-	EXPECT_THROW(bump::FileInfo(destination).canonicalPath(), bump::FileSystemError);
-	source = "unittest/files/archive.tar.gz.whoops";
-	destination = "unittest/files/new_symlinks/archive.tar.gz.whoops";
-	EXPECT_TRUE(bump::FileSystem::createSymbolicLink(source, destination));
-	EXPECT_THROW(bump::FileInfo(destination).canonicalPath(), bump::FileSystemError);
-
-	// Try to create some symlink files with bad destination paths
-	source = "does/not/matter/here.txt";
-	destination = "unittest/files/do/not/exist/here_copy.txt";
-	EXPECT_FALSE(bump::FileSystem::createSymbolicLink(source, destination));
-	source = "unittest/files/output.txt";
-	destination = "some/random/directory/output_copy.txt";
-	EXPECT_FALSE(bump::FileSystem::createSymbolicLink(source, destination));
-
-	//=====================================================================================
-	//									 DIRECTORIES
-	//=====================================================================================
-
 	// Create a valid relative path directory symlink
 	EXPECT_TRUE(bump::FileSystem::createDirectory("unittest/files/testing"));
-	source = "unittest/files/testing";
-	relative_source = "../files/testing";
-	destination = "unittest/regular_directory/copied_testing";
-	EXPECT_TRUE(bump::FileSystem::createSymbolicLink(relative_source, destination));
+	bump::String source = "unittest/files/testing";
+	bump::String relative_source = "../files/testing";
+	bump::String destination = "unittest/regular_directory/copied_testing";
+	EXPECT_TRUE(bump::FileSystem::createDirectorySymbolicLink(relative_source, destination));
 	EXPECT_TRUE(bump::FileSystem::exists(destination));
 	EXPECT_TRUE(bump::FileSystem::isSymbolicLink(destination));
 	EXPECT_TRUE(bump::FileSystem::exists(source));
@@ -1023,7 +1018,7 @@ TEST_F(FileSystemTest, testCreateSymbolicLink)
 	// path to the symlink's target to see if the symlink is actually valid.
 	source = "unittest/files/testing";
 	destination = "unittest/regular_directory/copied_testing_again";
-	EXPECT_TRUE(bump::FileSystem::createSymbolicLink(source, destination));
+	EXPECT_TRUE(bump::FileSystem::createDirectorySymbolicLink(source, destination));
 	EXPECT_TRUE(bump::FileSystem::exists(destination));
 	EXPECT_TRUE(bump::FileSystem::isSymbolicLink(destination));
 	EXPECT_TRUE(bump::FileSystem::exists(source));
@@ -1034,20 +1029,67 @@ TEST_F(FileSystemTest, testCreateSymbolicLink)
 	// the target path will be invalid)
 	source = "unittest/not valid";
 	destination = "unittest/files/testing/why not";
-	EXPECT_TRUE(bump::FileSystem::createSymbolicLink(source, destination));
+	EXPECT_TRUE(bump::FileSystem::createDirectorySymbolicLink(source, destination));
 	EXPECT_THROW(bump::FileInfo(destination).canonicalPath(), bump::FileSystemError);
 	source = "unittest/still/not/valid";
 	destination = "unittest/files/testing/again";
-	EXPECT_TRUE(bump::FileSystem::createSymbolicLink(source, destination));
+	EXPECT_TRUE(bump::FileSystem::createDirectorySymbolicLink(source, destination));
 	EXPECT_THROW(bump::FileInfo(destination).canonicalPath(), bump::FileSystemError);
 
 	// Try to create some symlink directories with bad destination paths
 	source = "does/not/matter/at/all";
 	destination = "unittest/files/do/not/exist";
-	EXPECT_FALSE(bump::FileSystem::createSymbolicLink(source, destination));
+	EXPECT_FALSE(bump::FileSystem::createDirectorySymbolicLink(source, destination));
 	source = "unittest/files";
 	destination = "some/random/directory";
-	EXPECT_FALSE(bump::FileSystem::createSymbolicLink(source, destination));
+	EXPECT_FALSE(bump::FileSystem::createDirectorySymbolicLink(source, destination));
+}
+
+
+TEST_F(FileSystemTest, testCreateFileSymbolicLink)
+{
+	// Create a valid relative path file symlink
+	EXPECT_TRUE(bump::FileSystem::createDirectory("unittest/files/new_symlinks"));
+	bump::String source = "unittest/files/output.txt";
+	bump::String relative_source = "../output.txt";
+	bump::String destination = "unittest/files/new_symlinks/output_copy.txt";
+	EXPECT_TRUE(bump::FileSystem::createFileSymbolicLink(relative_source, destination));
+	EXPECT_TRUE(bump::FileSystem::exists(destination));
+	EXPECT_TRUE(bump::FileSystem::isSymbolicLink(destination));
+	EXPECT_TRUE(bump::FileSystem::exists(source));
+	EXPECT_TRUE(bump::FileSystem::isFile(source));
+	EXPECT_TRUE(bump::FileSystem::exists(bump::FileInfo(destination).canonicalPath()));
+
+	// Test an incorrectly built relative path file symlink. It is really important
+	// to note that all the tests will pass except for the last one. We get the canonical
+	// path to the symlink's target to see if the symlink is actually valid.
+	source = "unittest/files/archive.tar.gz";
+	destination = "unittest/files/new_symlinks/archive_copy.tar.gz";
+	EXPECT_TRUE(bump::FileSystem::createFileSymbolicLink(source, destination));
+	EXPECT_TRUE(bump::FileSystem::exists(destination));
+	EXPECT_TRUE(bump::FileSystem::isSymbolicLink(destination));
+	EXPECT_TRUE(bump::FileSystem::exists(source));
+	EXPECT_TRUE(bump::FileSystem::isFile(source));
+	EXPECT_THROW(bump::FileInfo(destination).canonicalPath(), bump::FileSystemError);
+
+	// Try to create some symlink files with bad source paths (creation will succeed but
+	// the target path will be invalid)
+	source = "unittest/not valid/archive.tar.gz";
+	destination = "unittest/files/new_symlinks/my_new_archive.tar.gz";
+	EXPECT_TRUE(bump::FileSystem::createFileSymbolicLink(source, destination));
+	EXPECT_THROW(bump::FileInfo(destination).canonicalPath(), bump::FileSystemError);
+	source = "unittest/files/archive.tar.gz.whoops";
+	destination = "unittest/files/new_symlinks/archive.tar.gz.whoops";
+	EXPECT_TRUE(bump::FileSystem::createFileSymbolicLink(source, destination));
+	EXPECT_THROW(bump::FileInfo(destination).canonicalPath(), bump::FileSystemError);
+
+	// Try to create some symlink files with bad destination paths
+	source = "does/not/matter/here.txt";
+	destination = "unittest/files/do/not/exist/here_copy.txt";
+	EXPECT_FALSE(bump::FileSystem::createFileSymbolicLink(source, destination));
+	source = "unittest/files/output.txt";
+	destination = "some/random/directory/output_copy.txt";
+	EXPECT_FALSE(bump::FileSystem::createFileSymbolicLink(source, destination));
 }
 
 TEST_F(FileSystemTest, testRemoveSymbolicLink)
@@ -1057,7 +1099,7 @@ TEST_F(FileSystemTest, testRemoveSymbolicLink)
 	bump::String source = "unittest/files/output.txt";
 	bump::String relative_source = "../output.txt";
 	bump::String destination = "unittest/files/new_symlinks/output_copy.txt";
-	EXPECT_TRUE(bump::FileSystem::createSymbolicLink(relative_source, destination));
+	EXPECT_TRUE(bump::FileSystem::createFileSymbolicLink(relative_source, destination));
 	EXPECT_TRUE(bump::FileSystem::exists(destination));
 	EXPECT_TRUE(bump::FileSystem::isSymbolicLink(destination));
 	EXPECT_TRUE(bump::FileSystem::exists(source));
@@ -1074,7 +1116,7 @@ TEST_F(FileSystemTest, testRemoveSymbolicLink)
 	source = "unittest/files/testing";
 	relative_source = "../files/testing";
 	destination = "unittest/regular_directory/copied_testing";
-	EXPECT_TRUE(bump::FileSystem::createSymbolicLink(relative_source, destination));
+	EXPECT_TRUE(bump::FileSystem::createDirectorySymbolicLink(relative_source, destination));
 	EXPECT_TRUE(bump::FileSystem::exists(destination));
 	EXPECT_TRUE(bump::FileSystem::isSymbolicLink(destination));
 	EXPECT_TRUE(bump::FileSystem::exists(source));
@@ -1268,341 +1310,6 @@ TEST_F(FileSystemTest, testRenameSymbolicLink)
 	source = "unittest/symlink_directory";
 	destination = "unittest/does/not/exist/symlink_directory_copy";
 	EXPECT_FALSE(bump::FileSystem::renameSymbolicLink(source, destination));
-}
-
-TEST_F(FileSystemTest, testSetPermissions)
-{
-	// Set permissions on a valid file
-	bump::FileSystem::Permissions permissions = (bump::FileSystem::OWNER_READ |
-												 bump::FileSystem::OWNER_WRITE |
-												 bump::FileSystem::OWNER_EXE |
-												 bump::FileSystem::GROUP_READ |
-												 bump::FileSystem::OTHERS_READ);
-	EXPECT_TRUE(bump::FileSystem::setPermissions("unittest/files/output.txt", permissions));
-	bump::FileSystem::Permissions actual_permissions = bump::FileSystem::permissions("unittest/files/output.txt");
-	EXPECT_TRUE(actual_permissions & bump::FileSystem::OWNER_READ);
-	EXPECT_TRUE(actual_permissions & bump::FileSystem::OWNER_WRITE);
-	EXPECT_TRUE(actual_permissions & bump::FileSystem::OWNER_EXE);
-	EXPECT_TRUE(actual_permissions & bump::FileSystem::GROUP_READ);
-	EXPECT_FALSE(actual_permissions & bump::FileSystem::GROUP_WRITE);
-	EXPECT_FALSE(actual_permissions & bump::FileSystem::GROUP_EXE);
-	EXPECT_TRUE(actual_permissions & bump::FileSystem::OTHERS_READ);
-	EXPECT_FALSE(actual_permissions & bump::FileSystem::OTHERS_WRITE);
-	EXPECT_FALSE(actual_permissions & bump::FileSystem::OTHERS_EXE);
-
-	// Set permissions on a valid directory
-	permissions = (bump::FileSystem::OWNER_READ | bump::FileSystem::OWNER_WRITE | bump::FileSystem::OWNER_EXE);
-	EXPECT_TRUE(bump::FileSystem::setPermissions("unittest/files", permissions));
-	actual_permissions = bump::FileSystem::permissions("unittest/files");
-	EXPECT_TRUE(actual_permissions & bump::FileSystem::OWNER_READ);
-	EXPECT_TRUE(actual_permissions & bump::FileSystem::OWNER_WRITE);
-	EXPECT_TRUE(actual_permissions & bump::FileSystem::OWNER_EXE);
-	EXPECT_FALSE(actual_permissions & bump::FileSystem::GROUP_READ);
-	EXPECT_FALSE(actual_permissions & bump::FileSystem::GROUP_WRITE);
-	EXPECT_FALSE(actual_permissions & bump::FileSystem::GROUP_EXE);
-	EXPECT_FALSE(actual_permissions & bump::FileSystem::OTHERS_READ);
-	EXPECT_FALSE(actual_permissions & bump::FileSystem::OTHERS_WRITE);
-	EXPECT_FALSE(actual_permissions & bump::FileSystem::OTHERS_EXE);
-
-	// Set permissions on an invalid file
-	EXPECT_FALSE(bump::FileSystem::setPermissions("unittest/files/not_valid.txt", permissions));
-
-	// Set permissions on an invalid directory
-	EXPECT_FALSE(bump::FileSystem::setPermissions("unittest/not valid", permissions));
-}
-
-TEST_F(FileSystemTest, testPermissions)
-{
-	// Get the permissions of a valid file
-	bump::FileSystem::Permissions permissions = bump::FileSystem::permissions("unittest/files/output.txt");
-	EXPECT_TRUE(permissions & bump::FileSystem::OWNER_READ);
-	EXPECT_TRUE(permissions & bump::FileSystem::OWNER_WRITE);
-	EXPECT_FALSE(permissions & bump::FileSystem::OWNER_EXE);
-	EXPECT_TRUE(permissions & bump::FileSystem::GROUP_READ);
-	EXPECT_FALSE(permissions & bump::FileSystem::GROUP_WRITE);
-	EXPECT_FALSE(permissions & bump::FileSystem::GROUP_EXE);
-	EXPECT_TRUE(permissions & bump::FileSystem::OTHERS_READ);
-	EXPECT_FALSE(permissions & bump::FileSystem::OTHERS_WRITE);
-	EXPECT_FALSE(permissions & bump::FileSystem::OTHERS_EXE);
-
-	// Get the permissions of a valid directory
-	permissions = bump::FileSystem::permissions("unittest/files");
-	EXPECT_TRUE(permissions & bump::FileSystem::OWNER_READ);
-	EXPECT_TRUE(permissions & bump::FileSystem::OWNER_WRITE);
-	EXPECT_TRUE(permissions & bump::FileSystem::OWNER_EXE);
-	EXPECT_TRUE(permissions & bump::FileSystem::GROUP_READ);
-	EXPECT_FALSE(permissions & bump::FileSystem::GROUP_WRITE);
-	EXPECT_TRUE(permissions & bump::FileSystem::GROUP_EXE);
-	EXPECT_TRUE(permissions & bump::FileSystem::OTHERS_READ);
-	EXPECT_FALSE(permissions & bump::FileSystem::OTHERS_WRITE);
-	EXPECT_TRUE(permissions & bump::FileSystem::OTHERS_EXE);
-
-	// Get the permissions on an invalid file
-	EXPECT_THROW(bump::FileSystem::permissions("unittest/files/not_valid.txt"), bump::FileSystemError);
-
-	// Set permissions on an invalid directory
-	EXPECT_THROW(bump::FileSystem::permissions("unittest/not valid"), bump::FileSystemError);
-}
-
-TEST_F(FileSystemTest, testSetIsReadableByOwner)
-{
-	// Set permissions on a valid file
-	bump::String path = "unittest/files/output.txt";
-	EXPECT_TRUE(bump::FileSystem::setIsReadableByOwner(path, false));
-	bump::FileSystem::Permissions permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::OWNER_READ);
-	EXPECT_TRUE(bump::FileSystem::setIsReadableByOwner(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::OWNER_READ);
-
-	// Set permissions on a valid directory
-	path = "unittest/files";
-	EXPECT_TRUE(bump::FileSystem::setIsReadableByOwner(path, false));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::OWNER_READ);
-	EXPECT_TRUE(bump::FileSystem::setIsReadableByOwner(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::OWNER_READ);
-
-	// Set permissions on an invalid file
-	path = "unittest/files/not_valid.txt";
-	EXPECT_FALSE(bump::FileSystem::setIsReadableByOwner(path, permissions));
-
-	// Set permissions on an invalid directory
-	path = "unittest/not valid";
-	EXPECT_FALSE(bump::FileSystem::setIsReadableByOwner(path, permissions));
-}
-
-TEST_F(FileSystemTest, testSetIsWritableByOwner)
-{
-	// Set permissions on a valid file
-	bump::String path = "unittest/files/output.txt";
-	EXPECT_TRUE(bump::FileSystem::setIsWritableByOwner(path, false));
-	bump::FileSystem::Permissions permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::OWNER_WRITE);
-	EXPECT_TRUE(bump::FileSystem::setIsWritableByOwner(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::OWNER_WRITE);
-
-	// Set permissions on a valid directory
-	path = "unittest/files";
-	EXPECT_TRUE(bump::FileSystem::setIsWritableByOwner(path, false));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::OWNER_WRITE);
-	EXPECT_TRUE(bump::FileSystem::setIsWritableByOwner(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::OWNER_WRITE);
-
-	// Set permissions on an invalid file
-	path = "unittest/files/not_valid.txt";
-	EXPECT_FALSE(bump::FileSystem::setIsWritableByOwner(path, permissions));
-
-	// Set permissions on an invalid directory
-	path = "unittest/not valid";
-	EXPECT_FALSE(bump::FileSystem::setIsWritableByOwner(path, permissions));
-}
-
-TEST_F(FileSystemTest, testSetIsExecutableByOwner)
-{
-	// Set permissions on a valid file
-	bump::String path = "unittest/files/output.txt";
-	EXPECT_TRUE(bump::FileSystem::setIsExecutableByOwner(path, false));
-	bump::FileSystem::Permissions permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::OWNER_EXE);
-	EXPECT_TRUE(bump::FileSystem::setIsExecutableByOwner(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::OWNER_EXE);
-
-	// Set permissions on a valid directory
-	path = "unittest/files";
-	EXPECT_TRUE(bump::FileSystem::setIsExecutableByOwner(path, false));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::OWNER_EXE);
-	EXPECT_TRUE(bump::FileSystem::setIsExecutableByOwner(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::OWNER_EXE);
-
-	// Set permissions on an invalid file
-	path = "unittest/files/not_valid.txt";
-	EXPECT_FALSE(bump::FileSystem::setIsExecutableByOwner(path, permissions));
-
-	// Set permissions on an invalid directory
-	path = "unittest/not valid";
-	EXPECT_FALSE(bump::FileSystem::setIsExecutableByOwner(path, permissions));
-}
-
-TEST_F(FileSystemTest, testSetIsReadableByGroup)
-{
-	// Set permissions on a valid file
-	bump::String path = "unittest/files/output.txt";
-	EXPECT_TRUE(bump::FileSystem::setIsReadableByGroup(path, false));
-	bump::FileSystem::Permissions permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::GROUP_READ);
-	EXPECT_TRUE(bump::FileSystem::setIsReadableByGroup(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::GROUP_READ);
-
-	// Set permissions on a valid directory
-	path = "unittest/files";
-	EXPECT_TRUE(bump::FileSystem::setIsReadableByGroup(path, false));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::GROUP_READ);
-	EXPECT_TRUE(bump::FileSystem::setIsReadableByGroup(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::GROUP_READ);
-
-	// Set permissions on an invalid file
-	path = "unittest/files/not_valid.txt";
-	EXPECT_FALSE(bump::FileSystem::setIsReadableByGroup(path, permissions));
-
-	// Set permissions on an invalid directory
-	path = "unittest/not valid";
-	EXPECT_FALSE(bump::FileSystem::setIsReadableByGroup(path, permissions));
-}
-
-TEST_F(FileSystemTest, testSetIsWritableByGroup)
-{
-	// Set permissions on a valid file
-	bump::String path = "unittest/files/output.txt";
-	EXPECT_TRUE(bump::FileSystem::setIsWritableByGroup(path, false));
-	bump::FileSystem::Permissions permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::GROUP_WRITE);
-	EXPECT_TRUE(bump::FileSystem::setIsWritableByGroup(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::GROUP_WRITE);
-
-	// Set permissions on a valid directory
-	path = "unittest/files";
-	EXPECT_TRUE(bump::FileSystem::setIsWritableByGroup(path, false));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::GROUP_WRITE);
-	EXPECT_TRUE(bump::FileSystem::setIsWritableByGroup(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::GROUP_WRITE);
-
-	// Set permissions on an invalid file
-	path = "unittest/files/not_valid.txt";
-	EXPECT_FALSE(bump::FileSystem::setIsWritableByGroup(path, permissions));
-
-	// Set permissions on an invalid directory
-	path = "unittest/not valid";
-	EXPECT_FALSE(bump::FileSystem::setIsWritableByGroup(path, permissions));
-}
-
-TEST_F(FileSystemTest, testSetIsExecutableByGroup)
-{
-	// Set permissions on a valid file
-	bump::String path = "unittest/files/output.txt";
-	EXPECT_TRUE(bump::FileSystem::setIsExecutableByGroup(path, false));
-	bump::FileSystem::Permissions permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::GROUP_EXE);
-	EXPECT_TRUE(bump::FileSystem::setIsExecutableByGroup(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::GROUP_EXE);
-
-	// Set permissions on a valid directory
-	path = "unittest/files";
-	EXPECT_TRUE(bump::FileSystem::setIsExecutableByGroup(path, false));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::GROUP_EXE);
-	EXPECT_TRUE(bump::FileSystem::setIsExecutableByGroup(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::GROUP_EXE);
-
-	// Set permissions on an invalid file
-	path = "unittest/files/not_valid.txt";
-	EXPECT_FALSE(bump::FileSystem::setIsExecutableByGroup(path, permissions));
-
-	// Set permissions on an invalid directory
-	path = "unittest/not valid";
-	EXPECT_FALSE(bump::FileSystem::setIsExecutableByGroup(path, permissions));
-}
-
-TEST_F(FileSystemTest, testSetIsReadableByOthers)
-{
-	// Set permissions on a valid file
-	bump::String path = "unittest/files/output.txt";
-	EXPECT_TRUE(bump::FileSystem::setIsReadableByOthers(path, false));
-	bump::FileSystem::Permissions permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::OTHERS_READ);
-	EXPECT_TRUE(bump::FileSystem::setIsReadableByOthers(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::OTHERS_READ);
-
-	// Set permissions on a valid directory
-	path = "unittest/files";
-	EXPECT_TRUE(bump::FileSystem::setIsReadableByOthers(path, false));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::OTHERS_READ);
-	EXPECT_TRUE(bump::FileSystem::setIsReadableByOthers(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::OTHERS_READ);
-
-	// Set permissions on an invalid file
-	path = "unittest/files/not_valid.txt";
-	EXPECT_FALSE(bump::FileSystem::setIsReadableByOthers(path, permissions));
-
-	// Set permissions on an invalid directory
-	path = "unittest/not valid";
-	EXPECT_FALSE(bump::FileSystem::setIsReadableByOthers(path, permissions));
-}
-
-TEST_F(FileSystemTest, testSetIsWritableByOthers)
-{
-	// Set permissions on a valid file
-	bump::String path = "unittest/files/output.txt";
-	EXPECT_TRUE(bump::FileSystem::setIsWritableByOthers(path, false));
-	bump::FileSystem::Permissions permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::OTHERS_WRITE);
-	EXPECT_TRUE(bump::FileSystem::setIsWritableByOthers(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::OTHERS_WRITE);
-
-	// Set permissions on a valid directory
-	path = "unittest/files";
-	EXPECT_TRUE(bump::FileSystem::setIsWritableByOthers(path, false));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::OTHERS_WRITE);
-	EXPECT_TRUE(bump::FileSystem::setIsWritableByOthers(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::OTHERS_WRITE);
-
-	// Set permissions on an invalid file
-	path = "unittest/files/not_valid.txt";
-	EXPECT_FALSE(bump::FileSystem::setIsWritableByOthers(path, permissions));
-
-	// Set permissions on an invalid directory
-	path = "unittest/not valid";
-	EXPECT_FALSE(bump::FileSystem::setIsWritableByOthers(path, permissions));
-}
-
-TEST_F(FileSystemTest, testSetIsExecutableByOthers)
-{
-	// Set permissions on a valid file
-	bump::String path = "unittest/files/output.txt";
-	EXPECT_TRUE(bump::FileSystem::setIsExecutableByOthers(path, false));
-	bump::FileSystem::Permissions permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::OTHERS_EXE);
-	EXPECT_TRUE(bump::FileSystem::setIsExecutableByOthers(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::OTHERS_EXE);
-
-	// Set permissions on a valid directory
-	path = "unittest/files";
-	EXPECT_TRUE(bump::FileSystem::setIsExecutableByOthers(path, false));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_FALSE(permissions & bump::FileSystem::OTHERS_EXE);
-	EXPECT_TRUE(bump::FileSystem::setIsExecutableByOthers(path, true));
-	permissions = bump::FileSystem::permissions(path);
-	EXPECT_TRUE(permissions & bump::FileSystem::OTHERS_EXE);
-
-	// Set permissions on an invalid file
-	path = "unittest/files/not_valid.txt";
-	EXPECT_FALSE(bump::FileSystem::setIsExecutableByOthers(path, permissions));
-
-	// Set permissions on an invalid directory
-	path = "unittest/not valid";
-	EXPECT_FALSE(bump::FileSystem::setIsExecutableByOthers(path, permissions));
 }
 
 TEST_F(FileSystemTest, testSetModifiedDate)

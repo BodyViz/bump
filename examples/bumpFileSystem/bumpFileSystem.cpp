@@ -114,7 +114,7 @@ void pathQueriesDemo()
 
 	// Make a file symlink and query it
 	bump::String symlink = "test_file_symlink.pdf";
-	bump::FileSystem::createSymbolicLink(filepath, symlink);
+	bump::FileSystem::createFileSymbolicLink(filepath, symlink);
 	exists = bump::FileSystem::exists(symlink);
 	is_directory = bump::FileSystem::isDirectory(symlink);
 	is_file = bump::FileSystem::isFile(symlink);
@@ -250,13 +250,13 @@ void symbolicLinksDemo()
 
 	// Create a file symbolic link
 	bump::FileSystem::createFile("output.txt");
-	bump::FileSystem::createSymbolicLink("output.txt", "output_symlink.txt");
+	bump::FileSystem::createFileSymbolicLink("output.txt", "output_symlink.txt");
 	std::cout << "- Created File: \"output.txt\"" << std::endl;
 	std::cout << "- Created File Symlink: \"output_symlink.txt\" -> \"output.txt\"" << std::endl;
 
 	// Create a directory symbolic link
 	bump::FileSystem::createDirectory("Files");
-	bump::FileSystem::createSymbolicLink("Files", "Files Symlink");
+	bump::FileSystem::createDirectorySymbolicLink("Files", "Files Symlink");
 	std::cout << "- Created Directory: \"Files\"" << std::endl;
 	std::cout << "- Created Directory Symlink: \"Files Symlink\" -> \"Files\"" << std::endl;
 
@@ -294,6 +294,11 @@ void symbolicLinksDemo()
  */
 void permissionsDemo()
 {
+	// Only run the permissions demo logic when not on Windows. None of the permissions methods are
+	// currently implemented on the Windows OS.
+
+#ifndef BOOST_WINDOWS
+
 	std::cout << "\n============================ PERMISSIONS DEMO ===========================\n" << std::endl;
 
 	//=========================================================================================
@@ -370,6 +375,8 @@ void permissionsDemo()
 	std::cout << "- Is readable by others: " << (file_info.isReadableByOthers() ? "YES" : "NO") << std::endl;
 	std::cout << "- Is writable by others: " << (file_info.isWritableByOthers() ? "YES" : "NO") << std::endl;
 	std::cout << "- Is executable by others: " << (file_info.isExecutableByOthers() ? "YES" : "NO") << std::endl;
+
+#endif
 }
 
 /**

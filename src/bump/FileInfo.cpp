@@ -7,11 +7,13 @@
 //
 
 // Boost headers
+#include <boost/config.hpp>
 #include <boost/filesystem.hpp>
 
 // Bump headers
 #include <bump/Environment.h>
 #include <bump/FileInfo.h>
+#include <bump/FileSystem.h>
 #include <bump/FileSystemError.h>
 
 // Unix headers
@@ -23,10 +25,9 @@
 
 using namespace bump;
 
-FileInfo::FileInfo(const String& path) :
-	_path(path)
+FileInfo::FileInfo(const String& path)
 {
-	;
+	_path = boost::filesystem::path(path.c_str()).make_preferred();
 }
 
 FileInfo::~FileInfo()
@@ -40,16 +41,16 @@ FileInfo::~FileInfo()
 
 bool FileInfo::exists() const
 {
-	// First use the exists function
+	// Use the exists function to check if it is a valid file or directory
 	bool exists = boost::filesystem::exists(_path);
 	if (exists)
 	{
 		return true;
 	}
 
-	// Sometimes the exists function doesn't work properly for symbolic links, so
-	// let's use the symlink check as well.
-	if (isSymbolicLink())
+	// Since it's not a valid file or directory, let's check if it's a symbolic link
+	exists = boost::filesystem::symbolic_link_exists(_path);
+	if (exists)
 	{
 		return true;
 	}
@@ -62,14 +63,21 @@ unsigned long long FileInfo::fileSize() const
 	// Throw a FileSystemError if the path is not valid
 	_validatePath();
 
+	// Expand the symlink path if necessary
+	boost::filesystem::path path = _path;
+	if (boost::filesystem::is_symlink(path))
+	{
+		path = boost::filesystem::canonical(boost::filesystem::system_complete(path));
+	}
+
 	// Throw a FileSystemError if the path is not a file
-	if (!isFile())
+	if (!boost::filesystem::is_regular_file(path))
 	{
 		String msg = String("The following path is not a file: %1").arg(_path.string());
 		throw FileSystemError(msg, BUMP_LOCATION);
 	}
 
-	return boost::filesystem::file_size(_path);
+	return boost::filesystem::file_size(path);
 }
 
 bool FileInfo::isAbsolute() const
@@ -106,9 +114,10 @@ bool FileInfo::isEmpty() const
 	// the proper permissions to read the file system object.
 	try
 	{
-		return boost::filesystem::is_empty(_path);
+		boost::filesystem::path temp = boost::filesystem::canonical(_path);
+		return boost::filesystem::is_empty(temp);
 	}
-	catch (const boost::filesystem::filesystem_error& e)
+	catch (const boost::filesystem::filesystem_error& /*e*/)
 	{
 		throw FileSystemError("Do not have permission to check if empty", BUMP_LOCATION);
 	}
@@ -132,23 +141,26 @@ bool FileInfo::isHidden() const
 
 String FileInfo::absolutePath() const
 {
-	return boost::filesystem::absolute(_path).string();
+	String path = boost::filesystem::absolute(_path).string();
+	return bump::FileSystem::convertToUnixPath(path);
 }
 
 String FileInfo::canonicalPath() const
 {
 	_validatePath();
-	return boost::filesystem::canonical(_path).string();
+	String path = boost::filesystem::canonical(_path).string();
+	return bump::FileSystem::convertToUnixPath(path);
 }
 
 String FileInfo::parentPath() const
 {
-	return _path.parent_path().string();
+	String path = _path.parent_path().string();
+	return bump::FileSystem::convertToUnixPath(path);
 }
 
 String FileInfo::path() const
 {
-	return _path.string();
+	return bump::FileSystem::convertToUnixPath(_path.string());
 }
 
 String FileInfo::basename() const
@@ -237,253 +249,6 @@ String FileInfo::filename() const
 }
 
 //====================================================================================
-//                           Permissions Query Methods
-//====================================================================================
-
-bool FileInfo::isReadableByUser() const
-{
-	// If on windows, simply return the owner permissions
-#ifdef _WIN32
-	return this->isReadableByOwner();
-#endif
-
-	// Since we're not on windows, we need to figure out if we're the owner of the file
-	String owner;
-	try
-	{
-		owner = this->owner();
-	}
-	catch (const bump::FileSystemError& e)
-	{
-		return false;
-	}
-
-	// Find the current user and compare against the owner
-	String current_user = Environment::currentUsername();
-	if (owner == current_user)
-	{
-		return this->isReadableByOwner();
-	}
-	else
-	{
-		return this->isReadableByOthers();
-	}
-}
-
-bool FileInfo::isWritableByUser() const
-{
-	// If on windows, simply return the owner permissions
-#ifdef _WIN32
-	return this->isWritableByOwner();
-#endif
-
-	// Since we're not on windows, we need to figure out if we're the owner of the file
-	String owner;
-	try
-	{
-		owner = this->owner();
-	}
-	catch (const bump::FileSystemError& e)
-	{
-		return false;
-	}
-
-	// Find the current user and compare against the owner
-	String current_user = Environment::currentUsername();
-	if (owner == current_user)
-	{
-		return this->isWritableByOwner();
-	}
-	else
-	{
-		return this->isWritableByOthers();
-	}
-}
-
-bool FileInfo::isExecutableByUser() const
-{
-	// If on windows, simply return the owner permissions
-#ifdef _WIN32
-	return this->isExecutableByOwner();
-#endif
-
-	// Since we're not on windows, we need to figure out if we're the owner of the file
-	String owner;
-	try
-	{
-		owner = this->owner();
-	}
-	catch (const bump::FileSystemError& e)
-	{
-		return false;
-	}
-
-	// Find the current user and compare against the owner
-	String current_user = Environment::currentUsername();
-	if (owner == current_user)
-	{
-		return this->isExecutableByOwner();
-	}
-	else
-	{
-		return this->isExecutableByOthers();
-	}
-}
-
-bool FileInfo::isReadableByOwner() const
-{
-	boost::filesystem::file_status status = boost::filesystem::status(_path);
-	boost::filesystem::perms permissions = status.permissions();
-	bool is_readable = permissions & boost::filesystem::owner_read;
-
-	return is_readable;
-}
-
-bool FileInfo::isWritableByOwner() const
-{
-	boost::filesystem::file_status status = boost::filesystem::status(_path);
-	boost::filesystem::perms permissions = status.permissions();
-	bool is_writable = permissions & boost::filesystem::owner_write;
-
-	return is_writable;
-}
-
-bool FileInfo::isExecutableByOwner() const
-{
-	boost::filesystem::file_status status = boost::filesystem::status(_path);
-	boost::filesystem::perms permissions = status.permissions();
-	bool is_executable = permissions & boost::filesystem::owner_exe;
-
-	return is_executable;
-}
-
-bool FileInfo::isReadableByGroup() const
-{
-	boost::filesystem::file_status status = boost::filesystem::status(_path);
-	boost::filesystem::perms permissions = status.permissions();
-	bool is_readable = permissions & boost::filesystem::group_read;
-
-	return is_readable;
-}
-
-bool FileInfo::isWritableByGroup() const
-{
-	boost::filesystem::file_status status = boost::filesystem::status(_path);
-	boost::filesystem::perms permissions = status.permissions();
-	bool is_writable = permissions & boost::filesystem::group_write;
-
-	return is_writable;
-}
-
-bool FileInfo::isExecutableByGroup() const
-{
-	boost::filesystem::file_status status = boost::filesystem::status(_path);
-	boost::filesystem::perms permissions = status.permissions();
-	bool is_executable = permissions & boost::filesystem::group_exe;
-
-	return is_executable;
-}
-
-bool FileInfo::isReadableByOthers() const
-{
-	boost::filesystem::file_status status = boost::filesystem::status(_path);
-	boost::filesystem::perms permissions = status.permissions();
-	bool is_readable = permissions & boost::filesystem::others_read;
-
-	return is_readable;
-}
-
-bool FileInfo::isWritableByOthers() const
-{
-	boost::filesystem::file_status status = boost::filesystem::status(_path);
-	boost::filesystem::perms permissions = status.permissions();
-	bool is_writable = permissions & boost::filesystem::others_write;
-
-	return is_writable;
-}
-
-bool FileInfo::isExecutableByOthers() const
-{
-	boost::filesystem::file_status status = boost::filesystem::status(_path);
-	boost::filesystem::perms permissions = status.permissions();
-	bool is_executable = permissions & boost::filesystem::others_exe;
-
-	return is_executable;
-}
-
-String FileInfo::owner() const
-{
-	// Send back an empty string if we're on windows
-#ifdef _WIN32
-	return String();
-#endif
-
-	// Make sure we have a valid path
-	_validatePath();
-
-	// Since we're on unix, use the native unix calls to dig out the username
-	String filepath = this->canonicalPath();
-	struct stat info;
-	stat(filepath.c_str(), &info);
-	struct passwd* password_uid = getpwuid(info.st_uid);
-	return password_uid->pw_name;
-}
-
-unsigned int FileInfo::ownerId() const
-{
-	// Send back -1 if we're on windows
-#ifdef _WIN32
-	return -1;
-#endif
-
-	// Make sure we have a valid path
-	_validatePath();
-
-	// Since we're on unix, use the native unix calls to dig out the user id
-	String filepath = this->canonicalPath();
-	struct stat info;
-	stat(filepath.c_str(), &info);
-	struct passwd* password_uid = getpwuid(info.st_uid);
-	return password_uid->pw_uid;
-}
-
-String FileInfo::group() const
-{
-	// Send back an empty string if we're on windows
-#ifdef _WIN32
-	return String();
-#endif
-
-	// Make sure we have a valid path
-	_validatePath();
-
-	// Since we're on unix, use the native unix calls to dig out the group name
-	String filepath = this->canonicalPath();
-	struct stat info;
-	stat(filepath.c_str(), &info);
-	struct group* group_uid = getgrgid(info.st_gid);
-	return group_uid->gr_name;
-}
-
-unsigned int FileInfo::groupId() const
-{
-	// Send back -1 if we're on windows
-#ifdef _WIN32
-	return -1;
-#endif
-
-	// Make sure we have a valid path
-	_validatePath();
-
-	// Since we're on unix, use the native unix calls to dig out the group id
-	String filepath = this->canonicalPath();
-	struct stat info;
-	stat(filepath.c_str(), &info);
-	struct group* group_uid = getgrgid(info.st_gid);
-	return group_uid->gr_gid;
-}
-
-//====================================================================================
 //                              Date Query Methods
 //====================================================================================
 
@@ -495,9 +260,13 @@ std::time_t FileInfo::modifiedDate() const
 
 void FileInfo::_validatePath() const
 {
-	if (!boost::filesystem::exists(_path))
+	try
+	{
+		boost::filesystem::canonical(_path);
+	}
+	catch (const boost::filesystem::filesystem_error& /*e*/)
 	{
 		String msg = String("The following path is invalid: %1").arg(_path.string());
-		throw FileSystemError(msg, BUMP_LOCATION);
+		throw FileSystemError(msg, BUMP_LOCATION);	
 	}
 }
