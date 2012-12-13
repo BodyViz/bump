@@ -152,7 +152,7 @@ IF (Bump_BUILD_EXAMPLES)
 ENDIF ()
 
 # Set whether to build the tests
-OPTION (Bump_BUILD_TESTS "Enable to build Bump Tests" ON)
+OPTION (Bump_BUILD_TESTS "Enable to build Bump Tests" OFF)
 IF (Bump_BUILD_TESTS)
    ADD_SUBDIRECTORY (tests)
 ENDIF ()
