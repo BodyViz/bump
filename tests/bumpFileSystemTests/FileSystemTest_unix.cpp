@@ -57,7 +57,12 @@ TEST_F(FileSystemTest, testSetPermissions)
 TEST_F(FileSystemTest, testPermissions)
 {
 	// Get the permissions of a valid file
-	bump::FileSystem::Permissions permissions = bump::FileSystem::permissions("unittest/files/output.txt");
+	bump::FileSystem::Permissions permissions = (bump::FileSystem::OWNER_READ |
+												 bump::FileSystem::OWNER_WRITE |
+												 bump::FileSystem::GROUP_READ |
+												 bump::FileSystem::OTHERS_READ);
+	EXPECT_TRUE(bump::FileSystem::setPermissions("unittest/files/output.txt", permissions));
+	permissions = bump::FileSystem::permissions("unittest/files/output.txt");
 	EXPECT_TRUE((permissions & bump::FileSystem::OWNER_READ) != 0);
 	EXPECT_TRUE((permissions & bump::FileSystem::OWNER_WRITE) != 0);
 	EXPECT_FALSE((permissions & bump::FileSystem::OWNER_EXE) != 0);
@@ -69,6 +74,12 @@ TEST_F(FileSystemTest, testPermissions)
 	EXPECT_FALSE((permissions & bump::FileSystem::OTHERS_EXE) != 0);
 
 	// Get the permissions of a valid directory
+	permissions = (bump::FileSystem::OWNER_ALL |
+                   bump::FileSystem::GROUP_READ |
+                   bump::FileSystem::GROUP_EXE |
+                   bump::FileSystem::OTHERS_READ |
+                   bump::FileSystem::OTHERS_EXE);
+	EXPECT_TRUE(bump::FileSystem::setPermissions("unittest/files", permissions));
 	permissions = bump::FileSystem::permissions("unittest/files");
 	EXPECT_TRUE((permissions & bump::FileSystem::OWNER_READ) != 0);
 	EXPECT_TRUE((permissions & bump::FileSystem::OWNER_WRITE) != 0);
