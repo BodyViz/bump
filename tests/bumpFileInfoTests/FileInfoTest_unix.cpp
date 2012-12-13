@@ -20,11 +20,11 @@ TEST_F(FileInfoTest, testFileSize)
 {
 	// Test valid files
 	EXPECT_EQ(0, bump::FileInfo("unittest/files/output.txt").fileSize());
-	EXPECT_EQ(129, bump::FileInfo("unittest/files/info.xml").fileSize());
+	EXPECT_EQ(121, bump::FileInfo("unittest/files/info.xml").fileSize());
 
 	// Test valid file symlinks
 	EXPECT_EQ(0, bump::FileInfo("unittest/symlink_files/output.txt").fileSize());
-	EXPECT_EQ(129, bump::FileInfo("unittest/symlink_files/info.xml").fileSize());
+	EXPECT_EQ(121, bump::FileInfo("unittest/symlink_files/info.xml").fileSize());
 
 	// Test valid directories
 	EXPECT_THROW(bump::FileInfo("unittest/files").fileSize(), bump::FileSystemError);
@@ -85,7 +85,9 @@ TEST_F(FileInfoTest, testIsEmpty)
 	// Test invalid paths
 	EXPECT_THROW(bump::FileInfo("unittest/not/valid/output.txt").isEmpty(), bump::FileSystemError);
 	EXPECT_THROW(bump::FileInfo("unittest/not/valid").isEmpty(), bump::FileSystemError);
-	EXPECT_THROW(bump::FileInfo("").isEmpty(), bump::FileSystemError);
+
+	// Test empty path (actually ends up being the current path)
+	EXPECT_FALSE(bump::FileInfo("").isEmpty());
 }
 
 TEST_F(FileInfoTest, testIsReadableByUser)
@@ -584,7 +586,6 @@ TEST_F(FileInfoTest, testOwner)
 	// Test some invalid paths
 	EXPECT_THROW(bump::FileInfo("unittest/not/valid/output.txt").owner(), bump::FileSystemError);
 	EXPECT_THROW(bump::FileInfo("unittest/not/valid").owner(), bump::FileSystemError);
-	EXPECT_THROW(bump::FileInfo("").owner(), bump::FileSystemError);
 }
 
 TEST_F(FileInfoTest, testOwnerId)
@@ -610,7 +611,6 @@ TEST_F(FileInfoTest, testOwnerId)
 	// Test some invalid paths
 	EXPECT_THROW(bump::FileInfo("unittest/not/valid/output.txt").ownerId(), bump::FileSystemError);
 	EXPECT_THROW(bump::FileInfo("unittest/not/valid").ownerId(), bump::FileSystemError);
-	EXPECT_THROW(bump::FileInfo("").ownerId(), bump::FileSystemError);
 }
 
 TEST_F(FileInfoTest, testGroup)
@@ -636,7 +636,6 @@ TEST_F(FileInfoTest, testGroup)
 	// Test some invalid paths
 	EXPECT_THROW(bump::FileInfo("unittest/not/valid/output.txt").group(), bump::FileSystemError);
 	EXPECT_THROW(bump::FileInfo("unittest/not/valid").group(), bump::FileSystemError);
-	EXPECT_THROW(bump::FileInfo("").group(), bump::FileSystemError);
 }
 
 TEST_F(FileInfoTest, testGroupId)
@@ -662,7 +661,6 @@ TEST_F(FileInfoTest, testGroupId)
 	// Test some invalid paths
 	EXPECT_THROW(bump::FileInfo("unittest/not/valid/output.txt").groupId(), bump::FileSystemError);
 	EXPECT_THROW(bump::FileInfo("unittest/not/valid").groupId(), bump::FileSystemError);
-	EXPECT_THROW(bump::FileInfo("").groupId(), bump::FileSystemError);
 }
 
 }	// End of bumpTest namespace
