@@ -2,8 +2,16 @@
 # Only compile if we found GTest and Boost
 IF (GTEST_FOUND AND Boost_FOUND)
 
-	# Set the prefixes to make it easier to find in our projects
-	SET (TARGET_DEFAULT_PREFIX "Test - ")
+	# Set the default prefix to make it easier to find in our projects
+	# NOTE: we remove the empty spaces for the default prefix when
+	# using makefiles to make sure the "make clean" works properly.
+	IF (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
+		SET (TARGET_DEFAULT_PREFIX "Test_")
+	ELSE (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
+		SET (TARGET_DEFAULT_PREFIX "Test - ")
+	ENDIF (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
+
+	# Set the default label prefix
 	SET (TARGET_DEFAULT_LABEL_PREFIX "Tests")
 
 	# Add the GTest and Boost headers

@@ -128,16 +128,17 @@ IF (BUILD_DOCUMENTATION)
     )
 	INSTALL (DIRECTORY ${PROJECT_BINARY_DIR}/doc/BumpReferenceDocs DESTINATION doc COMPONENT bump-doc)
 
-    # This creates a new target to build documentation.
-    # It runs ${DOXYGEN} which is the full path and executable to
-    # Doxygen on your system, set by the FindDoxygen.cmake module
-    # (called by FindDocumentation.cmake).
-    # It runs the final generated Doxyfile against it.
-    # The DOT_PATH is substituted into the Doxyfile.
-    ADD_CUSTOM_TARGET ("Documentation - bump" ${DOXYGEN}
-        ${PROJECT_BINARY_DIR}/doc/bump.doxyfile
-    )
-    SET_TARGET_PROPERTIES ("Documentation - bump" PROPERTIES FOLDER "Documentation")
+	# Now we are going to create the new target to build the documentation. We need
+	# to do this a bit differently when using makefiles so we remove the target
+	# name spaces. How this works is that ${DOXYGEN} is run against the bump.doxyfile
+	# and the docs are generated.
+	IF (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
+		ADD_CUSTOM_TARGET ("Documentation_bump" ${DOXYGEN} ${PROJECT_BINARY_DIR}/doc/bump.doxyfile)
+	    SET_TARGET_PROPERTIES ("Documentation_bump" PROPERTIES FOLDER "Documentation")
+	ELSE (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
+		ADD_CUSTOM_TARGET ("Documentation - bump" ${DOXYGEN} ${PROJECT_BINARY_DIR}/doc/bump.doxyfile)
+	    SET_TARGET_PROPERTIES ("Documentation - bump" PROPERTIES FOLDER "Documentation")
+	ENDIF (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
 
 	# Need to create the BumpReferenceDocs directory in our build/doc directory
 	FILE (MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/doc/BumpReferenceDocs)

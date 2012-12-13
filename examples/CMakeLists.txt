@@ -2,8 +2,16 @@
 # Only compile if we found Boost
 IF (Boost_FOUND)
 
-	# Set the prefixes to make it easier to find in our projects
-	SET (TARGET_DEFAULT_PREFIX "Example - ")
+	# Set the default prefix to make it easier to find in our projects
+	# NOTE: we remove the empty spaces for the default prefix when
+	# using makefiles to make sure the "make clean" works properly.
+	IF (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
+		SET (TARGET_DEFAULT_PREFIX "Example_")
+	ELSE (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
+		SET (TARGET_DEFAULT_PREFIX "Example - ")
+	ENDIF (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
+
+	# Set the default label prefix
 	SET (TARGET_DEFAULT_LABEL_PREFIX "Examples")
 
     # Add the Boost headers
