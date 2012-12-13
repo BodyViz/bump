@@ -74,16 +74,6 @@ TEST_F(StringTest, testUnsignedCharConstructor)
 	unsigned char my_char = 27;
 	bump::String my_str(my_char);
 	EXPECT_STREQ("27", my_str.c_str());
-
-	// Check out-of-range negative case
-	my_char = -100;
-	my_str = bump::String(my_char);
-	EXPECT_STRNE("-100", my_str.c_str());
-
-	// Check out-of-range positive case
-	my_char = (unsigned char)260;
-	my_str = bump::String(my_char);
-	EXPECT_STRNE("260", my_str.c_str());
 }
 
 TEST_F(StringTest, testCharConstructor)
@@ -97,16 +87,6 @@ TEST_F(StringTest, testCharConstructor)
 	my_char = -50;
 	my_str = bump::String(my_char);
 	EXPECT_STREQ("-50", my_str.c_str());
-
-	// Check out-of-range negative case
-	my_char = (char)-220;
-	my_str = bump::String(my_char);
-	EXPECT_STRNE("-220", my_str.c_str());
-
-	// Check out-of-range positive case
-	my_char = (char)220;
-	my_str = bump::String(my_char);
-	EXPECT_STRNE("220", my_str.c_str());
 }
 
 TEST_F(StringTest, testUnsignedShortConstructor)
@@ -115,16 +95,6 @@ TEST_F(StringTest, testUnsignedShortConstructor)
 	unsigned short my_short = 65232;
 	bump::String my_str(my_short);
 	EXPECT_STREQ("65232", my_str.c_str());
-
-	// Check out-of-range negative case
-	my_short = -220;
-	my_str = bump::String(my_short);
-	EXPECT_STRNE("-220", my_str.c_str());
-
-	// Check out-of-range positive case
-	my_short = (unsigned short)69000;
-	my_str = bump::String(my_short);
-	EXPECT_STRNE("220", my_str.c_str());
 }
 
 TEST_F(StringTest, testShortConstructor)
@@ -138,16 +108,6 @@ TEST_F(StringTest, testShortConstructor)
 	my_short = -29324;
 	my_str = bump::String(my_short);
 	EXPECT_STREQ("-29324", my_str.c_str());
-
-	// Check out-of-range negative case
-	my_short = (short)-39465;
-	my_str = bump::String(my_short);
-	EXPECT_STRNE("-39465", my_str.c_str());
-
-	// Check out-of-range positive case
-	my_short = (short)44258;
-	my_str = bump::String(my_short);
-	EXPECT_STRNE("44258", my_str.c_str());
 }
 
 TEST_F(StringTest, testUnsignedIntConstructor)
@@ -156,16 +116,6 @@ TEST_F(StringTest, testUnsignedIntConstructor)
 	unsigned int my_int = 205000;
 	bump::String my_str(my_int);
 	EXPECT_STREQ("205000", my_str.c_str());
-
-	// Check out-of-range negative case
-	my_int = -220;
-	my_str = bump::String(my_int);
-	EXPECT_STRNE("-220", my_str.c_str());
-
-	// Check out-of-range positive case
-	my_int = (unsigned int)5000000000;
-	my_str = bump::String(my_int);
-	EXPECT_STRNE("5000000000", my_str.c_str());
 }
 
 TEST_F(StringTest, testIntConstructor)
@@ -179,16 +129,6 @@ TEST_F(StringTest, testIntConstructor)
 	my_int = -214748364;
 	my_str = bump::String(my_int);
 	EXPECT_STREQ("-214748364", my_str.c_str());
-
-	// Check out-of-range negative case
-	my_int = -((int)3000000000);
-	my_str = bump::String(my_int);
-	EXPECT_STRNE("-3000000000", my_str.c_str());
-
-	// Check out-of-range positive case
-	my_int = 3000000000;
-	my_str = bump::String(my_int);
-	EXPECT_STRNE("3000000000", my_str.c_str());
 }
 
 TEST_F(StringTest, testUnsignedLongConstructor)
@@ -197,11 +137,6 @@ TEST_F(StringTest, testUnsignedLongConstructor)
 	unsigned long my_long = 205000;
 	bump::String my_str(my_long);
 	EXPECT_STREQ("205000", my_str.c_str());
-
-	// Check out-of-range negative case
-	my_long = -220;
-	my_str = bump::String(my_long);
-	EXPECT_STRNE("-220", my_str.c_str());
 }
 
 TEST_F(StringTest, testLongConstructor)
@@ -2310,9 +2245,9 @@ TEST_F(StringTest, testOperatorLTLTInt)
 {
 	// Normal append
 	bump::String str("example string ");
-	int num1 = -((int)2147483648);
+	int num1 = -2147483647;
 	str << num1;
-	EXPECT_STREQ("example string -2147483648", str.c_str());
+	EXPECT_STREQ("example string -2147483647", str.c_str());
 	str = "example string ";
 	num1 = 2147483647;
 	str << num1;
@@ -2362,9 +2297,9 @@ TEST_F(StringTest, testOperatorLTLTLong)
 {
 	// Normal append
 	bump::String str("example string ");
-	long num1 = -((int)2147483648);
+	long num1 = -2147483647;
 	str << num1;
-	EXPECT_STREQ("example string -2147483648", str.c_str());
+	EXPECT_STREQ("example string -2147483647", str.c_str());
 	str = "example string ";
 	num1 = 2147483647;
 	str << num1;
