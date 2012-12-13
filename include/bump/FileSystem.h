@@ -604,7 +604,7 @@ BUMP_EXPORT bool setIsWritableByOthers(const String& path, bool isWritable);
  * @todo Add support for Windows.
  *
  * @throw bump::NotImplementedError When running on Windows.
- * 
+ *
  * @param path The path of the file or directory to set the permissions on.
  * @param isExecutable Whether to set the path to be executable or not.
  * @return True if the permissions were changed successfully, false otherwise.

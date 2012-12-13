@@ -549,7 +549,7 @@ bool createDirectorySymbolicLink(const String& source, const String& destination
 		// Convert the source path to the preferred OS
 		boost::filesystem::path source_path(boost::filesystem::path(source.c_str()).make_preferred().string());
 		boost::filesystem::path destination_path(destination.c_str());
-		
+
 		// Create the directory symlink
 		boost::filesystem::create_directory_symlink(source_path, destination_path);
 

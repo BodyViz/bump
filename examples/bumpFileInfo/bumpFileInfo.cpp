@@ -45,7 +45,7 @@ void printInfo(const bump::FileInfo& fileInfo)
 	std::cout << "- Filename:                " << fileInfo.filename() << std::endl;
 
 #ifndef BOOST_WINDOWS
-	
+
 	// Permissions query methods (NOT implemented on Windows)
 	std::cout << "\nPermissions Queries" << std::endl;
 	std::cout << "- Is readable by user:     " << fileInfo.isReadableByUser() << std::endl;

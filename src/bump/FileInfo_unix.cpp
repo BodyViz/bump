@@ -225,7 +225,7 @@ String FileInfo::group() const
 }
 
 unsigned int FileInfo::groupId() const
-{	
+{
 	// Make sure we have a valid path
 	_validatePath();
 

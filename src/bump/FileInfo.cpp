@@ -267,6 +267,6 @@ void FileInfo::_validatePath() const
 	catch (const boost::filesystem::filesystem_error& /*e*/)
 	{
 		String msg = String("The following path is invalid: %1").arg(_path.string());
-		throw FileSystemError(msg, BUMP_LOCATION);	
+		throw FileSystemError(msg, BUMP_LOCATION);
 	}
 }

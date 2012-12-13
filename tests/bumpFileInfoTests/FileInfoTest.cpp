@@ -219,7 +219,7 @@ TEST_F(FileInfoTest, testIsRelative)
 	// Test some relative files
 	EXPECT_TRUE(bump::FileInfo("unittest/files/output.txt").isRelative());
 	EXPECT_TRUE(bump::FileInfo("unittest/files/archive.tar.gz").isRelative());
-	
+
 	// Test windows style relative paths
 	EXPECT_TRUE(bump::FileInfo("unittest\\files\\output.txt").isRelative());
 	EXPECT_TRUE(bump::FileInfo("unittest\\files\\archive.tar.gz").isRelative());
@@ -514,7 +514,7 @@ TEST_F(FileInfoTest, testCanonicalPath)
 	// Test invalid paths (passes since the path is never resolved)
 	EXPECT_THROW(bump::FileInfo("unittest/not/valid/output.txt").canonicalPath(), bump::FileSystemError);
 	EXPECT_THROW(bump::FileInfo("unittest/not/valid").canonicalPath(), bump::FileSystemError);
-	
+
 	// Test an empty path
 	EXPECT_STREQ(bump::FileSystem::currentPath().c_str(), bump::FileInfo("").canonicalPath().c_str());
 }
