@@ -115,17 +115,27 @@ FIND_PACKAGE (GTest)
 ADD_SUBDIRECTORY (src)
 
 # Set up everything for Doxygen
-INCLUDE (${CMAKE_ROOT}/Modules/Documentation.cmake OPTIONAL)
-OPTION (BUILD_DOCUMENTATION "Build Bump reference documentation using doxygen (use: make DoxygenDoc)" OFF)
-MARK_AS_ADVANCED (CLEAR BUILD_DOCUMENTATION)
+OPTION (Bump_BUILD_DOCUMENTATION "Build Bump reference documentation using Doxygen" OFF)
+MARK_AS_ADVANCED (CLEAR Bump_BUILD_DOCUMENTATION)
+IF (Bump_BUILD_DOCUMENTATION)
 
-# To build the documention, you will have to enable it and then do the equivalent of "make DoxygenDoc".
-IF (BUILD_DOCUMENTATION)
+	# Find all the packages
+	FIND_PACKAGE (UnixCommands)
+	FIND_PACKAGE (Doxygen)
+	FIND_PACKAGE (Gnuplot)
+	FIND_PACKAGE (HTMLHelp)
+	FIND_PACKAGE (Perl)
+	FIND_PACKAGE (Wget)
+
+	# Additional options
+	OPTION (DOCUMENTATION_HTML_HELP "Build the HTML Help file (CHM)." OFF)
+	OPTION (DOCUMENTATION_HTML_TARZ "Build a compressed tar archive of the HTML doc." OFF)
+
+	# Advanced options
+	MARK_AS_ADVANCED (DOCUMENTATION_HTML_HELP DOCUMENTATION_HTML_TARZ)
 
 	# This processes our doxyfile.cmake and substitutes paths to generate a final Doxyfile
-	CONFIGURE_FILE (${PROJECT_SOURCE_DIR}/doc/doxyfile.cmake
-		${PROJECT_BINARY_DIR}/doc/bump.doxyfile
-    )
+	CONFIGURE_FILE (${PROJECT_SOURCE_DIR}/doc/doxyfile.cmake ${PROJECT_BINARY_DIR}/doc/bump.doxyfile)
 	INSTALL (DIRECTORY ${PROJECT_BINARY_DIR}/doc/BumpReferenceDocs DESTINATION doc COMPONENT bump-doc)
 
 	# Now we are going to create the new target to build the documentation. We need
@@ -143,7 +153,7 @@ IF (BUILD_DOCUMENTATION)
 	# Need to create the BumpReferenceDocs directory in our build/doc directory
 	FILE (MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/doc/BumpReferenceDocs)
 
-ENDIF (BUILD_DOCUMENTATION)
+ENDIF (Bump_BUILD_DOCUMENTATION)
 
 # Set whether to build the examples
 OPTION (Bump_BUILD_EXAMPLES "Enable to build Bump Examples" ON)
