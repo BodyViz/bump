@@ -51,9 +51,9 @@ ENDIF()
 IF (WIN32 AND MSVC)
 
 	# This option is to enable the /MP switch for Visual Studio 2005 and above compilers
-	OPTION (WIN32_USE_MP "Set to ON to build BUMP with the /MP option (Visual Studio 2005 and above)." OFF)
-	MARK_AS_ADVANCED (WIN32_USE_MP)
-	IF (WIN32_USE_MP)
+	OPTION (Bump_WIN32_USE_MP "Set to ON to build BUMP with the /MP option (Visual Studio 2005 and above)." ON)
+	MARK_AS_ADVANCED (Bump_WIN32_USE_MP)
+	IF (Bump_WIN32_USE_MP)
 		SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 	ENDIF ()
 
@@ -107,8 +107,13 @@ FOREACH (CONF ${CMAKE_CONFIGURATION_TYPES})
 	ENDIF ()
 ENDFOREACH ()
 
-# Find all the dependency packages
+# Find Boost...using static, multithreaded libs with a shared runtime
+SET (Boost_USE_STATIC_LIBS    ON)
+SET (Boost_USE_MULTITHREAD    ON)
+SET (Boost_USE_STATIC_RUNTIME OFF)
 FIND_PACKAGE (Boost 1.52.0 COMPONENTS chrono date_time filesystem regex system thread timer REQUIRED)
+
+# Find GTest
 FIND_PACKAGE (GTest)
 
 # Add the src subdirectory
