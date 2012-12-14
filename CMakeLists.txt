@@ -107,8 +107,10 @@ FOREACH (CONF ${CMAKE_CONFIGURATION_TYPES})
 	ENDIF ()
 ENDFOREACH ()
 
-# Find Boost...using static, multithreaded libs with a shared runtime
-SET (Boost_USE_STATIC_LIBS    ON)
+# Find Boost...using static, multithreaded libs with a shared runtime on Windows
+IF (WIN32 AND MSVC)
+	SET (Boost_USE_STATIC_LIBS    ON)
+ENDIF (WIN32 AND MSVC)
 SET (Boost_USE_MULTITHREAD    ON)
 SET (Boost_USE_STATIC_RUNTIME OFF)
 FIND_PACKAGE (Boost 1.52.0 COMPONENTS chrono date_time filesystem regex system thread timer REQUIRED)
