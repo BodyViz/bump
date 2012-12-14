@@ -33,7 +33,7 @@ namespace bump {
  *	  - Five different log levels
  *	  - Output redirection to files (a custom std::ofstream)
  *	  - Thread-safe access to the stream buffer
- *    - Date time formatting
+ *    - Timestamp formatting
  *	  - Disabling the log altogether
  *
  * The following environment variables can be used to configure the log at runtime:
@@ -91,13 +91,13 @@ public:
 		DEBUG_LVL
 	};
 
-	/** The various date time formats. */
-	enum DateTimeFormat
+	/** The various timestamp formats. */
+	enum TimestampFormat
 	{
-		DATE_TIME_DEFAULT,
-		DATE_TIME_WITH_AM_PM,
-		TIME_DEFAULT,
-		TIME_WITH_AM_PM
+		DATE_TIME_TIMESTAMP,
+		DATE_TIME_WITH_AM_PM_TIMESTAMP,
+		TIME_TIMESTAMP,
+		TIME_WITHOUT_AM_PM_TIMESTAMP
 	};
 
 	/**
@@ -144,32 +144,32 @@ public:
 	LogLevel logLevel();
 
 	/**
-	 * Sets whether the date time formatting display is enabled.
+	 * Sets whether the timestamp display is enabled.
 	 *
-	 * @param enabled Whether the date time formatting display is enabled.
+	 * @param enabled Whether to display timestamps in the log messages.
 	 */
-	void setIsDateTimeFormattingEnabled(bool enabled);
+	void setIsTimestampingEnabled(bool enabled);
 
 	/**
-	 * Returns whether the date time formatting display is enabled.
+	 * Returns whether timestamps are displayed in the log messages.
 	 *
-	 * @return True if the date time formatting display is enabled, false otherwise.
+	 * @return True if timestamps are displayed in the log messages, false otherwise.
 	 */
-	bool isDateTimeFormattingEnabled();
+	bool isTimestampingEnabled();
 
 	/**
-	 * Sets the date time format.
+	 * Sets the timestamp format.
 	 *
-	 * @param format The date time format to set the Log instance to.
+	 * @param format The timestamp format to set the Log instance to.
 	 */
-	void setDateTimeFormat(const DateTimeFormat& format);
+	void setTimestampFormat(const TimestampFormat& format);
 
 	/**
-	 * Returns the date time format.
+	 * Returns the timestamp format.
 	 *
-	 * @return The date time format.
+	 * @return The timestamp format.
 	 */
-	DateTimeFormat dateTimeFormat();
+	TimestampFormat timestampFormat();
 
 	/**
 	 * Sets the output stream to a std::ofstream created from the provided filepath.
@@ -222,7 +222,7 @@ protected:
 	bool					_isEnabled;					/**< Whether the log is enabled for output. */
 	LogLevel				_logLevel;					/**< The log level the log instance is set to. */
 	bool					_isDateTimeFormatEnabled;	/**< Whether the date/time are tacked onto the log output. */
-	DateTimeFormat			_dateTimeFormat;			/**< The date/time format when enabled. */
+	TimestampFormat			_timestampFormat;			/**< The timestamp format when enabled. */
 	std::ostream*			_logStream;					/**< The log stream to output to. */
 	boost::mutex			_mutex;						/**< A boost mutex used to make the log streamm access thread-safe. */
 };

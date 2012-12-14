@@ -22,7 +22,7 @@ Log::Log() :
 	_isEnabled(true),
 	_logLevel(WARNING_LVL),
 	_isDateTimeFormatEnabled(false),
-	_dateTimeFormat(DATE_TIME_DEFAULT),
+	_timestampFormat(DATE_TIME_WITH_AM_PM_TIMESTAMP),
 	_logStream(&std::cout)
 {
 	// Attempt to disable the entire log system based on the "BUMP_LOG_ENABLED" environment variable
@@ -139,28 +139,28 @@ Log::LogLevel Log::logLevel()
 	return _logLevel;
 }
 
-void Log::setDateTimeFormat(const DateTimeFormat& format)
-{
-	boost::mutex::scoped_lock lock(_mutex);
-	_dateTimeFormat = format;
-}
-
-void Log::setIsDateTimeFormattingEnabled(bool enabled)
+void Log::setIsTimestampingEnabled(bool enabled)
 {
 	boost::mutex::scoped_lock lock(_mutex);
 	_isDateTimeFormatEnabled = enabled;
 }
 
-bool Log::isDateTimeFormattingEnabled()
+bool Log::isTimestampingEnabled()
 {
 	boost::mutex::scoped_lock lock(_mutex);
 	return _isDateTimeFormatEnabled;
 }
 
-Log::DateTimeFormat Log::dateTimeFormat()
+void Log::setTimestampFormat(const TimestampFormat& format)
 {
 	boost::mutex::scoped_lock lock(_mutex);
-	return _dateTimeFormat;
+	_timestampFormat = format;
+}
+
+Log::TimestampFormat Log::timestampFormat()
+{
+	boost::mutex::scoped_lock lock(_mutex);
+	return _timestampFormat;
 }
 
 bool Log::setLogFile(const String& filepath)
@@ -244,20 +244,20 @@ String Log::_convertTimeToString()
 		seconds.append("0");
 	}
 
-	// Now create a string representation of the time based on the date/time format
-	if (_dateTimeFormat == DATE_TIME_DEFAULT)
+	// Now create a string representation of the timestamp based on the timestamp format
+	if (_timestampFormat == DATE_TIME_TIMESTAMP)
 	{
-		return String("%1-%2-%3 %4:%5:%6:").arg(year, month, day, hours, minutes, seconds);
+		return String("%1-%2-%3 %4:%5:%6:").arg(month, day, year, hours, minutes, seconds);
 	}
-	else if (_dateTimeFormat == DATE_TIME_WITH_AM_PM)
+	else if (_timestampFormat == DATE_TIME_WITH_AM_PM_TIMESTAMP)
 	{
-		return String("%1-%2-%3 %4:%5:%6 %7:").arg(year, month, day, hours, minutes, seconds, am_pm);
+		return String("%1-%2-%3 %4:%5:%6 %7:").arg(month, day, year, hours, minutes, seconds, am_pm);
 	}
-	else if (_dateTimeFormat == TIME_DEFAULT)
+	else if (_timestampFormat == DATE_TIME_TIMESTAMP)
 	{
 		return String("%1:%2:%3:").arg(hours, minutes, seconds);
 	}
-	else // _dateTimeFormat == TIME_WITH_AM_PM
+	else // _timestampFormat == TIME_WITH_AM_PM_TIMESTAMP
 	{
 		return String("%1:%2:%3 %4:").arg(hours, minutes, seconds, am_pm);
 	}

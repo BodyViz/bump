@@ -29,7 +29,7 @@ void pushAllLogMessageTypes()
  *	  - Five different log levels
  *	  - Output redirection to files (a custom std::ofstream)
  *	  - Thread-safe access to the stream buffer
- *    - Date time formatting
+ *    - Timestamp formatting
  *	  - Disabling the log altogether
  *
  * The following environment variables can be used to configure the log at runtime:
@@ -130,32 +130,32 @@ int main(int argc, char **argv)
 	LOG_DEBUG_P(customDashPrefix) << "DEBUG Message" << std::endl;
 
 	//=======================================================================
-	//            Demonstrates how to use date time formatting
+	//            Demonstrates how to use timestamp formatting
 	//=======================================================================
 
-	// By default, the date time formatting is disabled. To enable it, just
-	// turn it on.
+	// By default, the timestamp formatting is disabled. To enable it, just turn it on.
 	LOG_ALWAYS() << std::endl;
-	LOG()->setIsDateTimeFormattingEnabled(true);
-	LOG_ALWAYS() << "Example message with \"DATE_TIME_DEFAULT\" date time formatting" << std::endl;
-	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"DATE_TIME_DEFAULT\" date time formatting\n" << std::endl;
+	LOG()->setIsTimestampingEnabled(true);
+	LOG()->setTimestampFormat(bump::Log::DATE_TIME_TIMESTAMP);
+	LOG_ALWAYS() << "Example message with \"DATE_TIME_TIMESTAMP\" timestamp formatting" << std::endl;
+	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"DATE_TIME_TIMESTAMP\" timestamp formatting\n" << std::endl;
 
-	// From here, you can customize the output format using the date time format enumeration
-	LOG()->setDateTimeFormat(bump::Log::DATE_TIME_WITH_AM_PM);
-	LOG_ALWAYS() << "Example message with \"DATE_TIME_WITH_AM_PM\" date time formatting" << std::endl;
-	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"DATE_TIME_WITH_AM_PM\" date time formatting\n" << std::endl;
+	// From here, you can customize the timestamp format as you wish
+	LOG()->setTimestampFormat(bump::Log::DATE_TIME_WITH_AM_PM_TIMESTAMP);
+	LOG_ALWAYS() << "Example message with \"DATE_TIME_WITH_AM_PM_TIMESTAMP\" timestamp formatting" << std::endl;
+	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"DATE_TIME_WITH_AM_PM_TIMESTAMP\" timestamp formatting\n" << std::endl;
 
-	LOG()->setDateTimeFormat(bump::Log::TIME_DEFAULT);
-	LOG_ALWAYS() << "Example message with \"TIME_DEFAULT\" date time formatting" << std::endl;
-	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"TIME_DEFAULT\" date time formatting\n" << std::endl;
+	LOG()->setTimestampFormat(bump::Log::TIME_TIMESTAMP);
+	LOG_ALWAYS() << "Example message with \"TIME_TIMESTAMP\" timestamp formatting" << std::endl;
+	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"TIME_TIMESTAMP\" timestamp formatting\n" << std::endl;
 
-	LOG()->setDateTimeFormat(bump::Log::TIME_WITH_AM_PM);
-	LOG_ALWAYS() << "Example message with \"TIME_WITH_AM_PM\" date time formatting" << std::endl;
-	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"TIME_WITH_AM_PM\" date time formatting\n" << std::endl;
+	LOG()->setTimestampFormat(bump::Log::TIME_WITHOUT_AM_PM_TIMESTAMP);
+	LOG_ALWAYS() << "Example message with \"TIME_WITHOUT_AM_PM_TIMESTAMP\" timestamp formatting" << std::endl;
+	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"TIME_WITHOUT_AM_PM_TIMESTAMP\" timestamp formatting\n" << std::endl;
 
 	// Then to turn it back off, simply disable it.
-	LOG()->setIsDateTimeFormattingEnabled(false);
-	LOG_ALWAYS() << "The date time formatting should now be disabled and not visible" << std::endl;
+	LOG()->setIsTimestampingEnabled(false);
+	LOG_ALWAYS() << "The timestamps should now be disabled and not visible" << std::endl;
 
     return 0;
 }
