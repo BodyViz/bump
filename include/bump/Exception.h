@@ -16,21 +16,24 @@
 #include <bump/Export.h>
 #include <bump/String.h>
 
-/**
- *=============================================================================================================
- *
- *                                   Bump Exception Hierarchy
- *
- *	Exception - PROTECTED (base class exception supporting both logic and runtime errors)
- *	- LogicError - PROTECTED (when error condition could be detected prior to running the application)
- *		- InvalidArgumentError - PUBLIC (when parameter passed into a function is invalid)
- *	- RuntimeError - PROTECTED (when error condition can only be caught at runtime)
- *		- OutOfRangeError - PUBLIC (when container encounters an out-of-range error)
- *		- TypeCastError - PUBLIC (when runtime cannot type cast an object as requested)
- *
- *=============================================================================================================
- */
+//=============================================================================================================
+//
+//                                   Bump Exception Hierarchy
+//
+//	Exception - PROTECTED (base class exception supporting both logic and runtime errors)
+//	- LogicError - PROTECTED (when error condition could be detected prior to running the application)
+//		- InvalidArgumentError - PUBLIC (when parameter passed into a function is invalid)
+//	- RuntimeError - PROTECTED (when error condition can only be caught at runtime)
+//		- OutOfRangeError - PUBLIC (when container encounters an out-of-range error)
+//		- TypeCastError - PUBLIC (when runtime cannot type cast an object as requested)
+//
+//=============================================================================================================
 
+/**
+ * The BUMP_LOCATION is used in exceptions to place the function name, filename and line number directly
+ * into the description for the exception. This makes everything much easier to debug when exceptions are
+ * actually thrown.
+ */
 #define BUMP_LOCATION bump::String("Function: ") + BOOST_CURRENT_FUNCTION + " File: " + __FILE__ + " Line: " + bump::String(__LINE__)
 
 namespace bump {
