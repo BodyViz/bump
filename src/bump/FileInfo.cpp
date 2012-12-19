@@ -16,13 +16,6 @@
 #include <bump/FileSystem.h>
 #include <bump/FileSystemError.h>
 
-// Unix headers
-#ifndef _WIN32
-#include <pwd.h>
-#include <grp.h>
-#include <sys/stat.h>
-#endif
-
 using namespace bump;
 
 FileInfo::FileInfo(const String& path)
