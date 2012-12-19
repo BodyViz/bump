@@ -11,41 +11,42 @@
 
 namespace bump {
 
-String bumpGetVersion()
+bump::String version()
 {
-	static bool shouldInitialize = true;
-	static bump::String bumpVersion;
-	if (shouldInitialize)
+	bump::String version;
+	if (BUMP_SO_VERSION == 0)
 	{
-		if (BUMP_SOVERSION == 0)
-		{
-			bumpVersion << BUMP_MAJOR_VERSION << "." << BUMP_MINOR_VERSION << "." << BUMP_PATCH_VERSION;
-		}
-		else
-		{
-			bumpVersion << BUMP_MAJOR_VERSION << "." << BUMP_MINOR_VERSION << "." << BUMP_PATCH_VERSION << "-" << BUMP_SOVERSION;
-		}
-
-		shouldInitialize = false;
+		version << BUMP_MAJOR_VERSION << "." << BUMP_MINOR_VERSION << "." << BUMP_PATCH_VERSION;
+	}
+	else
+	{
+		version << BUMP_MAJOR_VERSION << "." << BUMP_MINOR_VERSION << "." << BUMP_PATCH_VERSION << "-" << BUMP_SO_VERSION;
 	}
 
-	return bumpVersion;
+	return version;
 }
 
-String bumpGetSOVersion()
+bump::String majorVersion()
 {
-	static bool shouldInitialize = true;
-	static bump::String bumpSOVersion;
-	if (shouldInitialize)
-	{
-		bumpSOVersion << BUMP_SOVERSION;
-		shouldInitialize = false;
-	}
-
-	return bumpSOVersion;
+	return BUMP_MAJOR_VERSION;
 }
 
-String bumpGetLibraryName()
+bump::String minorVersion()
+{
+	return BUMP_MINOR_VERSION;
+}
+
+bump::String patchVersion()
+{
+	return BUMP_PATCH_VERSION;
+}
+
+bump::String soVersion()
+{
+	return BUMP_SO_VERSION;
+}
+
+bump::String libraryName()
 {
 	return "Bump Library";
 }

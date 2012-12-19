@@ -16,7 +16,7 @@
 #define BUMP_MAJOR_VERSION	  @BUMP_MAJOR_VERSION@
 #define BUMP_MINOR_VERSION	  @BUMP_MINOR_VERSION@
 #define BUMP_PATCH_VERSION	  @BUMP_PATCH_VERSION@
-#define BUMP_SOVERSION		  @BUMP_SOVERSION@
+#define BUMP_SO_VERSION		  @BUMP_SO_VERSION@
 
 namespace bump {
 
@@ -24,25 +24,46 @@ namespace bump {
  * Returns the library version number.
  *
  * The number convention is as follows:
- *    - Bump-1.0.2 will return 1.0.2 from bumpGetVersion.
+ *    - Bump-1.0.2 will return "1.0.2".
  *
  * @return The version of the bump library as a string.
  */
-BUMP_EXPORT String bumpGetVersion();
+BUMP_EXPORT String version();
 
 /**
- * Returns the bump shared object version number.
+ * Returns the library's major version number.
  *
- * @return The bump shared object version number as a string.
+ * @return The major version of the bump library as a string.
  */
-BUMP_EXPORT String bumpGetSOVersion();
+BUMP_EXPORT String majorVersion();
+
+/**
+ * Returns the library's minor version number.
+ *
+ * @return The minor version of the bump library as a string.
+ */
+BUMP_EXPORT String minorVersion();
+
+/**
+ * Returns the library's patch version number.
+ *
+ * @return The patch version of the bump library as a string.
+ */
+BUMP_EXPORT String patchVersion();
+
+/**
+ * Returns the library's so version number.
+ *
+ * @return The so version of the bump library as a string.
+ */
+BUMP_EXPORT String soVersion();
 
 /**
  * Returns the library name in human-friendly form.
  *
  * @return The library name in human-friendly form.
  */
-BUMP_EXPORT String bumpGetLibraryName();
+BUMP_EXPORT String libraryName();
 
 }	// End of bump namespace
 
