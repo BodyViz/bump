@@ -16,7 +16,7 @@
 #include <bump/Environment.h>
 #include <bump/Log.h>
 
-using namespace bump;
+namespace bump {
 
 Log::Log() :
 	_isEnabled(true),
@@ -262,3 +262,5 @@ String Log::convertTimeToString()
 		return String("%1:%2:%3 %4:").arg(hours, minutes, seconds, am_pm);
 	}
 }
+
+}	// End of bump namespace

@@ -23,7 +23,7 @@
 #include <bump/String.h>
 #include <bump/StringSearchError.h>
 
-using namespace bump;
+namespace bump {
 
 String::String() : std::string()
 {
@@ -1159,3 +1159,5 @@ String& String::operator << (bool appendBool)
 	*this += String(appendBool);
 	return *this;
 }
+
+}	// End of bump namespace

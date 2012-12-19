@@ -20,7 +20,7 @@
 #include <grp.h>
 #include <sys/stat.h>
 
-using namespace bump;
+namespace bump {
 
 //====================================================================================
 //                           Permissions Query Methods
@@ -237,3 +237,5 @@ unsigned int FileInfo::groupId() const
 
 	return group_uid->gr_gid;
 }
+
+}	// End of bump namespace

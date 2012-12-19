@@ -10,7 +10,7 @@
 #include <bump/String.h>
 #include <bump/Timer.h>
 
-using namespace bump;
+namespace bump {
 
 Timer::Timer() :
 	_timer()
@@ -66,3 +66,5 @@ double Timer::nanosecondsElapsed() const
 	String elapsed_time = boost::timer::format(_timer.elapsed(), boost::timer::default_places, "%w");
 	return elapsed_time.toDouble() * 1e9;
 }
+
+}	// End of bump namespace

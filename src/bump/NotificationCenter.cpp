@@ -12,7 +12,7 @@
 // Bump headers
 #include <bump/NotificationCenter.h>
 
-using namespace bump;
+namespace bump {
 
 NotificationCenter::NotificationCenter()
 {
@@ -116,3 +116,5 @@ void NotificationCenter::removeObserver(void* observer)
 	}
 	_objectObservers = object_observers_to_keep;
 }
+
+}	// End of bump namespace

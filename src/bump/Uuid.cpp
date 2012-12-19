@@ -17,7 +17,7 @@
 #include <bump/String.h>
 #include <bump/Uuid.h>
 
-using namespace bump;
+namespace bump {
 
 Uuid::Uuid() : boost::uuids::uuid(boost::uuids::nil_uuid())
 {
@@ -68,3 +68,5 @@ String Uuid::toString() const
 {
 	return boost::uuids::to_string(*this);
 }
+
+}	// End of bump namespace

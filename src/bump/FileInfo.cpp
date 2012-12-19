@@ -16,7 +16,7 @@
 #include <bump/FileSystem.h>
 #include <bump/FileSystemError.h>
 
-using namespace bump;
+namespace bump {
 
 FileInfo::FileInfo(const String& path)
 {
@@ -263,3 +263,5 @@ void FileInfo::validatePath() const
 		throw FileSystemError(msg, BUMP_LOCATION);
 	}
 }
+
+}	// End of bump namespace

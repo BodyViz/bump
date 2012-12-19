@@ -9,7 +9,7 @@
 // Bump headers
 #include <bump/Timeline.h>
 
-using namespace bump;
+namespace bump {
 
 Timeline::Timeline() :
 	_state(NOT_RUNNING),
@@ -245,3 +245,5 @@ void Timeline::generateStep()
 		}
 	}
 }
+
+}	// End of bump namespace

@@ -9,7 +9,7 @@
 // Bump headers
 #include <bump/AutoTimer.h>
 
-using namespace bump;
+namespace bump {
 
 AutoTimer::AutoTimer(const OutputType& outputType) :
 	_outputType(outputType)
@@ -36,3 +36,5 @@ AutoTimer::~AutoTimer()
 		std::cout << "Elapsed Time: " << _timer.nanosecondsElapsed() << " nsecs" << std::endl;
 	}
 }
+
+}	// End of bump namespace
