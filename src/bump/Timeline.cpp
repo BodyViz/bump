@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
+// Bump headers
 #include <bump/Timeline.h>
 
 using namespace bump;
