@@ -54,7 +54,7 @@ bool FileInfo::exists() const
 unsigned long long FileInfo::fileSize() const
 {
 	// Throw a FileSystemError if the path is not valid
-	_validatePath();
+	validatePath();
 
 	// Expand the symlink path if necessary
 	boost::filesystem::path path = _path;
@@ -101,7 +101,7 @@ bool FileInfo::isSymbolicLink() const
 bool FileInfo::isEmpty() const
 {
 	// Make sure the path is valid
-	_validatePath();
+	validatePath();
 
 	// Try to check if the path is empty. This can fail in the event that we don't have
 	// the proper permissions to read the file system object.
@@ -140,7 +140,7 @@ String FileInfo::absolutePath() const
 
 String FileInfo::canonicalPath() const
 {
-	_validatePath();
+	validatePath();
 	String path = boost::filesystem::canonical(_path).string();
 	return bump::FileSystem::convertToUnixPath(path);
 }
@@ -247,11 +247,11 @@ String FileInfo::filename() const
 
 std::time_t FileInfo::modifiedDate() const
 {
-	_validatePath();
+	validatePath();
 	return boost::filesystem::last_write_time(_path);
 }
 
-void FileInfo::_validatePath() const
+void FileInfo::validatePath() const
 {
 	try
 	{

@@ -447,7 +447,7 @@ protected:
 	 *
 	 * @throw bump::FileSystemError When the path does not exist.
 	 */
-	void _validatePath() const;
+	void validatePath() const;
 
 	// Instance member variables
 	boost::filesystem::path		_path; /**< The boost "path" used to support the FileInfo API. */

@@ -216,7 +216,7 @@ protected:
 	 *
 	 * @return The current time as a formatted string.
 	 */
-	String	_convertTimeToString();
+	String	convertTimeToString();
 
 	// Instance member variables
 	bool					_isEnabled;					/**< Whether the log is enabled for output. */

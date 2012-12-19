@@ -198,7 +198,7 @@ std::ostream& Log::logStream(const String& prefix)
 	// Append the date time if necessary
 	if (_isDateTimeFormatEnabled)
 	{
-		ostream << _convertTimeToString() << " ";
+		ostream << convertTimeToString() << " ";
 	}
 
 	// Append the prefix if necessary
@@ -210,7 +210,7 @@ std::ostream& Log::logStream(const String& prefix)
 	return *_logStream;
 }
 
-String Log::_convertTimeToString()
+String Log::convertTimeToString()
 {
 	// Get the time using boost
 	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();

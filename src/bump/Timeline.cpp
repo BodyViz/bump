@@ -58,7 +58,7 @@ void Timeline::start()
 		_state = RUNNING;
 
 		// Calculate the interpolation coefficients
-		_calculateAcceleration();
+		calculateAcceleration();
 		_halfDuration = _duration / 2.0;
 
 		// Reset the step value and step increment
@@ -125,10 +125,10 @@ void Timeline::update()
 		_state = FINISHED;
 
 	// Generate the new step value
-	_generateStep();
+	generateStep();
 }
 
-void Timeline::_calculateAcceleration()
+void Timeline::calculateAcceleration()
 {
 	if (_curveShape == EASE_IN_AND_OUT_CURVE)
 	{
@@ -140,7 +140,7 @@ void Timeline::_calculateAcceleration()
 	}
 }
 
-void Timeline::_generateStep()
+void Timeline::generateStep()
 {
 	// Return the EXACT value if this is the last iteration
 	if (_state == FINISHED && _direction == FORWARDS)

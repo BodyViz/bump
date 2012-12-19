@@ -199,12 +199,12 @@ protected:
 	/**
 	 * Calculates the acceleration for the step.
 	 */
-	void _calculateAcceleration();
+	void calculateAcceleration();
 
 	/**
 	 * Updates the timeline step value.
 	 */
-	void _generateStep();
+	void generateStep();
 
 	// Instance member variables
 	State			_state;				/**< Timeline run-time status. */

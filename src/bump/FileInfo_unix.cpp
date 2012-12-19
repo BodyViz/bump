@@ -185,7 +185,7 @@ bool FileInfo::isExecutableByOthers() const
 String FileInfo::owner() const
 {
 	// Make sure we have a valid path
-	_validatePath();
+	validatePath();
 
 	// Since we're on unix, use the native unix calls to dig out the username
 	String filepath = this->canonicalPath();
@@ -199,7 +199,7 @@ String FileInfo::owner() const
 unsigned int FileInfo::ownerId() const
 {
 	// Make sure we have a valid path
-	_validatePath();
+	validatePath();
 
 	// Since we're on unix, use the native unix calls to dig out the user id
 	String filepath = this->canonicalPath();
@@ -213,7 +213,7 @@ unsigned int FileInfo::ownerId() const
 String FileInfo::group() const
 {
 	// Make sure we have a valid path
-	_validatePath();
+	validatePath();
 
 	// Since we're on unix, use the native unix calls to dig out the group name
 	String filepath = this->canonicalPath();
@@ -227,7 +227,7 @@ String FileInfo::group() const
 unsigned int FileInfo::groupId() const
 {
 	// Make sure we have a valid path
-	_validatePath();
+	validatePath();
 
 	// Since we're on unix, use the native unix calls to dig out the group id
 	String filepath = this->canonicalPath();
