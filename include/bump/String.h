@@ -398,7 +398,7 @@ public:
 	 * @param position The position of the character to return of this string.
 	 * @return The character at the given position.
 	 */
-	const char at(int position) const;
+	const char& at(int position) const;
 
 	/**
 	 * Converts the string to a c string.

@@ -345,7 +345,7 @@ String String::arg(const String& a1, const String& a2, const String& a3, const S
 	return replaced;
 }
 
-const char String::at(int position) const
+const char& String::at(int position) const
 {
 	try
 	{
