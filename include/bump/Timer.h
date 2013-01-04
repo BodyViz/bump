@@ -92,7 +92,7 @@ public:
 protected:
 
 	// Instance member variables
-	boost::timer::cpu_timer _timer;		/**< The boost cpu timer used to compute the elapsed times. */
+	boost::timer::cpu_timer _timer;		/**< @internal The boost cpu timer used to compute the elapsed times. */
 };
 
 /**

@@ -43,6 +43,8 @@ public:
 
 	/**
 	 * Copy constructor creates a new uuid from a boost uuid.
+	 *
+	 * @param uuid The boost uuid to create a copy of.
 	 */
 	Uuid(const boost::uuids::uuid& uuid);
 

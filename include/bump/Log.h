@@ -199,6 +199,7 @@ public:
 protected:
 
 	/**
+	 * @internal
 	 * Constructor.
 	 *
 	 * Initializes the log level by attempting to grab the BUMP_LOG_LEVEL environment
@@ -207,11 +208,13 @@ protected:
 	Log();
 
 	/**
+	 * @internal
 	 * Destructor.
 	 */
 	~Log();
 
 	/**
+	 * @internal
 	 * Returns the current time as a formatted string.
 	 *
 	 * @return The current time as a formatted string.
@@ -219,12 +222,12 @@ protected:
 	String convertTimeToString();
 
 	// Instance member variables
-	bool					_isEnabled;					/**< Whether the log is enabled for output. */
-	LogLevel				_logLevel;					/**< The log level the log instance is set to. */
-	bool					_isDateTimeFormatEnabled;	/**< Whether the date/time are tacked onto the log output. */
-	TimestampFormat			_timestampFormat;			/**< The timestamp format when enabled. */
-	std::ostream*			_logStream;					/**< The log stream to output to. */
-	boost::mutex			_mutex;						/**< A boost mutex used to make the log streamm access thread-safe. */
+	bool					_isEnabled;					/**< @internal Whether the log is enabled for output. */
+	LogLevel				_logLevel;					/**< @internal The log level the log instance is set to. */
+	bool					_isDateTimeFormatEnabled;	/**< @internal Whether the date/time are tacked onto the log output. */
+	TimestampFormat			_timestampFormat;			/**< @internal The timestamp format when enabled. */
+	std::ostream*			_logStream;					/**< @internal The log stream to output to. */
+	boost::mutex			_mutex;						/**< @internal A boost mutex used to make the log streamm access thread-safe. */
 };
 
 /**

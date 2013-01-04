@@ -74,7 +74,7 @@ public:
 	/**
 	 * Returns whether the given observer is the same as the internal observer.
 	 *
-	 * param observer An observer pointer to match against the internal observer pointer.
+	 * @param observer An observer pointer to match against the internal observer pointer.
 	 * @return True if the internal observer matches the given observer, false otherwise.
 	 */
 	bool containsObserver(void* observer)
@@ -85,14 +85,15 @@ public:
 protected:
 
 	/**
+	 * @internal
 	 * Constructor.
 	 */
 	Observer() {}
 
 	// Instance member variables
-	void*						_observer;			/**< The observer instance used to send notifications. */
-	bump::String				_notificationName;	/**< The notification name the observer is observing. */
-	ObserverType				_observerType;		/**< The type of observer the observer is. */
+	void*						_observer;			/**< @internal The observer instance used to send notifications. */
+	bump::String				_notificationName;	/**< @internal The notification name the observer is observing. */
+	ObserverType				_observerType;		/**< @internal The type of observer the observer is. */
 };
 
 /**
@@ -130,17 +131,18 @@ public:
 protected:
 
 	/**
+	 * @internal
 	 * Destructor.
 	 */
 	~KeyObserver() {}
 
 	// Instance member variables
-	boost::function<void ()> _functionPointer;	/**< The function pointer called on the observer instance when notified. */
+	boost::function<void ()> _functionPointer;	/**< @internal The function pointer called on the observer instance when notified. */
 };
 
 /**
  * The ObjectObserver subclass is used to send an observers notifications with objects based
- * on the key. This subclass is used with the POST_NOIFICATION_WITH_OBJECT macro.
+ * on the key. This subclass is used with the POST_NOTIFICATION_WITH_OBJECT macro.
  */
 template <class T1, class T2>
 class BUMP_EXPORT ObjectObserver : public Observer
@@ -243,13 +245,14 @@ public:
 protected:
 
 	/**
+	 * @internal
 	 * Destructor.
 	 */
 	~ObjectObserver() {}
 
 	// Instance member variables
-	boost::function<void (T2)>	_functionPointerWithObject;		/**< The function pointer that has an object signature. */
-	boost::function<void (T2*)>	_functionPointerWithPointer;	/**< The function pointer that has a pointer signature. */
+	boost::function<void (T2)>	_functionPointerWithObject;		/**< @internal The function pointer that has an object signature. */
+	boost::function<void (T2*)>	_functionPointerWithPointer;	/**< @internal The function pointer that has a pointer signature. */
 };
 
 /**
@@ -349,18 +352,20 @@ public:
 protected:
 
 	/**
+	 * @internal
 	 * Constructor.
 	 */
 	NotificationCenter();
 
 	/**
+	 * @internal
 	 * Destructor.
 	 */
 	~NotificationCenter();
 
 	// Instance member variables
-	std::vector<Observer*> _keyObservers;		/**< The list of key observers registered with the NotificationCenter. */
-	std::vector<Observer*> _objectObservers;	/**< The list of object observers registered with the NotificationCenter. */
+	std::vector<Observer*> _keyObservers;		/**< @internal The list of key observers registered with the NotificationCenter. */
+	std::vector<Observer*> _objectObservers;	/**< @internal The list of object observers registered with the NotificationCenter. */
 };
 
 /**

@@ -437,6 +437,7 @@ public:
 protected:
 
 	/**
+	 * @internal
 	 * Validates that the path is valid.
 	 *
 	 * @throw bump::FileSystemError When the path does not exist.
@@ -444,7 +445,7 @@ protected:
 	void validatePath() const;
 
 	// Instance member variables
-	boost::filesystem::path		_path; /**< The boost "path" used to support the FileInfo API. */
+	boost::filesystem::path		_path; /**< @internal The boost "path" used to support the FileInfo API. */
 };
 
 // Typedefs

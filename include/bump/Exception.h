@@ -87,6 +87,7 @@ public:
 protected:
 
 	/**
+	 * @internal
 	 * Constructor.
 	 *
 	 * @param className The class name of the sub-class exception.
@@ -101,8 +102,8 @@ protected:
 	}
 
 	// Instance member variables
-	String			_className;			/**< The class name of the exception. */
-	StringList		_descriptions;		/**< A list of descriptions each time an exception is thrown or re-thrown. */
+	String			_className;			/**< @internal The class name of the exception. */
+	StringList		_descriptions;		/**< @internal A list of descriptions each time an exception is thrown or re-thrown. */
 };
 
 /**
@@ -121,6 +122,7 @@ public:
 protected:
 
 	/**
+	 * @internal
 	 * Constructor.
 	 *
 	 * @param className The class name of the sub-class exception.
@@ -150,6 +152,7 @@ public:
 protected:
 
 	/**
+	 * @internal
 	 * Constructor.
 	 *
 	 * @param className The class name of the sub-class exception.

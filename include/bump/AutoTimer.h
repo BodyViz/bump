@@ -50,8 +50,8 @@ public:
 protected:
 
 	// Instance member variables
-	OutputType		_outputType;	/**< The output format to be printed to std::cout. */
-	Timer			_timer;			/**< The timer used to print out the elapsed time. */
+	OutputType		_outputType;	/**< @internal The output format to be printed to std::cout. */
+	Timer			_timer;			/**< @internal The timer used to print out the elapsed time. */
 };
 
 }	// End of bump namespace

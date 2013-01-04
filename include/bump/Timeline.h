@@ -197,28 +197,30 @@ public:
 protected:
 
 	/**
+	 * @internal
 	 * Calculates the acceleration for the step.
 	 */
 	void calculateAcceleration();
 
 	/**
+	 * @internal
 	 * Updates the timeline step value.
 	 */
 	void generateStep();
 
 	// Instance member variables
-	State			_state;				/**< Timeline run-time status. */
-	Direction		_direction;			/**< Timeline forwards or backwards direction. */
-	CurveShape		_curveShape;		/**< Timeline curve shape interpolation. */
-	double			_duration;			/**< How long the timeline will run. */
-	double			_halfDuration;		/**< Half the time the timeline will run. */
-	double			_runTime;			/**< How long the timeline has been running. */
-	double			_acceleration;		/**< How fast or slow the timeline accelerates. */
-	double			_stepValue;			/**< The step output value generated from start to end. */
-	double			_stepIncrement;		/**< The step output increment between each update. */
-	double			_startOutput;		/**< The starting point step value. */
-	double			_endOutput;			/**< The ending point step value. */
-	Timer			_timer;				/**< The timer used to keep track of time. */
+	State			_state;				/**< @internal Timeline run-time status. */
+	Direction		_direction;			/**< @internal Timeline forwards or backwards direction. */
+	CurveShape		_curveShape;		/**< @internal Timeline curve shape interpolation. */
+	double			_duration;			/**< @internal How long the timeline will run. */
+	double			_halfDuration;		/**< @internal Half the time the timeline will run. */
+	double			_runTime;			/**< @internal How long the timeline has been running. */
+	double			_acceleration;		/**< @internal How fast or slow the timeline accelerates. */
+	double			_stepValue;			/**< @internal The step output value generated from start to end. */
+	double			_stepIncrement;		/**< @internal The step output increment between each update. */
+	double			_startOutput;		/**< @internal The starting point step value. */
+	double			_endOutput;			/**< @internal The ending point step value. */
+	Timer			_timer;				/**< @internal The timer used to keep track of time. */
 };
 
 }	// End of bump namespace
