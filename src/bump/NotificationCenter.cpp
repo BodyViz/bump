@@ -78,8 +78,25 @@ NotificationCenter::~NotificationCenter()
 {
 	if (!_keyObservers.empty() || !_objectObservers.empty())
 	{
+		// Collect all the keys that are registered
+		StringList keys;
+		BOOST_FOREACH(Observer* observer, _keyObservers)
+		{
+			String key = String("\"%1\"").arg(observer->notificationName());
+			keys.push_back(key);
+		}
+		BOOST_FOREACH(Observer* observer, _objectObservers)
+		{
+			String key = String("\"%1\"").arg(observer->notificationName());
+			keys.push_back(key);
+		}
+
+		// Create a key string
+		String key_string = String::join(keys, ", ");
+
+		// Throw a notification error listing the number of observer still registered along with the keys
 		unsigned int total_observers = _keyObservers.size() + _objectObservers.size();
-		String msg = String("bump::NotificationCenter has %1 observers that were not properly destructed!").arg(total_observers);
+		String msg = String("bump::NotificationCenter has %1 observers left with keys: %2").arg(total_observers, key_string);
 		throw NotificationError(msg, BUMP_LOCATION);
 	}
 }
