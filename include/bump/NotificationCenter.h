@@ -123,7 +123,7 @@ public:
 	/**
 	 * Calls the function pointer on the observer instance.
 	 */
-	virtual void notify()
+	void notify()
 	{
 		_functionPointer();
 	}
@@ -220,7 +220,7 @@ public:
 	 *
 	 * @param object The object to send to the notification's observer.
 	 */
-	virtual void notify(const boost::any& object)
+	void notify(const boost::any& object)
 	{
 		try
 		{
