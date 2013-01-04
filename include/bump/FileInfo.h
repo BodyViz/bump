@@ -18,12 +18,6 @@
 
 namespace bump {
 
-// Forward declarations
-class FileInfo;
-
-// Typedefs
-typedef std::vector<FileInfo> FileInfoList; /**< Shortcut for creating vectors of file info objects. */
-
 /**
  * The FileInfo class is useful when you need information about a file system object.
  *
@@ -452,6 +446,9 @@ protected:
 	// Instance member variables
 	boost::filesystem::path		_path; /**< The boost "path" used to support the FileInfo API. */
 };
+
+// Typedefs
+typedef std::vector<FileInfo> FileInfoList; /**< Shortcut for creating vectors of file info objects. */
 
 }	// End of bump namespace
 
