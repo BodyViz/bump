@@ -32,10 +32,11 @@ IF (GTEST_FOUND AND Boost_FOUND)
 	ELSE ()
 		ADD_DEFINITIONS(-DBump_LIBRARY_STATIC)
 	ENDIF ()
-	
+
 	# Add each set of tests
 	FOREACH (BUMP_TEST
 			bumpAllTests
+			bumpCryptographicHashTests
 			bumpEnvironmentTests
 			bumpFileInfoTests
 			bumpFileSystemTests

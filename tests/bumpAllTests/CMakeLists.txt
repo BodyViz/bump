@@ -2,6 +2,7 @@
 # Add the source files
 SET (TARGET_SRC
 	../bumpTest/main.cpp
+	../bumpCryptographicHashTests/CryptographicHashTest.cpp
 	../bumpEnvironmentTests/EnvironmentTest.cpp
 	../bumpFileInfoTests/FileInfoTest.cpp
 	../bumpFileSystemTests/FileSystemTest.cpp
