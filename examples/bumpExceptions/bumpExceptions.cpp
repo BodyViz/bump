@@ -7,7 +7,9 @@
 //
 
 // Bump headers
-#include <bump/Exception.h>
+#include <bump/InvalidArgumentError.h>
+#include <bump/OutOfRangeError.h>
+#include <bump/TypeCastError.h>
 
 void valueMustBePositive(int value)
 {
