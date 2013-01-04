@@ -14,6 +14,7 @@ SET (HEADER_PATH ${Bump_SOURCE_DIR}/include/${LIB_NAME})
 SET (
 	TARGET_H
 	${HEADER_PATH}/AutoTimer.h
+	${HEADER_PATH}/CryptographicHash.h
 	${HEADER_PATH}/Environment.h
 	${HEADER_PATH}/Exception.h
 	${HEADER_PATH}/Export.h
@@ -40,7 +41,11 @@ SET (
 )
 
 # Add some of the source files
-SET (TARGET_SRC AutoTimer.cpp Exception.cpp)
+SET (TARGET_SRC
+	AutoTimer.cpp
+	CryptographicHash.cpp
+	Exception.cpp
+)
 
 # Add Environment files
 IF (WIN32)
