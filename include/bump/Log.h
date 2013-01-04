@@ -196,6 +196,14 @@ public:
 	 */
 	std::ostream& logStream(const String& prefix = "");
 
+	/**
+	 * Returns a null log stream that won't push any output through it.
+	 *
+	 * @param prefix The string to tack onto the front of the message.
+	 * @return The output stream to write to.
+	 */
+	std::ostream& nullLogStream();
+
 protected:
 
 	/**
@@ -227,13 +235,11 @@ protected:
 	bool					_isDateTimeFormatEnabled;	/**< @internal Whether the date/time are tacked onto the log output. */
 	TimestampFormat			_timestampFormat;			/**< @internal The timestamp format when enabled. */
 	std::ostream*			_logStream;					/**< @internal The log stream to output to. */
+	std::ostream			_nullLogStream;				/**< @internal A null log stream that won't push output. */
 	boost::mutex			_mutex;						/**< @internal A boost mutex used to make the log streamm access thread-safe. */
 };
 
-/**
- * Convenience macro for accessing the Log singleton.
- */
-#define LOG() bump::Log::instance()
+}	// End of bump namespace
 
 /**
  * Logs the message no matter what level is set.
@@ -242,7 +248,7 @@ protected:
  *   LOG_ALWAYS() << "This is an ALWAYS message" << std::endl; // outputs "This is an ALWAYS message"
  * @endcode
  */
-#define LOG_ALWAYS() log(bump::Log::ALWAYS_LVL)
+std::ostream& LOG_ALWAYS();
 
 /**
  * Logs the message when the log level is set to ERROR_LVL or higher.
@@ -251,7 +257,7 @@ protected:
  *   LOG_ERROR() << "This is an ERROR message" << std::endl; // outputs "This is an ERROR message"
  * @endcode
  */
-#define LOG_ERROR() log(bump::Log::ERROR_LVL)
+std::ostream& LOG_ERROR();
 
 /**
  * Logs the message when the log level is set to WARNING_LVL or higher.
@@ -260,7 +266,7 @@ protected:
  *   LOG_WARNING() << "This is a WARNING message" << std::endl; // outputs "This is a WARNING message"
  * @endcode
  */
-#define LOG_WARNING() log(bump::Log::WARNING_LVL)
+std::ostream& LOG_WARNING();
 
 /**
  * Logs the message when the log level is set to INFO_LVL or higher.
@@ -269,7 +275,7 @@ protected:
  *   LOG_INFO() << "This is an INFO message" << std::endl; // outputs "This is an INFO message"
  * @endcode
  */
-#define LOG_INFO() log(bump::Log::INFO_LVL)
+std::ostream& LOG_INFO();
 
 /**
  * Logs the message only when the log level is set to DEBUG_LVL.
@@ -278,7 +284,7 @@ protected:
  *   LOG_DEBUG() << "This is a DEBUG message" << std::endl; // outputs "This is a DEBUG message"
  * @endcode
  */
-#define LOG_DEBUG() log(bump::Log::DEBUG_LVL)
+std::ostream& LOG_DEBUG();
 
 /**
  * Logs the message with the given prefix no matter what level is set.
@@ -287,7 +293,7 @@ protected:
  *   LOG_ALWAYS_P(bumpPrefix) << "This is an ALWAYS message" << std::endl; // outputs "[bump] This is an ALWAYS message"
  * @endcode
  */
-#define LOG_ALWAYS_P(prefix) logWithPrefix(bump::Log::ALWAYS_LVL, prefix)
+std::ostream& LOG_ALWAYS_P(const bump::String& prefix);
 
 /**
  * Logs the message with the given prefix when the log level is set to ERROR_LVL or higher.
@@ -296,7 +302,7 @@ protected:
  *   LOG_ERROR_P(bumpPrefix) << "This is an ERROR message" << std::endl; // outputs "[bump] This is an ERROR message"
  * @endcode
  */
-#define LOG_ERROR_P(prefix) logWithPrefix(bump::Log::ERROR_LVL, prefix)
+std::ostream& LOG_ERROR_P(const bump::String& prefix);
 
 /**
  * Logs the message with the given prefix when the log level is set to WARNING_LVL or higher.
@@ -305,7 +311,7 @@ protected:
  *   LOG_WARNING_P(bumpPrefix) << "This is a WARNING message" << std::endl; // outputs "[bump] This is a WARNING message"
  * @endcode
  */
-#define LOG_WARNING_P(prefix) logWithPrefix(bump::Log::WARNING_LVL, prefix)
+std::ostream& LOG_WARNING_P(const bump::String& prefix);
 
 /**
  * Logs the message with the given prefix when the log level is set to INFO_LVL or higher.
@@ -314,7 +320,7 @@ protected:
  *   LOG_INFO_P(bumpPrefix) << "This is an INFO message" << std::endl; // outputs "[bump] This is an INFO message"
  * @endcode
  */
-#define LOG_INFO_P(prefix) logWithPrefix(bump::Log::INFO_LVL, prefix)
+std::ostream& LOG_INFO_P(const bump::String& prefix);
 
 /**
  * Logs the message with the given prefix only when the log level is set to DEBUG_LVL.
@@ -323,18 +329,6 @@ protected:
  *   LOG_DEBUG_P(bumpPrefix) << "This is a DEBUG message" << std::endl; // outputs "[bump] This is a DEBUG message"
  * @endcode
  */
-#define LOG_DEBUG_P(prefix) logWithPrefix(bump::Log::DEBUG_LVL, prefix)
-
-/**
- * PRIVATE MACRO (Do not use publically).
- */
-#define log(level) if ((LOG()->isLogLevelEnabled(level)) && level <= LOG()->logLevel()) LOG()->logStream()
-
-/**
- * PRIVATE MACRO (Do not use publically).
- */
-#define logWithPrefix(level, prefix) if ((LOG()->isLogLevelEnabled(level)) && level <= LOG()->logLevel()) LOG()->logStream(prefix)
-
-}	// End of bump namespace
+std::ostream& LOG_DEBUG_P(const bump::String& prefix);
 
 #endif	// End of BUMP_LOG_H

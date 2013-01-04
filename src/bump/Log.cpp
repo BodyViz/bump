@@ -23,7 +23,8 @@ Log::Log() :
 	_logLevel(WARNING_LVL),
 	_isDateTimeFormatEnabled(false),
 	_timestampFormat(DATE_TIME_WITH_AM_PM_TIMESTAMP),
-	_logStream(&std::cout)
+	_logStream(&std::cout),
+	_nullLogStream(NULL)
 {
 	// Attempt to disable the entire log system based on the "BUMP_LOG_ENABLED" environment variable
 	String logEnabled = bump::Environment::environmentVariable(BUMP_LOG_ENABLED);
@@ -258,4 +259,79 @@ String Log::convertTimeToString()
 	}
 }
 
+std::ostream& Log::nullLogStream()
+{
+	return _nullLogStream;
+}
+
+std::ostream& fetchLogStream(const Log::LogLevel& level)
+{
+	if ((Log::instance()->isLogLevelEnabled(level)) && level <= Log::instance()->logLevel())
+	{
+		return Log::instance()->logStream();
+	}
+
+	return Log::instance()->nullLogStream();
+}
+
+std::ostream& fetchLogStreamWithPrefix(const Log::LogLevel& level, const String& prefix)
+{
+	if ((Log::instance()->isLogLevelEnabled(level)) && level <= Log::instance()->logLevel())
+	{
+		return Log::instance()->logStream(prefix);
+	}
+
+	return Log::instance()->nullLogStream();
+}
+
 }	// End of bump namespace
+
+std::ostream& LOG_ALWAYS()
+{
+	return bump::fetchLogStream(bump::Log::ALWAYS_LVL);
+}
+
+std::ostream& LOG_ERROR()
+{
+	return bump::fetchLogStream(bump::Log::ERROR_LVL);
+}
+
+std::ostream& LOG_WARNING()
+{
+	return bump::fetchLogStream(bump::Log::WARNING_LVL);
+}
+
+std::ostream& LOG_INFO()
+{
+	return bump::fetchLogStream(bump::Log::INFO_LVL);
+}
+
+std::ostream& LOG_DEBUG()
+{
+	return bump::fetchLogStream(bump::Log::DEBUG_LVL);
+}
+
+std::ostream& LOG_ALWAYS_P(const bump::String& prefix)
+{
+	return bump::fetchLogStreamWithPrefix(bump::Log::ALWAYS_LVL, prefix);
+}
+
+std::ostream& LOG_ERROR_P(const bump::String& prefix)
+{
+	return bump::fetchLogStreamWithPrefix(bump::Log::ERROR_LVL, prefix);
+}
+
+std::ostream& LOG_WARNING_P(const bump::String& prefix)
+{
+	return bump::fetchLogStreamWithPrefix(bump::Log::WARNING_LVL, prefix);
+}
+
+std::ostream& LOG_INFO_P(const bump::String& prefix)
+{
+	return bump::fetchLogStreamWithPrefix(bump::Log::INFO_LVL, prefix);
+}
+
+std::ostream& LOG_DEBUG_P(const bump::String& prefix)
+{
+	return bump::fetchLogStreamWithPrefix(bump::Log::DEBUG_LVL, prefix);
+}

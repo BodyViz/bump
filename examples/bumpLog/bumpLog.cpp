@@ -135,26 +135,26 @@ int main(int argc, char **argv)
 
 	// By default, the timestamp formatting is disabled. To enable it, just turn it on.
 	LOG_ALWAYS() << std::endl;
-	LOG()->setIsTimestampingEnabled(true);
-	LOG()->setTimestampFormat(bump::Log::DATE_TIME_TIMESTAMP);
+	bump::Log::instance()->setIsTimestampingEnabled(true);
+	bump::Log::instance()->setTimestampFormat(bump::Log::DATE_TIME_TIMESTAMP);
 	LOG_ALWAYS() << "Example message with \"DATE_TIME_TIMESTAMP\" timestamp formatting" << std::endl;
 	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"DATE_TIME_TIMESTAMP\" timestamp formatting\n" << std::endl;
 
 	// From here, you can customize the timestamp format as you wish
-	LOG()->setTimestampFormat(bump::Log::DATE_TIME_WITH_AM_PM_TIMESTAMP);
+	bump::Log::instance()->setTimestampFormat(bump::Log::DATE_TIME_WITH_AM_PM_TIMESTAMP);
 	LOG_ALWAYS() << "Example message with \"DATE_TIME_WITH_AM_PM_TIMESTAMP\" timestamp formatting" << std::endl;
 	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"DATE_TIME_WITH_AM_PM_TIMESTAMP\" timestamp formatting\n" << std::endl;
 
-	LOG()->setTimestampFormat(bump::Log::TIME_TIMESTAMP);
+	bump::Log::instance()->setTimestampFormat(bump::Log::TIME_TIMESTAMP);
 	LOG_ALWAYS() << "Example message with \"TIME_TIMESTAMP\" timestamp formatting" << std::endl;
 	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"TIME_TIMESTAMP\" timestamp formatting\n" << std::endl;
 
-	LOG()->setTimestampFormat(bump::Log::TIME_WITHOUT_AM_PM_TIMESTAMP);
+	bump::Log::instance()->setTimestampFormat(bump::Log::TIME_WITHOUT_AM_PM_TIMESTAMP);
 	LOG_ALWAYS() << "Example message with \"TIME_WITHOUT_AM_PM_TIMESTAMP\" timestamp formatting" << std::endl;
 	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"TIME_WITHOUT_AM_PM_TIMESTAMP\" timestamp formatting\n" << std::endl;
 
 	// Then to turn it back off, simply disable it.
-	LOG()->setIsTimestampingEnabled(false);
+	bump::Log::instance()->setIsTimestampingEnabled(false);
 	LOG_ALWAYS() << "The timestamps should now be disabled and not visible" << std::endl;
 
     return 0;
