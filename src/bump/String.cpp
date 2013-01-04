@@ -679,6 +679,23 @@ int String::length() const
 	return std::string::length();
 }
 
+String& String::padWithString(const String& padString, unsigned int paddedLength)
+{
+	// Simply return if padString is empty
+	if (padString.isEmpty())
+	{
+		return *this;
+	}
+
+	// Prepend the padString onto this string until the paddedLength is hit
+	while (length() < paddedLength)
+	{
+		prepend(padString);
+	}
+
+	return *this;
+}
+
 String& String::prepend(const String& prependString)
 {
 	std::string::insert(0, prependString);

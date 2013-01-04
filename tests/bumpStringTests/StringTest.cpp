@@ -1215,6 +1215,29 @@ TEST_F(StringTest, testLength)
 	EXPECT_EQ(0, str.length());
 }
 
+TEST_F(StringTest, testPadWithString)
+{
+	// Normal case
+	bump::String str = "27";
+	str.padWithString("0", 4);
+	EXPECT_STREQ("0027", str.c_str());
+
+	// Large pad string
+	str = "wah";
+	str.padWithString("wah-", 19);
+	EXPECT_STREQ("wah-wah-wah-wah-wah", str.c_str());
+
+	// Empty pad string case
+	str = "test";
+	str.padWithString("", 20);
+	EXPECT_STREQ("test", str.c_str());
+
+	// Length is smaller than string length
+	str = "test";
+	str.padWithString("0", 3);
+	EXPECT_STREQ("test", str.c_str());
+}
+
 TEST_F(StringTest, testPrependString)
 {
 	// Normal prepend

@@ -29,7 +29,7 @@ void joinSplit();
  * particular functionality.
  *
  *		Section 1 - Creation and Casting
- *		Section 2 - Formatting (arg, << operator)
+ *		Section 2 - Formatting (arg, << operator, padWithString)
  *		Section 3 - Comparison (compare, startsWith, endsWith)
  *		Section 4 - Manipulation (prepend, append, remove, chop, trimmed)
  *		Section 5 - Extraction (section, left, right)
@@ -202,6 +202,15 @@ void formatting()
 	str = orig_str.arg(20.9987, true, "\"awesome\"", -174354, bump::String("\"why not\""), std::string("\"works\""));
 	std::cout << "- Original String:     " << orig_str << std::endl;
 	std::cout << "- Replaced String:     " << str << std::endl;
+
+	// Sometimes you need to pad a string with a character or another string to make
+	// sure it's a certain length. If you need to do this, the padWithString method
+	// can be used.
+	std::cout << "\nPadding a string with a character:" << std::endl;
+	orig_str = "27";
+	std::cout << "- Original String:     " << orig_str << std::endl;
+	orig_str.padWithString("0", 4);
+	std::cout << "- Padded String:       " << orig_str << std::endl;
 }
 
 void comparison()

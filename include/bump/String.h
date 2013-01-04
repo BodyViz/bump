@@ -628,6 +628,22 @@ public:
 	int length() const;
 
 	/**
+	 * Pads the beginning of the string with the padString until the paddedLength is reached.
+	 *
+	 * For example, sometimes you need to pad a number for formatting purposes.
+	 *
+	 * @code
+	 *   bump::String number = "27";
+	 *   number.padWithString("0", 4); // result = "0027"
+	 * @endcode
+	 *
+	 * @param padString The string to add to the beginning of this string.
+	 * @param paddedLength The length of the string to stop padding at.
+	 * @return The modified version of this string.
+	 */
+	String& padWithString(const String& padString, unsigned int paddedLength);
+
+	/**
 	 * Adds the given string to the beginning of this string.
 	 *
 	 * @param prependString The string to add to the beginning of this string.
