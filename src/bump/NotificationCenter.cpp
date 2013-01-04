@@ -140,7 +140,7 @@ unsigned int NotificationCenter::postNotification(const String& notificationName
 	return notification_count;
 }
 
-unsigned int NotificationCenter::postNotificationWithObject(const String& notificationName, boost::any object)
+unsigned int NotificationCenter::postNotificationWithObject(const String& notificationName, const boost::any& object)
 {
 	unsigned int notification_count = 0;
 	BOOST_FOREACH(Observer* abs_observer, _objectObservers)
@@ -191,3 +191,23 @@ void NotificationCenter::removeObserver(void* observer)
 }
 
 }	// End of bump namespace
+
+void ADD_OBSERVER(bump::Observer* observer)
+{
+	bump::NotificationCenter::instance()->addObserver(observer);
+}
+
+void REMOVE_OBSERVER(void* observer)
+{
+	bump::NotificationCenter::instance()->removeObserver(observer);
+}
+
+unsigned int POST_NOTIFICATION(const bump::String& notificationName)
+{
+	return bump::NotificationCenter::instance()->postNotification(notificationName);
+}
+
+unsigned int POST_NOTIFICATION_WITH_OBJECT(const bump::String& notificationName, const boost::any& object)
+{
+	return bump::NotificationCenter::instance()->postNotificationWithObject(notificationName, object);
+}

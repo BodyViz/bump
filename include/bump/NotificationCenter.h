@@ -270,7 +270,7 @@ public:
 	 * @param object The object to send to the registered observers.
 	 * @return The number of observers that received the notification.
 	 */
-	unsigned int postNotificationWithObject(const String& notificationName, boost::any object);
+	unsigned int postNotificationWithObject(const String& notificationName, const boost::any& object);
 
 	/**
 	 * Removes the observer from the notification center.
@@ -298,32 +298,38 @@ protected:
 	std::vector<Observer*> _objectObservers;	/**< @internal The list of object observers registered with the NotificationCenter. */
 };
 
-/**
- * Convenience macro for accessing the NotificationCenter singleton.
- */
-#define NOTIFICATION_CENTER() bump::NotificationCenter::instance()
-
-/**
- * Convenience macro for accessing the NotificationCenter singleton's addObserver() method.
- */
-#define ADD_OBSERVER(c) NOTIFICATION_CENTER()->addObserver(c)
-
-/**
- * Convenience macro for accessing the NotificationCenter singleton's removeObserver() method.
- */
-#define REMOVE_OBSERVER(o) NOTIFICATION_CENTER()->removeObserver(o)
-
-/**
- * Convenience macro for accessing the NotificationCenter singleton's postNotification() method.
- */
-#define POST_NOTIFICATION(k) NOTIFICATION_CENTER()->postNotification(k)
-
-/**
- * Convenience macro for accessing the NotificationCenter singleton's postNotificationWithObject() method.
- */
-#define POST_NOTIFICATION_WITH_OBJECT(k, o) NOTIFICATION_CENTER()->postNotificationWithObject(k, o)
-
 }	// End of bump namespace
+
+/**
+ * Convenience function for accessing the NotificationCenter singleton's addObserver() method.
+ *
+ * @param observer The object or key observer to add to the NotificationCenter.
+ */
+void ADD_OBSERVER(bump::Observer* observer);
+
+/**
+ * Convenience method for accessing the NotificationCenter singleton's removeObserver() method.
+ *
+ * @param observer The observer instance to remove from the NotificationCenter.
+ */
+void REMOVE_OBSERVER(void* observer);
+
+/**
+ * Convenience method for accessing the NotificationCenter singleton's postNotification() method.
+ *
+ * @param notificationName The notification to post to registered observers.
+ * @return The number of observers that received the notification.
+ */
+unsigned int POST_NOTIFICATION(const bump::String& notificationName);
+
+/**
+ * Convenience method for accessing the NotificationCenter singleton's postNotificationWithObject() method.
+ *
+ * @param notificationName The notification to post to registered observers.
+ * @param object The object to send to the registered observers.
+ * @return The number of observers that received the notification.
+ */
+unsigned int POST_NOTIFICATION_WITH_OBJECT(const bump::String& notificationName, const boost::any& object);
 
 // Pull in the KeyObserver and ObjectObserver template implementations
 #include <bump/NotificationCenter_impl.h>
