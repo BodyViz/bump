@@ -196,7 +196,6 @@ public:
 	/**
 	 * Returns a null log stream that won't push any output through it.
 	 *
-	 * @param prefix The string to tack onto the front of the message.
 	 * @return The output stream to write to.
 	 */
 	std::ostream& nullLogStream();
