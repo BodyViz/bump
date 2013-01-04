@@ -118,6 +118,9 @@ FIND_PACKAGE (Boost 1.52.0 COMPONENTS chrono date_time filesystem regex system t
 # Find GTest
 FIND_PACKAGE (GTest)
 
+# Add the 3rdParty subdirectory since they need to be built first
+ADD_SUBDIRECTORY (3rdParty)
+
 # Add the src subdirectory
 ADD_SUBDIRECTORY (src)
 
