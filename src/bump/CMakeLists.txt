@@ -27,6 +27,8 @@ SET (
 	${HEADER_PATH}/NotificationError.h
 	${HEADER_PATH}/NotImplementedError.h
 	${HEADER_PATH}/OutOfRangeError.h
+	${HEADER_PATH}/Singleton.h
+	${HEADER_PATH}/SingletonError.h
 	${HEADER_PATH}/String.h
 	${HEADER_PATH}/StringSearchError.h
 	${HEADER_PATH}/Timeline.h
@@ -71,6 +73,7 @@ SET (TARGET_SRC
 	NotificationError.cpp
 	NotImplementedError.cpp
 	OutOfRangeError.cpp
+	SingletonError.cpp
 	String.cpp
 	StringSearchError.cpp
 	Timeline.cpp
