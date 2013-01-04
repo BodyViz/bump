@@ -10,8 +10,8 @@
 #include <boost/uuid/uuid_io.hpp>
 
 // Bump headers
-#include <bump/Exception.h>
 #include <bump/String.h>
+#include <bump/TypeCastError.h>
 #include <bump/Uuid.h>
 
 // bumpTest headers

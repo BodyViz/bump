@@ -83,79 +83,55 @@ public:
 	 * @return A string representation of the uuid.
 	 */
 	String toString() const;
+
+	/**
+	 * Determines whether this uuid and the right-hand side uuid are equal.
+	 *
+	 * @param rhs The right-hand side uuid.
+	 * @return True if this uuid and the right-hand side uuid are equal, otherwise returns false.
+	 */
+	bool operator==(const Uuid& rhs);
+
+	/**
+	 * Determines whether this uuid and the right-hand side uuid are not equal.
+	 *
+	 * @param rhs The right-hand side uuid.
+	 * @return True if this uuid and the right-hand side uuid are not equal, otherwise returns false.
+	 */
+	bool operator!=(const Uuid& rhs);
+
+	/**
+	 * Determines whether this uuid is less than the right-hand side uuid.
+	 *
+	 * @param rhs The right-hand side uuid.
+	 * @return True if this uuid is less than the right-hand side uuid, otherwise returns false.
+	 */
+	bool operator<(const Uuid& rhs);
+
+	/**
+	 * Determines whether this uuid is greater than the right-hand side uuid.
+	 *
+	 * @param rhs The right-hand side uuid.
+	 * @return True if this uuid is greater than the right-side uuid, otherwise returns false.
+	 */
+	bool operator>(const Uuid& rhs);
+
+	/**
+	 * Determines whether this uuid is less than or equal to the right-hand side uuid.
+	 *
+	 * @param rhs The right-hand side uuid.
+	 * @return True if this uuid is less than or equal to the right-side uuid, otherwise returns false.
+	 */
+	bool operator<=(const Uuid& rhs);
+
+	/**
+	 * Determines whether this uuid is greater than or equal to the right-hand side uuid.
+	 *
+	 * @param rhs The right-hand side uuid.
+	 * @return True if this uuid is greater than or equal to the right-side uuid, otherwise returns false.
+	 */
+	bool operator>=(const Uuid& rhs);
 };
-
-/**
- * Determines whether the left-hand side and right-hand side uuids are equal.
- *
- * @param lhs The left-hand side uuid.
- * @param rhs The right-hand side uuid.
- * @return True if the left and right side uuids are equal, otherwise returns false.
- */
-bool operator == (const Uuid& lhs, const Uuid& rhs)
-{
-	return boost::uuids::operator==(lhs, rhs);
-}
-
-/**
- * Determines whether the left-hand side and right-hand side uuids are not equal.
- *
- * @param lhs The left-hand side uuid.
- * @param rhs The right-hand side uuid.
- * @return True if the left and right side uuids are not equal, otherwise returns false.
- */
-bool operator != (const Uuid& lhs, const Uuid& rhs)
-{
-	return boost::uuids::operator!=(lhs, rhs);
-}
-
-/**
- * Determines whether the left-hand side uuid is less than the right-hand side uuid.
- *
- * @param lhs The left-hand side uuid.
- * @param rhs The right-hand side uuid.
- * @return True if the left-hand side uuid is less than the right-side uuid, otherwise returns false.
- */
-bool operator < (const Uuid& lhs, const Uuid& rhs)
-{
-	return boost::uuids::operator<(lhs, rhs);
-}
-
-/**
- * Determines whether the left-hand side uuid is greater than the right-hand side uuid.
- *
- * @param lhs The left-hand side uuid.
- * @param rhs The right-hand side uuid.
- * @return True if the left-hand side uuid is greater than the right-side uuid, otherwise returns false.
- */
-bool operator > (const Uuid& lhs, const Uuid& rhs)
-{
-	return boost::uuids::operator>(lhs, rhs);
-}
-
-/**
- * Determines whether the left-hand side uuid is less than or equal to the right-hand side uuid.
- *
- * @param lhs The left-hand side uuid.
- * @param rhs The right-hand side uuid.
- * @return True if the left-hand side uuid is less than or equal to the right-side uuid, otherwise returns false.
- */
-bool operator <= (const Uuid& lhs, const Uuid& rhs)
-{
-	return boost::uuids::operator<=(lhs, rhs);
-}
-
-/**
- * Determines whether the left-hand side uuid is greater than or equal to the right-hand side uuid.
- *
- * @param lhs The left-hand side uuid.
- * @param rhs The right-hand side uuid.
- * @return True if the left-hand side uuid is greater than or equal to the right-side uuid, otherwise returns false.
- */
-bool operator >= (const Uuid& lhs, const Uuid& rhs)
-{
-	return boost::uuids::operator>=(lhs, rhs);
-}
 
 }	// End of bump namespace
 

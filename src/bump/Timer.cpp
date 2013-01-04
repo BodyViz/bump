@@ -23,6 +23,12 @@ Timer::~Timer()
 	;
 }
 
+Timer* Timer::instance()
+{
+	static Timer s_timer;
+	return &s_timer;
+}
+
 void Timer::start()
 {
 	_timer.start();

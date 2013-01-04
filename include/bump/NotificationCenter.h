@@ -43,33 +43,33 @@ public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~Observer() {}
+	virtual ~Observer();
 
 	/**
 	 * Calls the function pointer on the observer instance.
 	 */
-	virtual void notify() {}
+	virtual void notify();
 
 	/**
 	 * Calls the function pointer on the observer instance with the given object.
 	 *
 	 * @param object The object to send to the notification's observer.
 	 */
-	virtual void notify(const boost::any& object) {}
+	virtual void notify(const boost::any& object);
 
 	/**
 	 * Returns the name of the notification that the observer is attached to.
 	 *
 	 * @return The name of the notification that the observer is attached to.
 	 */
-	inline const String& notificationName() { return _notificationName; }
+	const String& notificationName();
 
 	/**
 	 * Returns the type of the observer.
 	 *
 	 * @return The type of the observer.
 	 */
-	inline const ObserverType& observerType() { return _observerType; }
+	const ObserverType& observerType();
 
 	/**
 	 * Returns whether the given observer is the same as the internal observer.
@@ -77,10 +77,7 @@ public:
 	 * @param observer An observer pointer to match against the internal observer pointer.
 	 * @return True if the internal observer matches the given observer, false otherwise.
 	 */
-	bool containsObserver(void* observer)
-	{
-		return observer == _observer;
-	}
+	bool containsObserver(void* observer);
 
 protected:
 
@@ -88,7 +85,7 @@ protected:
 	 * @internal
 	 * Constructor.
 	 */
-	Observer() {}
+	Observer();
 
 	// Instance member variables
 	void*						_observer;			/**< @internal The observer instance used to send notifications. */
@@ -112,21 +109,12 @@ public:
 	 * @param functionPointer The function pointer called on the observer instance when notified.
 	 * @param notificationName The name of the notification the observer is observing.
 	 */
-	KeyObserver(T* observer, void (T::*functionPointer)(), const String& notificationName)
-	{
-		_observer = observer;
-		_functionPointer = boost::bind(functionPointer, observer);
-		_notificationName = notificationName;
-		_observerType = KEY_OBSERVER;
-	}
+	inline KeyObserver(T* observer, void (T::*functionPointer)(), const String& notificationName);
 
 	/**
 	 * Calls the function pointer on the observer instance.
 	 */
-	void notify()
-	{
-		_functionPointer();
-	}
+	inline void notify();
 
 protected:
 
@@ -134,7 +122,7 @@ protected:
 	 * @internal
 	 * Destructor.
 	 */
-	~KeyObserver() {}
+	inline ~KeyObserver();
 
 	// Instance member variables
 	boost::function<void ()> _functionPointer;	/**< @internal The function pointer called on the observer instance when notified. */
@@ -156,14 +144,7 @@ public:
 	 * @param functionPointer The function pointer called on the observer instance when notified.
 	 * @param notificationName The name of the notification the observer is observing.
 	 */
-	ObjectObserver(T1* observer, void (T1::*functionPointer)(T2), const String& notificationName)
-	{
-		_observer = observer;
-		_functionPointerWithObject = boost::bind(functionPointer, observer, _1);
-		_functionPointerWithPointer = NULL;
-		_notificationName = notificationName;
-		_observerType = OBJECT_OBSERVER;
-	}
+	inline ObjectObserver(T1* observer, void (T1::*functionPointer)(T2), const String& notificationName);
 
 	/**
 	 * Constructor.
@@ -172,14 +153,7 @@ public:
 	 * @param functionPointer The function pointer called on the observer instance when notified.
 	 * @param notificationName The name of the notification the observer is observing.
 	 */
-	ObjectObserver(T1* observer, void (T1::*functionPointer)(const T2&), const String& notificationName)
-	{
-		_observer = observer;
-		_functionPointerWithObject = boost::bind(functionPointer, observer, _1);
-		_functionPointerWithPointer = NULL;
-		_notificationName = notificationName;
-		_observerType = OBJECT_OBSERVER;
-	}
+	inline ObjectObserver(T1* observer, void (T1::*functionPointer)(const T2&), const String& notificationName);
 
 	/**
 	 * Constructor.
@@ -188,14 +162,7 @@ public:
 	 * @param functionPointer The function pointer called on the observer instance when notified.
 	 * @param notificationName The name of the notification the observer is observing.
 	 */
-	ObjectObserver(T1* observer, void (T1::*functionPointer)(T2*), const String& notificationName)
-	{
-		_observer = observer;
-		_functionPointerWithObject = NULL;
-		_functionPointerWithPointer = boost::bind(functionPointer, observer, _1);
-		_notificationName = notificationName;
-		_observerType = OBJECT_OBSERVER;
-	}
+	inline ObjectObserver(T1* observer, void (T1::*functionPointer)(T2*), const String& notificationName);
 
 	/**
 	 * Constructor.
@@ -204,14 +171,7 @@ public:
 	 * @param functionPointer The function pointer called on the observer instance when notified.
 	 * @param notificationName The name of the notification the observer is observing.
 	 */
-	ObjectObserver(T1* observer, void (T1::*functionPointer)(const T2*), const String& notificationName)
-	{
-		_observer = observer;
-		_functionPointerWithObject = NULL;
-		_functionPointerWithPointer = boost::bind(functionPointer, observer, _1);
-		_notificationName = notificationName;
-		_observerType = OBJECT_OBSERVER;
-	}
+	inline ObjectObserver(T1* observer, void (T1::*functionPointer)(const T2*), const String& notificationName);
 
 	/**
 	 * Calls the function pointer on the observer instance with the given object.
@@ -220,27 +180,7 @@ public:
 	 *
 	 * @param object The object to send to the notification's observer.
 	 */
-	void notify(const boost::any& object)
-	{
-		try
-		{
-			if (_functionPointerWithObject)
-			{
-				const T2& castObject = boost::any_cast<T2>(object);
-				_functionPointerWithObject(castObject);
-			}
-			else // _functionPointerWithPointer
-			{
-				T2* castObject = boost::any_cast<T2*>(object);
-				_functionPointerWithPointer(castObject);
-			}
-		}
-		catch (const boost::bad_any_cast& /*e*/)
-		{
-			String msg = String("Notification object for \"%1\" has invalid type for bound callback.").arg(_notificationName);
-			throw NotificationError(msg, BUMP_LOCATION);
-		}
-	}
+	inline void notify(const boost::any& object);
 
 protected:
 
@@ -248,7 +188,7 @@ protected:
 	 * @internal
 	 * Destructor.
 	 */
-	~ObjectObserver() {}
+	inline ~ObjectObserver();
 
 	// Instance member variables
 	boost::function<void (T2)>	_functionPointerWithObject;		/**< @internal The function pointer that has an object signature. */
@@ -297,24 +237,14 @@ public:
 	 *
 	 * @return The singleton NotificationCenter instance.
 	 */
-	static NotificationCenter* instance() { static NotificationCenter nc; return &nc; }
+	static NotificationCenter* instance();
 
 	/**
 	 * Adds the observer to the list of observers to send notifications.
 	 *
 	 * @param observer The observer to add to the list of observers to send notifications.
 	 */
-	void addObserver(Observer* observer)
-	{
-		if (observer->observerType() == bump::Observer::KEY_OBSERVER)
-		{
-			_keyObservers.push_back(observer);
-		}
-		else
-		{
-			_objectObservers.push_back(observer);
-		}
-	}
+	void addObserver(Observer* observer);
 
 	/**
 	 * Determines whether the notification center contains the observer.
@@ -394,5 +324,8 @@ protected:
 #define POST_NOTIFICATION_WITH_OBJECT(k, o) NOTIFICATION_CENTER()->postNotificationWithObject(k, o)
 
 }	// End of bump namespace
+
+// Pull in the KeyObserver and ObjectObserver template implementations
+#include <bump/NotificationCenter_impl.h>
 
 #endif	// End of BUMP_NOTIFICATION_CENTER_H

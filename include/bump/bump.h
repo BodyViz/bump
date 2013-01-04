@@ -16,14 +16,18 @@
 #include <bump/FileInfo.h>
 #include <bump/FileSystem.h>
 #include <bump/FileSystemError.h>
+#include <bump/InvalidArgumentError.h>
 #include <bump/Log.h>
 #include <bump/NotificationCenter.h>
+#include <bump/NotificationCenter_impl.h>
 #include <bump/NotificationError.h>
 #include <bump/NotImplementedError.h>
+#include <bump/OutOfRangeError.h>
 #include <bump/String.h>
 #include <bump/StringSearchError.h>
 #include <bump/Timeline.h>
 #include <bump/Timer.h>
+#include <bump/TypeCastError.h>
 #include <bump/Uuid.h>
 #include <bump/Version.h>
 

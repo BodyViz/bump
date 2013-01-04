@@ -20,8 +20,11 @@
 #include <boost/regex.hpp>
 
 // Bump headers
+#include <bump/InvalidArgumentError.h>
+#include <bump/OutOfRangeError.h>
 #include <bump/String.h>
 #include <bump/StringSearchError.h>
+#include <bump/TypeCastError.h>
 
 namespace bump {
 

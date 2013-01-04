@@ -14,6 +14,61 @@
 
 namespace bump {
 
+//====================================================================================
+//                                     Observer
+//====================================================================================
+
+Observer::Observer()
+{
+	;
+}
+
+Observer::~Observer()
+{
+	;
+}
+
+void Observer::notify()
+{
+	;
+}
+
+void Observer::notify(const boost::any& object)
+{
+	;
+}
+
+const String& Observer::notificationName()
+{
+	return _notificationName;
+}
+
+const Observer::ObserverType& Observer::observerType()
+{
+	return _observerType;
+}
+
+bool Observer::containsObserver(void* observer)
+{
+	return observer == _observer;
+}
+
+//====================================================================================
+//                                    KeyObserver
+//====================================================================================
+
+// Implemented in NotificationCenter_impl.h
+
+//====================================================================================
+//                                   ObjectObserver
+//====================================================================================
+
+// Implemented in NotificationCenter_impl.h
+
+//====================================================================================
+//                                 NotificationCenter
+//====================================================================================
+
 NotificationCenter::NotificationCenter()
 {
 	;
@@ -26,6 +81,24 @@ NotificationCenter::~NotificationCenter()
 		unsigned int total_observers = _keyObservers.size() + _objectObservers.size();
 		String msg = String("bump::NotificationCenter has %1 observers that were not properly destructed!").arg(total_observers);
 		throw NotificationError(msg, BUMP_LOCATION);
+	}
+}
+
+NotificationCenter* NotificationCenter::instance()
+{
+	static NotificationCenter nc;
+	return &nc;
+}
+
+void NotificationCenter::addObserver(Observer* observer)
+{
+	if (observer->observerType() == bump::Observer::KEY_OBSERVER)
+	{
+		_keyObservers.push_back(observer);
+	}
+	else
+	{
+		_objectObservers.push_back(observer);
 	}
 }
 

@@ -118,60 +118,56 @@ public:
 	 * @param startOutput The starting output value for the timeline.
 	 * @param endOutput The ending output value for the timeline.
 	 */
-	inline void setOutputRange(double startOutput, double endOutput)
-	{
-		_startOutput = startOutput;
-		_endOutput = endOutput;
-	}
+	void setOutputRange(double startOutput, double endOutput);
 
 	/**
 	 * Sets the direction of the timeline.
 	 *
 	 * @param direction The direction to set for the timeline.
 	 */
-	inline void setDirection(const Direction& direction) { _direction = direction; }
+	void setDirection(const Direction& direction);
 
 	/**
 	 * Determines the direction of the timeline.
 	 *
 	 * @return The direction of the timeline.
 	 */
-	inline Direction direction() { return _direction; }
+	Direction direction();
 
 	/**
 	 * Sets the curve shape of the timeline.
 	 *
 	 * @param curveShape The curve shape to set for the timeline.
 	 */
-	inline void setCurveShape(const CurveShape& curveShape) { _curveShape = curveShape; }
+	void setCurveShape(const CurveShape& curveShape);
 
 	/**
 	 * Returns the curve shape for the timeline.
 	 *
 	 * @return The curve shape for the timeline.
 	 */
-	inline CurveShape curveShape() { return _curveShape; }
+	CurveShape curveShape();
 
 	/**
 	 * Sets the duration of the timeline.
 	 *
 	 * @param duration The duration to set for the timeline.
 	 */
-	inline void setDuration(double duration) { _duration = duration; }
+	void setDuration(double duration);
 
 	/**
 	 * Returns the duration of the timeline.
 	 *
 	 * @return The duration of the timeline.
 	 */
-	inline double duration() { return _duration; }
+	double duration();
 
 	/**
 	 * Returns the state of the timeline.
 	 *
 	 * @return The state of the timeline.
 	 */
-	inline State state() { return _state; }
+	State state();
 
 	/**
 	 * Returns the step value of the timeline.
@@ -182,7 +178,7 @@ public:
 	 *
 	 * @return The step value of the timeline.
 	 */
-	inline double stepValue() { return _stepValue; }
+	double stepValue();
 
 	/**
 	 * Returns the step increment of the timeline.
@@ -192,7 +188,7 @@ public:
 	 *
 	 * @return The step increment of the timeline.
 	 */
-	inline double stepIncrement() { return _stepIncrement; }
+	double stepIncrement();
 
 protected:
 

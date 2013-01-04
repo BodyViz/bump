@@ -1,5 +1,5 @@
 //
-//	NotificationError.h
+//	NotImplementedError.h
 //	Bump
 //
 //	Created by Christian Noon on 12/12/12.
@@ -29,16 +29,12 @@ public:
 	 * @param description The description of the exception.
 	 * @param location The file path, line number and function name of where the exception was thrown.
 	 */
-	NotImplementedError(const String& description, const String& location) throw() :
-		RuntimeError("bump::NotImplementedError", description, location)
-	{
-		;
-	}
+	NotImplementedError(const String& description, const String& location) throw();
 
 	/**
 	 * Destructor.
 	 */
-	~NotImplementedError() throw() {}
+	~NotImplementedError() throw();
 };
 
 }	// End of bump namespace

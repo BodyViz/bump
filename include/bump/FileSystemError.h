@@ -29,16 +29,12 @@ public:
 	 * @param description The description of the exception.
 	 * @param location The file path, line number and function name of where the exception was thrown.
 	 */
-	FileSystemError(const String& description, const String& location) throw() :
-		RuntimeError("bump::FileSystemError", description, location)
-	{
-		;
-	}
+	FileSystemError(const String& description, const String& location) throw();
 
 	/**
 	 * Destructor.
 	 */
-	~FileSystemError() throw() {}
+	~FileSystemError() throw();
 };
 
 }	// End of bump namespace

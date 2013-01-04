@@ -13,8 +13,8 @@
 #include <boost/uuid/uuid_io.hpp>
 
 // Bump headers
-#include <bump/Exception.h>
 #include <bump/String.h>
+#include <bump/TypeCastError.h>
 #include <bump/Uuid.h>
 
 namespace bump {
@@ -67,6 +67,36 @@ bool Uuid::isNull() const
 String Uuid::toString() const
 {
 	return boost::uuids::to_string(*this);
+}
+
+bool Uuid::operator==(const Uuid& rhs)
+{
+	return boost::uuids::operator==(*this, rhs);
+}
+
+bool Uuid::operator!=(const Uuid& rhs)
+{
+	return boost::uuids::operator!=(*this, rhs);
+}
+
+bool Uuid::operator<(const Uuid& rhs)
+{
+	return boost::uuids::operator<(*this, rhs);
+}
+
+bool Uuid::operator>(const Uuid& rhs)
+{
+	return boost::uuids::operator>(*this, rhs);
+}
+
+bool Uuid::operator<=(const Uuid& rhs)
+{
+	return boost::uuids::operator<=(*this, rhs);
+}
+
+bool Uuid::operator>=(const Uuid& rhs)
+{
+	return boost::uuids::operator>=(*this, rhs);
 }
 
 }	// End of bump namespace

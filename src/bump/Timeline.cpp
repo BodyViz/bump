@@ -129,6 +129,57 @@ void Timeline::update()
 	generateStep();
 }
 
+void Timeline::setOutputRange(double startOutput, double endOutput)
+{
+	_startOutput = startOutput;
+	_endOutput = endOutput;
+}
+
+void Timeline::setDirection(const Direction& direction)
+{
+	_direction = direction;
+}
+
+Timeline::Direction Timeline::direction()
+{
+	return _direction;
+}
+
+void Timeline::setCurveShape(const CurveShape& curveShape)
+{
+	_curveShape = curveShape;
+}
+
+Timeline::CurveShape Timeline::curveShape()
+{
+	return _curveShape;
+}
+
+void Timeline::setDuration(double duration)
+{
+	_duration = duration;
+}
+
+double Timeline::duration()
+{
+	return _duration;
+}
+
+Timeline::State Timeline::state()
+{
+	return _state;
+}
+
+double Timeline::stepValue()
+{
+	return _stepValue;
+}
+
+double Timeline::stepIncrement()
+{
+	return _stepIncrement;
+}
+
 void Timeline::calculateAcceleration()
 {
 	if (_curveShape == EASE_IN_AND_OUT_CURVE)

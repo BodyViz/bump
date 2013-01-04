@@ -10,8 +10,11 @@
 #include <limits>
 
 // Bump headers
+#include <bump/InvalidArgumentError.h>
+#include <bump/OutOfRangeError.h>
 #include <bump/String.h>
 #include <bump/StringSearchError.h>
+#include <bump/TypeCastError.h>
 
 // bumpTest headers
 #include "../bumpTest/BaseTest.h"

@@ -29,16 +29,12 @@ public:
 	 * @param description The description of the exception.
 	 * @param location The file path, line number and function name of where the exception was thrown.
 	 */
-	NotificationError(const String& description, const String& location) throw() :
-		RuntimeError("bump::NotificationError", description, location)
-	{
-		;
-	}
+	NotificationError(const String& description, const String& location) throw();
 
 	/**
 	 * Destructor.
 	 */
-	~NotificationError() throw() {}
+	~NotificationError() throw();
 };
 
 }	// End of bump namespace
