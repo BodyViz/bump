@@ -232,26 +232,21 @@ String Log::convertTimeToString()
 		hours = hours.toInt() - 12;
 	}
 
-	// Pad the minutes
-	while (minutes.length() < 2)
-	{
-		minutes.append("0");
-	}
-
-	// Pad the seconds
-	while (seconds.length() < 2)
-	{
-		seconds.append("0");
-	}
+	// Pad the month, day, hours, minutes and seconds
+	month.padWithString("0", 2);
+	day.padWithString("0", 2);
+	hours.padWithString("0", 2);
+	minutes.padWithString("0", 2);
+	seconds.padWithString("0", 2);
 
 	// Now create a string representation of the timestamp based on the timestamp format
 	if (_timestampFormat == DATE_TIME_TIMESTAMP)
 	{
-		return String("%1-%2-%3 %4:%5:%6:").arg(month, day, year, hours, minutes, seconds);
+		return String("%1-%2-%3 %4:%5:%6:").arg(year, month, day, hours, minutes, seconds);
 	}
 	else if (_timestampFormat == DATE_TIME_WITH_AM_PM_TIMESTAMP)
 	{
-		return String("%1-%2-%3 %4:%5:%6 %7:").arg(month, day, year, hours, minutes, seconds, am_pm);
+		return String("%1-%2-%3 %4:%5:%6 %7:").arg(year, month, day, hours, minutes, seconds, am_pm);
 	}
 	else if (_timestampFormat == DATE_TIME_TIMESTAMP)
 	{
