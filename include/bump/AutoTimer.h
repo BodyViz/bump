@@ -29,10 +29,10 @@ public:
 	 */
 	enum OutputType
 	{
-		SECONDS,
-		MILLISECONDS,
-		MICROSECONDS,
-		NANOSECONDS
+		SECONDS,		/**< Output type is in seconds. */
+		MILLISECONDS,	/**< Output type is in milliseconds (10e3). */
+		MICROSECONDS,	/**< Output type is in microseconds (10e6). */
+		NANOSECONDS		/**< Output type is in nanoseconds (10e9). */
 	};
 
 	/**

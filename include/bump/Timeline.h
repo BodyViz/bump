@@ -33,10 +33,10 @@ public:
 	 */
 	enum State
 	{
-		RUNNING,
-		NOT_RUNNING,
-		PAUSED,
-		FINISHED
+		RUNNING,				/**< Timeline timer is running. */
+		NOT_RUNNING,			/**< Timeline timer is NOT running. */
+		PAUSED,					/**< Timeline timer is paused. */
+		FINISHED				/**< Timeline timer is NOT running and is finished. */
 	};
 
 	/**
@@ -44,8 +44,8 @@ public:
 	 */
 	enum Direction
 	{
-		FORWARDS,
-		BACKWARDS
+		FORWARDS,				/**< Timeline value moves from start to end output values. */
+		BACKWARDS				/**< Timeline value moves from end to start output values. */
 	};
 
 	/**
@@ -53,10 +53,10 @@ public:
 	 */
 	enum CurveShape
 	{
-		LINEAR_CURVE,
-		EASE_IN_CURVE,
-		EASE_OUT_CURVE,
-		EASE_IN_AND_OUT_CURVE
+		LINEAR_CURVE,			/**< Timeline moves from start to end output linearly. */
+		EASE_IN_CURVE,			/**< Timeline moves slow at first, then increases in speed. */
+		EASE_OUT_CURVE,			/**< Timeline moves fast at first, then slows down steadily. */
+		EASE_IN_AND_OUT_CURVE	/**< Timeline starts slow, increases in speed, peaks in the middle, then eases out. */
 	};
 
 	/**

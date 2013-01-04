@@ -46,8 +46,8 @@ public:
 	 */
 	enum CaseSensitivity
 	{
-		CaseSensitive = 0,
-		NotCaseSensitive = 1
+		CaseSensitive = 0,		/**< Case sensitive meaning that 'xyz' and 'XYZ' are different. */
+		NotCaseSensitive = 1	/**< NOT case sensitive meaning that 'xyz' and 'XYZ' are the same. */
 	};
 
 	/**

@@ -84,20 +84,20 @@ public:
 	/** The various levels of log message verbosity. */
 	enum LogLevel
 	{
-		ALWAYS_LVL,
-		ERROR_LVL,
-		WARNING_LVL,
-		INFO_LVL,
-		DEBUG_LVL
+		ALWAYS_LVL,		/**< These will always be shown if the log is enabled. */
+		ERROR_LVL,		/**< Used for errors that the application cannot recover from. */
+		WARNING_LVL,	/**< For warnings that the application can recover from. */
+		INFO_LVL,		/**< Information that can be useful to the user. */
+		DEBUG_LVL		/**< Designed purely for the lowest level debugging. */
 	};
 
 	/** The various timestamp formats. */
 	enum TimestampFormat
 	{
-		DATE_TIME_TIMESTAMP,
-		DATE_TIME_WITH_AM_PM_TIMESTAMP,
-		TIME_TIMESTAMP,
-		TIME_WITHOUT_AM_PM_TIMESTAMP
+		DATE_TIME_TIMESTAMP,				/**< Date and time with format: 2013-01-14 10:51:33. */
+		DATE_TIME_WITH_AM_PM_TIMESTAMP,		/**< Date and time with format: 2013-01-14 10:51:33 AM. */
+		TIME_TIMESTAMP,						/**< Time with format: 2013-01-14 10:51:33. */
+		TIME_WITHOUT_AM_PM_TIMESTAMP		/**< Time with format: 2013-01-14 10:51:33 AM. */
 	};
 
 	/**
