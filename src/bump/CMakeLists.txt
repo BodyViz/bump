@@ -83,5 +83,8 @@ SET (TARGET_SRC
 	Version.cpp
 )
 
+# Add smallsha1 as a target 3rd party dependency
+SET (TARGET_3RD_PARTY_LIBRARIES smallsha1)
+
 # Finish setting up the library
 SETUP_LIBRARY (${LIB_NAME})
