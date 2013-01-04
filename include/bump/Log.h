@@ -14,6 +14,7 @@
 
 // Bump headers
 #include <bump/Export.h>
+#include <bump/Singleton.h>
 #include <bump/String.h>
 
 // Environment variable name definitions
@@ -77,9 +78,12 @@ namespace bump {
  *
  * As you can see, it is just like using std::cout, except with a bunch of extra benefits!
  */
-class BUMP_EXPORT Log
+class BUMP_EXPORT Log : public Singleton<Log>
 {
 public:
+
+	// Declare the singleton to be a friend class to call the constructor/destructors
+	friend class Singleton<Log>;
 
 	/** The various levels of log message verbosity. */
 	enum LogLevel
@@ -99,13 +103,6 @@ public:
 		TIME_TIMESTAMP,						/**< Time with format: 2013-01-14 10:51:33. */
 		TIME_WITHOUT_AM_PM_TIMESTAMP		/**< Time with format: 2013-01-14 10:51:33 AM. */
 	};
-
-	/**
-	 * Creates a singleton instance.
-	 *
-	 * @return The singleton Log instance.
-	 */
-	static Log* instance() { static Log log; return &log; }
 
 	/**
 	 * Sets whether the log is enabled.

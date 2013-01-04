@@ -101,12 +101,6 @@ NotificationCenter::~NotificationCenter()
 	}
 }
 
-NotificationCenter* NotificationCenter::instance()
-{
-	static NotificationCenter nc;
-	return &nc;
-}
-
 void NotificationCenter::addObserver(Observer* observer)
 {
 	if (observer->observerType() == bump::Observer::KEY_OBSERVER)

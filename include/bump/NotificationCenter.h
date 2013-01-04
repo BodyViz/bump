@@ -17,6 +17,7 @@
 // Bump headers
 #include <bump/Export.h>
 #include <bump/NotificationError.h>
+#include <bump/Singleton.h>
 #include <bump/String.h>
 
 namespace bump {
@@ -228,16 +229,12 @@ protected:
  *
  * And that's all there is to it! For more information, please see the bumpNotificationCenter example.
  */
-class BUMP_EXPORT NotificationCenter
+class BUMP_EXPORT NotificationCenter : public Singleton<NotificationCenter>
 {
 public:
 
-	/**
-	 * Creates a singleton instance.
-	 *
-	 * @return The singleton NotificationCenter instance.
-	 */
-	static NotificationCenter* instance();
+	// Declare the singleton to be a friend class to call the constructor/destructors
+	friend class Singleton<NotificationCenter>;
 
 	/**
 	 * Adds the observer to the list of observers to send notifications.

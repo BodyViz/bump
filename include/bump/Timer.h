@@ -14,13 +14,14 @@
 
 // Bump headers
 #include <bump/Export.h>
+#include <bump/Singleton.h>
 
 namespace bump {
 
 /**
  * Timer class used for measuring elapsed time between two events.
  */
-class BUMP_EXPORT Timer
+class BUMP_EXPORT Timer : public Singleton<Timer>
 {
 public:
 
@@ -33,13 +34,6 @@ public:
 	 * Destructor.
 	 */
 	~Timer();
-
-	/**
-	 * Creates a singleton Timer instance.
-	 *
-	 * @return The singleton timer instance.
-	 */
-	static Timer* instance();
 
 	/**
 	 * Starts the timer.
