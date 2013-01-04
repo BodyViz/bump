@@ -37,6 +37,9 @@ MACRO (SETUP_LIBRARY LIB_NAME)
 	ENDIF (TARGET_LABEL)
 
 	# Add linking to other libraries here
+	IF (TARGET_3RD_PARTY_LIBRARIES)
+		LINK_3RD_PARTY (${LIB_NAME} ${TARGET_3RD_PARTY_LIBRARIES})
+	ENDIF (TARGET_3RD_PARTY_LIBRARIES)
 	IF (TARGET_LIBRARIES)
 		LINK_INTERNAL (${LIB_NAME} ${TARGET_LIBRARIES})
 	ENDIF (TARGET_LIBRARIES)
@@ -99,6 +102,41 @@ ENDMACRO (SETUP_LIBRARY LIB_NAME)
 
 #######################################################################################################
 #
+#  Macro for setup of 3rd party libraries.
+#
+#  LIB_NAME						- name of the target library
+#  TARGET_SRC					- source files of the target
+#  TARGET_H						- eventual headers of the target
+#  TARGET_LABEL					- label IDE should show up for targets
+#
+##########################################################################################################
+
+MACRO (SETUP_3RD_PARTY_LIBRARY LIB_NAME)
+
+	SET (TARGET_NAME ${LIB_NAME})
+	SET (TARGET_TARGETNAME ${LIB_NAME})
+	ADD_LIBRARY (
+		${LIB_NAME}
+		STATIC
+		${TARGET_SRC}
+		${TARGET_H}
+	)
+
+	SET_TARGET_PROPERTIES (${LIB_NAME} PROPERTIES FOLDER "3rdParty")
+	IF (TARGET_LABEL)
+		SET_TARGET_PROPERTIES (
+			${TARGET_TARGETNAME}
+			PROPERTIES
+			PROJECT_LABEL
+			"${TARGET_LABEL}"
+		)
+	ENDIF (TARGET_LABEL)
+
+ENDMACRO (SETUP_3RD_PARTY_LIBRARY LIB_NAME)
+
+
+#######################################################################################################
+#
 #  Macros for linking with internal and external libraries. All the libraries to link come
 #  in as a list.
 #
@@ -111,6 +149,18 @@ ENDMACRO (SETUP_LIBRARY LIB_NAME)
 MACRO (LINK_EXTERNAL TRGTNAME)
 	TARGET_LINK_LIBRARIES (${TRGTNAME} ${ARGN})
 ENDMACRO()
+
+MACRO (LINK_3RD_PARTY TRGTNAME)
+	FOREACH (LINKLIB ${ARGN})
+		IF (MSVC)
+			TARGET_LINK_LIBRARIES(${TRGTNAME} optimized "${OUTPUT_LIBDIR}/${LINKLIB}${CMAKE_RELEASE_POSTFIX}.lib" debug "${OUTPUT_LIBDIR}/${LINKLIB}${CMAKE_DEBUG_POSTFIX}.lib")
+			ADD_DEPENDENCIES(${TRGTNAME} ${LINKLIB})
+		ELSE ()
+			TARGET_LINK_LIBRARIES(${TRGTNAME} optimized "${OUTPUT_LIBDIR}/lib${LINKLIB}${CMAKE_RELEASE_POSTFIX}.a" debug "${OUTPUT_LIBDIR}/lib${LINKLIB}${CMAKE_DEBUG_POSTFIX}.a")
+			ADD_DEPENDENCIES(${TRGTNAME} ${LINKLIB})
+		ENDIF ()
+	ENDFOREACH ()
+ENDMACRO ()
 
 MACRO (LINK_INTERNAL TRGTNAME)
 	IF (MSVC OR APPLE AND NOT Bump_COMPILE_FRAMEWORKS)
