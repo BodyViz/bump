@@ -23,6 +23,7 @@ SET (
 	${HEADER_PATH}/FileSystemError.h
 	${HEADER_PATH}/InvalidArgumentError.h
 	${HEADER_PATH}/Log.h
+	${HEADER_PATH}/Log_impl.h
 	${HEADER_PATH}/NotificationCenter.h
 	${HEADER_PATH}/NotificationCenter_impl.h
 	${HEADER_PATH}/NotificationError.h
