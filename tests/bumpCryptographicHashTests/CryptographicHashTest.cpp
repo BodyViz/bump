@@ -167,9 +167,9 @@ TEST_F(CryptographicHashTest, testResult)
 	values_char[7] = 68;
 	values_char[8] = 27;
 	values_char[9] = 107;
-	hash.setData(values_char);
+	hash.setData(reinterpret_cast<char*>(values_char), 10);
 	result = hash.result();
-	EXPECT_STREQ("5ffe533b830f08a0326348a9160afafc8ada44db", result.c_str());
+	EXPECT_STREQ("884095846c4f9390655c48ee2819da470b35fb60", result.c_str());
 
 	// Short array case
 	hash = bump::CryptographicHash();
@@ -179,9 +179,9 @@ TEST_F(CryptographicHashTest, testResult)
 	values_short[2] = 20676;
 	values_short[3] = 1047;
 	values_short[4] = -10;
-	hash.setData(values_short);
+	hash.setData(reinterpret_cast<char*>(values_short), 10);
 	result = hash.result();
-	EXPECT_STREQ("5ffe533b830f08a0326348a9160afafc8ada44db", result.c_str());
+	EXPECT_STREQ("bc1ed3c73cb98a7c3742a0f41e6e703f4472f679", result.c_str());
 }
 
 }	// End of bumpTest namespace
