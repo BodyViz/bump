@@ -111,4 +111,28 @@ inline void ObjectObserver<T1, T2>::notify(const boost::any& object)
 
 }	// End of bump namespace
 
+//====================================================================================
+//                     NotificationCenter convenience functions
+//====================================================================================
+
+inline void ADD_OBSERVER(bump::Observer* observer)
+{
+	bump::NotificationCenter::instance()->addObserver(observer);
+}
+
+inline void REMOVE_OBSERVER(void* observer)
+{
+	bump::NotificationCenter::instance()->removeObserver(observer);
+}
+
+inline unsigned int POST_NOTIFICATION(const bump::String& notificationName)
+{
+	return bump::NotificationCenter::instance()->postNotification(notificationName);
+}
+
+inline unsigned int POST_NOTIFICATION_WITH_OBJECT(const bump::String& notificationName, const boost::any& object)
+{
+	return bump::NotificationCenter::instance()->postNotificationWithObject(notificationName, object);
+}
+
 #endif	// End of BUMP_NOTIFICATION_CENTER_IMPL_H

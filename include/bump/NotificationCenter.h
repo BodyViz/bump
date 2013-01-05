@@ -302,14 +302,14 @@ protected:
  *
  * @param observer The object or key observer to add to the NotificationCenter.
  */
-void ADD_OBSERVER(bump::Observer* observer);
+inline void ADD_OBSERVER(bump::Observer* observer);
 
 /**
  * Convenience method for accessing the NotificationCenter singleton's removeObserver() method.
  *
  * @param observer The observer instance to remove from the NotificationCenter.
  */
-void REMOVE_OBSERVER(void* observer);
+inline void REMOVE_OBSERVER(void* observer);
 
 /**
  * Convenience method for accessing the NotificationCenter singleton's postNotification() method.
@@ -317,7 +317,7 @@ void REMOVE_OBSERVER(void* observer);
  * @param notificationName The notification to post to registered observers.
  * @return The number of observers that received the notification.
  */
-unsigned int POST_NOTIFICATION(const bump::String& notificationName);
+inline unsigned int POST_NOTIFICATION(const bump::String& notificationName);
 
 /**
  * Convenience method for accessing the NotificationCenter singleton's postNotificationWithObject() method.
@@ -326,7 +326,7 @@ unsigned int POST_NOTIFICATION(const bump::String& notificationName);
  * @param object The object to send to the registered observers.
  * @return The number of observers that received the notification.
  */
-unsigned int POST_NOTIFICATION_WITH_OBJECT(const bump::String& notificationName, const boost::any& object);
+inline unsigned int POST_NOTIFICATION_WITH_OBJECT(const bump::String& notificationName, const boost::any& object);
 
 // Pull in the KeyObserver and ObjectObserver template implementations
 #include <bump/NotificationCenter_impl.h>
