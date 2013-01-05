@@ -688,7 +688,7 @@ String& String::padWithString(const String& padString, unsigned int paddedLength
 	}
 
 	// Prepend the padString onto this string until the paddedLength is hit
-	while (length() < paddedLength)
+	while ((unsigned int)length() < paddedLength)
 	{
 		prepend(padString);
 	}
