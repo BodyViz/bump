@@ -321,7 +321,7 @@ bool copyDirectoryAndContents(const String& source, const String& destination)
 
 	// Iterate through the local source directory
 	FileInfoList local_source_files = directoryInfoList(source);
-	BOOST_FOREACH(const FileInfo& local_source_file, local_source_files)
+	BOOST_FOREACH (const FileInfo& local_source_file, local_source_files)
 	{
 		bool copied_successfully;
 
@@ -408,7 +408,7 @@ StringList directoryList(const String& path)
 
 	// Iterate through the directory collecting all the item paths as strings
 	StringSet directory_set;
-	BOOST_FOREACH(const boost::filesystem::path& item, std::make_pair(iter, end_iter))
+	BOOST_FOREACH (const boost::filesystem::path& item, std::make_pair(iter, end_iter))
 	{
 		String unix_item_str = convertToUnixPath(item.string());
 		directory_set.insert(unix_item_str);
@@ -416,7 +416,7 @@ StringList directoryList(const String& path)
 
 	// Build a string list from the sorted string set
 	StringList directory_list;
-	BOOST_FOREACH(const String& item, directory_set)
+	BOOST_FOREACH (const String& item, directory_set)
 	{
 		directory_list.push_back(item);
 	}
@@ -447,7 +447,7 @@ FileInfoList directoryInfoList(const String& path)
 
 	// Iterate through the directory collecting all the item paths as strings
 	StringSet directory_set;
-	BOOST_FOREACH(const boost::filesystem::path& item, std::make_pair(iter, end_iter))
+	BOOST_FOREACH (const boost::filesystem::path& item, std::make_pair(iter, end_iter))
 	{
 		String unix_item_str = convertToUnixPath(item.string());
 		directory_set.insert(unix_item_str);
@@ -455,7 +455,7 @@ FileInfoList directoryInfoList(const String& path)
 
 	// Build a file info list from the sorted string set
 	FileInfoList directory_list;
-	BOOST_FOREACH(const String& item, directory_set)
+	BOOST_FOREACH (const String& item, directory_set)
 	{
 		FileInfo item_info(item);
 		directory_list.push_back(item_info);

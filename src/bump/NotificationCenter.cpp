@@ -80,12 +80,12 @@ NotificationCenter::~NotificationCenter()
 	{
 		// Collect all the keys that are registered
 		StringList keys;
-		BOOST_FOREACH(Observer* observer, _keyObservers)
+		BOOST_FOREACH (Observer* observer, _keyObservers)
 		{
 			String key = String("\"%1\"").arg(observer->notificationName());
 			keys.push_back(key);
 		}
-		BOOST_FOREACH(Observer* observer, _objectObservers)
+		BOOST_FOREACH (Observer* observer, _objectObservers)
 		{
 			String key = String("\"%1\"").arg(observer->notificationName());
 			keys.push_back(key);
@@ -116,7 +116,7 @@ void NotificationCenter::addObserver(Observer* observer)
 bool NotificationCenter::containsObserver(void* observer)
 {
 	// Iterate through the observers
-	BOOST_FOREACH(Observer* abs_observer, _keyObservers)
+	BOOST_FOREACH (Observer* abs_observer, _keyObservers)
 	{
 		if (abs_observer->containsObserver(observer))
 		{
@@ -125,7 +125,7 @@ bool NotificationCenter::containsObserver(void* observer)
 	}
 
 	// Iterate through the object observers
-	BOOST_FOREACH(Observer* abs_observer, _objectObservers)
+	BOOST_FOREACH (Observer* abs_observer, _objectObservers)
 	{
 		if (abs_observer->containsObserver(observer))
 		{
@@ -139,7 +139,7 @@ bool NotificationCenter::containsObserver(void* observer)
 unsigned int NotificationCenter::postNotification(const String& notificationName)
 {
 	unsigned int notification_count = 0;
-	BOOST_FOREACH(Observer* abs_observer, _keyObservers)
+	BOOST_FOREACH (Observer* abs_observer, _keyObservers)
 	{
 		if (abs_observer->notificationName() == notificationName)
 		{
@@ -154,7 +154,7 @@ unsigned int NotificationCenter::postNotification(const String& notificationName
 unsigned int NotificationCenter::postNotificationWithObject(const String& notificationName, const boost::any& object)
 {
 	unsigned int notification_count = 0;
-	BOOST_FOREACH(Observer* abs_observer, _objectObservers)
+	BOOST_FOREACH (Observer* abs_observer, _objectObservers)
 	{
 		if (abs_observer->notificationName() == notificationName)
 		{
@@ -170,7 +170,7 @@ void NotificationCenter::removeObserver(void* observer)
 {
 	// Remove all the observers that match observer
 	std::vector<Observer*> key_observers_to_keep;
-	BOOST_FOREACH(Observer* abs_observer, _keyObservers)
+	BOOST_FOREACH (Observer* abs_observer, _keyObservers)
 	{
 		if (abs_observer->containsObserver(observer))
 		{
@@ -186,7 +186,7 @@ void NotificationCenter::removeObserver(void* observer)
 
 	// Remove all the object observers that match observer
 	std::vector<Observer*> object_observers_to_keep;
-	BOOST_FOREACH(Observer* abs_observer, _objectObservers)
+	BOOST_FOREACH (Observer* abs_observer, _objectObservers)
 	{
 		if (abs_observer->containsObserver(observer))
 		{

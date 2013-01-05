@@ -179,7 +179,7 @@ void directoriesDemo()
 	// List all the files inside the directory
 	std::cout << "- Items inside       \"Test Directory\":" << std::endl;
 	bump::StringList directory_items = bump::FileSystem::directoryList("Test Directory");
-	BOOST_FOREACH(const bump::String& directory_item, directory_items)
+	BOOST_FOREACH (const bump::String& directory_item, directory_items)
 	{
 		std::cout << "\t- Relative Path: \"" << directory_item << "\"" << std::endl;
 		std::cout << "\t- Absolute Path: \"" << bump::FileInfo(directory_item).absolutePath() << "\"" << std::endl;
