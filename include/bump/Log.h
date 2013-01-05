@@ -45,16 +45,16 @@ namespace bump {
  *	  - BUMP_LOG_LEVEL: Defines the maximum output level for the log:
  *		  * [ ALWAYS_LVL | ERROR_LVL | WARNING_LVL | INFO_LVL | DEBUG_LVL ]
  *
- * Using the log is straight-forward. There are several different convenience macros
+ * Using the log is straight-forward. There are several different convenience functions
  * provided to make this as simple as possible. The easiest way to use the log is with
- * the following macros:
+ * the following functions:
  *    - LOG_ALWAYS()
  *    - LOG_ERROR()
  *    - LOG_WARNING()
  *    - LOG_INFO()
  *    - LOG_DEBUG()
  *
- * Here is a simple example using the LOG_DEBUG() macro:
+ * Here is a simple example using the LOG_DEBUG() function:
  *
  * @code
  *   LOG_DEBUG() << "this is my output" << std::endl;
@@ -62,7 +62,7 @@ namespace bump {
  *
  * Sometimes, it is useful to be able to prefix your output with something like a
  * namespace, application name, error message, etc. For this purpose, the following
- * macros exist:
+ * functions exist:
  *	  - LOG_ALWAYS_P(prefix)
  *	  - LOG_ERROR_P(prefix)
  *	  - LOG_WARNING_P(prefix)

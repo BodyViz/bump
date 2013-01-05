@@ -210,21 +210,21 @@ protected:
  * @code
  *   bump::AbstractObserver* observer = new bump::ObjectObserver<ObjectType, Event*>(this, &ObjectType::eventCompleted, "EventCompleted");
  *   bump::NotificationCenter::instance()->addObserver(observer);
- *   ADD_OBSERVER(observer); // convenience macro
+ *   ADD_OBSERVER(observer); // convenience function
  * @endcode
  *
  * 2) Make sure to remove the observer from the NotificationCenter in its destructor
  *
  * @code
  *   bump::NotificationCenter::instance()->removeObserver(this);
- *   REMOVE_OBSERVER(observer); // convenience macro
+ *   REMOVE_OBSERVER(observer); // convenience function
  * @endcode
  *
  * 3) When the event completes, post a notification that the event completed with a matching name
  *
  * @code
  *   bump::NotificationCenter::instance()->postNotificationWithObject("EventCompleted", event);
- *   POST_NOTIFICATION_WITH_OBJECT("EventCompleted", event); // convenience macro
+ *   POST_NOTIFICATION_WITH_OBJECT("EventCompleted", event); // convenience function
  * @endcode
  *
  * And that's all there is to it! For more information, please see the bumpNotificationCenter example.
@@ -305,14 +305,14 @@ protected:
 inline void ADD_OBSERVER(bump::Observer* observer);
 
 /**
- * Convenience method for accessing the NotificationCenter singleton's removeObserver() method.
+ * Convenience function for accessing the NotificationCenter singleton's removeObserver() method.
  *
  * @param observer The observer instance to remove from the NotificationCenter.
  */
 inline void REMOVE_OBSERVER(void* observer);
 
 /**
- * Convenience method for accessing the NotificationCenter singleton's postNotification() method.
+ * Convenience function for accessing the NotificationCenter singleton's postNotification() method.
  *
  * @param notificationName The notification to post to registered observers.
  * @return The number of observers that received the notification.
@@ -320,7 +320,7 @@ inline void REMOVE_OBSERVER(void* observer);
 inline unsigned int POST_NOTIFICATION(const bump::String& notificationName);
 
 /**
- * Convenience method for accessing the NotificationCenter singleton's postNotificationWithObject() method.
+ * Convenience function for accessing the NotificationCenter singleton's postNotificationWithObject() method.
  *
  * @param notificationName The notification to post to registered observers.
  * @param object The object to send to the registered observers.
