@@ -53,6 +53,7 @@ public:
 protected:
 
 	/**
+	 * @internal
 	 * Constructor.
 	 */
 	Singleton()
@@ -61,6 +62,7 @@ protected:
 	}
 
 	/**
+	 * @internal
 	 * Destructor.
 	 */
 	~Singleton()
@@ -71,6 +73,7 @@ protected:
 private:
 
 	/**
+	 * @internal
 	 * Returns the mutex for locking the instance creation.
 	 *
 	 * @return The mutex for locking the instance creation.
@@ -82,7 +85,7 @@ private:
 	}
 
 	// Instance member variables
-	static bool _isDestructed;	/**< Whether the singleton instance has been destructed. */
+	static bool _isDestructed;	/**< @internal Whether the singleton instance has been destructed. */
 };
 
 // Forces the creation of the mutex before main() is called
