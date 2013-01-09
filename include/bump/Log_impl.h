@@ -9,9 +9,11 @@
 #ifndef BUMP_LOG_IMPL_H
 #define BUMP_LOG_IMPL_H
 
+/*
+
 namespace bump {
 
-std::ostream& fetchLogStream(const Log::LogLevel& level)
+inline std::ostream& fetchLogStream(const Log::LogLevel& level)
 {
 	if ((Log::instance()->isLogLevelEnabled(level)) && level <= Log::instance()->logLevel())
 	{
@@ -21,7 +23,7 @@ std::ostream& fetchLogStream(const Log::LogLevel& level)
 	return Log::instance()->nullLogStream();
 }
 
-std::ostream& fetchLogStreamWithPrefix(const Log::LogLevel& level, const String& prefix)
+inline std::ostream& fetchLogStreamWithPrefix(const Log::LogLevel& level, const String& prefix)
 {
 	if ((Log::instance()->isLogLevelEnabled(level)) && level <= Log::instance()->logLevel())
 	{
@@ -82,5 +84,7 @@ inline std::ostream& LOG_DEBUG_P(const bump::String& prefix)
 {
 	return bump::fetchLogStreamWithPrefix(bump::Log::DEBUG_LVL, prefix);
 }
+
+*/
 
 #endif	// End of BUMP_LOG_IMPL_H
