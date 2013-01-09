@@ -8,7 +8,6 @@
 
 // Boost headers
 #include <boost/foreach.hpp>
-#include <boost/thread/mutex.hpp>
 
 // Bump headers
 #include <bump/NotificationCenter.h>
@@ -114,7 +113,7 @@ NotificationCenter* NotificationCenter::instance()
 
 void NotificationCenter::addObserver(Observer* observer)
 {
-	boost::mutex::scoped_lock lock(gNotificationCenterSingletonMutex);
+	boost::mutex::scoped_lock lock(_mutex);
 
 	if (observer->observerType() == bump::Observer::KEY_OBSERVER)
 	{
@@ -128,7 +127,7 @@ void NotificationCenter::addObserver(Observer* observer)
 
 bool NotificationCenter::containsObserver(void* observer)
 {
-	boost::mutex::scoped_lock lock(gNotificationCenterSingletonMutex);
+	boost::mutex::scoped_lock lock(_mutex);
 
 	// Iterate through the observers
 	BOOST_FOREACH (Observer* abs_observer, _keyObservers)
@@ -153,7 +152,7 @@ bool NotificationCenter::containsObserver(void* observer)
 
 unsigned int NotificationCenter::postNotification(const String& notificationName)
 {
-	boost::mutex::scoped_lock lock(gNotificationCenterSingletonMutex);
+	boost::mutex::scoped_lock lock(_mutex);
 
 	unsigned int notification_count = 0;
 	BOOST_FOREACH (Observer* abs_observer, _keyObservers)
@@ -170,7 +169,7 @@ unsigned int NotificationCenter::postNotification(const String& notificationName
 
 unsigned int NotificationCenter::postNotificationWithObject(const String& notificationName, const boost::any& object)
 {
-	boost::mutex::scoped_lock lock(gNotificationCenterSingletonMutex);
+	boost::mutex::scoped_lock lock(_mutex);
 
 	unsigned int notification_count = 0;
 	BOOST_FOREACH (Observer* abs_observer, _objectObservers)
@@ -187,7 +186,7 @@ unsigned int NotificationCenter::postNotificationWithObject(const String& notifi
 
 void NotificationCenter::removeObserver(void* observer)
 {
-	boost::mutex::scoped_lock lock(gNotificationCenterSingletonMutex);
+	boost::mutex::scoped_lock lock(_mutex);
 
 	// Remove all the observers that match observer
 	std::vector<Observer*> key_observers_to_keep;
