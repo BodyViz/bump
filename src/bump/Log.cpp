@@ -141,8 +141,6 @@ bool Log::isLogLevelEnabled(LogLevel logLevel)
 
 void Log::setLogLevel(LogLevel logLevel)
 {
-	std::cout << "bump::String Log Instance: " << instance() << std::endl;
-
 	boost::mutex::scoped_lock lock(_mutex);
 	_logLevel = logLevel;
 }
