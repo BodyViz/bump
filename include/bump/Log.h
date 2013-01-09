@@ -226,7 +226,7 @@ protected:
 	TimestampFormat			_timestampFormat;			/**< @internal The timestamp format when enabled. */
 	std::ostream*			_logStream;					/**< @internal The log stream to output to. */
 	std::ostream			_nullLogStream;				/**< @internal A null log stream that won't push output. */
-	boost::mutex			_mutex;						/**< @internal A boost mutex used to make the log streamm access thread-safe. */
+	boost::mutex			_mutex;						/**< @internal A boost mutex used to make the log stream access thread-safe. */
 
 private:
 
