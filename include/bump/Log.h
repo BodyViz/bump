@@ -14,7 +14,6 @@
 
 // Bump headers
 #include <bump/Export.h>
-#include <bump/Singleton.h>
 #include <bump/String.h>
 
 // Environment variable name definitions
@@ -78,12 +77,9 @@ namespace bump {
  *
  * As you can see, it is just like using std::cout, except with a bunch of extra benefits!
  */
-class BUMP_EXPORT Log : public Singleton<Log>
+class BUMP_EXPORT Log
 {
 public:
-
-	// Declare the singleton to be a friend class to call the constructor/destructors
-	friend class Singleton<Log>;
 
 	/** The various levels of log message verbosity. */
 	enum LogLevel
@@ -103,6 +99,13 @@ public:
 		TIME_TIMESTAMP,						/**< Time with format: 2013-01-14 10:51:33. */
 		TIME_WITHOUT_AM_PM_TIMESTAMP		/**< Time with format: 2013-01-14 10:51:33 AM. */
 	};
+
+	/**
+	 * Creates a thread-safe singleton instance of the Log object.
+	 *
+	 * @return The singleton instance.
+	 */
+	static Log* instance();
 
 	/**
 	 * Sets whether the log is enabled.
@@ -204,15 +207,6 @@ protected:
 
 	/**
 	 * @internal
-	 * Constructor.
-	 *
-	 * Initializes the log level by attempting to grab the BUMP_LOG_LEVEL environment
-	 * variables from the user's environment.
-	 */
-	Log();
-
-	/**
-	 * @internal
 	 * Destructor.
 	 */
 	~Log();
@@ -233,6 +227,34 @@ protected:
 	std::ostream*			_logStream;					/**< @internal The log stream to output to. */
 	std::ostream			_nullLogStream;				/**< @internal A null log stream that won't push output. */
 	boost::mutex			_mutex;						/**< @internal A boost mutex used to make the log streamm access thread-safe. */
+
+private:
+
+	/**
+	 * @internal
+	 * Constructor.
+	 *
+	 * Initializes the log level by attempting to grab the BUMP_LOG_LEVEL environment
+	 * variables from the user's environment. Needs to be private to ensure you can
+	 * only create a single instance.
+	 */
+	Log();
+
+	/**
+	 * @internal
+	 * Copy constructor.
+	 *
+	 * No-op to support the singleton.
+	 */
+	Log(const Log& log);
+
+	/**
+	 * @internal
+	 * Overloaded assignment operator.
+	 *
+	 * No-op to support the singleton.
+	 */
+	void operator=(const Log& log);
 };
 
 }	// End of bump namespace
@@ -244,7 +266,7 @@ protected:
  *   LOG_ALWAYS() << "This is an ALWAYS message" << std::endl; // outputs "This is an ALWAYS message"
  * @endcode
  */
-std::ostream& LOG_ALWAYS();
+BUMP_EXPORT std::ostream& LOG_ALWAYS();
 
 /**
  * Logs the message when the log level is set to ERROR_LVL or higher.
@@ -253,7 +275,7 @@ std::ostream& LOG_ALWAYS();
  *   LOG_ERROR() << "This is an ERROR message" << std::endl; // outputs "This is an ERROR message"
  * @endcode
  */
-std::ostream& LOG_ERROR();
+BUMP_EXPORT std::ostream& LOG_ERROR();
 
 /**
  * Logs the message when the log level is set to WARNING_LVL or higher.
@@ -262,7 +284,7 @@ std::ostream& LOG_ERROR();
  *   LOG_WARNING() << "This is a WARNING message" << std::endl; // outputs "This is a WARNING message"
  * @endcode
  */
-std::ostream& LOG_WARNING();
+BUMP_EXPORT std::ostream& LOG_WARNING();
 
 /**
  * Logs the message when the log level is set to INFO_LVL or higher.
@@ -271,7 +293,7 @@ std::ostream& LOG_WARNING();
  *   LOG_INFO() << "This is an INFO message" << std::endl; // outputs "This is an INFO message"
  * @endcode
  */
-std::ostream& LOG_INFO();
+BUMP_EXPORT std::ostream& LOG_INFO();
 
 /**
  * Logs the message only when the log level is set to DEBUG_LVL.
@@ -280,7 +302,7 @@ std::ostream& LOG_INFO();
  *   LOG_DEBUG() << "This is a DEBUG message" << std::endl; // outputs "This is a DEBUG message"
  * @endcode
  */
-std::ostream& LOG_DEBUG();
+BUMP_EXPORT std::ostream& LOG_DEBUG();
 
 /**
  * Logs the message with the given prefix no matter what level is set.
@@ -289,7 +311,7 @@ std::ostream& LOG_DEBUG();
  *   LOG_ALWAYS_P(bumpPrefix) << "This is an ALWAYS message" << std::endl; // outputs "[bump] This is an ALWAYS message"
  * @endcode
  */
-std::ostream& LOG_ALWAYS_P(const bump::String& prefix);
+BUMP_EXPORT std::ostream& LOG_ALWAYS_P(const bump::String& prefix);
 
 /**
  * Logs the message with the given prefix when the log level is set to ERROR_LVL or higher.
@@ -298,7 +320,7 @@ std::ostream& LOG_ALWAYS_P(const bump::String& prefix);
  *   LOG_ERROR_P(bumpPrefix) << "This is an ERROR message" << std::endl; // outputs "[bump] This is an ERROR message"
  * @endcode
  */
-std::ostream& LOG_ERROR_P(const bump::String& prefix);
+BUMP_EXPORT std::ostream& LOG_ERROR_P(const bump::String& prefix);
 
 /**
  * Logs the message with the given prefix when the log level is set to WARNING_LVL or higher.
@@ -307,7 +329,7 @@ std::ostream& LOG_ERROR_P(const bump::String& prefix);
  *   LOG_WARNING_P(bumpPrefix) << "This is a WARNING message" << std::endl; // outputs "[bump] This is a WARNING message"
  * @endcode
  */
-std::ostream& LOG_WARNING_P(const bump::String& prefix);
+BUMP_EXPORT std::ostream& LOG_WARNING_P(const bump::String& prefix);
 
 /**
  * Logs the message with the given prefix when the log level is set to INFO_LVL or higher.
@@ -316,7 +338,7 @@ std::ostream& LOG_WARNING_P(const bump::String& prefix);
  *   LOG_INFO_P(bumpPrefix) << "This is an INFO message" << std::endl; // outputs "[bump] This is an INFO message"
  * @endcode
  */
-std::ostream& LOG_INFO_P(const bump::String& prefix);
+BUMP_EXPORT std::ostream& LOG_INFO_P(const bump::String& prefix);
 
 /**
  * Logs the message with the given prefix only when the log level is set to DEBUG_LVL.
@@ -325,9 +347,6 @@ std::ostream& LOG_INFO_P(const bump::String& prefix);
  *   LOG_DEBUG_P(bumpPrefix) << "This is a DEBUG message" << std::endl; // outputs "[bump] This is a DEBUG message"
  * @endcode
  */
-std::ostream& LOG_DEBUG_P(const bump::String& prefix);
-
-// Include the implementation for the convenience functions
-#include <bump/Log_impl.h>
+BUMP_EXPORT std::ostream& LOG_DEBUG_P(const bump::String& prefix);
 
 #endif	// End of BUMP_LOG_H

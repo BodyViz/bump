@@ -15,13 +15,11 @@
 #include <bump/FileInfo.h>
 #include <bump/FileSystem.h>
 #include <bump/FileSystemError.h>
-#include <bump/Log.h>
 
 namespace bump {
 
 FileInfo::FileInfo(const String& path)
 {
-	std::cout << "File Info Log Instance: " << Log::instance() << std::endl;
 	_path = boost::filesystem::path(path.c_str()).make_preferred();
 }
 

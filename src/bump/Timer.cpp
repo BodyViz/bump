@@ -6,9 +6,15 @@
 //  Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
+// Boost headers
+#include <boost/thread/mutex.hpp>
+
 // Bump headers
 #include <bump/String.h>
 #include <bump/Timer.h>
+
+// Global singleton mutex
+boost::mutex gTimerSingletonMutex;
 
 namespace bump {
 
@@ -21,6 +27,13 @@ Timer::Timer() :
 Timer::~Timer()
 {
 	;
+}
+
+Timer* Timer::instance()
+{
+	boost::mutex::scoped_lock lock(gTimerSingletonMutex);
+	static Timer timer;
+	return &timer;
 }
 
 void Timer::start()

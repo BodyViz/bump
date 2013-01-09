@@ -17,7 +17,6 @@
 // Bump headers
 #include <bump/Export.h>
 #include <bump/NotificationError.h>
-#include <bump/Singleton.h>
 #include <bump/String.h>
 
 namespace bump {
@@ -229,12 +228,16 @@ protected:
  *
  * And that's all there is to it! For more information, please see the bumpNotificationCenter example.
  */
-class BUMP_EXPORT NotificationCenter : public Singleton<NotificationCenter>
+class BUMP_EXPORT NotificationCenter
 {
 public:
 
-	// Declare the singleton to be a friend class to call the constructor/destructors
-	friend class Singleton<NotificationCenter>;
+	/**
+	 * Creates a thread-safe singleton instance of the NotificationCenter object.
+	 *
+	 * @return The singleton instance.
+	 */
+	static NotificationCenter* instance();
 
 	/**
 	 * Adds the observer to the list of observers to send notifications.
@@ -280,12 +283,6 @@ protected:
 
 	/**
 	 * @internal
-	 * Constructor.
-	 */
-	NotificationCenter();
-
-	/**
-	 * @internal
 	 * Destructor.
 	 */
 	~NotificationCenter();
@@ -293,6 +290,30 @@ protected:
 	// Instance member variables
 	std::vector<Observer*> _keyObservers;		/**< @internal The list of key observers registered with the NotificationCenter. */
 	std::vector<Observer*> _objectObservers;	/**< @internal The list of object observers registered with the NotificationCenter. */
+
+private:
+
+	/**
+	 * @internal
+	 * Constructor.
+	 */
+	NotificationCenter();
+
+	/**
+	 * @internal
+	 * Copy constructor.
+	 *
+	 * No-op to support the singleton.
+	 */
+	NotificationCenter(const NotificationCenter& notificationCenter);
+
+	/**
+	 * @internal
+	 * Overloaded assignment operator.
+	 *
+	 * No-op to support the singleton.
+	 */
+	void operator=(const NotificationCenter& notificationCenter);
 };
 
 }	// End of bump namespace

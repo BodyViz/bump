@@ -8,9 +8,13 @@
 
 // Boost headers
 #include <boost/foreach.hpp>
+#include <boost/thread/mutex.hpp>
 
 // Bump headers
 #include <bump/NotificationCenter.h>
+
+// Global singleton mutex
+boost::mutex gNotificationCenterSingletonMutex;
 
 namespace bump {
 
@@ -99,6 +103,13 @@ NotificationCenter::~NotificationCenter()
 		String msg = String("bump::NotificationCenter has %1 observers left with keys: %2").arg(total_observers, key_string);
 		throw NotificationError(msg, BUMP_LOCATION);
 	}
+}
+
+NotificationCenter* NotificationCenter::instance()
+{
+	boost::mutex::scoped_lock lock(gNotificationCenterSingletonMutex);
+	static NotificationCenter notification_center;
+	return &notification_center;
 }
 
 void NotificationCenter::addObserver(Observer* observer)

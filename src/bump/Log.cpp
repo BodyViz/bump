@@ -11,10 +11,14 @@
 
 // Boost headers
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/thread/mutex.hpp>
 
 // Bump headers
 #include <bump/Environment.h>
 #include <bump/Log.h>
+
+// Global singleton mutex
+boost::mutex gLogSingletonMutex;
 
 namespace bump {
 
@@ -101,6 +105,13 @@ Log::Log() :
 Log::~Log()
 {
 	;
+}
+
+Log* Log::instance()
+{
+	boost::mutex::scoped_lock lock(gLogSingletonMutex);
+	static Log log;
+	return &log;
 }
 
 void Log::setIsLogEnabled(bool enabled)

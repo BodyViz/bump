@@ -23,14 +23,11 @@ SET (
 	${HEADER_PATH}/FileSystemError.h
 	${HEADER_PATH}/InvalidArgumentError.h
 	${HEADER_PATH}/Log.h
-	${HEADER_PATH}/Log_impl.h
 	${HEADER_PATH}/NotificationCenter.h
 	${HEADER_PATH}/NotificationCenter_impl.h
 	${HEADER_PATH}/NotificationError.h
 	${HEADER_PATH}/NotImplementedError.h
 	${HEADER_PATH}/OutOfRangeError.h
-	${HEADER_PATH}/Singleton.h
-	${HEADER_PATH}/SingletonError.h
 	${HEADER_PATH}/String.h
 	${HEADER_PATH}/StringSearchError.h
 	${HEADER_PATH}/Timeline.h
@@ -79,7 +76,6 @@ SET (TARGET_SRC
 	NotificationError.cpp
 	NotImplementedError.cpp
 	OutOfRangeError.cpp
-	SingletonError.cpp
 	String.cpp
 	StringSearchError.cpp
 	Timeline.cpp
