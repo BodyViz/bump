@@ -10,7 +10,7 @@
 #define BUMP_LOG_H
 
 // Boost headers
-#include <boost/thread.hpp>
+#include <boost/thread/mutex.hpp>
 
 // Bump headers
 #include <bump/Export.h>
@@ -32,7 +32,7 @@ namespace bump {
  * This logging system supports the following:
  *	  - Five different log levels
  *	  - Output redirection to files (a custom std::ofstream)
- *	  - Thread-safe access to the stream buffer
+ *	  - Thread-safe access to the stream buffer and thread-safe logging functions
  *    - Timestamp formatting
  *	  - Disabling the log altogether
  *
@@ -47,32 +47,29 @@ namespace bump {
  * Using the log is straight-forward. There are several different convenience functions
  * provided to make this as simple as possible. The easiest way to use the log is with
  * the following functions:
- *    - LOG_ALWAYS()
- *    - LOG_ERROR()
- *    - LOG_WARNING()
- *    - LOG_INFO()
- *    - LOG_DEBUG()
+ *    - bumpALWAYS(message);
+ *    - bumpERROR(message);
+ *    - bumpWARNING(message);
+ *    - bumpINFO(message);
+ *    - bumpDEBUG(message);
  *
- * Here is a simple example using the LOG_DEBUG() function:
- *
- * @code
- *   LOG_DEBUG() << "this is my output" << std::endl;
- * @endcode
+ * Here is a simple example using the bumpDEBUG() function:
+ *    - bumpDEBUG("this is my output");
  *
  * Sometimes, it is useful to be able to prefix your output with something like a
  * namespace, application name, error message, etc. For this purpose, the following
  * functions exist:
- *	  - LOG_ALWAYS_P(prefix)
- *	  - LOG_ERROR_P(prefix)
- *	  - LOG_WARNING_P(prefix)
- *	  - LOG_INFO_P(prefix)
- *	  - LOG_DEBUG_P(prefix)
+ *	  - bumpALWAYS_P(prefix, message);
+ *	  - bumpERROR_P(prefix, message);
+ *	  - bumpWARNING_P(prefix, message);
+ *	  - bumpINFO_P(prefix, message);
+ *	  - bumpDEBUG_P(prefix, message);
  *
  * Here are some common examples of different logging messages:
  *
  * @code
- *   LOG_ERROR_P("[bump] ") << "ERROR: We have a problem here" << std::endl;
- *   LOG_ALWAYS_P("[bump] ") << "Initializing the logging system" << std::endl;
+ *   bumpERROR_P("[bump] ", "ERROR: We have a problem here");
+ *   bumpALWAYS_P("[bump] ", "Initializing the logging system");
  * @endcode
  *
  * As you can see, it is just like using std::cout, except with a bunch of extra benefits!
@@ -196,13 +193,6 @@ public:
 	 */
 	std::ostream& logStream(const String& prefix = "");
 
-	/**
-	 * Returns a null log stream that won't push any output through it.
-	 *
-	 * @return The output stream to write to.
-	 */
-	std::ostream& nullLogStream();
-
 protected:
 
 	/**
@@ -225,7 +215,6 @@ protected:
 	bool					_isDateTimeFormatEnabled;	/**< @internal Whether the date/time are tacked onto the log output. */
 	TimestampFormat			_timestampFormat;			/**< @internal The timestamp format when enabled. */
 	std::ostream*			_logStream;					/**< @internal The log stream to output to. */
-	std::ostream			_nullLogStream;				/**< @internal A null log stream that won't push output. */
 	boost::mutex			_mutex;						/**< @internal A boost mutex used to make the log stream access thread-safe. */
 
 private:
@@ -260,93 +249,64 @@ private:
 }	// End of bump namespace
 
 /**
- * Logs the message no matter what level is set.
+ * Default log functions.
  *
- * @code
- *   LOG_ALWAYS() << "This is an ALWAYS message" << std::endl; // outputs "This is an ALWAYS message"
- * @endcode
+ * These are the most commonly used logging functions. They automatically use the
+ * appropriate log level for the message. The log stream is retrieved, then the message
+ * is appended into it, then std::endl is appended onto the stream flushing the buffer.
  */
-BUMP_EXPORT std::ostream& LOG_ALWAYS();
+BUMP_EXPORT void bumpALWAYS(const bump::String& message);
+BUMP_EXPORT void bumpERROR(const bump::String& message);
+BUMP_EXPORT void bumpWARNING(const bump::String& message);
+BUMP_EXPORT void bumpINFO(const bump::String& message);
+BUMP_EXPORT void bumpDEBUG(const bump::String& message);
+BUMP_EXPORT void bumpNEWLINE();
 
 /**
- * Logs the message when the log level is set to ERROR_LVL or higher.
+ * Log functions that only flush the buffer.
  *
- * @code
- *   LOG_ERROR() << "This is an ERROR message" << std::endl; // outputs "This is an ERROR message"
- * @endcode
+ * These functions set the appropriate log level for the message, retrieve the stream,
+ * append the message into the stream, then flush the stream. This is useful for when
+ * you need to generate multiple log messages on a single line.
  */
-BUMP_EXPORT std::ostream& LOG_ERROR();
+BUMP_EXPORT void bumpALWAYS_F(const bump::String& message);
+BUMP_EXPORT void bumpERROR_F(const bump::String& message);
+BUMP_EXPORT void bumpWARNING_F(const bump::String& message);
+BUMP_EXPORT void bumpINFO_F(const bump::String& message);
+BUMP_EXPORT void bumpDEBUG_F(const bump::String& message);
+
+/** Default log functions that only call std::flush on the std::ostream without adding a newline. */
 
 /**
- * Logs the message when the log level is set to WARNING_LVL or higher.
+ * Log functions that append a prefix to the output message.
  *
- * @code
- *   LOG_WARNING() << "This is a WARNING message" << std::endl; // outputs "This is a WARNING message"
- * @endcode
+ * It can sometimes be useful to tack on a prefix to your logging messages. These
+ * functions are for exactly that. They automatically set the approprate log level
+ * for the message and retrieve the stream. First, the prefix is appended to the
+ * stream and then the message. Finally, std::endl is appended onto the stream
+ * flushing the buffer with a newline character.
  */
-BUMP_EXPORT std::ostream& LOG_WARNING();
+BUMP_EXPORT void bumpALWAYS_P(const bump::String& prefix, const bump::String& message);
+BUMP_EXPORT void bumpERROR_P(const bump::String& prefix, const bump::String& message);
+BUMP_EXPORT void bumpWARNING_P(const bump::String& prefix, const bump::String& message);
+BUMP_EXPORT void bumpINFO_P(const bump::String& prefix, const bump::String& message);
+BUMP_EXPORT void bumpDEBUG_P(const bump::String& prefix, const bump::String& message);
+BUMP_EXPORT void bumpNEWLINE_P(const bump::String& prefix);
 
 /**
- * Logs the message when the log level is set to INFO_LVL or higher.
+ * Log functions that append a prefix to the output message and only flush the buffer.
  *
- * @code
- *   LOG_INFO() << "This is an INFO message" << std::endl; // outputs "This is an INFO message"
- * @endcode
+ * It can sometimes be useful to tack on a prefix to your logging messages. These
+ * functions are for exactly that. They automatically set the approprate log level
+ * for the message and retrieve the stream. First, the prefix is appended to the
+ * stream and then the message. Finally, the stream's buffer is flushed without
+ * adding a newline character to the end. This is useful for when you need to
+ * generate multiple log messages on a single line.
  */
-BUMP_EXPORT std::ostream& LOG_INFO();
-
-/**
- * Logs the message only when the log level is set to DEBUG_LVL.
- *
- * @code
- *   LOG_DEBUG() << "This is a DEBUG message" << std::endl; // outputs "This is a DEBUG message"
- * @endcode
- */
-BUMP_EXPORT std::ostream& LOG_DEBUG();
-
-/**
- * Logs the message with the given prefix no matter what level is set.
- *
- * @code
- *   LOG_ALWAYS_P(bumpPrefix) << "This is an ALWAYS message" << std::endl; // outputs "[bump] This is an ALWAYS message"
- * @endcode
- */
-BUMP_EXPORT std::ostream& LOG_ALWAYS_P(const bump::String& prefix);
-
-/**
- * Logs the message with the given prefix when the log level is set to ERROR_LVL or higher.
- *
- * @code
- *   LOG_ERROR_P(bumpPrefix) << "This is an ERROR message" << std::endl; // outputs "[bump] This is an ERROR message"
- * @endcode
- */
-BUMP_EXPORT std::ostream& LOG_ERROR_P(const bump::String& prefix);
-
-/**
- * Logs the message with the given prefix when the log level is set to WARNING_LVL or higher.
- *
- * @code
- *   LOG_WARNING_P(bumpPrefix) << "This is a WARNING message" << std::endl; // outputs "[bump] This is a WARNING message"
- * @endcode
- */
-BUMP_EXPORT std::ostream& LOG_WARNING_P(const bump::String& prefix);
-
-/**
- * Logs the message with the given prefix when the log level is set to INFO_LVL or higher.
- *
- * @code
- *   LOG_INFO_P(bumpPrefix) << "This is an INFO message" << std::endl; // outputs "[bump] This is an INFO message"
- * @endcode
- */
-BUMP_EXPORT std::ostream& LOG_INFO_P(const bump::String& prefix);
-
-/**
- * Logs the message with the given prefix only when the log level is set to DEBUG_LVL.
- *
- * @code
- *   LOG_DEBUG_P(bumpPrefix) << "This is a DEBUG message" << std::endl; // outputs "[bump] This is a DEBUG message"
- * @endcode
- */
-BUMP_EXPORT std::ostream& LOG_DEBUG_P(const bump::String& prefix);
+BUMP_EXPORT void bumpALWAYS_PF(const bump::String& prefix, const bump::String& message);
+BUMP_EXPORT void bumpERROR_PF(const bump::String& prefix, const bump::String& message);
+BUMP_EXPORT void bumpWARNING_PF(const bump::String& prefix, const bump::String& message);
+BUMP_EXPORT void bumpINFO_PF(const bump::String& prefix, const bump::String& message);
+BUMP_EXPORT void bumpDEBUG_PF(const bump::String& prefix, const bump::String& message);
 
 #endif	// End of BUMP_LOG_H

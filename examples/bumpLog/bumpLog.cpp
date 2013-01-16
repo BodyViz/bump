@@ -6,19 +6,63 @@
 //  Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
+// Boost headers
+#include <boost/thread.hpp>
+
 // Bump headers
 #include <bump/Log.h>
 
+// Custom prefixes for logging
 #define customPrefix			"[bump] "
 #define customDashPrefix		"- [bump] "
 
-void pushAllLogMessageTypes()
+/**
+ * Simple function that prints out a message on all log levels.
+ */
+void pushAllLogMessageLevels()
 {
-	LOG_ALWAYS() << "- ALWAYS Message" << std::endl;
-	LOG_ERROR() << "- ERROR Message" << std::endl;
-	LOG_WARNING() << "- WARNING Message" << std::endl;
-	LOG_INFO() << "- WARNING Message" << std::endl;
-	LOG_DEBUG() << "- DEBUG Message" << std::endl;
+	bumpALWAYS("- ALWAYS Message");
+	bumpERROR("- ERROR Message");
+	bumpWARNING("- WARNING Message");
+	bumpINFO("- INFO Message");
+	bumpDEBUG("- DEBUG Message");
+}
+
+/**
+ * Helper callable to demonstrate the bump::Log's thread-safety.
+ */
+struct Callable
+{
+	// Instance member variables
+	bump::String name;
+	uint64_t counter = 0;
+
+	// Constructor
+	Callable(const bump::String& callableName) { name = callableName; }
+
+	// Callback
+    void operator()()
+	{
+		for (uint64_t i = 0; i < 10; ++i)
+		{
+			bumpALWAYS(bump::String("- %1: %2").arg(name, counter));
+			++counter;
+		}
+	}
+};
+
+/**
+ * Runs the bump::Log in parallel across two different threads to demonstrate the
+ * thread-safety of the logging system.
+ */
+void runThreadSafetyDemo()
+{
+    Callable x("Callable X");
+	Callable y("Callable Y");
+	boost::thread thread_x(x);
+	boost::thread thread_y(y);
+	thread_x.join();
+	thread_y.join();
 }
 
 /**
@@ -28,7 +72,7 @@ void pushAllLogMessageTypes()
  *
  *	  - Five different log levels
  *	  - Output redirection to files (a custom std::ofstream)
- *	  - Thread-safe access to the stream buffer
+ *	  - Thread-safe access to the stream buffer and thread-safe logging functions
  *    - Timestamp formatting
  *	  - Disabling the log altogether
  *
@@ -41,34 +85,34 @@ void pushAllLogMessageTypes()
  *	  - BUMP_LOG_LEVEL: Defines the maximum output level for the log:
  *		  * [ ALWAYS_LVL | ERROR_LVL | WARNING_LVL | INFO_LVL | DEBUG_LVL ]
  *
- * Using the log is straight-forward. There are several different convenience macros
+ * Using the log is straight-forward. There are several different convenience functions
  * provided to make this as simple as possible. The easiest way to use the log is with
- * the following macros:
+ * the following functions:
  *
- *    - LOG_ALWAYS()
- *    - LOG_ERROR()
- *    - LOG_WARNING()
- *    - LOG_INFO()
- *    - LOG_DEBUG()
+ *    - bumpALWAYS(message);
+ *    - bumpERROR(message);
+ *    - bumpWARNING(message);
+ *    - bumpINFO(message);
+ *    - bumpDEBUG(message);
  *
- * Here is a simple example using the LOG_DEBUG() macro:
+ * Here is a simple example using the bumpDEBUG() function:
  *
- *    - LOG_DEBUG() << "this is my output" << std::endl;
+ *    - bumpDEBUG("this is my output");
  *
  * Sometimes, it is useful to be able to prefix your output with something like a
  * namespace, application name, error message, etc. For this purpose, the following
- * macros exist:
+ * functions exist:
  *
- *	  - LOG_ALWAYS_P(prefix)
- *	  - LOG_ERROR_P(prefix)
- *	  - LOG_WARNING_P(prefix)
- *	  - LOG_INFO_P(prefix)
- *	  - LOG_DEBUG_P(prefix)
+ *	  - bumpALWAYS_P(prefix, message);
+ *	  - bumpERROR_P(prefix, message);
+ *	  - bumpWARNING_P(prefix, message);
+ *	  - bumpINFO_P(prefix, message);
+ *	  - bumpDEBUG_P(prefix, message);
  *
  * Here are some common examples of different logging messages:
  *
- *	  - LOG_ERROR_P("[bump] ") << "ERROR: We have a problem here" << std::endl;
- *	  - LOG_ALWAYS_P("[bump] ") << "Initializing the logging system" << std::endl;
+ *	  - bumpERROR_P("[bump] ", "ERROR: We have a problem here");
+ *	  - bumpALWAYS_P("[bump] ", "Initializing the logging system");
  *
  * As you can see, it is just like using std::cout, except with a bunch of extra benefits!
  */
@@ -94,68 +138,81 @@ int main(int argc, char **argv)
 
 	// Set the log level to "ALWAYS"
 	bump::Log::instance()->setLogLevel(bump::Log::ALWAYS_LVL);
-	LOG_ALWAYS() << "Setting LogLevel to ALWAYS:" << std::endl;
-	pushAllLogMessageTypes();
+	bumpALWAYS("Setting LogLevel to ALWAYS:");
+	pushAllLogMessageLevels();
 
 	// Set the log level to "ERROR"
 	bump::Log::instance()->setLogLevel(bump::Log::ERROR_LVL);
-	LOG_ALWAYS() << "\nSetting LogLevel to ERROR:" << std::endl;
-	pushAllLogMessageTypes();
+	bumpNEWLINE();
+	bumpALWAYS("Setting LogLevel to ERROR:");
+	pushAllLogMessageLevels();
 
 	// Set the log level to "WARNING"
 	bump::Log::instance()->setLogLevel(bump::Log::WARNING_LVL);
-	LOG_ALWAYS() << "\nSetting LogLevel to WARNING:" << std::endl;
-	pushAllLogMessageTypes();
+	bumpNEWLINE();
+	bumpALWAYS("Setting LogLevel to WARNING:");
+	pushAllLogMessageLevels();
 
 	// Set the log level to "INFO"
 	bump::Log::instance()->setLogLevel(bump::Log::INFO_LVL);
-	LOG_ALWAYS() << "\nSetting LogLevel to INFO:" << std::endl;
-	pushAllLogMessageTypes();
+	bumpNEWLINE();
+	bumpALWAYS("Setting LogLevel to INFO:");
+	pushAllLogMessageLevels();
 
 	// Set the log level to "DEBUG"
 	bump::Log::instance()->setLogLevel(bump::Log::DEBUG_LVL);
-	LOG_ALWAYS() << "\nSetting LogLevel to DEBUG:" << std::endl;
-	pushAllLogMessageTypes();
+	bumpNEWLINE();
+	bumpALWAYS("Setting LogLevel to DEBUG:");
+	pushAllLogMessageLevels();
 
 	//=======================================================================
 	//              Demonstrates how to use prefix logging
 	//=======================================================================
 
 	// Push some messages using the prefix logging functions
-	LOG_ALWAYS() << "\nPushing messages with a custom prefix: \"" << customDashPrefix << "\"" << std::endl;
-	LOG_ALWAYS_P(customDashPrefix) << "ALWAYS Message" << std::endl;
-	LOG_ERROR_P(customDashPrefix) << "ERROR Message" << std::endl;
-	LOG_WARNING_P(customDashPrefix) << "WARNING Message" << std::endl;
-	LOG_INFO_P(customDashPrefix) << "WARNING Message" << std::endl;
-	LOG_DEBUG_P(customDashPrefix) << "DEBUG Message" << std::endl;
+	bumpALWAYS(bump::String("\nPushing messages with a custom prefix: \"") << customDashPrefix << "\"");
+	bumpALWAYS_P(customDashPrefix, "ALWAYS Message");
+	bumpERROR_P(customDashPrefix, "ERROR Message");
+	bumpWARNING_P(customDashPrefix, "WARNING Message");
+	bumpINFO_P(customDashPrefix, "WARNING Message");
+	bumpDEBUG_P(customDashPrefix, "DEBUG Message");
 
 	//=======================================================================
 	//            Demonstrates how to use timestamp formatting
 	//=======================================================================
 
 	// By default, the timestamp formatting is disabled. To enable it, just turn it on.
-	LOG_ALWAYS() << std::endl;
+	bumpNEWLINE();
 	bump::Log::instance()->setIsTimestampingEnabled(true);
 	bump::Log::instance()->setTimestampFormat(bump::Log::DATE_TIME_TIMESTAMP);
-	LOG_ALWAYS() << "Example message with \"DATE_TIME_TIMESTAMP\" timestamp formatting" << std::endl;
-	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"DATE_TIME_TIMESTAMP\" timestamp formatting\n" << std::endl;
+	bumpALWAYS("Example message with \"DATE_TIME_TIMESTAMP\" timestamp formatting");
+	bumpALWAYS_P(customPrefix, "Example prefix message with \"DATE_TIME_TIMESTAMP\" timestamp formatting\n");
 
 	// From here, you can customize the timestamp format as you wish
 	bump::Log::instance()->setTimestampFormat(bump::Log::DATE_TIME_WITH_AM_PM_TIMESTAMP);
-	LOG_ALWAYS() << "Example message with \"DATE_TIME_WITH_AM_PM_TIMESTAMP\" timestamp formatting" << std::endl;
-	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"DATE_TIME_WITH_AM_PM_TIMESTAMP\" timestamp formatting\n" << std::endl;
+	bumpALWAYS("Example message with \"DATE_TIME_WITH_AM_PM_TIMESTAMP\" timestamp formatting");
+	bumpALWAYS_P(customPrefix, "Example prefix message with \"DATE_TIME_WITH_AM_PM_TIMESTAMP\" timestamp formatting\n");
 
 	bump::Log::instance()->setTimestampFormat(bump::Log::TIME_TIMESTAMP);
-	LOG_ALWAYS() << "Example message with \"TIME_TIMESTAMP\" timestamp formatting" << std::endl;
-	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"TIME_TIMESTAMP\" timestamp formatting\n" << std::endl;
+	bumpALWAYS("Example message with \"TIME_TIMESTAMP\" timestamp formatting");
+	bumpALWAYS_P(customPrefix, "Example prefix message with \"TIME_TIMESTAMP\" timestamp formatting\n");
 
 	bump::Log::instance()->setTimestampFormat(bump::Log::TIME_WITHOUT_AM_PM_TIMESTAMP);
-	LOG_ALWAYS() << "Example message with \"TIME_WITHOUT_AM_PM_TIMESTAMP\" timestamp formatting" << std::endl;
-	LOG_ALWAYS_P(customPrefix) << "Example prefix message with \"TIME_WITHOUT_AM_PM_TIMESTAMP\" timestamp formatting\n" << std::endl;
+	bumpALWAYS("Example message with \"TIME_WITHOUT_AM_PM_TIMESTAMP\" timestamp formatting");
+	bumpALWAYS_P(customPrefix, "Example prefix message with \"TIME_WITHOUT_AM_PM_TIMESTAMP\" timestamp formatting\n");
 
 	// Then to turn it back off, simply disable it.
 	bump::Log::instance()->setIsTimestampingEnabled(false);
-	LOG_ALWAYS() << "The timestamps should now be disabled and not visible" << std::endl;
+	bumpALWAYS("The timestamps should now be disabled and not visible");
+	bumpNEWLINE();
+
+	//=======================================================================
+	//               Demonstrates the log's thread-safety
+	//=======================================================================
+
+	// Run the thread safety demo to show that the bump::Log is thread-safe
+	bumpALWAYS("Thread Saftey Demo:");
+	runThreadSafetyDemo();
 
     return 0;
 }
