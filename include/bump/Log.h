@@ -193,6 +193,13 @@ public:
 	 */
 	std::ostream& logStream(const String& prefix = "");
 
+	/**
+	 * Returns the convenience function mutex used to lock all the convenience functions.
+	 *
+	 * @return The convenience function mutex used to lock all the convenience functions.
+	 */
+	boost::mutex& convenienceFunctionMutex();
+
 protected:
 
 	/**
@@ -216,6 +223,7 @@ protected:
 	TimestampFormat			_timestampFormat;			/**< @internal The timestamp format when enabled. */
 	std::ostream*			_logStream;					/**< @internal The log stream to output to. */
 	boost::mutex			_mutex;						/**< @internal A boost mutex used to make the log stream access thread-safe. */
+	boost::mutex			_convenienceFunctionMutex;		/**< @internal A boost mutex used to lock all the convenience functions making them thread-safe. */
 
 private:
 
