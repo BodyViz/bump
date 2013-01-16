@@ -28,6 +28,7 @@ Here is a quick list of the dependencies and applications used to build Bump.
 
 * [Boost](http://www.boost.org/) (required - headers and libraries)
 * [Google Test](http://code.google.com/p/googletest/) (optional - necessary to compile the unit tests)
+* [smallsha1](http://code.google.com/p/smallsha1/) (required - already bundled inside the Bump build system)
 
 **Applications**
 
@@ -87,6 +88,9 @@ There are many cool features inside Bump. The best way to learn how to use Bump 
 * **AutoTimer**
 	* Want to quickly know how long something takes?
 	* Simple! Create a bump::AutoTimer on the stack. When it's destructed, it prints out the elapsed time in your choice of precision.
+* **CryptographicHash**
+	* Need to generate a hex string hash for textual or binary data?
+	* Just pass off your data and call the result method...simple and efficient sha1 hex string hashing.
 * **Environment**
 	* Gets and sets environment variables and usernames.
 * **Exception**
