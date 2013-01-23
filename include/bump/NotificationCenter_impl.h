@@ -12,6 +12,45 @@
 namespace bump {
 
 //====================================================================================
+//                                     Observer
+//====================================================================================
+
+inline Observer::Observer()
+{
+	;
+}
+
+inline Observer::~Observer()
+{
+	;
+}
+
+inline void Observer::notify()
+{
+	;
+}
+
+inline void Observer::notify(const boost::any& object)
+{
+	;
+}
+
+inline const String& Observer::notificationName()
+{
+	return _notificationName;
+}
+
+inline const Observer::ObserverType& Observer::observerType()
+{
+	return _observerType;
+}
+
+inline bool Observer::containsObserver(void* observer)
+{
+	return observer == _observer;
+}
+
+//====================================================================================
 //                                    KeyObserver
 //====================================================================================
 
@@ -110,29 +149,5 @@ inline void ObjectObserver<T1, T2>::notify(const boost::any& object)
 }
 
 }	// End of bump namespace
-
-//====================================================================================
-//                     NotificationCenter convenience functions
-//====================================================================================
-
-inline void ADD_OBSERVER(bump::Observer* observer)
-{
-	bump::NotificationCenter::instance()->addObserver(observer);
-}
-
-inline void REMOVE_OBSERVER(void* observer)
-{
-	bump::NotificationCenter::instance()->removeObserver(observer);
-}
-
-inline unsigned int POST_NOTIFICATION(const bump::String& notificationName)
-{
-	return bump::NotificationCenter::instance()->postNotification(notificationName);
-}
-
-inline unsigned int POST_NOTIFICATION_WITH_OBJECT(const bump::String& notificationName, const boost::any& object)
-{
-	return bump::NotificationCenter::instance()->postNotificationWithObject(notificationName, object);
-}
 
 #endif	// End of BUMP_NOTIFICATION_CENTER_IMPL_H

@@ -21,40 +21,7 @@ namespace bump {
 //                                     Observer
 //====================================================================================
 
-Observer::Observer()
-{
-	;
-}
-
-Observer::~Observer()
-{
-	;
-}
-
-void Observer::notify()
-{
-	;
-}
-
-void Observer::notify(const boost::any& object)
-{
-	;
-}
-
-const String& Observer::notificationName()
-{
-	return _notificationName;
-}
-
-const Observer::ObserverType& Observer::observerType()
-{
-	return _observerType;
-}
-
-bool Observer::containsObserver(void* observer)
-{
-	return observer == _observer;
-}
+// Implemented in NotificationCenter_impl.h
 
 //====================================================================================
 //                                    KeyObserver
@@ -222,3 +189,23 @@ void NotificationCenter::removeObserver(void* observer)
 }
 
 }	// End of bump namespace
+
+void ADD_OBSERVER(bump::Observer* observer)
+{
+	bump::NotificationCenter::instance()->addObserver(observer);
+}
+
+void REMOVE_OBSERVER(void* observer)
+{
+	bump::NotificationCenter::instance()->removeObserver(observer);
+}
+
+unsigned int POST_NOTIFICATION(const bump::String& notificationName)
+{
+	return bump::NotificationCenter::instance()->postNotification(notificationName);
+}
+
+unsigned int POST_NOTIFICATION_WITH_OBJECT(const bump::String& notificationName, const boost::any& object)
+{
+	return bump::NotificationCenter::instance()->postNotificationWithObject(notificationName, object);
+}

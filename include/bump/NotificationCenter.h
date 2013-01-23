@@ -28,7 +28,7 @@ namespace bump {
  * Observer objects to handle forwarding all notifications to the appropriate
  * Observer instances.
  */
-class BUMP_EXPORT Observer
+class Observer
 {
 public:
 
@@ -44,33 +44,33 @@ public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~Observer();
+	inline virtual ~Observer();
 
 	/**
 	 * Calls the function pointer on the observer instance.
 	 */
-	virtual void notify();
+	inline virtual void notify();
 
 	/**
 	 * Calls the function pointer on the observer instance with the given object.
 	 *
 	 * @param object The object to send to the notification's observer.
 	 */
-	virtual void notify(const boost::any& object);
+	inline virtual void notify(const boost::any& object);
 
 	/**
 	 * Returns the name of the notification that the observer is attached to.
 	 *
 	 * @return The name of the notification that the observer is attached to.
 	 */
-	const String& notificationName();
+	inline const String& notificationName();
 
 	/**
 	 * Returns the type of the observer.
 	 *
 	 * @return The type of the observer.
 	 */
-	const ObserverType& observerType();
+	inline const ObserverType& observerType();
 
 	/**
 	 * Returns whether the given observer is the same as the internal observer.
@@ -78,7 +78,7 @@ public:
 	 * @param observer An observer pointer to match against the internal observer pointer.
 	 * @return True if the internal observer matches the given observer, false otherwise.
 	 */
-	bool containsObserver(void* observer);
+	inline bool containsObserver(void* observer);
 
 protected:
 
@@ -86,7 +86,7 @@ protected:
 	 * @internal
 	 * Constructor.
 	 */
-	Observer();
+	inline Observer();
 
 	// Instance member variables
 	void*						_observer;			/**< @internal The observer instance used to send notifications. */
@@ -99,7 +99,7 @@ protected:
  * on the key. This subclass is used with the POST_NOIFICATION macro.
  */
 template <class T>
-class BUMP_EXPORT KeyObserver : public Observer
+class KeyObserver : public Observer
 {
 public:
 
@@ -134,7 +134,7 @@ protected:
  * on the key. This subclass is used with the POST_NOTIFICATION_WITH_OBJECT macro.
  */
 template <class T1, class T2>
-class BUMP_EXPORT ObjectObserver : public Observer
+class ObjectObserver : public Observer
 {
 public:
 
@@ -325,14 +325,14 @@ private:
  *
  * @param observer The object or key observer to add to the NotificationCenter.
  */
-inline void ADD_OBSERVER(bump::Observer* observer);
+BUMP_EXPORT void ADD_OBSERVER(bump::Observer* observer);
 
 /**
  * Convenience function for accessing the NotificationCenter singleton's removeObserver() method.
  *
  * @param observer The observer instance to remove from the NotificationCenter.
  */
-inline void REMOVE_OBSERVER(void* observer);
+BUMP_EXPORT void REMOVE_OBSERVER(void* observer);
 
 /**
  * Convenience function for accessing the NotificationCenter singleton's postNotification() method.
@@ -340,7 +340,7 @@ inline void REMOVE_OBSERVER(void* observer);
  * @param notificationName The notification to post to registered observers.
  * @return The number of observers that received the notification.
  */
-inline unsigned int POST_NOTIFICATION(const bump::String& notificationName);
+BUMP_EXPORT unsigned int POST_NOTIFICATION(const bump::String& notificationName);
 
 /**
  * Convenience function for accessing the NotificationCenter singleton's postNotificationWithObject() method.
@@ -349,7 +349,7 @@ inline unsigned int POST_NOTIFICATION(const bump::String& notificationName);
  * @param object The object to send to the registered observers.
  * @return The number of observers that received the notification.
  */
-inline unsigned int POST_NOTIFICATION_WITH_OBJECT(const bump::String& notificationName, const boost::any& object);
+BUMP_EXPORT unsigned int POST_NOTIFICATION_WITH_OBJECT(const bump::String& notificationName, const boost::any& object);
 
 // Pull in the KeyObserver and ObjectObserver template implementations
 #include <bump/NotificationCenter_impl.h>
