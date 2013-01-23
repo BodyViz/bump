@@ -35,15 +35,20 @@ struct Callable
 {
 	// Instance member variables
 	bump::String name;
-	uint64_t counter = 0;
+	unsigned int counter;
 
 	// Constructor
-	Callable(const bump::String& callableName) { name = callableName; }
+	Callable(const bump::String& callableName) :
+		name(callableName),
+		counter(0)
+	{
+		;
+	}
 
 	// Callback
     void operator()()
 	{
-		for (uint64_t i = 0; i < 10; ++i)
+		for (unsigned int i = 0; i < 10; ++i)
 		{
 			bumpALWAYS(bump::String("- %1: %2").arg(name, counter));
 			++counter;
