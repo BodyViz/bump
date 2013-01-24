@@ -21,7 +21,30 @@ namespace bump {
 //                                     Observer
 //====================================================================================
 
-// Implemented in NotificationCenter_impl.h
+Observer::Observer()
+{
+	;
+}
+
+Observer::~Observer()
+{
+	;
+}
+
+const String& Observer::notificationName()
+{
+	return _notificationName;
+}
+
+const Observer::ObserverType& Observer::observerType()
+{
+	return _observerType;
+}
+
+bool Observer::containsObserver(void* observer)
+{
+	return observer == _observer;
+}
 
 //====================================================================================
 //                                    KeyObserver

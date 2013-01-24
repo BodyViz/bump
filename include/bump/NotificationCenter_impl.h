@@ -12,45 +12,6 @@
 namespace bump {
 
 //====================================================================================
-//                                     Observer
-//====================================================================================
-
-inline Observer::Observer()
-{
-	;
-}
-
-inline Observer::~Observer()
-{
-	;
-}
-
-inline void Observer::notify()
-{
-	;
-}
-
-inline void Observer::notify(const boost::any& object)
-{
-	;
-}
-
-inline const String& Observer::notificationName()
-{
-	return _notificationName;
-}
-
-inline const Observer::ObserverType& Observer::observerType()
-{
-	return _observerType;
-}
-
-inline bool Observer::containsObserver(void* observer)
-{
-	return observer == _observer;
-}
-
-//====================================================================================
 //                                    KeyObserver
 //====================================================================================
 
@@ -73,6 +34,12 @@ template <class T>
 inline void KeyObserver<T>::notify()
 {
 	_functionPointer();
+}
+
+template <class T>
+inline void KeyObserver<T>::notify(const boost::any& /*object*/)
+{
+	// No-op
 }
 
 //====================================================================================
@@ -123,6 +90,12 @@ template <class T1, class T2>
 inline ObjectObserver<T1, T2>::~ObjectObserver()
 {
 	;
+}
+
+template <class T1, class T2>
+inline void ObjectObserver<T1, T2>::notify()
+{
+	// No-op
 }
 
 template <class T1, class T2>

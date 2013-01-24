@@ -28,7 +28,7 @@ namespace bump {
  * Observer objects to handle forwarding all notifications to the appropriate
  * Observer instances.
  */
-class Observer
+class BUMP_EXPORT Observer
 {
 public:
 
@@ -44,33 +44,33 @@ public:
 	/**
 	 * Destructor.
 	 */
-	inline virtual ~Observer();
+	virtual ~Observer();
 
 	/**
 	 * Calls the function pointer on the observer instance.
 	 */
-	inline virtual void notify();
+	virtual void notify() = 0;
 
 	/**
 	 * Calls the function pointer on the observer instance with the given object.
 	 *
 	 * @param object The object to send to the notification's observer.
 	 */
-	inline virtual void notify(const boost::any& object);
+	virtual void notify(const boost::any& object) = 0;
 
 	/**
 	 * Returns the name of the notification that the observer is attached to.
 	 *
 	 * @return The name of the notification that the observer is attached to.
 	 */
-	inline const String& notificationName();
+	const String& notificationName();
 
 	/**
 	 * Returns the type of the observer.
 	 *
 	 * @return The type of the observer.
 	 */
-	inline const ObserverType& observerType();
+	const ObserverType& observerType();
 
 	/**
 	 * Returns whether the given observer is the same as the internal observer.
@@ -78,7 +78,7 @@ public:
 	 * @param observer An observer pointer to match against the internal observer pointer.
 	 * @return True if the internal observer matches the given observer, false otherwise.
 	 */
-	inline bool containsObserver(void* observer);
+	bool containsObserver(void* observer);
 
 protected:
 
@@ -86,7 +86,7 @@ protected:
 	 * @internal
 	 * Constructor.
 	 */
-	inline Observer();
+	Observer();
 
 	// Instance member variables
 	void*						_observer;			/**< @internal The observer instance used to send notifications. */
@@ -116,6 +116,13 @@ public:
 	 * Calls the function pointer on the observer instance.
 	 */
 	inline void notify();
+
+	/**
+	 * Calls the function pointer on the observer instance with the given object (NO-OP).
+	 *
+	 * @param object The object to send to the notification's observer.
+	 */
+	inline void notify(const boost::any& object);
 
 protected:
 
@@ -173,6 +180,11 @@ public:
 	 * @param notificationName The name of the notification the observer is observing.
 	 */
 	inline ObjectObserver(T1* observer, void (T1::*functionPointer)(const T2*), const String& notificationName);
+
+	/**
+	 * Calls the function pointer on the observer instance (NO-OP).
+	 */
+	inline void notify();
 
 	/**
 	 * Calls the function pointer on the observer instance with the given object.
