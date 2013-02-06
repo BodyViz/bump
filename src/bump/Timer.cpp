@@ -53,7 +53,7 @@ void Timer::unpause()
 
 void Timer::restart()
 {
-	_timer.resume();
+	_timer.start();
 }
 
 double Timer::secondsElapsed() const
