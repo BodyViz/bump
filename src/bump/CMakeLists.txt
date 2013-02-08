@@ -13,6 +13,7 @@ SET (HEADER_PATH ${Bump_SOURCE_DIR}/include/${LIB_NAME})
 # Add all the headers
 SET (
 	TARGET_H
+	${smallsha1_INCLUDE_DIR}/sha1.h
 	${HEADER_PATH}/AutoTimer.h
 	${HEADER_PATH}/CryptographicHash.h
 	${HEADER_PATH}/Environment.h
@@ -38,8 +39,12 @@ SET (
 	${HEADER_PATH}/bump.h
 )
 
+# Add the smallsha1 source files
+SET(TARGET_SRC ${Bump_SOURCE_DIR}/src/smallsha1/sha1.cpp)
+
 # Add some of the source files
 SET (TARGET_SRC
+	${TARGET_SRC}
 	AutoTimer.cpp
 	CryptographicHash.cpp
 	Exception.cpp
@@ -84,9 +89,6 @@ SET (TARGET_SRC
 	Uuid.cpp
 	Version.cpp
 )
-
-# Add smallsha1 as a target 3rd party dependency
-SET (TARGET_3RD_PARTY_LIBRARIES smallsha1)
 
 # Finish setting up the library
 SETUP_LIBRARY (${LIB_NAME})
