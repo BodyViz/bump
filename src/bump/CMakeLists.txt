@@ -13,6 +13,7 @@ SET (HEADER_PATH ${Bump_SOURCE_DIR}/include/${LIB_NAME})
 # Add all the headers
 SET (
 	TARGET_H
+	${smallsha1_INCLUDE_DIR}/sha1.h
 	${HEADER_PATH}/AutoTimer.h
 	${HEADER_PATH}/CryptographicHash.h
 	${HEADER_PATH}/Environment.h

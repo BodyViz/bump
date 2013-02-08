@@ -2,7 +2,7 @@
 # Only compile if we found Boost
 if (Boost_FOUND)
 
-	# Add the 3rd party and Boost headers
+	# Add 3rd party and Boost headers
 	SET (smallsha1_INCLUDE_DIR ${Bump_SOURCE_DIR}/include/smallsha1)
 	INCLUDE_DIRECTORIES (${smallsha1_INCLUDE_DIR} ${Boost_INCLUDE_DIR})
 
