@@ -32,7 +32,8 @@
  Gregory Petrosyan
  */
 
-#include "sha1.h"
+// Smallsha1 headers
+#include <smallsha1/sha1.h>
 
 namespace sha1
 {
