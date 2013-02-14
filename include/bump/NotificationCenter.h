@@ -13,7 +13,7 @@
 #include <boost/any.hpp>
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
-#include <boost/thread/mutex.hpp>
+#include <boost/thread.hpp>
 
 // Bump headers
 #include <bump/Export.h>
@@ -303,7 +303,7 @@ protected:
 	// Instance member variables
 	std::vector<Observer*>	_keyObservers;		/**< @internal The list of key observers registered with the NotificationCenter. */
 	std::vector<Observer*>	_objectObservers;	/**< @internal The list of object observers registered with the NotificationCenter. */
-	boost::mutex			_mutex;				/**< @internal A boost mutex used to make the notification center access thread-safe. */
+	boost::shared_mutex		_mutex;				/**< @internal A boost mutex used to make the notification center access thread-safe. */
 
 private:
 
