@@ -27,22 +27,25 @@ namespace bump {
 namespace TextFileReader {
 	
 	/* Read entire file and place in StringList and return pointer or ref */
-    BUMP_EXPORT boost::shared_ptr<StringList> returnFileContents(const String fileName) ;
+    BUMP_EXPORT boost::shared_ptr<StringList> fileContents(const String fileName) ;
     
 	/* Read first line of the file and return String */
-    BUMP_EXPORT bump::String returnFirstLine(const String fileName) ;
+    BUMP_EXPORT bump::String firstLine(const String fileName) ;
     
 	/* Read first numLines number of lines of a file and return */
-    BUMP_EXPORT boost::shared_ptr<StringList> returnFirstNLines(const String fileName, const int numLines);
+    BUMP_EXPORT boost::shared_ptr<StringList> header(const String fileName, const int numLines);
     
-	/* Read numLines number of lines starting at line begginningLine (lines start at nuber 0) */
-    BUMP_EXPORT boost::shared_ptr<StringList> returnNLinesStartingAtM(const String fileName, const int beginningLine, const int numLines);
+	/* Read numLines number of lines starting at line begginningLine (lines start at number 0) */
+    BUMP_EXPORT boost::shared_ptr<StringList> fileContents(const String fileName, const int beginningLine, const int numLines);
 	
 	/* Read the rest of the file starting at line begginningLine through the end of the file */
-	BUMP_EXPORT boost::shared_ptr<StringList> returnLineNThroughEnd(const String fileName, const int beginningLine);
+	BUMP_EXPORT boost::shared_ptr<StringList> fileContents(const String fileName, const int beginningLine);
 	
 	/* Returns the number of lines in the file or -1 if there was an error */
 	BUMP_EXPORT int numberOfLines(const String fileName);
+	
+	//TODO: Read the footer of the File
+	
     
     
     /* Reads from the file at the beginning line for the number of lines (numLines = -1 for the entire file) */
