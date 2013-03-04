@@ -52,7 +52,7 @@ namespace TextFileReader {
 	 * @param numLines The number of lines to read
 	 * @return The requested contents of the file with each String being one line from the file
 	 */
-    BUMP_EXPORT StringList fileContents(const String& fileName, const int beginningLine, const int numLines);
+    BUMP_EXPORT StringList fileContents(const String& fileName, const int& beginningLine, const int& numLines);
 	
 	/**
 	 * Returns the contents of the text file starting at
@@ -63,7 +63,7 @@ namespace TextFileReader {
 	 * @param beginningLine The line to start reading from
 	 * @return The requested contents of the file with each String being one line from the file
 	 */
-	BUMP_EXPORT StringList fileContents(const String& fileName, const int beginningLine);
+	BUMP_EXPORT StringList fileContents(const String& fileName, const int& beginningLine);
     
 	/**
 	 * Returns the first line of the text file
@@ -81,7 +81,7 @@ namespace TextFileReader {
 	 * @param numLines The number of lines making up the header
 	 * @return The header lines from the file with each String being one line
 	 */
-    BUMP_EXPORT StringList header(const String& fileName, const int numLines);
+    BUMP_EXPORT StringList header(const String& fileName, const int& numLines);
 	
 	/**
 	 * Returns the footer of the file. The size of the file footer
@@ -91,7 +91,7 @@ namespace TextFileReader {
 	 * @param numLines The number of lines making up the footer
 	 * @return The footer lines from the file with each String being one line
 	 */
-	BUMP_EXPORT StringList footer(const String& fileName, const int numLines);
+	BUMP_EXPORT StringList footer(const String& fileName, const int& numLines);
 
 	/**
 	 * Returns the number of line in the file or -1 if there was an error

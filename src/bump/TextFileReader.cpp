@@ -19,7 +19,7 @@ namespace bump {
 	
 namespace TextFileReader{
 	
-StringList readFileLines(String fileName, int beginningLine, int numLines){
+StringList readFileLines(String fileName, const int& beginningLine, const int& numLines){
 	
 	// Create StringList to store info
 	StringList file_contents;
@@ -79,7 +79,7 @@ StringList fileContents(const String& fileName){
 	return readFileLines(fileName, 0, -1); // -1 for the whole file
 }
 	
-StringList fileContents(const String& fileName, const int beginningLine, const int numLines){
+StringList fileContents(const String& fileName, const int& beginningLine, const int& numLines){
 	
 	if (beginningLine < 1) {
 		bumpINFO_P("FileReader: ", "The beginningLine can not be less than 1");
@@ -90,7 +90,7 @@ StringList fileContents(const String& fileName, const int beginningLine, const i
 	return readFileLines(fileName, beginningLine, numLines);
 }
 
-StringList fileContents(const String& fileName, const int beginningLine){
+StringList fileContents(const String& fileName, const int& beginningLine){
 	
 	if (beginningLine < 1) {
 		bumpINFO_P("FileReader: ", "The beginningLine can not be less than 1");
@@ -114,7 +114,7 @@ String firstLine(const String& fileName){
 	return header;
 }
 
-StringList header(const String& fileName, const int numLines){
+StringList header(const String& fileName, const int& numLines){
 	
 	if (numLines < 1) {
 		bumpINFO_P("FileReader: ", "The numLines can not be less than 1 for a header");
@@ -125,7 +125,7 @@ StringList header(const String& fileName, const int numLines){
 	return readFileLines(fileName, 0, numLines);
 }
 	
-StringList footer(const String& fileName, const int numLines){
+StringList footer(const String& fileName, const int& numLines){
 	
 	int file_num_lines = numberOfLines(fileName);
 	if (file_num_lines == -1) {
