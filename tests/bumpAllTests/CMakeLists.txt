@@ -8,6 +8,7 @@ SET (TARGET_SRC
 	../bumpFileSystemTests/FileSystemTest.cpp
 	../bumpNotificationTests/NotificationTest.cpp
 	../bumpStringTests/StringTest.cpp
+	../bumpTextFileReaderTests/TextFileReaderTest.cpp
 	../bumpUuidTests/UuidTest.cpp
 )
 
