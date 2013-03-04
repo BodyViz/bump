@@ -260,6 +260,7 @@ TEST_F(TextFileReaderTest, testReadFromLineToEnd)
 	
 TEST_F(TextFileReaderTest, testReadFirstLine)
 {
+	// With a valid file path, invalids are taken care of in testValidityOfFile()
 	bump::String line = bump::TextFileReader::firstLine(_validFileName);
 	EXPECT_STREQ("1: This is the first line", line.toStdString().c_str());
 }
@@ -322,6 +323,13 @@ TEST_F(TextFileReaderTest, testFooter)
 	EXPECT_STREQ("8: This is the eighth line", entire_file.at(7).toStdString().c_str());
 	EXPECT_STREQ("9: This is the ninth line", entire_file.at(8).toStdString().c_str());
 	EXPECT_STREQ("10: This is the tenth line", entire_file.at(9).toStdString().c_str());
+}
+	
+TEST_F(TextFileReaderTest, testNumberOfLines)
+{
+	// With a valid file path, invalids are taken care of in testValidityOfFile()
+	int numLines = bump::TextFileReader::numberOfLines(_validFileName);
+	EXPECT_EQ(10, numLines);
 }
 
 
