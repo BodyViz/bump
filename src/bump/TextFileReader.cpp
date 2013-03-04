@@ -27,7 +27,7 @@ StringList readFileLines(String fileName, int beginningLine, int numLines){
 	// Check to see if the file is valid before opening
 	bool is_valid = FileSystem::isFile(fileName);
 	if(!is_valid){
-		bumpALWAYS_P("FileSystem: ", "File to open is not a valid file");
+		bumpERROR_P("FileSystem: ", "File to open is not a valid file");
 		return file_contents;
 	}
 	bumpINFO_P("FileReader: Reading File ", fileName);
@@ -36,7 +36,7 @@ StringList readFileLines(String fileName, int beginningLine, int numLines){
 	std::ifstream input_file;
 	input_file.open(fileName.toStdString().data(), std::ios::in);
 	if (!input_file.is_open()) {
-		bumpALWAYS_P("FileReader: Error opening ", fileName);
+		bumpERROR_P("FileReader: Error opening ", fileName);
 		return file_contents;
 	}
 	
@@ -45,7 +45,7 @@ StringList readFileLines(String fileName, int beginningLine, int numLines){
 	for (unsigned int i = 1; i < beginningLine; i++) {
 		std::getline(input_file, line);
 		if (input_file.eof()) {
-			bumpALWAYS_P("FileReader: ", "The line requested is larger than the number of lines in the file");
+			bumpERROR_P("FileReader: ", "The line requested is larger than the number of lines in the file");
 			return file_contents;
 		}
 	}
@@ -74,17 +74,29 @@ StringList readFileLines(String fileName, int beginningLine, int numLines){
 	
 }
 
-StringList returnFileContents(const String& fileName){
+StringList fileContents(const String& fileName){
 	
 	return readFileLines(fileName, 0, -1); // -1 for the whole file
 }
 	
-StringList fileContents(const String& fileName, const int& beginningLine, const int& numLines){
+StringList fileContents(const String& fileName, const int beginningLine, const int numLines){
+	
+	if (beginningLine < 1) {
+		bumpINFO_P("FileReader: ", "The beginningLine can not be less than 1");
+		StringList empty_string;
+		return empty_string;
+	}
 	
 	return readFileLines(fileName, beginningLine, numLines);
 }
 
-StringList fileContents(const String& fileName, const int& beginningLine){
+StringList fileContents(const String& fileName, const int beginningLine){
+	
+	if (beginningLine < 1) {
+		bumpINFO_P("FileReader: ", "The beginningLine can not be less than 1");
+		StringList empty_string;
+		return empty_string;
+	}
 	
 	int number_of_lines = -1; // -1 for the rest of the file
 	return readFileLines(fileName, beginningLine, number_of_lines);
@@ -102,12 +114,12 @@ String firstLine(const String& fileName){
 	return header;
 }
 
-StringList header(const String& fileName, const int& numLines){
+StringList header(const String& fileName, const int numLines){
 	
 	return readFileLines(fileName, 0, numLines);
 }
 	
-StringList footer(const String& fileName, const int& numLines){
+StringList footer(const String& fileName, const int numLines){
 	
 	int file_num_lines = numberOfLines(fileName);
 	if (file_num_lines == -1) {
@@ -124,7 +136,7 @@ int numberOfLines(const String& fileName){
 	// Check to see if the file is valid before opening
 	bool is_valid = FileSystem::isFile(fileName);
 	if(!is_valid){
-		bumpALWAYS_P("FileSystem: ", "File to open is not a valid file");
+		bumpERROR_P("FileSystem: ", "File to open is not a valid file");
 		return -1;
 	}
 	bumpINFO_P("FileReader: Reading File ", fileName);
@@ -133,7 +145,7 @@ int numberOfLines(const String& fileName){
 	std::ifstream input_file;
 	input_file.open(fileName.toStdString().data(), std::ios::in);
 	if (!input_file.is_open()) {
-		bumpALWAYS_P("FileReader: Error opening ", fileName);
+		bumpERROR_P("FileReader: Error opening ", fileName);
 		return -1;
 	}
 	
