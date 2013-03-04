@@ -132,7 +132,9 @@ StringList footer(const String& fileName, const int numLines){
 		StringList empty_string;
 		return empty_string;
 	}
-	int beginning_line = file_num_lines - numLines;
+	int beginning_line = file_num_lines - numLines + 1;
+	if(beginning_line < 0)
+		beginning_line = 0;
 
 	return readFileLines(fileName, beginning_line, numLines);
 }
