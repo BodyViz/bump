@@ -1,10 +1,11 @@
-/**
- *  FileReader.cpp
- *  SOMViz
- *
- *  Created by Joseph Holub on 2/1/13.
- *  Copyright 2013 Iowa State University. All rights reserved.
- */
+//
+//  TextFileReader.h
+//  Bump
+//
+//  Created by Joseph Holub on 2/1/13.
+//  Copyright (c) 2012 Joseph Holub. All rights reserved.
+//
+
 
 // Local headers
 #include <bump/TextFileReader.h>
@@ -75,8 +76,19 @@ StringList returnFileContents(const String& fileName){
 	
 	return readFileLines(fileName, 0, -1); // -1 for the whole file
 }
+	
+StringList fileContents(const String& fileName, const int& beginningLine, const int& numLines){
+	
+	return readFileLines(fileName, beginningLine, numLines);
+}
 
-String returnFirstLine(const String& fileName){
+StringList fileContents(const String& fileName, const int& beginningLine){
+	
+	int number_of_lines = -1; // -1 for the rest of the file
+	return readFileLines(fileName, beginningLine, number_of_lines);
+}
+
+String firstLine(const String& fileName){
 	
 	StringList file_contents = readFileLines(fileName, 0, 1);
 	
@@ -88,20 +100,14 @@ String returnFirstLine(const String& fileName){
 	return header;
 }
 
-StringList returnFirstNLines(const String& fileName, const int& numLines){
+StringList header(const String& fileName, const int& numLines){
 	
 	return readFileLines(fileName, 0, numLines);
 }
-
-StringList returnNLinesStartingAtM(const String& fileName, const int& beginningLine, const int& numLines){
 	
-	return readFileLines(fileName, beginningLine, numLines);
-}
-
-StringList returnLineNThroughEnd(const String& fileName, const int& beginningLine){
-	
-	int number_of_lines = -1; // -1 for the rest of the file
-	return readFileLines(fileName, beginningLine, number_of_lines);
+StringList footer(const String& fileName, const int& numLines){
+	StringList footer;
+	return footer;
 }
 
 int numberOfLines(const String& fileName){
