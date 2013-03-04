@@ -116,6 +116,12 @@ String firstLine(const String& fileName){
 
 StringList header(const String& fileName, const int numLines){
 	
+	if (numLines < 1) {
+		bumpINFO_P("FileReader: ", "The numLines can not be less than 1 for a header");
+		StringList empty_string;
+		return empty_string;
+	}
+	
 	return readFileLines(fileName, 0, numLines);
 }
 	

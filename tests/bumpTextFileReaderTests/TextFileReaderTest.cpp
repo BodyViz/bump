@@ -183,20 +183,6 @@ TEST_F(TextFileReaderTest, testReadEntireFile)
 	EXPECT_STREQ("8: This is the eighth line", entire_file.at(7).toStdString().c_str());
 	EXPECT_STREQ("9: This is the ninth line", entire_file.at(8).toStdString().c_str());
 	EXPECT_STREQ("10: This is the tenth line", entire_file.at(9).toStdString().c_str());
-	
-	// Check for the full path being passed in
-	bump::String file_path = _currentPath + bump::String("/") + _validFileName;
-	entire_file = bump::TextFileReader::fileContents(file_path);
-	EXPECT_STREQ("1: This is the first line", entire_file.at(0).toStdString().c_str());
-	EXPECT_STREQ("2: This is the second line", entire_file.at(1).toStdString().c_str());
-	EXPECT_STREQ("3: This is the third line", entire_file.at(2).toStdString().c_str());
-	EXPECT_STREQ("4: This is the fourth line", entire_file.at(3).toStdString().c_str());
-	EXPECT_STREQ("5: This is the fifth line", entire_file.at(4).toStdString().c_str());
-	EXPECT_STREQ("6: This is the sixth line", entire_file.at(5).toStdString().c_str());
-	EXPECT_STREQ("7: This is the seventh line", entire_file.at(6).toStdString().c_str());
-	EXPECT_STREQ("8: This is the eighth line", entire_file.at(7).toStdString().c_str());
-	EXPECT_STREQ("9: This is the ninth line", entire_file.at(8).toStdString().c_str());
-	EXPECT_STREQ("10: This is the tenth line", entire_file.at(9).toStdString().c_str());
 		
 }
 	
@@ -259,6 +245,23 @@ TEST_F(TextFileReaderTest, testReadFirstLine)
 {
 	bump::String line = bump::TextFileReader::firstLine(_validFileName);
 	EXPECT_STREQ("1: This is the first line", line.toStdString().c_str());
+}
+	
+TEST_F(TextFileReaderTest, testHeader)
+{
+	// Grab the 2 lines of the file starting at the second line
+	bump::StringList entire_file = bump::TextFileReader::header(_validFileName, 2);
+	EXPECT_STREQ("1: This is the first line", entire_file.at(0).toStdString().c_str());
+	EXPECT_STREQ("2: This is the second line", entire_file.at(1).toStdString().c_str());
+	
+	// Entering a negative number in for the beginningLine
+	entire_file = bump::TextFileReader::header(_validFileName, -2);
+	EXPECT_TRUE(entire_file.empty());
+	
+	// Entering a float number in for the beginningLine
+	entire_file = bump::TextFileReader::header(_validFileName, 2.999);
+	EXPECT_STREQ("1: This is the first line", entire_file.at(0).toStdString().c_str());
+	EXPECT_STREQ("2: This is the second line", entire_file.at(1).toStdString().c_str());
 }
 
 
