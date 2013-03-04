@@ -206,6 +206,19 @@ TEST_F(TextFileReaderTest, testReadSubsetOfFile)
 	entire_file = bump::TextFileReader::fileContents(_validFileName, 2, 2.999);
 	EXPECT_STREQ("2: This is the second line", entire_file.at(0).toStdString().c_str());
 	EXPECT_STREQ("3: This is the third line", entire_file.at(1).toStdString().c_str());
+	
+	// Request more lines than are left in the file
+	entire_file = bump::TextFileReader::fileContents(_validFileName, 5, 6);
+	EXPECT_STREQ("5: This is the fifth line", entire_file.at(0).toStdString().c_str());
+	EXPECT_STREQ("6: This is the sixth line", entire_file.at(1).toStdString().c_str());
+	EXPECT_STREQ("7: This is the seventh line", entire_file.at(2).toStdString().c_str());
+	EXPECT_STREQ("8: This is the eighth line", entire_file.at(3).toStdString().c_str());
+	EXPECT_STREQ("9: This is the ninth line", entire_file.at(4).toStdString().c_str());
+	EXPECT_STREQ("10: This is the tenth line", entire_file.at(5).toStdString().c_str());
+	
+	// Request a line that is beyond the limit of the file
+	entire_file = bump::TextFileReader::fileContents(_validFileName, 11, 6);
+	EXPECT_TRUE(entire_file.empty());
 
 }
 	
@@ -239,6 +252,10 @@ TEST_F(TextFileReaderTest, testReadFromLineToEnd)
 	EXPECT_STREQ("9: This is the ninth line", entire_file.at(7).toStdString().c_str());
 	EXPECT_STREQ("10: This is the tenth line", entire_file.at(8).toStdString().c_str());
 	
+	// Request a line that is beyond the limit of the file
+	entire_file = bump::TextFileReader::fileContents(_validFileName, 11, 6);
+	EXPECT_TRUE(entire_file.empty());
+	
 }
 	
 TEST_F(TextFileReaderTest, testReadFirstLine)
@@ -262,6 +279,19 @@ TEST_F(TextFileReaderTest, testHeader)
 	entire_file = bump::TextFileReader::header(_validFileName, 2.999);
 	EXPECT_STREQ("1: This is the first line", entire_file.at(0).toStdString().c_str());
 	EXPECT_STREQ("2: This is the second line", entire_file.at(1).toStdString().c_str());
+	
+	// Request a header size larger than the entire file
+	entire_file = bump::TextFileReader::header(_validFileName, 11);
+	EXPECT_STREQ("1: This is the first line", entire_file.at(0).toStdString().c_str());
+	EXPECT_STREQ("2: This is the second line", entire_file.at(1).toStdString().c_str());
+	EXPECT_STREQ("3: This is the third line", entire_file.at(2).toStdString().c_str());
+	EXPECT_STREQ("4: This is the fourth line", entire_file.at(3).toStdString().c_str());
+	EXPECT_STREQ("5: This is the fifth line", entire_file.at(4).toStdString().c_str());
+	EXPECT_STREQ("6: This is the sixth line", entire_file.at(5).toStdString().c_str());
+	EXPECT_STREQ("7: This is the seventh line", entire_file.at(6).toStdString().c_str());
+	EXPECT_STREQ("8: This is the eighth line", entire_file.at(7).toStdString().c_str());
+	EXPECT_STREQ("9: This is the ninth line", entire_file.at(8).toStdString().c_str());
+	EXPECT_STREQ("10: This is the tenth line", entire_file.at(9).toStdString().c_str());
 }
 
 
