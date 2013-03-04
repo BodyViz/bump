@@ -7,10 +7,12 @@
 //
 
 
-// Local headers
+// Bump Headers
 #include <bump/TextFileReader.h>
 #include <bump/FileSystem.h>
 #include <bump/Log.h>
+
+// C++ Headers
 #include <fstream>
 
 namespace bump {
@@ -106,8 +108,15 @@ StringList header(const String& fileName, const int& numLines){
 }
 	
 StringList footer(const String& fileName, const int& numLines){
-	StringList footer;
-	return footer;
+	
+	int file_num_lines = numberOfLines(fileName);
+	if (file_num_lines == -1) {
+		StringList empty_string;
+		return empty_string;
+	}
+	int beginning_line = file_num_lines - numLines;
+
+	return readFileLines(fileName, beginning_line, numLines);
 }
 
 int numberOfLines(const String& fileName){
