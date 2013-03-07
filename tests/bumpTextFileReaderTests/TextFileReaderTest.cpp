@@ -1,9 +1,9 @@
 //
-//	StringTest.cpp
+//	TextFileReaderTest.cpp
 //	Bump
 //
-//	Created by Christian Noon on 11/12/12.
-//	Copyright (c) 2012 Christian Noon. All rights reserved.
+//  Created by Joseph Holub on 2/1/13.
+//  Copyright (c) 2012 Joseph Holub. All rights reserved.
 //
 
 // C++ Headers
@@ -21,7 +21,7 @@
 namespace bumpTest {
 
 /**
- * This is our main string testing class. The SetUp and TearDown methods are
+ * This is our main TextFileReader testing class. The SetUp and TearDown methods are
  * executed before the test runs and after it completes. This is where we can
  * add any custom set up for each test without having to add this to "every"
  * test individually.
@@ -59,7 +59,8 @@ protected:
 		// Add content to the file to be read in.
 		std::ofstream unit_file;
 		unit_file.open("unittest/unit_test.txt");
-		if (unit_file != NULL) {
+		if (unit_file != NULL)
+		{
 			unit_file << "1: This is the first line\n";
 			unit_file << "2: This is the second line\n";
 			unit_file << "3: This is the third line\n";
@@ -72,10 +73,8 @@ protected:
 			unit_file << "10: This is the tenth line";
 		}
 		unit_file.close();
-		
-		
 	}
-
+	
 	/** Invoked immediately after a test finishes. Stops the timer. */
 	void TearDown()
 	{
@@ -166,7 +165,6 @@ TEST_F(TextFileReaderTest, testValidityOfFile)
 	EXPECT_TRUE(entire_file.empty());
 	numLines = bump::TextFileReader::numberOfLines(_nonsensicalFileName);
 	EXPECT_EQ(-1, numLines);
-
 }
 
 TEST_F(TextFileReaderTest, testReadEntireFile)
@@ -183,7 +181,6 @@ TEST_F(TextFileReaderTest, testReadEntireFile)
 	EXPECT_STREQ("8: This is the eighth line", entire_file.at(7).toStdString().c_str());
 	EXPECT_STREQ("9: This is the ninth line", entire_file.at(8).toStdString().c_str());
 	EXPECT_STREQ("10: This is the tenth line", entire_file.at(9).toStdString().c_str());
-		
 }
 	
 TEST_F(TextFileReaderTest, testReadSubsetOfFile)
@@ -219,7 +216,6 @@ TEST_F(TextFileReaderTest, testReadSubsetOfFile)
 	// Request a line that is beyond the limit of the file
 	entire_file = bump::TextFileReader::fileContents(_validFileName, 11, 6);
 	EXPECT_TRUE(entire_file.empty());
-
 }
 	
 TEST_F(TextFileReaderTest, testReadFromLineToEnd)
@@ -255,7 +251,6 @@ TEST_F(TextFileReaderTest, testReadFromLineToEnd)
 	// Request a line that is beyond the limit of the file
 	entire_file = bump::TextFileReader::fileContents(_validFileName, 11, 6);
 	EXPECT_TRUE(entire_file.empty());
-	
 }
 	
 TEST_F(TextFileReaderTest, testReadFirstLine)
@@ -331,6 +326,5 @@ TEST_F(TextFileReaderTest, testNumberOfLines)
 	int numLines = bump::TextFileReader::numberOfLines(_validFileName);
 	EXPECT_EQ(10, numLines);
 }
-
 
 }	// End of bumpTest namespace
