@@ -30,6 +30,7 @@ SET (
 	${HEADER_PATH}/OutOfRangeError.h
 	${HEADER_PATH}/String.h
 	${HEADER_PATH}/StringSearchError.h
+	${HEADER_PATH}/TextFileReader.h
 	${HEADER_PATH}/Timeline.h
 	${HEADER_PATH}/Timer.h
 	${HEADER_PATH}/TypeCastError.h
@@ -82,6 +83,7 @@ SET (TARGET_SRC
 	OutOfRangeError.cpp
 	String.cpp
 	StringSearchError.cpp
+	TextFileReader.cpp
 	Timeline.cpp
 	Timer.cpp
 	TypeCastError.cpp
