@@ -42,6 +42,7 @@ IF (GTEST_FOUND AND Boost_FOUND)
 			bumpFileSystemTests
 			bumpNotificationTests
 			bumpStringTests
+			bumpTextFileReaderTests
 			bumpUuidTests
 		)
 
