@@ -52,7 +52,7 @@ BUMP_EXPORT StringList fileContents(const String& fileName);
  * @param numLines The number of lines to read.
  * @return The requested contents of the file with each bump::String being one line from the file.
  */
-BUMP_EXPORT StringList fileContents(const String& fileName, const int& beginningLine, const int& numLines);
+BUMP_EXPORT StringList fileContents(const String& fileName, int beginningLine, int numLines);
 
 /**
  * Returns a subset of the text file.
@@ -64,7 +64,7 @@ BUMP_EXPORT StringList fileContents(const String& fileName, const int& beginning
  * @param beginningLine The line to start reading from.
  * @return The requested contents of the file with each bump::String being one line from the file.
  */
-BUMP_EXPORT StringList fileContents(const String& fileName, const int& beginningLine);
+BUMP_EXPORT StringList fileContents(const String& fileName, int beginningLine);
 
 /**
  * Returns the first line of the text file.
@@ -83,7 +83,7 @@ BUMP_EXPORT String firstLine(const String& fileName);
  * @param numLines The number of lines making up the header.
  * @return The header lines from the file with each bump::String being one line.
  */
-BUMP_EXPORT StringList header(const String& fileName, const int& numLines);
+BUMP_EXPORT StringList header(const String& fileName, int numLines);
 
 /**
  * Returns the footer of the file.
@@ -94,7 +94,7 @@ BUMP_EXPORT StringList header(const String& fileName, const int& numLines);
  * @param numLines The number of lines making up the footer.
  * @return The footer lines from the file with each bump::String being one line.
  */
-BUMP_EXPORT StringList footer(const String& fileName, const int& numLines);
+BUMP_EXPORT StringList footer(const String& fileName, int numLines);
 
 /**
  * Returns the number of line in the file.
