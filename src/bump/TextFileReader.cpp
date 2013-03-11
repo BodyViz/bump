@@ -25,7 +25,7 @@ StringList readFileLines(String fileName, const int& beginningLine, const int& n
 
 	// Check to see if the file is valid before opening
 	bool is_valid = FileSystem::isFile(fileName);
-	if(!is_valid)
+	if (!is_valid)
 	{
 		bumpERROR_P("FileSystem: ", "File to open is not a valid file");
 		return file_contents;
@@ -115,7 +115,7 @@ String firstLine(const String& fileName)
 	StringList file_contents = readFileLines(fileName, 0, 1);
 
 	String header;
-	if(!file_contents.empty())
+	if (!file_contents.empty())
 	{
 		header = file_contents.front();
 	}
@@ -144,7 +144,7 @@ StringList footer(const String& fileName, const int& numLines)
 		return empty_string;
 	}
 	int beginning_line = file_num_lines - numLines + 1;
-	if(beginning_line < 0)
+	if (beginning_line < 0)
 	{
 		beginning_line = 0;
 	}
@@ -156,7 +156,7 @@ int numberOfLines(const String& fileName)
 {
 	// Check to see if the file is valid before opening
 	bool is_valid = FileSystem::isFile(fileName);
-	if(!is_valid)
+	if (!is_valid)
 	{
 		bumpERROR_P("FileSystem: ", "File to open is not a valid file");
 		return -1;
