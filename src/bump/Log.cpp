@@ -16,10 +16,10 @@
 #include <bump/Environment.h>
 #include <bump/Log.h>
 
-// Global singleton mutex
-boost::mutex gLogSingletonMutex;
-
 namespace bump {
+	
+// Global singleton mutex
+static boost::mutex gLogSingletonMutex;
 
 Log::Log() :
 	_isEnabled(true),
