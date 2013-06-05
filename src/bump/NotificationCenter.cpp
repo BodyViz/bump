@@ -12,10 +12,10 @@
 // Bump headers
 #include <bump/NotificationCenter.h>
 
-// Global singleton mutex
-boost::mutex gNotificationCenterSingletonMutex;
-
 namespace bump {
+
+// Global singleton mutex
+static boost::mutex gNotificationCenterSingletonMutex;
 
 //====================================================================================
 //                                     Observer

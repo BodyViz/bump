@@ -13,10 +13,10 @@
 #include <bump/String.h>
 #include <bump/Timer.h>
 
-// Global singleton mutex
-boost::mutex gTimerSingletonMutex;
-
 namespace bump {
+
+// Global singleton mutex
+static boost::mutex gTimerSingletonMutex;
 
 Timer::Timer() :
 	_timer()
