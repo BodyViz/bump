@@ -17,6 +17,9 @@
 #include <bump/Log.h>
 
 namespace bump {
+	
+// Global singleton mutex
+static boost::mutex gLogSingletonMutex;
 
 // Global singleton mutex
 static boost::mutex gLogSingletonMutex;

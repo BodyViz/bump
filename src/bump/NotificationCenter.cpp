@@ -13,6 +13,9 @@
 #include <bump/NotificationCenter.h>
 
 namespace bump {
+	
+// Global singleton mutex
+static boost::mutex gNotificationCenterSingletonMutex;
 
 // Global singleton mutex
 static boost::mutex gNotificationCenterSingletonMutex;
