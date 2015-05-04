@@ -56,12 +56,12 @@ String convertToUnixPath(String path)
 	converted = path.replace("\\/", "/");
 
 	// Replace all duplicate forward slashes with a single forward slash
-	converted = path.replace("///", "/");
-	converted = path.replace("//", "/");
+//	converted = path.replace("///", "/");
+//	converted = path.replace("//", "/");
 
 	// Replace all duplicate backward slashes with a single backward slash
-	converted = path.replace("\\\\\\", "\\");
-	converted = path.replace("\\\\", "\\");
+//	converted = path.replace("\\\\\\", "\\");
+//	converted = path.replace("\\\\", "\\");
 
 	// Convert all backward slashes to forward slashes
 	converted = path.replace("\\", "/");
