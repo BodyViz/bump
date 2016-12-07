@@ -10,6 +10,7 @@
 #include <bump/Timer.h>
 
 // C++ headers
+#include <iostream>
 #include <math.h>
 
 void doSomeWork()

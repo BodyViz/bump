@@ -6,6 +6,9 @@
 //  Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
+// C++ headers
+#include <iostream>
+
 // Bump headers
 #include <bump/Timeline.h>
 
