@@ -113,7 +113,7 @@ IF (WIN32 AND MSVC)
 ENDIF (WIN32 AND MSVC)
 SET (Boost_USE_MULTITHREAD    ON)
 SET (Boost_USE_STATIC_RUNTIME OFF)
-FIND_PACKAGE (Boost 1.52.0 COMPONENTS chrono date_time filesystem regex system thread timer REQUIRED)
+FIND_PACKAGE (Boost 1.62.0 COMPONENTS chrono date_time filesystem regex system thread timer REQUIRED)
 
 # Find GTest
 FIND_PACKAGE (GTest)
