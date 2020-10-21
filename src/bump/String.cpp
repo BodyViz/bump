@@ -613,8 +613,14 @@ bool String::isNumber() const
 	String this_copy = *this;
 	double num;
 	std::istringstream iss(this_copy);
-	iss >> num;
-	return (iss.fail() || (int)iss.tellg() != (int)this_copy.length()) ? false : true;
+	if(iss >> num){
+		if(iss.tellg() != -1){
+			return false;
+		}
+		return true;
+	}else {
+		return false;
+	}
 }
 
 int String::lastIndexOf(String indexString, int startPosition, CaseSensitivity caseSensitivity) const

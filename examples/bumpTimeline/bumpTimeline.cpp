@@ -12,6 +12,9 @@
 // Bump headers
 #include <bump/Timeline.h>
 
+// STL headers
+#include <iostream>
+
 #define ANIMATION_DURATION				4.0
 #define TOTAL_ANIMATION_CHARACTERS		81
 

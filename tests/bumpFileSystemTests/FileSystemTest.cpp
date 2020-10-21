@@ -1368,19 +1368,19 @@ TEST_F(FileSystemTest, testModifiedDate)
 	// Test a directory
 	path = "unittest/files";
 	EXPECT_TRUE(bump::FileSystem::setModifiedDate(path, time));
-	modified_date = modified_date = bump::FileSystem::modifiedDate(path);
+	modified_date = bump::FileSystem::modifiedDate(path);
 	EXPECT_EQ(time, modified_date);
 
 	// Test a file symlink
 	path = "unittest/symlink_files/output.txt";
 	EXPECT_TRUE(bump::FileSystem::setModifiedDate(path, time));
-	modified_date = modified_date = bump::FileSystem::modifiedDate(path);
+	modified_date = bump::FileSystem::modifiedDate(path);
 	EXPECT_EQ(time, modified_date);
 
 	// Test a directory symlink
 	path = "unittest/symlink_directory";
 	EXPECT_TRUE(bump::FileSystem::setModifiedDate(path, time));
-	modified_date = modified_date = bump::FileSystem::modifiedDate(path);
+	modified_date = bump::FileSystem::modifiedDate(path);
 	EXPECT_EQ(time, modified_date);
 }
 

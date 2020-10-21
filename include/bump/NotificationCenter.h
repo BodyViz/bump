@@ -11,7 +11,7 @@
 
 // Boost headers
 #include <boost/any.hpp>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/function.hpp>
 #include <boost/thread.hpp>
 
@@ -19,6 +19,8 @@
 #include <bump/Export.h>
 #include <bump/NotificationError.h>
 #include <bump/String.h>
+
+using namespace boost::placeholders;
 
 namespace bump {
 

@@ -59,7 +59,7 @@ protected:
 		// Add content to the file to be read in.
 		std::ofstream unit_file;
 		unit_file.open("unittest/unit_test.txt");
-		if (!unit_file)
+		if (unit_file.is_open())
 		{
 			unit_file << "1: This is the first line\n";
 			unit_file << "2: This is the second line\n";
