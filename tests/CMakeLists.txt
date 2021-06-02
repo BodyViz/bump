@@ -8,7 +8,7 @@ IF (GTEST_FOUND AND Boost_FOUND)
 	IF (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
 		SET (TARGET_DEFAULT_PREFIX "Test_")
 	ELSE (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
-		SET (TARGET_DEFAULT_PREFIX "Test - ")
+		SET (TARGET_DEFAULT_PREFIX "Test_")
 	ENDIF (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
 
 	# Set the default label prefix

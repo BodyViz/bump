@@ -1,6 +1,6 @@
 
 # Set the minimum required version of CMake
-CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED (VERSION 3.19)
 
 # Enable folders inside Visual Studio and Xcode
 set_property (GLOBAL PROPERTY USE_FOLDERS ON)
@@ -8,8 +8,8 @@ set_property (GLOBAL PROPERTY USE_FOLDERS ON)
 # Project settings
 PROJECT (Bump)
 SET (BUMP_MAJOR_VERSION 1)
-SET (BUMP_MINOR_VERSION 1)
-SET (BUMP_PATCH_VERSION 5)
+SET (BUMP_MINOR_VERSION 2)
+SET (BUMP_PATCH_VERSION 1)
 SET (BUMP_SO_VERSION 17)
 SET (BUMP_VERSION ${BUMP_MAJOR_VERSION}.${BUMP_MINOR_VERSION}.${BUMP_PATCH_VERSION})
 
@@ -108,12 +108,7 @@ FOREACH (CONF ${CMAKE_CONFIGURATION_TYPES})
 ENDFOREACH ()
 
 # Find Boost...using static, multithreaded libs with a shared runtime on Windows
-IF (WIN32 AND MSVC)
-	SET (Boost_USE_STATIC_LIBS    ON)
-ENDIF (WIN32 AND MSVC)
-SET (Boost_USE_MULTITHREAD    ON)
-SET (Boost_USE_STATIC_RUNTIME OFF)
-FIND_PACKAGE (Boost 1.74.0 COMPONENTS chrono date_time filesystem regex system thread timer REQUIRED)
+FIND_PACKAGE (Boost 1.76.0 COMPONENTS chrono date_time filesystem regex system thread timer REQUIRED)
 
 # Find GTest
 FIND_PACKAGE (GTest)
