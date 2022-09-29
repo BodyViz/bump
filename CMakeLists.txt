@@ -9,7 +9,7 @@ set_property (GLOBAL PROPERTY USE_FOLDERS ON)
 PROJECT (Bump)
 SET (BUMP_MAJOR_VERSION 1)
 SET (BUMP_MINOR_VERSION 2)
-SET (BUMP_PATCH_VERSION 1)
+SET (BUMP_PATCH_VERSION 2)
 SET (BUMP_SO_VERSION 17)
 SET (BUMP_VERSION ${BUMP_MAJOR_VERSION}.${BUMP_MINOR_VERSION}.${BUMP_PATCH_VERSION})
 
@@ -108,7 +108,7 @@ FOREACH (CONF ${CMAKE_CONFIGURATION_TYPES})
 ENDFOREACH ()
 
 # Find Boost...using static, multithreaded libs with a shared runtime on Windows
-FIND_PACKAGE (Boost 1.76.0 COMPONENTS chrono date_time filesystem regex system thread timer REQUIRED)
+FIND_PACKAGE (Boost 1.80.0 COMPONENTS chrono date_time filesystem regex system thread timer REQUIRED)
 
 # Find GTest
 FIND_PACKAGE (GTest)
