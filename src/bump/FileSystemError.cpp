@@ -6,20 +6,16 @@
 //	Copyright (c) 2013 Christian Noon. All rights reserved.
 //
 
-// Bump headers
 #include <bump/FileSystemError.h>
 
 namespace bump {
 
-FileSystemError::FileSystemError(const String& description, const String& location) throw() :
-	RuntimeError("bump::FileSystemError", description, location)
-{
-	;
+FileSystemError::FileSystemError(const String& description,
+                                 const String& location) throw()
+    : RuntimeError("bump::FileSystemError", description, location) {
+    ;
 }
 
-FileSystemError::~FileSystemError() throw()
-{
-	;
-}
+FileSystemError::~FileSystemError() throw() { ; }
 
-}	// End of bump namespace
+}  // namespace bump

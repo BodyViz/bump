@@ -6,207 +6,162 @@
 //	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
-// Boost headers
-#include <boost/foreach.hpp>
-
-// Bump headers
 #include <bump/NotificationCenter.h>
+
+#include <boost/foreach.hpp>
 
 namespace bump {
 
 // Global singleton mutex
 static boost::mutex gNotificationCenterSingletonMutex;
 
-//====================================================================================
+//=============================================================================
 //                                     Observer
-//====================================================================================
+//=============================================================================
 
-Observer::Observer()
-{
-	;
+Observer::Observer() { ; }
+
+Observer::~Observer() { ; }
+
+const String& Observer::notificationName() { return _notificationName; }
+
+const Observer::ObserverType& Observer::observerType() { return _observerType; }
+
+bool Observer::containsObserver(void* observer) {
+    return observer == _observer;
 }
 
-Observer::~Observer()
-{
-	;
-}
-
-const String& Observer::notificationName()
-{
-	return _notificationName;
-}
-
-const Observer::ObserverType& Observer::observerType()
-{
-	return _observerType;
-}
-
-bool Observer::containsObserver(void* observer)
-{
-	return observer == _observer;
-}
-
-//====================================================================================
+//=============================================================================
 //                                    KeyObserver
-//====================================================================================
+//=============================================================================
 
 // Implemented in NotificationCenter_impl.h
 
-//====================================================================================
+//=============================================================================
 //                                   ObjectObserver
-//====================================================================================
+//=============================================================================
 
 // Implemented in NotificationCenter_impl.h
 
-//====================================================================================
+//=============================================================================
 //                                 NotificationCenter
-//====================================================================================
+//=============================================================================
 
-NotificationCenter::NotificationCenter()
-{
-	;
+NotificationCenter::NotificationCenter() { ; }
+
+NotificationCenter::~NotificationCenter() { ; }
+
+NotificationCenter* NotificationCenter::instance() {
+    boost::mutex::scoped_lock lock(gNotificationCenterSingletonMutex);
+    static NotificationCenter notification_center;
+    return &notification_center;
 }
 
-NotificationCenter::~NotificationCenter()
-{
-	;
+void NotificationCenter::addObserver(Observer* observer) {
+    boost::unique_lock<boost::shared_mutex> lock(_mutex);
+
+    if (observer->observerType() == bump::Observer::KEY_OBSERVER) {
+        _keyObservers.push_back(observer);
+    } else {
+        _objectObservers.push_back(observer);
+    }
 }
 
-NotificationCenter* NotificationCenter::instance()
-{
-	boost::mutex::scoped_lock lock(gNotificationCenterSingletonMutex);
-	static NotificationCenter notification_center;
-	return &notification_center;
+bool NotificationCenter::containsObserver(void* observer) {
+    boost::shared_lock<boost::shared_mutex> lock(_mutex);
+
+    // Iterate through the observers
+    BOOST_FOREACH (Observer* abs_observer, _keyObservers) {
+        if (abs_observer->containsObserver(observer)) {
+            return true;
+        }
+    }
+
+    // Iterate through the object observers
+    BOOST_FOREACH (Observer* abs_observer, _objectObservers) {
+        if (abs_observer->containsObserver(observer)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
-void NotificationCenter::addObserver(Observer* observer)
-{
-	boost::unique_lock<boost::shared_mutex> lock(_mutex);
+unsigned int NotificationCenter::postNotification(
+    const String& notificationName) {
+    boost::shared_lock<boost::shared_mutex> lock(_mutex);
 
-	if (observer->observerType() == bump::Observer::KEY_OBSERVER)
-	{
-		_keyObservers.push_back(observer);
-	}
-	else
-	{
-		_objectObservers.push_back(observer);
-	}
+    unsigned int notification_count = 0;
+    BOOST_FOREACH (Observer* abs_observer, _keyObservers) {
+        if (abs_observer->notificationName() == notificationName) {
+            abs_observer->notify();
+            ++notification_count;
+        }
+    }
+
+    return notification_count;
 }
 
-bool NotificationCenter::containsObserver(void* observer)
-{
-	boost::shared_lock<boost::shared_mutex> lock(_mutex);
+unsigned int NotificationCenter::postNotificationWithObject(
+    const String& notificationName, const boost::any& object) {
+    boost::shared_lock<boost::shared_mutex> lock(_mutex);
 
-	// Iterate through the observers
-	BOOST_FOREACH (Observer* abs_observer, _keyObservers)
-	{
-		if (abs_observer->containsObserver(observer))
-		{
-			return true;
-		}
-	}
+    unsigned int notification_count = 0;
+    BOOST_FOREACH (Observer* abs_observer, _objectObservers) {
+        if (abs_observer->notificationName() == notificationName) {
+            abs_observer->notify(object);
+            ++notification_count;
+        }
+    }
 
-	// Iterate through the object observers
-	BOOST_FOREACH (Observer* abs_observer, _objectObservers)
-	{
-		if (abs_observer->containsObserver(observer))
-		{
-			return true;
-		}
-	}
-
-	return false;
+    return notification_count;
 }
 
-unsigned int NotificationCenter::postNotification(const String& notificationName)
-{
-	boost::shared_lock<boost::shared_mutex> lock(_mutex);
+void NotificationCenter::removeObserver(void* observer) {
+    boost::unique_lock<boost::shared_mutex> lock(_mutex);
 
-	unsigned int notification_count = 0;
-	BOOST_FOREACH (Observer* abs_observer, _keyObservers)
-	{
-		if (abs_observer->notificationName() == notificationName)
-		{
-			abs_observer->notify();
-			++notification_count;
-		}
-	}
+    // Remove all the observers that match observer
+    std::vector<Observer*> key_observers_to_keep;
+    BOOST_FOREACH (Observer* abs_observer, _keyObservers) {
+        if (abs_observer->containsObserver(observer)) {
+            delete abs_observer;
+            abs_observer = NULL;
+        } else {
+            key_observers_to_keep.push_back(abs_observer);
+        }
+    }
+    _keyObservers = key_observers_to_keep;
 
-	return notification_count;
+    // Remove all the object observers that match observer
+    std::vector<Observer*> object_observers_to_keep;
+    BOOST_FOREACH (Observer* abs_observer, _objectObservers) {
+        if (abs_observer->containsObserver(observer)) {
+            delete abs_observer;
+            abs_observer = NULL;
+        } else {
+            object_observers_to_keep.push_back(abs_observer);
+        }
+    }
+    _objectObservers = object_observers_to_keep;
 }
 
-unsigned int NotificationCenter::postNotificationWithObject(const String& notificationName, const boost::any& object)
-{
-	boost::shared_lock<boost::shared_mutex> lock(_mutex);
+}  // namespace bump
 
-	unsigned int notification_count = 0;
-	BOOST_FOREACH (Observer* abs_observer, _objectObservers)
-	{
-		if (abs_observer->notificationName() == notificationName)
-		{
-			abs_observer->notify(object);
-			++notification_count;
-		}
-	}
-
-	return notification_count;
+void ADD_OBSERVER(bump::Observer* observer) {
+    bump::NotificationCenter::instance()->addObserver(observer);
 }
 
-void NotificationCenter::removeObserver(void* observer)
-{
-	boost::unique_lock<boost::shared_mutex> lock(_mutex);
-
-	// Remove all the observers that match observer
-	std::vector<Observer*> key_observers_to_keep;
-	BOOST_FOREACH (Observer* abs_observer, _keyObservers)
-	{
-		if (abs_observer->containsObserver(observer))
-		{
-			delete abs_observer;
-			abs_observer = NULL;
-		}
-		else
-		{
-			key_observers_to_keep.push_back(abs_observer);
-		}
-	}
-	_keyObservers = key_observers_to_keep;
-
-	// Remove all the object observers that match observer
-	std::vector<Observer*> object_observers_to_keep;
-	BOOST_FOREACH (Observer* abs_observer, _objectObservers)
-	{
-		if (abs_observer->containsObserver(observer))
-		{
-			delete abs_observer;
-			abs_observer = NULL;
-		}
-		else
-		{
-			object_observers_to_keep.push_back(abs_observer);
-		}
-	}
-	_objectObservers = object_observers_to_keep;
+void REMOVE_OBSERVER(void* observer) {
+    bump::NotificationCenter::instance()->removeObserver(observer);
 }
 
-}	// End of bump namespace
-
-void ADD_OBSERVER(bump::Observer* observer)
-{
-	bump::NotificationCenter::instance()->addObserver(observer);
+unsigned int POST_NOTIFICATION(const bump::String& notificationName) {
+    return bump::NotificationCenter::instance()->postNotification(
+        notificationName);
 }
 
-void REMOVE_OBSERVER(void* observer)
-{
-	bump::NotificationCenter::instance()->removeObserver(observer);
-}
-
-unsigned int POST_NOTIFICATION(const bump::String& notificationName)
-{
-	return bump::NotificationCenter::instance()->postNotification(notificationName);
-}
-
-unsigned int POST_NOTIFICATION_WITH_OBJECT(const bump::String& notificationName, const boost::any& object)
-{
-	return bump::NotificationCenter::instance()->postNotificationWithObject(notificationName, object);
+unsigned int POST_NOTIFICATION_WITH_OBJECT(const bump::String& notificationName,
+                                           const boost::any& object) {
+    return bump::NotificationCenter::instance()->postNotificationWithObject(
+        notificationName, object);
 }

@@ -6,32 +6,26 @@
 //	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
-#ifndef BUMPTEST_BASE_TEST_H
-#define BUMPTEST_BASE_TEST_H
+#pragma once
 
-// GTest headers
 #include <gtest/gtest.h>
 
 namespace bumpTest {
 
 /** Base test class for setting up unit tests for the Bump test suite. */
-class BaseTest : public testing::Test
-{
+class BaseTest : public testing::Test {
 protected:
+    /** Constructor. */
+    BaseTest() {}
 
-	/** Constructor. */
-	BaseTest() {}
+    /** Destructor. */
+    ~BaseTest() {}
 
-	/** Destructor. */
-	~BaseTest() {}
+    /** Run immediately before a test starts. Starts the timer. */
+    virtual void SetUp() {}
 
-	/** Run immediately before a test starts. Starts the timer. */
-	virtual void SetUp() {}
-
-	/** Invoked immediately after a test finishes. Stops the timer. */
-	virtual void TearDown() {}
+    /** Invoked immediately after a test finishes. Stops the timer. */
+    virtual void TearDown() {}
 };
 
-}	// End of bumpTest namespace
-
-#endif	// End of BUMPTEST_BASE_TEST_H
+}  // namespace bumpTest

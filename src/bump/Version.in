@@ -6,10 +6,8 @@
 //	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
-#ifndef BUMP_VERSION_H
-#define BUMP_VERSION_H
+#pragma once
 
-// Bump headers
 #include <bump/Export.h>
 #include <bump/String.h>
 
@@ -66,5 +64,3 @@ BUMP_EXPORT String soVersion();
 BUMP_EXPORT String libraryName();
 
 }	// End of bump namespace
-
-#endif	// End of BUMP_VERSION_H

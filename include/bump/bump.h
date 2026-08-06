@@ -6,8 +6,7 @@
 //  Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
-#ifndef BUMP_BUMP_H
-#define BUMP_BUMP_H
+#pragma once
 
 #include <bump/AutoTimer.h>
 #include <bump/Environment.h>
@@ -18,10 +17,10 @@
 #include <bump/FileSystemError.h>
 #include <bump/InvalidArgumentError.h>
 #include <bump/Log.h>
+#include <bump/NotImplementedError.h>
 #include <bump/NotificationCenter.h>
 #include <bump/NotificationCenter_impl.h>
 #include <bump/NotificationError.h>
-#include <bump/NotImplementedError.h>
 #include <bump/OutOfRangeError.h>
 #include <bump/String.h>
 #include <bump/StringSearchError.h>
@@ -38,5 +37,3 @@
  * management and even cross-code abstract notifications can be found in bump.
  */
 namespace bump {}
-
-#endif  // End of BUMP_BUMP_H

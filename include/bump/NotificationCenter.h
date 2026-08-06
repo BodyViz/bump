@@ -6,366 +6,401 @@
 //	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
-#ifndef BUMP_NOTIFICATION_CENTER_H
-#define BUMP_NOTIFICATION_CENTER_H
+#pragma once
 
-// Boost headers
+#include <bump/Export.h>
+#include <bump/NotificationError.h>
+#include <bump/String.h>
+
 #include <boost/any.hpp>
 #include <boost/bind/bind.hpp>
 #include <boost/function.hpp>
 #include <boost/thread.hpp>
-
-// Bump headers
-#include <bump/Export.h>
-#include <bump/NotificationError.h>
-#include <bump/String.h>
 
 using namespace boost::placeholders;
 
 namespace bump {
 
 /**
- * The base observer class defines the notify() interface as well as contains the
- * observer pointer and the notification name. The notification center uses only
- * Observer objects to handle forwarding all notifications to the appropriate
- * Observer instances.
+ * The base observer class defines the notify() interface as well as contains
+ * the observer pointer and the notification name. The notification center uses
+ * only Observer objects to handle forwarding all notifications to the
+ * appropriate Observer instances.
  */
-class BUMP_EXPORT Observer
-{
+class BUMP_EXPORT Observer {
 public:
+    /**
+     * Defines what type of observer the observer is.
+     */
+    enum ObserverType { KEY_OBSERVER, OBJECT_OBSERVER };
 
-	/**
-	 * Defines what type of observer the observer is.
-	 */
-	enum ObserverType
-	{
-		KEY_OBSERVER,
-		OBJECT_OBSERVER
-	};
+    /**
+     * Destructor.
+     */
+    virtual ~Observer();
 
-	/**
-	 * Destructor.
-	 */
-	virtual ~Observer();
+    /**
+     * Calls the function pointer on the observer instance.
+     */
+    virtual void notify() = 0;
 
-	/**
-	 * Calls the function pointer on the observer instance.
-	 */
-	virtual void notify() = 0;
+    /**
+     * Calls the function pointer on the observer instance with the given
+     * object.
+     *
+     * @param object The object to send to the notification's observer.
+     */
+    virtual void notify(const boost::any& object) = 0;
 
-	/**
-	 * Calls the function pointer on the observer instance with the given object.
-	 *
-	 * @param object The object to send to the notification's observer.
-	 */
-	virtual void notify(const boost::any& object) = 0;
+    /**
+     * Returns the name of the notification that the observer is attached to.
+     *
+     * @return The name of the notification that the observer is attached to.
+     */
+    const String& notificationName();
 
-	/**
-	 * Returns the name of the notification that the observer is attached to.
-	 *
-	 * @return The name of the notification that the observer is attached to.
-	 */
-	const String& notificationName();
+    /**
+     * Returns the type of the observer.
+     *
+     * @return The type of the observer.
+     */
+    const ObserverType& observerType();
 
-	/**
-	 * Returns the type of the observer.
-	 *
-	 * @return The type of the observer.
-	 */
-	const ObserverType& observerType();
-
-	/**
-	 * Returns whether the given observer is the same as the internal observer.
-	 *
-	 * @param observer An observer pointer to match against the internal observer pointer.
-	 * @return True if the internal observer matches the given observer, false otherwise.
-	 */
-	bool containsObserver(void* observer);
+    /**
+     * Returns whether the given observer is the same as the internal observer.
+     *
+     * @param observer An observer pointer to match against the internal
+     * observer pointer.
+     * @return True if the internal observer matches the given observer, false
+     * otherwise.
+     */
+    bool containsObserver(void* observer);
 
 protected:
+    /**
+     * @internal
+     * Constructor.
+     */
+    Observer();
 
-	/**
-	 * @internal
-	 * Constructor.
-	 */
-	Observer();
-
-	// Instance member variables
-	void*						_observer;			/**< @internal The observer instance used to send notifications. */
-	bump::String				_notificationName;	/**< @internal The notification name the observer is observing. */
-	ObserverType				_observerType;		/**< @internal The type of observer the observer is. */
+    // Instance member variables
+    void* _observer; /**< @internal The observer instance used to send
+                        notifications. */
+    bump::String _notificationName; /**< @internal The notification name the
+                                       observer is observing. */
+    ObserverType
+        _observerType; /**< @internal The type of observer the observer is. */
 };
 
 /**
- * The KeyObserver subclass is used to send an observers notifications without objects based strictly
- * on the key. This subclass is used with the POST_NOIFICATION macro.
+ * The KeyObserver subclass is used to send an observers notifications without
+ * objects based strictly on the key. This subclass is used with the
+ * POST_NOIFICATION macro.
  */
 template <class T>
-class KeyObserver : public Observer
-{
+class KeyObserver : public Observer {
 public:
+    /**
+     * Constructor.
+     *
+     * @param observer The observer instance used to send notifications.
+     * @param functionPointer The function pointer called on the observer
+     * instance when notified.
+     * @param notificationName The name of the notification the observer is
+     * observing.
+     */
+    inline KeyObserver(T* observer, void (T::*functionPointer)(),
+                       const String& notificationName);
 
-	/**
-	 * Constructor.
-	 *
-	 * @param observer The observer instance used to send notifications.
-	 * @param functionPointer The function pointer called on the observer instance when notified.
-	 * @param notificationName The name of the notification the observer is observing.
-	 */
-	inline KeyObserver(T* observer, void (T::*functionPointer)(), const String& notificationName);
+    /**
+     * Calls the function pointer on the observer instance.
+     */
+    inline void notify();
 
-	/**
-	 * Calls the function pointer on the observer instance.
-	 */
-	inline void notify();
-
-	/**
-	 * Calls the function pointer on the observer instance with the given object (NO-OP).
-	 *
-	 * @param object The object to send to the notification's observer.
-	 */
-	inline void notify(const boost::any& object);
+    /**
+     * Calls the function pointer on the observer instance with the given object
+     * (NO-OP).
+     *
+     * @param object The object to send to the notification's observer.
+     */
+    inline void notify(const boost::any& object);
 
 protected:
+    /**
+     * @internal
+     * Destructor.
+     */
+    inline ~KeyObserver();
 
-	/**
-	 * @internal
-	 * Destructor.
-	 */
-	inline ~KeyObserver();
-
-	// Instance member variables
-	boost::function<void ()> _functionPointer;	/**< @internal The function pointer called on the observer instance when notified. */
+    // Instance member variables
+    boost::function<void()>
+        _functionPointer; /**< @internal The function pointer called on the
+                             observer instance when notified. */
 };
 
 /**
- * The ObjectObserver subclass is used to send an observers notifications with objects based
- * on the key. This subclass is used with the POST_NOTIFICATION_WITH_OBJECT macro.
+ * The ObjectObserver subclass is used to send an observers notifications with
+ * objects based on the key. This subclass is used with the
+ * POST_NOTIFICATION_WITH_OBJECT macro.
  */
 template <class T1, class T2>
-class ObjectObserver : public Observer
-{
+class ObjectObserver : public Observer {
 public:
+    /**
+     * Constructor.
+     *
+     * @param observer The observer instance used to send notifications.
+     * @param functionPointer The function pointer called on the observer
+     * instance when notified.
+     * @param notificationName The name of the notification the observer is
+     * observing.
+     */
+    inline ObjectObserver(T1* observer, void (T1::*functionPointer)(T2),
+                          const String& notificationName);
 
-	/**
-	 * Constructor.
-	 *
-	 * @param observer The observer instance used to send notifications.
-	 * @param functionPointer The function pointer called on the observer instance when notified.
-	 * @param notificationName The name of the notification the observer is observing.
-	 */
-	inline ObjectObserver(T1* observer, void (T1::*functionPointer)(T2), const String& notificationName);
+    /**
+     * Constructor.
+     *
+     * @param observer The observer instance used to send notifications.
+     * @param functionPointer The function pointer called on the observer
+     * instance when notified.
+     * @param notificationName The name of the notification the observer is
+     * observing.
+     */
+    inline ObjectObserver(T1* observer, void (T1::*functionPointer)(const T2&),
+                          const String& notificationName);
 
-	/**
-	 * Constructor.
-	 *
-	 * @param observer The observer instance used to send notifications.
-	 * @param functionPointer The function pointer called on the observer instance when notified.
-	 * @param notificationName The name of the notification the observer is observing.
-	 */
-	inline ObjectObserver(T1* observer, void (T1::*functionPointer)(const T2&), const String& notificationName);
+    /**
+     * Constructor.
+     *
+     * @param observer The observer instance used to send notifications.
+     * @param functionPointer The function pointer called on the observer
+     * instance when notified.
+     * @param notificationName The name of the notification the observer is
+     * observing.
+     */
+    inline ObjectObserver(T1* observer, void (T1::*functionPointer)(T2*),
+                          const String& notificationName);
 
-	/**
-	 * Constructor.
-	 *
-	 * @param observer The observer instance used to send notifications.
-	 * @param functionPointer The function pointer called on the observer instance when notified.
-	 * @param notificationName The name of the notification the observer is observing.
-	 */
-	inline ObjectObserver(T1* observer, void (T1::*functionPointer)(T2*), const String& notificationName);
+    /**
+     * Constructor.
+     *
+     * @param observer The observer instance used to send notifications.
+     * @param functionPointer The function pointer called on the observer
+     * instance when notified.
+     * @param notificationName The name of the notification the observer is
+     * observing.
+     */
+    inline ObjectObserver(T1* observer, void (T1::*functionPointer)(const T2*),
+                          const String& notificationName);
 
-	/**
-	 * Constructor.
-	 *
-	 * @param observer The observer instance used to send notifications.
-	 * @param functionPointer The function pointer called on the observer instance when notified.
-	 * @param notificationName The name of the notification the observer is observing.
-	 */
-	inline ObjectObserver(T1* observer, void (T1::*functionPointer)(const T2*), const String& notificationName);
+    /**
+     * Calls the function pointer on the observer instance (NO-OP).
+     */
+    inline void notify();
 
-	/**
-	 * Calls the function pointer on the observer instance (NO-OP).
-	 */
-	inline void notify();
-
-	/**
-	 * Calls the function pointer on the observer instance with the given object.
-	 *
-	 * @throw bump::NotificationError When the object has an invalid type for the bound callback.
-	 *
-	 * @param object The object to send to the notification's observer.
-	 */
-	inline void notify(const boost::any& object);
+    /**
+     * Calls the function pointer on the observer instance with the given
+     * object.
+     *
+     * @throw bump::NotificationError When the object has an invalid type for
+     * the bound callback.
+     *
+     * @param object The object to send to the notification's observer.
+     */
+    inline void notify(const boost::any& object);
 
 protected:
+    /**
+     * @internal
+     * Destructor.
+     */
+    inline ~ObjectObserver();
 
-	/**
-	 * @internal
-	 * Destructor.
-	 */
-	inline ~ObjectObserver();
-
-	// Instance member variables
-	boost::function<void (T2)>	_functionPointerWithObject;		/**< @internal The function pointer that has an object signature. */
-	boost::function<void (T2*)>	_functionPointerWithPointer;	/**< @internal The function pointer that has a pointer signature. */
+    // Instance member variables
+    boost::function<void(T2)>
+        _functionPointerWithObject; /**< @internal The function pointer that has
+                                       an object signature. */
+    boost::function<void(T2*)>
+        _functionPointerWithPointer; /**< @internal The function pointer that
+                                        has a pointer signature. */
 };
 
 /**
- * Central messaging system for passing abstract messages with objects through Bump.
+ * Central messaging system for passing abstract messages with objects through
+ * Bump.
  *
- * The NotificationCenter is a notification system that allows you to send notifications abstractly
- * when events occur in your application. For example, if you're work on an event system, and your event
- * completes, sometimes it would be nice to notify multiple parts of your application that that event
- * was completed. The bump::NotificationCenter makes this type of notification very easy to do. In order
- * to create such a notification, follow these steps:
+ * The NotificationCenter is a notification system that allows you to send
+ * notifications abstractly when events occur in your application. For example,
+ * if you're work on an event system, and your event completes, sometimes it
+ * would be nice to notify multiple parts of your application that that event
+ * was completed. The bump::NotificationCenter makes this type of notification
+ * very easy to do. In order to create such a notification, follow these steps:
  *
  * 1) Register all objects as observers with the NotificationCenter
  *
  * @code
- *   bump::AbstractObserver* observer = new bump::ObjectObserver<ObjectType, Event*>(this, &ObjectType::eventCompleted, "EventCompleted");
+ *   bump::AbstractObserver* observer = new bump::ObjectObserver<ObjectType,
+ * Event*>(this, &ObjectType::eventCompleted, "EventCompleted");
  *   bump::NotificationCenter::instance()->addObserver(observer);
  *   ADD_OBSERVER(observer); // convenience function
  * @endcode
  *
- * 2) Make sure to remove the observer from the NotificationCenter in its destructor
+ * 2) Make sure to remove the observer from the NotificationCenter in its
+ * destructor
  *
  * @code
  *   bump::NotificationCenter::instance()->removeObserver(this);
  *   REMOVE_OBSERVER(observer); // convenience function
  * @endcode
  *
- * 3) When the event completes, post a notification that the event completed with a matching name
+ * 3) When the event completes, post a notification that the event completed
+ * with a matching name
  *
  * @code
- *   bump::NotificationCenter::instance()->postNotificationWithObject("EventCompleted", event);
- *   POST_NOTIFICATION_WITH_OBJECT("EventCompleted", event); // convenience function
+ *   bump::NotificationCenter::instance()->postNotificationWithObject("EventCompleted",
+ * event); POST_NOTIFICATION_WITH_OBJECT("EventCompleted", event); //
+ * convenience function
  * @endcode
  *
- * And that's all there is to it! For more information, please see the bumpNotificationCenter example.
+ * And that's all there is to it! For more information, please see the
+ * bumpNotificationCenter example.
  */
-class BUMP_EXPORT NotificationCenter
-{
+class BUMP_EXPORT NotificationCenter {
 public:
+    /**
+     * Creates a thread-safe singleton instance of the NotificationCenter
+     * object.
+     *
+     * @return The singleton instance.
+     */
+    static NotificationCenter* instance();
 
-	/**
-	 * Creates a thread-safe singleton instance of the NotificationCenter object.
-	 *
-	 * @return The singleton instance.
-	 */
-	static NotificationCenter* instance();
+    /**
+     * Adds the observer to the list of observers to send notifications.
+     *
+     * @param observer The observer to add to the list of observers to send
+     * notifications.
+     */
+    void addObserver(Observer* observer);
 
-	/**
-	 * Adds the observer to the list of observers to send notifications.
-	 *
-	 * @param observer The observer to add to the list of observers to send notifications.
-	 */
-	void addObserver(Observer* observer);
+    /**
+     * Determines whether the notification center contains the observer.
+     *
+     * @param observer The observer pointer to check against the list of
+     * internal observers stored.
+     * @return True if the observer is registered with the notification center,
+     * false otherwise.
+     */
+    bool containsObserver(void* observer);
 
-	/**
-	 * Determines whether the notification center contains the observer.
-	 *
-	 * @param observer The observer pointer to check against the list of internal observers stored.
-	 * @return True if the observer is registered with the notification center, false otherwise.
-	 */
-	bool containsObserver(void* observer);
+    /**
+     * Calls all observer's function pointers that have registered for the
+     * posted notification.
+     *
+     * @param notificationName The notification to post to registered observers.
+     * @return The number of observers that received the notification.
+     */
+    unsigned int postNotification(const String& notificationName);
 
-	/**
-	 * Calls all observer's function pointers that have registered for the posted notification.
-	 *
-	 * @param notificationName The notification to post to registered observers.
-	 * @return The number of observers that received the notification.
-	 */
-	unsigned int postNotification(const String& notificationName);
+    /**
+     * Calls all observer's function pointers that have registered for the
+     * posted notification with the given object.
+     *
+     * @param notificationName The notification to post to registered observers.
+     * @param object The object to send to the registered observers.
+     * @return The number of observers that received the notification.
+     */
+    unsigned int postNotificationWithObject(const String& notificationName,
+                                            const boost::any& object);
 
-	/**
-	 * Calls all observer's function pointers that have registered for the posted notification
-	 * with the given object.
-	 *
-	 * @param notificationName The notification to post to registered observers.
-	 * @param object The object to send to the registered observers.
-	 * @return The number of observers that received the notification.
-	 */
-	unsigned int postNotificationWithObject(const String& notificationName, const boost::any& object);
-
-	/**
-	 * Removes the observer from the notification center.
-	 *
-	 * @param observer The observer instance to remove from the notification center.
-	 */
-	void removeObserver(void* observer);
+    /**
+     * Removes the observer from the notification center.
+     *
+     * @param observer The observer instance to remove from the notification
+     * center.
+     */
+    void removeObserver(void* observer);
 
 protected:
+    /**
+     * @internal
+     * Destructor.
+     */
+    ~NotificationCenter();
 
-	/**
-	 * @internal
-	 * Destructor.
-	 */
-	~NotificationCenter();
-
-	// Instance member variables
-	std::vector<Observer*>	_keyObservers;		/**< @internal The list of key observers registered with the NotificationCenter. */
-	std::vector<Observer*>	_objectObservers;	/**< @internal The list of object observers registered with the NotificationCenter. */
-	boost::shared_mutex		_mutex;				/**< @internal A boost mutex used to make the notification center access thread-safe. */
+    // Instance member variables
+    std::vector<Observer*>
+        _keyObservers; /**< @internal The list of key observers registered with
+                          the NotificationCenter. */
+    std::vector<Observer*>
+        _objectObservers; /**< @internal The list of object observers registered
+                             with the NotificationCenter. */
+    boost::shared_mutex _mutex; /**< @internal A boost mutex used to make the
+                                   notification center access thread-safe. */
 
 private:
+    /**
+     * @internal
+     * Constructor.
+     */
+    NotificationCenter();
 
-	/**
-	 * @internal
-	 * Constructor.
-	 */
-	NotificationCenter();
+    /**
+     * @internal
+     * Copy constructor.
+     *
+     * No-op to support the singleton.
+     */
+    NotificationCenter(const NotificationCenter& notificationCenter);
 
-	/**
-	 * @internal
-	 * Copy constructor.
-	 *
-	 * No-op to support the singleton.
-	 */
-	NotificationCenter(const NotificationCenter& notificationCenter);
-
-	/**
-	 * @internal
-	 * Overloaded assignment operator.
-	 *
-	 * No-op to support the singleton.
-	 */
-	void operator=(const NotificationCenter& notificationCenter);
+    /**
+     * @internal
+     * Overloaded assignment operator.
+     *
+     * No-op to support the singleton.
+     */
+    void operator=(const NotificationCenter& notificationCenter);
 };
 
-}	// End of bump namespace
+}  // namespace bump
 
 /**
- * Convenience function for accessing the NotificationCenter singleton's addObserver() method.
+ * Convenience function for accessing the NotificationCenter singleton's
+ * addObserver() method.
  *
  * @param observer The object or key observer to add to the NotificationCenter.
  */
 BUMP_EXPORT void ADD_OBSERVER(bump::Observer* observer);
 
 /**
- * Convenience function for accessing the NotificationCenter singleton's removeObserver() method.
+ * Convenience function for accessing the NotificationCenter singleton's
+ * removeObserver() method.
  *
  * @param observer The observer instance to remove from the NotificationCenter.
  */
 BUMP_EXPORT void REMOVE_OBSERVER(void* observer);
 
 /**
- * Convenience function for accessing the NotificationCenter singleton's postNotification() method.
+ * Convenience function for accessing the NotificationCenter singleton's
+ * postNotification() method.
  *
  * @param notificationName The notification to post to registered observers.
  * @return The number of observers that received the notification.
  */
-BUMP_EXPORT unsigned int POST_NOTIFICATION(const bump::String& notificationName);
+BUMP_EXPORT unsigned int POST_NOTIFICATION(
+    const bump::String& notificationName);
 
 /**
- * Convenience function for accessing the NotificationCenter singleton's postNotificationWithObject() method.
+ * Convenience function for accessing the NotificationCenter singleton's
+ * postNotificationWithObject() method.
  *
  * @param notificationName The notification to post to registered observers.
  * @param object The object to send to the registered observers.
  * @return The number of observers that received the notification.
  */
-BUMP_EXPORT unsigned int POST_NOTIFICATION_WITH_OBJECT(const bump::String& notificationName, const boost::any& object);
+BUMP_EXPORT unsigned int POST_NOTIFICATION_WITH_OBJECT(
+    const bump::String& notificationName, const boost::any& object);
 
 // Pull in the KeyObserver and ObjectObserver template implementations
 #include <bump/NotificationCenter_impl.h>
-
-#endif	// End of BUMP_NOTIFICATION_CENTER_H

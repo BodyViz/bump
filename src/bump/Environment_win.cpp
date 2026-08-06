@@ -6,44 +6,43 @@
 //	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
-// Bump headers
 #include <bump/Environment.h>
 #include <bump/String.h>
 
-// Windows headers
+// Order is load-bearing: Lmcons.h uses Windows types without including
+// windows.h itself, so windows.h must come first.
+// clang-format off
 #include <windows.h>
 #include <Lmcons.h>
+// clang-format on
 
 namespace bump {
 
 namespace Environment {
 
-bool setEnvironmentVariable(const String& name, const String& value, bool overwrite)
-{
-	int result = 0;
-	bool exists = !environmentVariable(name).isEmpty();
-	if (overwrite || !exists)
-	{
-		result = _putenv_s(name.c_str(), value.c_str());
-	}
+bool setEnvironmentVariable(const String& name, const String& value,
+                            bool overwrite) {
+    int result = 0;
+    bool exists = !environmentVariable(name).isEmpty();
+    if (overwrite || !exists) {
+        result = _putenv_s(name.c_str(), value.c_str());
+    }
 
-	return result == 0;
+    return result == 0;
 }
 
-bool unsetEnvironmentVariable(const String& name)
-{
-	int result = _putenv_s(name.c_str(), "");
-	return result == 0;
+bool unsetEnvironmentVariable(const String& name) {
+    int result = _putenv_s(name.c_str(), "");
+    return result == 0;
 }
 
-String currentUsername()
-{
-	char username[UNLEN + 1];
-	DWORD size = UNLEN + 1;
-	GetUserName((char*)username, &size);
-	return username;
+String currentUsername() {
+    char username[UNLEN + 1];
+    DWORD size = UNLEN + 1;
+    GetUserName((char*)username, &size);
+    return username;
 }
 
-}	// End of Environment namespace
+}  // namespace Environment
 
-}	// End of bump namespace
+}  // namespace bump

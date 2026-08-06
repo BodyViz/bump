@@ -6,8 +6,7 @@
 //  Copyright (c) 2012 Joseph Holub. All rights reserved.
 //
 
-#ifndef BUMP_TEXT_FILE_READER_H
-#define BUMP_TEXT_FILE_READER_H
+#pragma once
 
 #include <bump/Export.h>
 #include <bump/String.h>
@@ -34,7 +33,8 @@ namespace TextFileReader {
  * line of the text file.
  *
  * @param fileName The text file's name and/or path.
- * @return The entire contents of the file with each bump::String being one line from the file.
+ * @return The entire contents of the file with each bump::String being one line
+ * from the file.
  */
 BUMP_EXPORT StringList fileContents(const String& fileName);
 
@@ -50,9 +50,11 @@ BUMP_EXPORT StringList fileContents(const String& fileName);
  * @param fileName The text file's name and/or path.
  * @param beginningLine The line to start reading from.
  * @param numLines The number of lines to read.
- * @return The requested contents of the file with each bump::String being one line from the file.
+ * @return The requested contents of the file with each bump::String being one
+ * line from the file.
  */
-BUMP_EXPORT StringList fileContents(const String& fileName, int beginningLine, int numLines);
+BUMP_EXPORT StringList fileContents(const String& fileName, int beginningLine,
+                                    int numLines);
 
 /**
  * Returns a subset of the text file.
@@ -62,7 +64,8 @@ BUMP_EXPORT StringList fileContents(const String& fileName, int beginningLine, i
  *
  * @param fileName The text file's name and/or path.
  * @param beginningLine The line to start reading from.
- * @return The requested contents of the file with each bump::String being one line from the file.
+ * @return The requested contents of the file with each bump::String being one
+ * line from the file.
  */
 BUMP_EXPORT StringList fileContents(const String& fileName, int beginningLine);
 
@@ -77,7 +80,8 @@ BUMP_EXPORT String firstLine(const String& fileName);
 /**
  * Returns the header of the file.
  *
- * The size of the file header, in number of lines, must be specified as numLines.
+ * The size of the file header, in number of lines, must be specified as
+ * numLines.
  *
  * @param fileName The text file's name and/or path.
  * @param numLines The number of lines making up the header.
@@ -88,7 +92,8 @@ BUMP_EXPORT StringList header(const String& fileName, int numLines);
 /**
  * Returns the footer of the file.
  *
- * The size of the file footer, in number of lines, must be specified as numLines.
+ * The size of the file footer, in number of lines, must be specified as
+ * numLines.
  *
  * @param fileName The text file's name and/or path.
  * @param numLines The number of lines making up the footer.
@@ -106,8 +111,6 @@ BUMP_EXPORT StringList footer(const String& fileName, int numLines);
  */
 BUMP_EXPORT int numberOfLines(const String& fileName);
 
-}	// End of TextFileReader namespace
+}  // namespace TextFileReader
 
-}	// End of bump namespace
-
-#endif	// End of BUMP_TEXT_FILE_READER_H
+}  // namespace bump

@@ -6,32 +6,26 @@
 //	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
-#ifndef BUMPTEST_ENVIRONMENT_FIXTURE_H
-#define BUMPTEST_ENVIRONMENT_FIXTURE_H
+#pragma once
 
-// GTest headers
 #include <gtest/gtest.h>
 
 namespace bumpTest {
 
 /** Point of entry for the Bump test suite. */
-class EnvironmentFixture : public testing::Environment
-{
+class EnvironmentFixture : public testing::Environment {
 public:
+    /** Constructor. */
+    EnvironmentFixture() {}
 
-	/** Constructor. */
-	EnvironmentFixture() {}
+    /** Destructor. */
+    ~EnvironmentFixture() {}
 
-	/** Destructor. */
-	~EnvironmentFixture() {}
+    /** Run immediately before a test starts. Starts the timer. */
+    void SetUp() {}
 
-	/** Run immediately before a test starts. Starts the timer. */
-	void SetUp() {}
-
-	/** Invoked immediately after a test finishes. Stops the timer. */
-	void TearDown() {}
+    /** Invoked immediately after a test finishes. Stops the timer. */
+    void TearDown() {}
 };
 
-}	// End of bumpTest namespace
-
-#endif	// End of BUMPTEST_ENVIRONMENT_FIXTURE_H
+}  // namespace bumpTest
