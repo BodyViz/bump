@@ -76,7 +76,7 @@ TEST_F(UuidTest, testCopyConstructorUuid) {
     EXPECT_TRUE(uuid1 == uuid2);
 
     // Try the same thing with a randomly generated uuid
-    uuid1 = bump::Uuid::genarateRandom();
+    uuid1 = bump::Uuid::generateRandom();
     uuid2 = bump::Uuid(uuid1);
     EXPECT_STREQ(uuid1.toString().c_str(), uuid2.toString().c_str());
 }
@@ -96,7 +96,7 @@ TEST_F(UuidTest, testGenerateRandom) {
     std::set<bump::String> uuid_counts;
     for (unsigned int i = 0; i < 20; ++i) {
         // Generate the uuid and the uuid string
-        bump::Uuid uuid = bump::Uuid::genarateRandom();
+        bump::Uuid uuid = bump::Uuid::generateRandom();
         bump::String uuid_str = uuid.toString();
 
         // Make sure it isn't null
@@ -159,8 +159,8 @@ TEST_F(UuidTest, testEqualToOperator) {
     EXPECT_TRUE(uuid1 == uuid2);
 
     // Create two random uuids
-    uuid1 = bump::Uuid::genarateRandom();
-    uuid2 = bump::Uuid::genarateRandom();
+    uuid1 = bump::Uuid::generateRandom();
+    uuid2 = bump::Uuid::generateRandom();
     EXPECT_FALSE(uuid1 == uuid2);
 
     // Create two different uuids from strings
@@ -181,8 +181,8 @@ TEST_F(UuidTest, testNotEqualOperator) {
     EXPECT_FALSE(uuid1 != uuid2);
 
     // Create two random uuids
-    uuid1 = bump::Uuid::genarateRandom();
-    uuid2 = bump::Uuid::genarateRandom();
+    uuid1 = bump::Uuid::generateRandom();
+    uuid2 = bump::Uuid::generateRandom();
     EXPECT_TRUE(uuid1 != uuid2);
 
     // Create two different uuids from strings

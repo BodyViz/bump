@@ -15,6 +15,15 @@
 #include <string>
 #include <vector>
 
+// MSVC C4275: bump::String derives from std::string, which has no
+// dll-interface. Scoped to this header so the suppression never reaches
+// consumer code.
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable \
+                : 4275)  // non dll-interface base for dll-interface class
+#endif
+
 namespace bump {
 
 // Forward Declarations
@@ -167,11 +176,6 @@ public:
      * @param boolValue A boolean to convert to a string.
      */
     String(bool boolValue);
-
-    /**
-     * Destructor.
-     */
-    ~String();
 
     /**
      * Joins all the strings into a single string each separated by the
@@ -1188,3 +1192,7 @@ public:
 };
 
 }  // namespace bump
+
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif

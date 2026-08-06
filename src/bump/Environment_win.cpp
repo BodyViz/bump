@@ -9,6 +9,8 @@
 #include <bump/Environment.h>
 #include <bump/String.h>
 
+#include <cstdlib>
+
 // Order is load-bearing: Lmcons.h uses Windows types without including
 // windows.h itself, so windows.h must come first.
 // clang-format off
@@ -37,9 +39,14 @@ bool unsetEnvironmentVariable(const String& name) {
 }
 
 String currentUsername() {
-    char username[UNLEN + 1];
+    // GetUserNameA explicitly, not the GetUserName A/W macro: if UNICODE is
+    // ever defined the macro resolves to GetUserNameW and this stops compiling.
+    char username[UNLEN + 1] = {};
     DWORD size = UNLEN + 1;
-    GetUserName((char*)username, &size);
+    if (!GetUserNameA(username, &size)) {
+        return String();
+    }
+
     return username;
 }
 

@@ -45,8 +45,6 @@ Timeline::Timeline(double duration, const Direction& direction,
     ;
 }
 
-Timeline::~Timeline() { ; }
-
 void Timeline::start() {
     if (_state == NOT_RUNNING || _state == FINISHED) {
         // Start the timer and set State to RUNNING

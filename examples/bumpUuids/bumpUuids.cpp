@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
     // How to generate random uuids
     std::cout << "Generating random uuids:" << std::endl;
     for (unsigned int i = 0; i < 4; ++i) {
-        bump::Uuid uuid = bump::Uuid::genarateRandom();
+        bump::Uuid uuid = bump::Uuid::generateRandom();
         std::cout << "- Random UUID: \"" << uuid.toString() << "\""
                   << std::endl;
     }

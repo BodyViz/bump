@@ -36,11 +36,6 @@ public:
     CryptographicHash(const Algorithm& algorithm = SHA1);
 
     /**
-     * Destructor.
-     */
-    ~CryptographicHash();
-
-    /**
      * Sets the textual data to generate the cryptographic hash.
      *
      * @param data The data string to use to generate the cryptographic hash.

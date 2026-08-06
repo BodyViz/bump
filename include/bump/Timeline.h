@@ -72,11 +72,6 @@ public:
              const CurveShape& curveShape = LINEAR_CURVE);
 
     /**
-     * Destructor.
-     */
-    ~Timeline();
-
-    /**
      * Starts the timeline.
      */
     void start();

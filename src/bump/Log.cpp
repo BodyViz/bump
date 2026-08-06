@@ -153,7 +153,7 @@ bool Log::setLogFile(const String& filepath) {
     std::ofstream* logFile = new std::ofstream(filepath.c_str());
     if (!(*logFile)) {
         delete logFile;
-        logFile = NULL;
+        logFile = nullptr;
         return false;
     }
 

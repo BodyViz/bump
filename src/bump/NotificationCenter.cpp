@@ -125,7 +125,7 @@ void NotificationCenter::removeObserver(void* observer) {
     BOOST_FOREACH (Observer* abs_observer, _keyObservers) {
         if (abs_observer->containsObserver(observer)) {
             delete abs_observer;
-            abs_observer = NULL;
+            abs_observer = nullptr;
         } else {
             key_observers_to_keep.push_back(abs_observer);
         }
@@ -137,7 +137,7 @@ void NotificationCenter::removeObserver(void* observer) {
     BOOST_FOREACH (Observer* abs_observer, _objectObservers) {
         if (abs_observer->containsObserver(observer)) {
             delete abs_observer;
-            abs_observer = NULL;
+            abs_observer = nullptr;
         } else {
             object_observers_to_keep.push_back(abs_observer);
         }

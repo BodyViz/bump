@@ -117,14 +117,11 @@ String::String(bool boolValue) {
     *this = boolValue == true ? String("true") : String("false");
 }
 
-String::~String() { ; }
-
 String String::join(const StringList& strings, const String& separator) {
-    int last_string = strings.size() - 1;
     String joined;
-    for (unsigned int i = 0; i < strings.size(); ++i) {
-        joined = i != last_string ? joined << strings.at(i) << separator
-                                  : joined << strings.at(i);
+    for (std::size_t i = 0; i < strings.size(); ++i) {
+        joined = i + 1 != strings.size() ? joined << strings.at(i) << separator
+                                         : joined << strings.at(i);
     }
 
     return joined;
@@ -159,7 +156,7 @@ String String::arg(const String& argument) const {
     // and not the %10 on this call, we use the multimap.
     std::multimap<int, int> marker_position_map;
     unsigned int current_index = 0;
-    unsigned int lowest_marker_value = 100;
+    int lowest_marker_value = 100;
     String lowest_marker;
     for (unsigned int i = 0; i < markers.size(); ++i) {
         // First find the marker index position in this string
@@ -167,7 +164,7 @@ String String::arg(const String& argument) const {
         int marker_position_index = indexOf(marker, current_index);
 
         // Convert the marker to a value
-        unsigned int marker_value = marker.remove("%").toUInt();
+        int marker_value = marker.remove("%").toInt();
         marker = markers.at(i);
 
         // See if the match is the lowest
@@ -841,7 +838,7 @@ bool String::toBool() const {
 double String::toDouble() const {
     try {
         return boost::lexical_cast<double>((*this).data());
-    } catch (boost::bad_lexical_cast) {
+    } catch (const boost::bad_lexical_cast&) {
         throw TypeCastError("Cannot convert string to double", BUMP_LOCATION);
     }
 }
@@ -849,7 +846,7 @@ double String::toDouble() const {
 float String::toFloat() const {
     try {
         return boost::lexical_cast<float>((*this).data());
-    } catch (boost::bad_lexical_cast) {
+    } catch (const boost::bad_lexical_cast&) {
         throw TypeCastError("Cannot convert string to float", BUMP_LOCATION);
     }
 }
@@ -857,7 +854,7 @@ float String::toFloat() const {
 int String::toInt() const {
     try {
         return boost::lexical_cast<int>((*this).data());
-    } catch (boost::bad_lexical_cast) {
+    } catch (const boost::bad_lexical_cast&) {
         throw TypeCastError("Cannot convert string to int", BUMP_LOCATION);
     }
 }
@@ -865,7 +862,7 @@ int String::toInt() const {
 long String::toLong() const {
     try {
         return boost::lexical_cast<long>((*this).data());
-    } catch (boost::bad_lexical_cast) {
+    } catch (const boost::bad_lexical_cast&) {
         throw TypeCastError("Cannot convert string to long", BUMP_LOCATION);
     }
 }
@@ -873,7 +870,7 @@ long String::toLong() const {
 long long String::toLongLong() const {
     try {
         return boost::lexical_cast<long long>((*this).data());
-    } catch (boost::bad_lexical_cast) {
+    } catch (const boost::bad_lexical_cast&) {
         throw TypeCastError("Cannot convert string to long long",
                             BUMP_LOCATION);
     }
@@ -887,7 +884,7 @@ String& String::toLowerCase() {
 short String::toShort() const {
     try {
         return boost::lexical_cast<short>((*this).data());
-    } catch (boost::bad_lexical_cast) {
+    } catch (const boost::bad_lexical_cast&) {
         throw TypeCastError("Cannot convert string to short", BUMP_LOCATION);
     }
 }
@@ -897,7 +894,7 @@ std::string String::toStdString() const { return *this; }
 unsigned int String::toUInt() const {
     try {
         return boost::lexical_cast<unsigned int>((*this).data());
-    } catch (boost::bad_lexical_cast) {
+    } catch (const boost::bad_lexical_cast&) {
         throw TypeCastError("Cannot convert string to unsigned int",
                             BUMP_LOCATION);
     }
@@ -906,7 +903,7 @@ unsigned int String::toUInt() const {
 unsigned long String::toULong() const {
     try {
         return boost::lexical_cast<unsigned long>((*this).data());
-    } catch (boost::bad_lexical_cast) {
+    } catch (const boost::bad_lexical_cast&) {
         throw TypeCastError("Cannot convert string to unsigned long",
                             BUMP_LOCATION);
     }
@@ -915,7 +912,7 @@ unsigned long String::toULong() const {
 unsigned long long String::toULongLong() const {
     try {
         return boost::lexical_cast<unsigned long long>((*this).data());
-    } catch (boost::bad_lexical_cast) {
+    } catch (const boost::bad_lexical_cast&) {
         throw TypeCastError("Cannot convert string to unsigned long long",
                             BUMP_LOCATION);
     }
@@ -929,7 +926,7 @@ String& String::toUpperCase() {
 unsigned short String::toUShort() const {
     try {
         return boost::lexical_cast<unsigned short>((*this).data());
-    } catch (boost::bad_lexical_cast) {
+    } catch (const boost::bad_lexical_cast&) {
         throw TypeCastError("Cannot convert string to unsigned short",
                             BUMP_LOCATION);
     }

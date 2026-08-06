@@ -20,27 +20,13 @@ FileInfo::FileInfo(const String& path) {
     _path = boost::filesystem::path(path.c_str()).make_preferred();
 }
 
-FileInfo::~FileInfo() { ; }
-
 //=============================================================================
 //                              Path Query Methods
 //=============================================================================
 
 bool FileInfo::exists() const {
-    // Use the exists function to check if it is a valid file or directory
-    bool exists = boost::filesystem::exists(_path);
-    if (exists) {
-        return true;
-    }
-
-    // Since it's not a valid file or directory, let's check if it's a symbolic
-    // link
-    exists = boost::filesystem::symbolic_link_exists(_path);
-    if (exists) {
-        return true;
-    }
-
-    return false;
+    return boost::filesystem::exists(_path) ||
+           boost::filesystem::is_symlink(_path);
 }
 
 unsigned long long FileInfo::fileSize() const {

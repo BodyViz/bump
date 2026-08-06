@@ -7,17 +7,14 @@
 //
 
 #include <bump/CryptographicHash.h>
-
 #include <smallsha1/sha1.h>
 
 namespace bump {
 
 CryptographicHash::CryptographicHash(const Algorithm& algorithm)
-    : _algorithm(algorithm), _data(NULL), _length(0) {
+    : _algorithm(algorithm), _data(nullptr), _length(0) {
     ;
 }
-
-CryptographicHash::~CryptographicHash() { ; }
 
 void CryptographicHash::setData(const String& data) {
     _data = data.c_str();
@@ -30,13 +27,13 @@ void CryptographicHash::setData(const char* data, int length) {
 }
 
 void CryptographicHash::reset() {
-    _data = NULL;
+    _data = nullptr;
     _length = 0;
 }
 
 String CryptographicHash::result() {
     // Make sure the data has been set
-    if (_data == NULL || _length == 0) {
+    if (_data == nullptr || _length == 0) {
         return String();
     }
 

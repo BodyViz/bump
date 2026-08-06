@@ -11,10 +11,12 @@
 #include <bump/Export.h>
 #include <bump/String.h>
 
-#define BUMP_MAJOR_VERSION	  @BUMP_MAJOR_VERSION@
-#define BUMP_MINOR_VERSION	  @BUMP_MINOR_VERSION@
-#define BUMP_PATCH_VERSION	  @BUMP_PATCH_VERSION@
-#define BUMP_SO_VERSION		  @BUMP_SO_VERSION@
+// clang-format off
+#define BUMP_MAJOR_VERSION @BUMP_MAJOR_VERSION@
+#define BUMP_MINOR_VERSION @BUMP_MINOR_VERSION@
+#define BUMP_PATCH_VERSION @BUMP_PATCH_VERSION@
+#define BUMP_SO_VERSION    @BUMP_SO_VERSION@
+// clang-format on
 
 namespace bump {
 
@@ -63,4 +65,4 @@ BUMP_EXPORT String soVersion();
  */
 BUMP_EXPORT String libraryName();
 
-}	// End of bump namespace
+}  // namespace bump

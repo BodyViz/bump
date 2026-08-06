@@ -15,7 +15,7 @@ namespace Environment {
 
 String environmentVariable(const String& name) {
     char* value = getenv(name.c_str());
-    return value == NULL ? String("") : String(value);
+    return value == nullptr ? String("") : String(value);
 }
 
 }  // namespace Environment

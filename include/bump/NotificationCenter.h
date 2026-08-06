@@ -19,6 +19,14 @@
 
 using namespace boost::placeholders;
 
+// MSVC C4251: observers hold boost::function members; NotificationCenter holds
+// a boost::shared_mutex. Scoped to this header so the suppression never reaches
+// consumer code.
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4251)  // needs dll-interface to be used by clients
+#endif
+
 namespace bump {
 
 /**
@@ -404,3 +412,7 @@ BUMP_EXPORT unsigned int POST_NOTIFICATION_WITH_OBJECT(
 
 // Pull in the KeyObserver and ObjectObserver template implementations
 #include <bump/NotificationCenter_impl.h>
+
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif

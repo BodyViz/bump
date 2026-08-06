@@ -40,7 +40,7 @@ StringList readFileLines(String fileName, int beginningLine, int numLines) {
 
     std::string line;
     input_file.seekg(0, std::ios::beg);
-    for (unsigned int i = 1; i < beginningLine; i++) {
+    for (int i = 1; i < beginningLine; i++) {
         std::getline(input_file, line);
         if (input_file.eof()) {
             bumpERROR_P("FileReader: ",
@@ -57,7 +57,7 @@ StringList readFileLines(String fileName, int beginningLine, int numLines) {
         }
     } else {
         // Read the specified lines from the file
-        for (unsigned int i = 0; i < numLines; i++) {
+        for (int i = 0; i < numLines; i++) {
             if (input_file.eof()) {
                 bumpINFO_P("FileReader: ",
                            "More lines were requested than were in the file");

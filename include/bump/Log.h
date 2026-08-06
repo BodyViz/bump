@@ -21,6 +21,13 @@
 // Defines the bump prefix for logging
 #define bumpPrefix "[bump] "
 
+// MSVC C4251: Log holds boost::mutex members.
+// Scoped to this header so the suppression never reaches consumer code.
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4251)  // needs dll-interface to be used by clients
+#endif
+
 namespace bump {
 
 /**
@@ -342,3 +349,7 @@ BUMP_EXPORT void bumpINFO_PF(const bump::String& prefix,
                              const bump::String& message);
 BUMP_EXPORT void bumpDEBUG_PF(const bump::String& prefix,
                               const bump::String& message);
+
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif

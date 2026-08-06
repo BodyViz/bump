@@ -12,6 +12,13 @@
 
 #include <boost/timer/timer.hpp>
 
+// MSVC C4251: Timer holds a boost::timer::cpu_timer by value.
+// Scoped to this header so the suppression never reaches consumer code.
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4251)  // needs dll-interface to be used by clients
+#endif
+
 namespace bump {
 
 /**
@@ -94,3 +101,7 @@ protected:
 };
 
 }  // namespace bump
+
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif

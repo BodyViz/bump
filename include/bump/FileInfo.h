@@ -13,6 +13,13 @@
 
 #include <boost/filesystem/path.hpp>
 
+// MSVC C4251: FileInfo holds a boost::filesystem::path by value.
+// Scoped to this header so the suppression never reaches consumer code.
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4251)  // needs dll-interface to be used by clients
+#endif
+
 namespace bump {
 
 /**
@@ -43,11 +50,6 @@ public:
      * inspect.
      */
     FileInfo(const String& path);
-
-    /**
-     * Destructor.
-     */
-    ~FileInfo();
 
     //=========================================================================
     //                               Path Query Methods
@@ -477,3 +479,7 @@ typedef std::vector<FileInfo>
     FileInfoList; /**< Shortcut for creating vectors of file info objects. */
 
 }  // namespace bump
+
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif

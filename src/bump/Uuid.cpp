@@ -19,13 +19,9 @@ namespace bump {
 
 Uuid::Uuid() : boost::uuids::uuid(boost::uuids::nil_uuid()) { ; }
 
-Uuid::Uuid(const Uuid& uuid) : boost::uuids::uuid(uuid) { ; }
-
 Uuid::Uuid(const boost::uuids::uuid& uuid) : boost::uuids::uuid(uuid) { ; }
 
-Uuid::~Uuid() { ; }
-
-Uuid Uuid::genarateRandom() {
+Uuid Uuid::generateRandom() {
     boost::uuids::random_generator generator;
     boost::uuids::uuid uuid = generator();
     return uuid;

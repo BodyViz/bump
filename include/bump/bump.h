@@ -9,6 +9,7 @@
 #pragma once
 
 #include <bump/AutoTimer.h>
+#include <bump/CryptographicHash.h>
 #include <bump/Environment.h>
 #include <bump/Exception.h>
 #include <bump/Export.h>
@@ -24,6 +25,7 @@
 #include <bump/OutOfRangeError.h>
 #include <bump/String.h>
 #include <bump/StringSearchError.h>
+#include <bump/TextFileReader.h>
 #include <bump/Timeline.h>
 #include <bump/Timer.h>
 #include <bump/TypeCastError.h>

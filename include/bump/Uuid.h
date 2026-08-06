@@ -12,6 +12,15 @@
 
 #include <boost/uuid/uuid.hpp>
 
+// MSVC C4275: bump::Uuid derives from boost::uuids::uuid, which has no
+// dll-interface. Scoped to this header so the suppression never reaches
+// consumer code.
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable \
+                : 4275)  // non dll-interface base for dll-interface class
+#endif
+
 namespace bump {
 
 // Forward declarations
@@ -32,13 +41,6 @@ public:
     Uuid();
 
     /**
-     * Copy constructor creates a new uuid from a bump::Uuid uuid.
-     *
-     * @param uuid The bump::Uuid to create a copy of.
-     */
-    Uuid(const Uuid& uuid);
-
-    /**
      * Copy constructor creates a new uuid from a boost uuid.
      *
      * @param uuid The boost uuid to create a copy of.
@@ -46,17 +48,12 @@ public:
     Uuid(const boost::uuids::uuid& uuid);
 
     /**
-     * Destructor.
-     */
-    ~Uuid();
-
-    /**
-     * Generates a random uuid by automatically seedings a random number
+     * Generates a random uuid by automatically seeding a random number
      * generator.
      *
      * @return A random uuid.
      */
-    static Uuid genarateRandom();
+    static Uuid generateRandom();
 
     /**
      * Generates a uuid from the given string (i.e.
@@ -143,3 +140,7 @@ public:
 };
 
 }  // namespace bump
+
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
