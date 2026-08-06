@@ -8,7 +8,6 @@
 
 #include <bump/CryptographicHash.h>
 
-// Smallsha1 headers
 #include <smallsha1/sha1.h>
 
 namespace bump {
