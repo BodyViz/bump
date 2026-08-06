@@ -12,13 +12,8 @@ namespace bump {
 
 bump::String version() {
     bump::String version;
-    if (BUMP_SO_VERSION == 0) {
-        version << BUMP_MAJOR_VERSION << "." << BUMP_MINOR_VERSION << "."
-                << BUMP_PATCH_VERSION;
-    } else {
-        version << BUMP_MAJOR_VERSION << "." << BUMP_MINOR_VERSION << "."
-                << BUMP_PATCH_VERSION << "-" << BUMP_SO_VERSION;
-    }
+    version << BUMP_MAJOR_VERSION << "." << BUMP_MINOR_VERSION << "."
+            << BUMP_PATCH_VERSION;
 
     return version;
 }

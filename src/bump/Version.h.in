@@ -21,10 +21,10 @@
 namespace bump {
 
 /**
- * Returns the library version number.
+ * Returns the library version number as "major.minor.patch".
  *
- * The number convention is as follows:
- *    - Bump-1.0.2 will return "1.0.2".
+ * For example, Bump 2.0.0 returns "2.0.0". The SO version is not appended.
+ * Use soVersion() if you need the ABI version.
  *
  * @return The version of the bump library as a string.
  */

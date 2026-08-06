@@ -1,170 +1,143 @@
+cmake_minimum_required(VERSION 3.30)
 
-# Set the minimum required version of CMake
-CMAKE_MINIMUM_REQUIRED (VERSION 3.19)
+project(Bump
+    VERSION 2.0.0
+    DESCRIPTION "C++ wrapper library for modern Boost functionality"
+    HOMEPAGE_URL "https://github.com/BodyViz/bump"
+    LANGUAGES CXX
+)
+set(BUMP_SO_VERSION ${PROJECT_VERSION_MAJOR})
 
-# Enable folders inside Visual Studio and Xcode
-set_property (GLOBAL PROPERTY USE_FOLDERS ON)
+include(CMakeDependentOption)
+include(GNUInstallDirs)
 
-# Project settings
-PROJECT (Bump)
-SET (BUMP_MAJOR_VERSION 1)
-SET (BUMP_MINOR_VERSION 2)
-SET (BUMP_PATCH_VERSION 2)
-SET (BUMP_SO_VERSION 17)
-SET (BUMP_VERSION ${BUMP_MAJOR_VERSION}.${BUMP_MINOR_VERSION}.${BUMP_PATCH_VERSION})
+#==============================================================================
+#                                   Guardrails
+#==============================================================================
 
-# Include all the header directories
-INCLUDE_DIRECTORIES (
-	${Bump_SOURCE_DIR}/include
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
+set(CMAKE_LINK_LIBRARIES_ONLY_TARGETS ON)
+
+#==============================================================================
+#                                    Options
+#==============================================================================
+
+option(BUMP_BUILD_EXAMPLES "Build the Bump example applications" ON)
+option(BUMP_BUILD_TESTS "Build the Bump unit tests" OFF)
+option(BUMP_BUILD_DOCS "Build the Bump reference documentation with Doxygen" OFF)
+option(BUMP_HIDE_PRIVATE_SYMBOLS
+    "Export only BUMP_EXPORT-annotated symbols from the shared library" ON)
+
+# Platform-conditional options. cmake_dependent_option keeps them out of the
+# cache entirely off-platform rather than wrapping them in if().
+cmake_dependent_option(BUMP_BUILD_FRAMEWORK
+    "Build Bump as a macOS framework instead of a plain library" OFF "APPLE" OFF)
+cmake_dependent_option(BUMP_WIN32_USE_MP
+    "Compile with /MP for parallel builds" ON "MSVC" OFF)
+
+# A framework is always a shared bundle, so it cannot honour a static
+# BUILD_SHARED_LIBS. Fail loudly rather than silently producing the other one.
+if(BUMP_BUILD_FRAMEWORK AND DEFINED BUILD_SHARED_LIBS AND NOT BUILD_SHARED_LIBS)
+    message(FATAL_ERROR
+        "BUMP_BUILD_FRAMEWORK requires a shared build; set BUILD_SHARED_LIBS=ON "
+        "or turn BUMP_BUILD_FRAMEWORK off.")
+endif()
+
+#==============================================================================
+#                            Standalone-only settings
+#==============================================================================
+# Guarded so that add_subdirectory()/FetchContent consumers keep control of
+# their own build configuration.
+
+if(PROJECT_IS_TOP_LEVEL)
+    set(CMAKE_CXX_EXTENSIONS OFF)
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+    # Boost's imported targets provide no Debug mapping for MinSizeRel or
+    # RelWithDebInfo and fall back to the release archives. Harmless on macOS,
+    # potentially heap-corrupting under MSVC, so restrict the set.
+    if(CMAKE_CONFIGURATION_TYPES)
+        set(CMAKE_CONFIGURATION_TYPES Debug Release)
+        # Ninja Multi-Config only; Xcode and Visual Studio reject this variable.
+        if(CMAKE_GENERATOR STREQUAL "Ninja Multi-Config")
+            set(CMAKE_DEFAULT_BUILD_TYPE Debug)
+        endif()
+    elseif(NOT CMAKE_BUILD_TYPE)
+        # Single-config generators default to an unoptimized no-config build,
+        # which the old `configure` script papered over with -DCMAKE_BUILD_TYPE.
+        set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+        set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release)
+    endif()
+
+    # Distinguishes Debug from Release artifacts so both can be installed into a
+    # single prefix. Frameworks ignore these and use
+    # FRAMEWORK_MULTI_CONFIG_POSTFIX_<CONFIG> instead.
+    set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "Debug library name postfix")
+    set(CMAKE_RELWITHDEBINFO_POSTFIX "rd" CACHE STRING "RelWithDebInfo postfix")
+    set(CMAKE_MINSIZEREL_POSTFIX "s" CACHE STRING "MinSizeRel postfix")
+
+    # Per-config subdirectories are left at CMake's defaults.
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
+endif()
+
+#==============================================================================
+#                                  Dependencies
+#==============================================================================
+
+find_package(Boost 1.91 REQUIRED CONFIG COMPONENTS
+    chrono
+    date_time
+    filesystem
+    regex
+    thread
+    timer
 )
 
-# Make the headers visible to everything
-IF (NOT ${PROJECT_BINARY_DIR} EQUAL ${PROJECT_SOURCE_DIR})
-   INCLUDE_DIRECTORIES (${PROJECT_BINARY_DIR}/include)
-ENDIF()
+if(BUMP_BUILD_TESTS)
+    find_package(GTest REQUIRED CONFIG)
+endif()
 
-# Set up the Bump Version file
-SET (BUMP_VERSION_HEADER "${PROJECT_SOURCE_DIR}/include/bump/Version.h")
-CONFIGURE_FILE ("${PROJECT_SOURCE_DIR}/src/bump/Version.in" ${BUMP_VERSION_HEADER})
+if(BUMP_BUILD_DOCS)
+    find_package(Doxygen)
+    if(NOT Doxygen_FOUND)
+        message(WARNING "BUMP_BUILD_DOCS is ON but Doxygen was not found; "
+                        "documentation will not be built.")
+    endif()
+endif()
 
-# Add the custom macro utilities
-SET (CMAKE_MODULE_PATH "${Bump_SOURCE_DIR}/CMakeModules;${CMAKE_MODULE_PATH}")
-INCLUDE (BumpMacroUtils)
+#==============================================================================
+#                                  Subdirectories
+#==============================================================================
 
-# If on an apple device, set whether to compile frameworks
-IF (APPLE)
-	OPTION (Bump_COMPILE_FRAMEWORKS "Compile frameworks instead of dylibs" ON)
-	SET (Bump_INSTALL_NAME_DIR "@executable_path/../Frameworks"
-		CACHE STRING "install name dir for compiled frameworks"
-	)
-ENDIF ()
+# TODO(phase 4): add_subdirectory(src)
+# TODO(phase 5): if(BUMP_BUILD_EXAMPLES) add_subdirectory(examples) endif()
+# TODO(phase 6): if(BUMP_BUILD_TESTS) add_subdirectory(tests) endif()
+# TODO(phase 10): if(BUMP_BUILD_DOCS) add_subdirectory(doc) endif()
 
-# Set whether to use dynamic or static linking
-OPTION (Bump_DYNAMIC_LINKING "Set to ON to build BUMP with dynamic linking (shared libraries). Use OFF for static." ON)
-IF (Bump_DYNAMIC_LINKING OR Bump_COMPILE_FRAMEWORKS)
-	SET (Bump_USER_DEFINED_DYNAMIC_OR_STATIC "SHARED")
-ELSE ()
-	SET (Bump_USER_DEFINED_DYNAMIC_OR_STATIC "STATIC")
-ENDIF()
+#==============================================================================
+#                              Configuration summary
+#==============================================================================
 
-# If compiling with Visual Studio, set up some specific flags
-IF (WIN32 AND MSVC)
-
-	# This option is to enable the /MP switch for Visual Studio 2005 and above compilers
-	OPTION (Bump_WIN32_USE_MP "Set to ON to build BUMP with the /MP option (Visual Studio 2005 and above)." ON)
-	MARK_AS_ADVANCED (Bump_WIN32_USE_MP)
-	IF (Bump_WIN32_USE_MP)
-		SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
-	ENDIF ()
-
-	# Some specific compiler flags to disable some warnings
-	ADD_DEFINITIONS (-D_SCL_SECURE_NO_WARNINGS)
-	ADD_DEFINITIONS (-D_CRT_SECURE_NO_DEPRECATE)
-
-ENDIF ()
-
-# Postfixes for all build types
-SET (CMAKE_DEBUG_POSTFIX "d" CACHE STRING "Add a postfix, usually 'd' on most operating systems")
-SET (CMAKE_RELEASE_POSTFIX "" CACHE STRING "Add a postfix, usually empty on most operating systems")
-SET (CMAKE_RELWITHDEBINFO_POSTFIX "rd" CACHE STRING "Add a postfix, usually 'rd' on most operating systems")
-SET (CMAKE_MINSIZEREL_POSTFIX "s" CACHE STRING "Add a postfix, usually 's' on most operating systems")
-IF (CMAKE_BUILD_TYPE MATCHES "Release")
-	SET (CMAKE_BUILD_POSTFIX "${CMAKE_RELEASE_POSTFIX}")
-ELSEIF (CMAKE_BUILD_TYPE MATCHES "MinSizeRel")
-	SET (CMAKE_BUILD_POSTFIX "${CMAKE_MINSIZEREL_POSTFIX}")
-ELSEIF (CMAKE_BUILD_TYPE MATCHES "RelWithDebInfo")
-	SET (CMAKE_BUILD_POSTFIX "${CMAKE_RELWITHDEBINFO_POSTFIX}")
-ELSEIF (CMAKE_BUILD_TYPE MATCHES "Debug")
-	SET (CMAKE_BUILD_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
-ELSE ()
-	SET (CMAKE_BUILD_POSTFIX "")
-ENDIF ()
-
-# Create the bin and lib directories
-SET (OUTPUT_BINDIR ${PROJECT_BINARY_DIR}/bin)
-MAKE_DIRECTORY (${OUTPUT_BINDIR})
-SET (OUTPUT_LIBDIR ${PROJECT_BINARY_DIR}/lib)
-MAKE_DIRECTORY (${OUTPUT_LIBDIR})
-
-# Set up CMake to properly use the bin and lib directories when compiling
-SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_LIBDIR})
-SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_BINDIR})
-IF (WIN32)
-	SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_BINDIR})
-ELSE (WIN32)
-	SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_LIBDIR})
-ENDIF (WIN32)
-
-# For each configuration (Debug, Release, MinSizeRel... and/or anything else)
-FOREACH (CONF ${CMAKE_CONFIGURATION_TYPES})
-	STRING (TOUPPER "${CONF}" CONF)			 # Go uppercase (DEBUG, RELEASE...)
-	SET ("CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${CONF}" "${OUTPUT_LIBDIR}")
-	SET ("CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONF}" "${OUTPUT_BINDIR}")
-	IF (WIN32)
-		SET ("CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CONF}" "${OUTPUT_BINDIR}")
-	ELSE ()
-		SET ("CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CONF}" "${OUTPUT_LIBDIR}")
-	ENDIF ()
-ENDFOREACH ()
-
-# Find Boost...using static, multithreaded libs with a shared runtime on Windows
-FIND_PACKAGE (Boost 1.80.0 COMPONENTS chrono date_time filesystem regex system thread timer REQUIRED)
-
-# Find GTest
-FIND_PACKAGE (GTest)
-
-# Add the src subdirectory
-ADD_SUBDIRECTORY (src)
-
-# Set up everything for Doxygen
-OPTION (Bump_BUILD_DOCUMENTATION "Build Bump reference documentation using Doxygen" OFF)
-MARK_AS_ADVANCED (CLEAR Bump_BUILD_DOCUMENTATION)
-IF (Bump_BUILD_DOCUMENTATION)
-
-	# Find all the packages
-	FIND_PACKAGE (UnixCommands)
-	FIND_PACKAGE (Doxygen)
-	FIND_PACKAGE (Gnuplot)
-	FIND_PACKAGE (HTMLHelp)
-	FIND_PACKAGE (Perl)
-	FIND_PACKAGE (Wget)
-
-	# Additional options
-	OPTION (DOCUMENTATION_HTML_HELP "Build the HTML Help file (CHM)." OFF)
-	OPTION (DOCUMENTATION_HTML_TARZ "Build a compressed tar archive of the HTML doc." OFF)
-
-	# Advanced options
-	MARK_AS_ADVANCED (DOCUMENTATION_HTML_HELP DOCUMENTATION_HTML_TARZ)
-
-	# This processes our doxyfile.cmake and substitutes paths to generate a final Doxyfile
-	CONFIGURE_FILE (${PROJECT_SOURCE_DIR}/doc/doxyfile.cmake ${PROJECT_BINARY_DIR}/doc/bump.doxyfile)
-	INSTALL (DIRECTORY ${PROJECT_BINARY_DIR}/doc/BumpReferenceDocs DESTINATION doc COMPONENT bump-doc)
-
-	# Now we are going to create the new target to build the documentation. We need
-	# to do this a bit differently when using makefiles so we remove the target
-	# name spaces. How this works is that ${DOXYGEN} is run against the bump.doxyfile
-	# and the docs are generated.
-	IF (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
-		ADD_CUSTOM_TARGET ("Documentation_bump" ${DOXYGEN} ${PROJECT_BINARY_DIR}/doc/bump.doxyfile)
-	    SET_TARGET_PROPERTIES ("Documentation_bump" PROPERTIES FOLDER "Documentation")
-	ELSE (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
-		ADD_CUSTOM_TARGET ("Documentation - bump" ${DOXYGEN} ${PROJECT_BINARY_DIR}/doc/bump.doxyfile)
-	    SET_TARGET_PROPERTIES ("Documentation - bump" PROPERTIES FOLDER "Documentation")
-	ENDIF (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
-
-	# Need to create the BumpReferenceDocs directory in our build/doc directory
-	FILE (MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/doc/BumpReferenceDocs)
-
-ENDIF (Bump_BUILD_DOCUMENTATION)
-
-# Set whether to build the examples
-OPTION (Bump_BUILD_EXAMPLES "Enable to build Bump Examples" ON)
-IF (Bump_BUILD_EXAMPLES)
-	 ADD_SUBDIRECTORY (examples)
-ENDIF ()
-
-# Set whether to build the tests
-OPTION (Bump_BUILD_TESTS "Enable to build Bump Tests" OFF)
-IF (Bump_BUILD_TESTS)
-   ADD_SUBDIRECTORY (tests)
-ENDIF ()
+if(PROJECT_IS_TOP_LEVEL)
+    message(STATUS "")
+    message(STATUS "Bump ${PROJECT_VERSION} (SO version ${BUMP_SO_VERSION})")
+    message(STATUS "  Boost              ${Boost_VERSION} -> ${Boost_DIR}")
+    message(STATUS "  Boost static libs  ${Boost_USE_STATIC_LIBS}")
+    if(CMAKE_CONFIGURATION_TYPES)
+        message(STATUS "  Configurations     ${CMAKE_CONFIGURATION_TYPES}")
+    else()
+        message(STATUS "  Build type         ${CMAKE_BUILD_TYPE}")
+    endif()
+    message(STATUS "  Shared libraries   ${BUILD_SHARED_LIBS}")
+    if(APPLE)
+        message(STATUS "  Framework          ${BUMP_BUILD_FRAMEWORK}")
+        message(STATUS "  Architectures      ${CMAKE_OSX_ARCHITECTURES}")
+        message(STATUS "  Deployment target  ${CMAKE_OSX_DEPLOYMENT_TARGET}")
+    endif()
+    message(STATUS "  Hide private syms  ${BUMP_HIDE_PRIVATE_SYMBOLS}")
+    message(STATUS "  Examples / tests   ${BUMP_BUILD_EXAMPLES} / ${BUMP_BUILD_TESTS}")
+    message(STATUS "  Install prefix     ${CMAKE_INSTALL_PREFIX}")
+    message(STATUS "")
+endif()
