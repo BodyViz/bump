@@ -22,6 +22,25 @@ set(CMAKE_LINK_LIBRARIES_ONLY_TARGETS ON)
 #                                    Options
 #==============================================================================
 
+# Linkage is a BUMP_* option so it groups with the rest in a cache editor, and so
+# it always exists as a typed BOOL rather than only when someone passes -D for it.
+# Past that point BUMP_BUILD_SHARED_LIBS is authoritative, and the
+# resulting type is handed to add_library() explicitly rather than left implicit.
+if(DEFINED BUILD_SHARED_LIBS)
+    set(_bump_shared_default ${BUILD_SHARED_LIBS})
+else()
+    set(_bump_shared_default OFF)
+endif()
+option(BUMP_BUILD_SHARED_LIBS
+    "Build Bump as a shared library instead of static" ${_bump_shared_default})
+unset(_bump_shared_default)
+
+if(BUMP_BUILD_SHARED_LIBS)
+    set(BUMP_LIBRARY_TYPE SHARED)
+else()
+    set(BUMP_LIBRARY_TYPE STATIC)
+endif()
+
 option(BUMP_BUILD_EXAMPLES "Build the Bump example applications" ON)
 option(BUMP_BUILD_TESTS "Build the Bump unit tests" OFF)
 option(BUMP_BUILD_DOCS "Build the Bump reference documentation with Doxygen" OFF)
@@ -35,12 +54,11 @@ cmake_dependent_option(BUMP_BUILD_FRAMEWORK
 cmake_dependent_option(BUMP_WIN32_USE_MP
     "Compile with /MP for parallel builds" ON "MSVC" OFF)
 
-# A framework is always a shared bundle, so it cannot honour a static
-# BUILD_SHARED_LIBS. Fail loudly rather than silently producing the other one.
-if(BUMP_BUILD_FRAMEWORK AND DEFINED BUILD_SHARED_LIBS AND NOT BUILD_SHARED_LIBS)
+# A framework is a shared bundle.
+if(BUMP_BUILD_FRAMEWORK AND NOT BUMP_BUILD_SHARED_LIBS)
     message(FATAL_ERROR
-        "BUMP_BUILD_FRAMEWORK requires a shared build; set BUILD_SHARED_LIBS=ON "
-        "or turn BUMP_BUILD_FRAMEWORK off.")
+        "BUMP_BUILD_FRAMEWORK requires a shared build. Enable "
+        "BUMP_BUILD_SHARED_LIBS as well, or turn BUMP_BUILD_FRAMEWORK off.")
 endif()
 
 #==============================================================================
@@ -111,7 +129,8 @@ endif()
 #                                  Subdirectories
 #==============================================================================
 
-# TODO(phase 4): add_subdirectory(src)
+add_subdirectory(src)
+
 # TODO(phase 5): if(BUMP_BUILD_EXAMPLES) add_subdirectory(examples) endif()
 # TODO(phase 6): if(BUMP_BUILD_TESTS) add_subdirectory(tests) endif()
 # TODO(phase 10): if(BUMP_BUILD_DOCS) add_subdirectory(doc) endif()
@@ -130,7 +149,7 @@ if(PROJECT_IS_TOP_LEVEL)
     else()
         message(STATUS "  Build type         ${CMAKE_BUILD_TYPE}")
     endif()
-    message(STATUS "  Shared libraries   ${BUILD_SHARED_LIBS}")
+    message(STATUS "  Library type       ${BUMP_LIBRARY_TYPE}")
     if(APPLE)
         message(STATUS "  Framework          ${BUMP_BUILD_FRAMEWORK}")
         message(STATUS "  Architectures      ${CMAKE_OSX_ARCHITECTURES}")

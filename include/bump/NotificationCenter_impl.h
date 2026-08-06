@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <bump/NotificationCenter.h>
+
 namespace bump {
 
 //=============================================================================
