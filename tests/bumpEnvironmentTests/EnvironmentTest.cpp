@@ -8,8 +8,7 @@
 
 #include <bump/Environment.h>
 #include <bump/String.h>
-
-#include "../bumpTest/BaseTest.h"
+#include <gtest/gtest.h>
 
 namespace bumpTest {
 
@@ -19,13 +18,10 @@ namespace bumpTest {
  * can add any custom set up for each test without having to add this to "every"
  * test individually.
  */
-class EnvironmentTest : public BaseTest {
+class EnvironmentTest : public ::testing::Test {
 protected:
     /** Run immediately before a test starts. Starts the timer. */
-    void SetUp() {
-        // Call the parent setup method
-        BaseTest::SetUp();
-
+    void SetUp() override {
         // Set a default environment variable
         _environmentVariable = bump::String("BumpTest");
         _expectedValue = bump::String("this is my value");
@@ -34,10 +30,7 @@ protected:
     }
 
     /** Invoked immediately after a test finishes. Stops the timer. */
-    void TearDown() {
-        // Call the parent tear down method
-        BaseTest::TearDown();
-
+    void TearDown() override {
         // Unset the default environment variable
         bump::Environment::unsetEnvironmentVariable(_environmentVariable);
     }

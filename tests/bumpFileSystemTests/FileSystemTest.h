@@ -9,8 +9,7 @@
 #pragma once
 
 #include <bump/String.h>
-
-#include "../bumpTest/BaseTest.h"
+#include <gtest/gtest.h>
 
 namespace bumpTest {
 
@@ -20,17 +19,17 @@ namespace bumpTest {
  * can add any custom set up for each test without having to add this to "every"
  * test individually.
  */
-class FileSystemTest : public BaseTest {
+class FileSystemTest : public ::testing::Test {
 protected:
     /**
      * Run immediately before a test starts. Starts the timer.
      */
-    void SetUp();
+    void SetUp() override;
 
     /**
      * Invoked immediately after a test finishes. Stops the timer.
      */
-    void TearDown();
+    void TearDown() override;
 
     // Instance member variables
     bump::String _unittestDirectory;

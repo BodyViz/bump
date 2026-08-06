@@ -16,9 +16,6 @@
 namespace bumpTest {
 
 void FileInfoTest::SetUp() {
-    // Call the parent setup method
-    BaseTest::SetUp();
-
     // Create the following directory structures as relative paths to the
     // executable. This way they aren't hard-coded to any specified computer or
     // file system.
@@ -129,9 +126,6 @@ void FileInfoTest::SetUp() {
 }
 
 void FileInfoTest::TearDown() {
-    // Call the parent tear down method
-    BaseTest::TearDown();
-
     // Remove the entire directory structure that was built
     bump::FileSystem::removeDirectoryAndContents("unittest");
 }

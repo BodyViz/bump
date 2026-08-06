@@ -11,37 +11,17 @@
 #include <bump/String.h>
 #include <bump/StringSearchError.h>
 #include <bump/TypeCastError.h>
+#include <gtest/gtest.h>
 
 #include <limits>
-
-#include "../bumpTest/BaseTest.h"
 
 namespace bumpTest {
 
 /**
- * This is our main string testing class. The SetUp and TearDown methods are
- * executed before the test runs and after it completes. This is where we can
- * add any custom set up for each test without having to add this to "every"
- * test individually.
+ * Test fixture for the bump::String class. There is no shared state or per-test
+ * setup, so the fixture exists only to group the suite.
  */
-class StringTest : public BaseTest {
-protected:
-    /** Run immediately before a test starts. Starts the timer. */
-    void SetUp() {
-        // Call the parent setup method
-        BaseTest::SetUp();
-
-        // Any custom setup we may need
-    }
-
-    /** Invoked immediately after a test finishes. Stops the timer. */
-    void TearDown() {
-        // Call the parent tear down method
-        BaseTest::TearDown();
-
-        // Any custom teardown you may need
-    }
-};
+class StringTest : public ::testing::Test {};
 
 TEST_F(StringTest, testEmptyConstructor) {
     bump::String empty_string_1;

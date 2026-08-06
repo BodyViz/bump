@@ -11,10 +11,9 @@
 #include <bump/Log.h>
 #include <bump/String.h>
 #include <bump/TextFileReader.h>
+#include <gtest/gtest.h>
 
 #include <fstream>
-
-#include "../bumpTest/BaseTest.h"
 
 namespace bumpTest {
 
@@ -24,13 +23,10 @@ namespace bumpTest {
  * can add any custom set up for each test without having to add this to "every"
  * test individually.
  */
-class TextFileReaderTest : public BaseTest {
+class TextFileReaderTest : public ::testing::Test {
 protected:
     /** Run immediately before a test starts. Starts the timer. */
-    void SetUp() {
-        // Call the parent setup method
-        BaseTest::SetUp();
-
+    void SetUp() override {
         // Set the Log level so no unneccessary information is provided
         bump::Log::instance()->setIsLogEnabled(true);
         _previousLogLevel = bump::Log::instance()->logLevel();
@@ -71,10 +67,7 @@ protected:
     }
 
     /** Invoked immediately after a test finishes. Stops the timer. */
-    void TearDown() {
-        // Call the parent tear down method
-        BaseTest::TearDown();
-
+    void TearDown() override {
         // Put the current path back to what it was originally
         bump::FileSystem::setCurrentPath(_currentPath);
 

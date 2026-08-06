@@ -10,8 +10,7 @@
 #include <bump/NotificationCenter.h>
 #include <bump/NotificationError.h>
 #include <bump/String.h>
-
-#include "../bumpTest/BaseTest.h"
+#include <gtest/gtest.h>
 
 namespace bumpTest {
 
@@ -113,13 +112,10 @@ protected:
  * where we can add any custom set up for each test without having to add this
  * to "every" test individually.
  */
-class NotificationTest : public BaseTest {
+class NotificationTest : public ::testing::Test {
 protected:
     /** Run immediately before a test starts. Starts the timer. */
-    void SetUp() {
-        // Call the parent setup method
-        BaseTest::SetUp();
-
+    void SetUp() override {
         // Create some renderers
         _r1 = new Renderer("Renderer 1");
         _r2 = new Renderer("Renderer 2");
@@ -127,10 +123,7 @@ protected:
     }
 
     /** Invoked immediately after a test finishes. Stops the timer. */
-    void TearDown() {
-        // Call the parent tear down method
-        BaseTest::TearDown();
-
+    void TearDown() override {
         // Cleanup the heap renderers
         bump::NotificationCenter::instance()->removeObserver(_r1);
         bump::NotificationCenter::instance()->removeObserver(_r2);

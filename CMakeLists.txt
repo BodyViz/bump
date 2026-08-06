@@ -135,7 +135,12 @@ if(BUMP_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
-# TODO(phase 6): if(BUMP_BUILD_TESTS) add_subdirectory(tests) endif()
+if(BUMP_BUILD_TESTS)
+    # Makes `cmake --build . --target test` useful without remembering the flag.
+    set(CMAKE_CTEST_ARGUMENTS "--output-on-failure")
+    include(CTest)
+    add_subdirectory(tests)
+endif()
 # TODO(phase 10): if(BUMP_BUILD_DOCS) add_subdirectory(doc) endif()
 
 #==============================================================================

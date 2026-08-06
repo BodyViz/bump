@@ -16,9 +16,6 @@
 namespace bumpTest {
 
 void FileSystemTest::SetUp() {
-    // Call the parent setup method
-    BaseTest::SetUp();
-
     // Save the current path so we can always put it back after a test modifies
     // it
     _currentPath = bump::FileSystem::currentPath();
@@ -78,9 +75,6 @@ void FileSystemTest::SetUp() {
 }
 
 void FileSystemTest::TearDown() {
-    // Call the parent tear down method
-    BaseTest::TearDown();
-
     // Put the current path back to what it was originally
     bump::FileSystem::setCurrentPath(_currentPath);
 

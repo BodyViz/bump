@@ -8,35 +8,15 @@
 
 #include <bump/CryptographicHash.h>
 #include <bump/Environment.h>
-
-#include "../bumpTest/BaseTest.h"
+#include <gtest/gtest.h>
 
 namespace bumpTest {
 
 /**
- * This is our main environment testing class. The SetUp and TearDown methods
- * are executed before the test runs and after it completes. This is where we
- * can add any custom set up for each test without having to add this to "every"
- * test individually.
+ * Test fixture for the bump::CryptographicHash class. There is no shared state
+ * or per-test setup, so the fixture exists only to group the suite.
  */
-class CryptographicHashTest : public BaseTest {
-protected:
-    /** Run immediately before a test starts. Starts the timer. */
-    void SetUp() {
-        // Call the parent setup method
-        BaseTest::SetUp();
-
-        // Custom set up logic
-    }
-
-    /** Invoked immediately after a test finishes. Stops the timer. */
-    void TearDown() {
-        // Call the parent tear down method
-        BaseTest::TearDown();
-
-        // Custom tear down logic
-    }
-};
+class CryptographicHashTest : public ::testing::Test {};
 
 TEST_F(CryptographicHashTest, testSetDataString) {
     // Normal case #1

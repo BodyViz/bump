@@ -76,6 +76,25 @@ bool FileInfo::isEmpty() const {
         boost::filesystem::path temp = boost::filesystem::canonical(_path);
         return boost::filesystem::is_empty(temp);
     } catch (const boost::filesystem::filesystem_error& /*e*/) {
+        // Boost 1.91 made is_empty() throw on a file we lack read permission
+        // for, where earlier releases returned a value. A regular file's
+        // emptiness is still knowable without reading it: stat() reports the
+        // size through a readable parent directory.
+        boost::system::error_code error;
+        boost::filesystem::path resolved =
+            boost::filesystem::canonical(_path, error);
+        if (!error) {
+            const bool is_file =
+                boost::filesystem::is_regular_file(resolved, error);
+            if (!error && is_file) {
+                const boost::uintmax_t size =
+                    boost::filesystem::file_size(resolved, error);
+                if (!error) {
+                    return size == 0;
+                }
+            }
+        }
+
         throw FileSystemError("Do not have permission to check if empty",
                               BUMP_LOCATION);
     }
