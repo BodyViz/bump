@@ -141,6 +141,21 @@ Bump uses the Google Test library to provide a comprehensive set of unittest sui
 
 	$ ./bumpAllTests
 
+Code Style
+----------
+
+Bump uses `clang-format` to keep formatting consistent. The style is defined in `.clang-format` at the repository root, so no arguments are needed:
+
+	$ clang-format -i include/bump/*.h src/bump/*.cpp
+
+The vendored `src/smallsha1` sources are deliberately excluded from formatting.
+
+Because the whole codebase was reformatted in a single commit, `git blame` needs to be told to skip it. Run this once per clone:
+
+	$ git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+GitHub applies `.git-blame-ignore-revs` automatically in its own blame view.
+
 Support
 -------
 

@@ -1,0 +1,17 @@
+# Revisions to skip when running `git blame`.
+#
+# These commits are mechanical, repo-wide reformatting or renaming with no
+# behavioral change. Ignoring them keeps `git blame` pointing at the commit
+# that actually wrote a line rather than the one that reindented it.
+#
+# Enable locally with:
+#
+#     git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# GitHub honors this file automatically in its blame view.
+
+# Modernize headers and reformat all sources
+# Applied .clang-format across 78 files (tabs -> 4 spaces, 80-column comment
+# reflow, brace attachment), removed include-group label comments, and
+# converted #ifndef include guards to #pragma once.
+1dcfdd658390a0b2b7675e75792bc361356ec8f7
