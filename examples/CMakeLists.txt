@@ -1,53 +1,59 @@
+#==============================================================================
+#                              Example applications
+#==============================================================================
+# Each example is a single translation unit at <name>/<name>.cpp, so a plain
+# foreach replaces the old SETUP_EXAMPLE macro and the eleven two-line leaf
+# CMakeLists files it drove.
+#
+# Everything an example needs -- include directories, C++20, the export define,
+# and Boost -- arrives through Bump::bump's usage requirements. Nothing is
+# restated here.
 
-# Only compile if we found Boost
-IF (Boost_FOUND)
+set(BUMP_EXAMPLES
+    bumpAutoTimer
+    bumpEnvironment
+    bumpExceptions
+    bumpFileInfo
+    bumpFileSystem
+    bumpLog
+    bumpNotifications
+    bumpStrings
+    bumpTimeline
+    bumpTimer
+    bumpUuids
+)
 
-	# Set the default prefix to make it easier to find in our projects
-	# NOTE: we remove the empty spaces for the default prefix when
-	# using makefiles to make sure the "make clean" works properly.
-	IF (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
-		SET (TARGET_DEFAULT_PREFIX "Example_")
-	ELSE (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
-		SET (TARGET_DEFAULT_PREFIX "Example_")
-	ENDIF (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
+foreach(example IN LISTS BUMP_EXAMPLES)
+    add_executable(${example} "${example}/${example}.cpp")
+    target_link_libraries(${example} PRIVATE Bump::bump)
 
-	# Set the default label prefix
-	SET (TARGET_DEFAULT_LABEL_PREFIX "Examples")
+    set_target_properties(${example} PROPERTIES FOLDER "bump/examples")
 
-    # Add the Boost headers
-    INCLUDE_DIRECTORIES (${Boost_INCLUDE_DIR})
+    # The examples are warning-clean, so they inherit
+    # CMAKE_COMPILE_WARNING_AS_ERROR along with the library rather than opting
+    # out of it.
+    target_compile_options(${example} PRIVATE
+        "$<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wall;-Wextra>"
+        "$<$<CXX_COMPILER_ID:MSVC>:/W4;/utf-8;/permissive-;/EHsc>"
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<BOOL:${BUMP_WIN32_USE_MP}>>:/MP>"
+    )
 
-	# Add the Boost libraries
-    SET (TARGET_EXTERNAL_LIBRARIES ${TARGET_EXTERNAL_LIBRARIES} ${Boost_LIBRARIES})
+    # bumpFileSystem and bumpFileInfo call asctime/localtime, which MSVC
+    # deprecates. Example code, so silence rather than rewrite.
+    target_compile_definitions(${example} PRIVATE
+        "$<$<PLATFORM_ID:Windows>:_CRT_SECURE_NO_WARNINGS>"
+    )
 
-	# Add the bump library
-	SET (TARGET_COMMON_LIBRARIES bump)
+    # Put the DLL next to the executable on Windows so an example can be run
+    # straight from the build tree or a debugger. Expands to nothing elsewhere,
+    # so this needs no if(WIN32) guard.
+    add_custom_command(TARGET ${example} POST_BUILD
+        COMMAND "${CMAKE_COMMAND}" -E copy -t
+                "$<TARGET_FILE_DIR:${example}>" "$<TARGET_RUNTIME_DLLS:${example}>"
+        COMMAND_EXPAND_LISTS
+    )
+endforeach()
 
-	# Add definitions for shared or static builds
-	IF (Bump_DYNAMIC_LINKING)
-		ADD_DEFINITIONS(-DBump_LIBRARY)
-	ELSE ()
-		ADD_DEFINITIONS(-DBump_LIBRARY_STATIC)
-	ENDIF ()
-
-	# Add all the examples
-	FOREACH (BUMP_EXAMPLE
-			bumpAutoTimer
-			bumpEnvironment
-			bumpExceptions
-			bumpFileInfo
-			bumpFileSystem
-			bumpLog
-			bumpNotifications
-			bumpStrings
-			bumpTimeline
-			bumpTimer
-			bumpUuids
-		)
-
-		MESSAGE ("Configuring Example: " ${BUMP_EXAMPLE})
-		ADD_SUBDIRECTORY (${BUMP_EXAMPLE})
-
-	ENDFOREACH ()
-
-ENDIF (Boost_FOUND)
+install(TARGETS ${BUMP_EXAMPLES}
+    RUNTIME DESTINATION "${CMAKE_INSTALL_DATADIR}/bump/examples"
+)

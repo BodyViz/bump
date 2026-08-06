@@ -34,7 +34,7 @@ void joinSplit();
  * Capitalization (toLowerCase, toUpperCase, capitalize, title) Section 7 -
  * Find/Replace (indexOf, lastIndexOf, replace) Section 8 - Join/Split
  */
-int main(int argc, char** argv) {
+int main() {
     // Run each example
     creationAndCasting();
     formatting();

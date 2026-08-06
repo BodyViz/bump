@@ -7,30 +7,38 @@
 //
 
 #include <bump/AutoTimer.h>
-#include <math.h>
 
+#include <cmath>
 #include <iostream>
+
+// Volatile sink for the busy-work result below.
+static volatile double gWorkSink = 0.0;
+
+/**
+ * Burns roughly proportional amounts of time so the timers have something to
+ * measure.
+ */
+void burnCycles(unsigned long iterations) {
+    double total = 0.0;
+    for (unsigned long i = 0; i < iterations; ++i) {
+        total += std::sqrt(static_cast<double>(i));
+    }
+
+    gWorkSink = total;
+}
 
 void doSomeWork() {
     // Create an auto timer
     bump::AutoTimer timer;
 
-    // Perform some work that takes a bit
-    for (unsigned long i = 0; i < 100000000; ++i) {
-        double temp = sqrt(123.456);
-        temp += 1.0f;
-    }
+    burnCycles(20000000);
 }
 
 void doSomeMoreWork(const bump::AutoTimer::OutputType& outputType) {
     // Create an auto timer
     bump::AutoTimer timer(outputType);
 
-    // Perform some work that takes a bit
-    for (unsigned long i = 0; i < 100000000; ++i) {
-        double temp = sqrt(123.456);
-        temp += 1.0f;
-    }
+    burnCycles(20000000);
 }
 
 void massiveMethod() {
@@ -39,37 +47,25 @@ void massiveMethod() {
 
     // Chunk 1 of work
     std::cout << "Starting Chunk 1:" << std::endl;
-    for (unsigned long i = 0; i < 300000000; ++i) {
-        double temp = sqrt(123.456);
-        temp += 1.0f;
-    }
+    burnCycles(60000000);
     delete timer;
     timer = new bump::AutoTimer();
 
     // Chunk 2 of work
     std::cout << "Starting Chunk 2:" << std::endl;
-    for (unsigned long i = 0; i < 100000000; ++i) {
-        double temp = sqrt(123.456);
-        temp += 1.0f;
-    }
+    burnCycles(20000000);
     delete timer;
     timer = new bump::AutoTimer();
 
     // Chunk 3 of work
     std::cout << "Starting Chunk 3:" << std::endl;
-    for (unsigned long i = 0; i < 400000000; ++i) {
-        double temp = sqrt(123.456);
-        temp += 1.0f;
-    }
+    burnCycles(80000000);
     delete timer;
     timer = new bump::AutoTimer();
 
     // Chunk 4 of work
     std::cout << "Starting Chunk 4:" << std::endl;
-    for (unsigned long i = 0; i < 200000000; ++i) {
-        double temp = sqrt(123.456);
-        temp += 1.0f;
-    }
+    burnCycles(40000000);
     delete timer;
 }
 
@@ -80,7 +76,7 @@ void massiveMethod() {
  * scope. When the AutoTimer is destructed, it will print out the elapsed
  * time to std::cout.
  */
-int main(int argc, char** argv) {
+int main() {
     // Using an auto timer is super simple. You add it to a scope that you want
     // timed, and once it is destructed, it will print out the elapsed time. For
     // example, let's run the "doSomeWork" method and see what happens.

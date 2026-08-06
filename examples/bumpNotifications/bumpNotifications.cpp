@@ -173,7 +173,7 @@ protected:
  * safe-guard to this is that the NotificationCenter will raise an exception
  * when it is destructed and still contains observers.
  */
-int main(int argc, char** argv) {
+int main() {
     //==============================================================================
     //     Demonstrates how to use notification center inside your own classes
     //==============================================================================

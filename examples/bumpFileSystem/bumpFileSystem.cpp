@@ -549,7 +549,7 @@ void datesDemo() {
  * setIsExecutableByOwner, etc.)
  *    - Dates (setModifiedDate, modifiedDate, etc.)
  */
-int main(int argc, char** argv) {
+int main() {
     // Run all the demo functions
     joinPathsDemo();
     systemPathsDemo();

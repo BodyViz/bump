@@ -100,7 +100,7 @@ void doubleThrow() {
  * then you will need to read up on them before trying to understand
  * bump::Exceptions.
  */
-int main(int argc, char** argv) {
+int main() {
     // Demonstrates how to handle a bump::InvalidArgumentError.
     try {
         std::cout << "=================== bump::InvalidArgumentError Example "

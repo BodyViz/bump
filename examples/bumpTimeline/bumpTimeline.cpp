@@ -60,7 +60,7 @@ void executeAnimation(bump::Timeline* timeline, bool pauseAtMiddle) {
  * method. After the timeline has been updated, use the stepValue or
  * stepIncrement values to update the animations.
  */
-int main(int argc, char** argv) {
+int main() {
     // Demonstrates how to create a linear animation
     std::cout << "================================== LINEAR_CURVE "
                  "================================="

@@ -116,7 +116,7 @@ void printInfo(const bump::FileInfo& fileInfo) {
  * changes to file system objects, then you are looking for the bump::FileSystem
  * API.
  */
-int main(int argc, char** argv) {
+int main() {
     // Create a file and print out all the information about it
     bump::FileSystem::createFile("basic_file.txt");
     bump::FileInfo file_info("basic_file.txt");

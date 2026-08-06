@@ -17,7 +17,7 @@
  * code. This class makes it easy to generate random UUIDs, as well as convert
  * them to/from bump::Strings.
  */
-int main(int argc, char** argv) {
+int main() {
     // How to generate random uuids
     std::cout << "Generating random uuids:" << std::endl;
     for (unsigned int i = 0; i < 4; ++i) {

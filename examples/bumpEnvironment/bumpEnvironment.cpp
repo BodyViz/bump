@@ -16,7 +16,7 @@
  * environment variables. You can easily fetch, set and unset environment
  * variables at runtime.
  */
-int main(int argc, char** argv) {
+int main() {
     // How to set environment variables
     std::cout << "Setting environment variables:" << std::endl;
     bump::String bump_home_value("/My/Path/To/Bump");

@@ -7,22 +7,27 @@
 //
 
 #include <bump/Timer.h>
-#include <math.h>
 
+#include <cmath>
 #include <iostream>
 
+// Volatile sink for the busy-work result below.
+static volatile double gWorkSink = 0.0;
+
 void doSomeWork() {
-    // Perform some work that takes a bit
-    for (unsigned long i = 0; i < 100000000; ++i) {
-        double temp = sqrt(123.456);
-        temp += 1.0f;
+    // Perform some work that takes a bit.
+    double total = 0.0;
+    for (unsigned long i = 0; i < 20000000; ++i) {
+        total += std::sqrt(static_cast<double>(i));
     }
+
+    gWorkSink = total;
 }
 
 /**
  * This example demonstrates how to use the Bump timer API.
  */
-int main(int argc, char** argv) {
+int main() {
     //=======================================================================
     //           Demonstrates how to use the singleton timer
     //=======================================================================

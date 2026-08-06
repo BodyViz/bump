@@ -118,7 +118,7 @@ void runThreadSafetyDemo() {
  * As you can see, it is just like using std::cout, except with a bunch of extra
  * benefits!
  */
-int main(int argc, char** argv) {
+int main() {
     //=======================================================================
     //          Demonstrates how to use the environment variables
     //=======================================================================
