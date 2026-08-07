@@ -22,10 +22,6 @@ set(CMAKE_LINK_LIBRARIES_ONLY_TARGETS ON)
 #                                    Options
 #==============================================================================
 
-# Linkage is a BUMP_* option so it groups with the rest in a cache editor, and so
-# it always exists as a typed BOOL rather than only when someone passes -D for it.
-# Past that point BUMP_BUILD_SHARED_LIBS is authoritative, and the
-# resulting type is handed to add_library() explicitly rather than left implicit.
 if(DEFINED BUILD_SHARED_LIBS)
     set(_bump_shared_default ${BUILD_SHARED_LIBS})
 else()
@@ -64,8 +60,6 @@ endif()
 #==============================================================================
 #                            Standalone-only settings
 #==============================================================================
-# Guarded so that add_subdirectory()/FetchContent consumers keep control of
-# their own build configuration.
 
 if(PROJECT_IS_TOP_LEVEL)
     set(CMAKE_CXX_EXTENSIONS OFF)
@@ -76,13 +70,10 @@ if(PROJECT_IS_TOP_LEVEL)
     # potentially heap-corrupting under MSVC, so restrict the set.
     if(CMAKE_CONFIGURATION_TYPES)
         set(CMAKE_CONFIGURATION_TYPES Debug Release)
-        # Ninja Multi-Config only; Xcode and Visual Studio reject this variable.
         if(CMAKE_GENERATOR STREQUAL "Ninja Multi-Config")
             set(CMAKE_DEFAULT_BUILD_TYPE Debug)
         endif()
     elseif(NOT CMAKE_BUILD_TYPE)
-        # Single-config generators default to an unoptimized no-config build,
-        # which the old `configure` script papered over with -DCMAKE_BUILD_TYPE.
         set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
         set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release)
     endif()
@@ -104,13 +95,13 @@ endif()
 #                                  Dependencies
 #==============================================================================
 
-find_package(Boost 1.91 REQUIRED CONFIG COMPONENTS
-    chrono
-    date_time
-    filesystem
-    regex
-    thread
-    timer
+# Stated once and reused by cmake/BumpConfig.cmake.in, so the package's
+# find_dependency() call cannot drift from what bump was actually built against.
+set(BUMP_BOOST_VERSION 1.91)
+set(BUMP_BOOST_COMPONENTS chrono date_time filesystem regex thread timer)
+
+find_package(Boost ${BUMP_BOOST_VERSION} REQUIRED CONFIG
+    COMPONENTS ${BUMP_BOOST_COMPONENTS}
 )
 
 if(BUMP_BUILD_TESTS)
@@ -126,6 +117,46 @@ if(BUMP_BUILD_DOCS)
 endif()
 
 #==============================================================================
+#                            Installed runtime paths
+#==============================================================================
+# The examples and the test binaries install to share/bump/<group> while the
+# library lands in lib/ -- or Frameworks/ for a framework build -- so once
+# installed they can only find a shared bump through a relative RPATH. Without
+# one, an installed example aborts at startup with "no LC_RPATH's found", which
+# the build tree never reveals because CMake gives it an absolute RPATH there
+# and strips it on install.
+#
+# Both groups sit exactly one level below share/bump, so a single value serves
+# both. Derived with file(RELATIVE_PATH) from the real destinations rather than
+# spelled out as ../../.., so it stays correct when CMAKE_INSTALL_LIBDIR is
+# lib64 or the framework flavour redirects the library elsewhere.
+
+set(BUMP_RUNTIME_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/bump")
+
+if(BUMP_BUILD_FRAMEWORK)
+    set(_bump_library_dir "Frameworks")
+else()
+    set(_bump_library_dir "${CMAKE_INSTALL_LIBDIR}")
+endif()
+
+# "group" stands in for examples or tests; only the depth matters here.
+file(RELATIVE_PATH _bump_rpath
+    "${CMAKE_INSTALL_PREFIX}/${BUMP_RUNTIME_INSTALL_DIR}/group"
+    "${CMAKE_INSTALL_PREFIX}/${_bump_library_dir}"
+)
+
+# @loader_path on Apple platforms, $ORIGIN for ELF. Windows resolves DLLs by
+# directory and ignores RPATH entirely, so this is simply unused there.
+if(APPLE)
+    set(BUMP_RUNTIME_INSTALL_RPATH "@loader_path/${_bump_rpath}")
+else()
+    set(BUMP_RUNTIME_INSTALL_RPATH "$ORIGIN/${_bump_rpath}")
+endif()
+
+unset(_bump_library_dir)
+unset(_bump_rpath)
+
+#==============================================================================
 #                                  Subdirectories
 #==============================================================================
 
@@ -138,10 +169,59 @@ endif()
 if(BUMP_BUILD_TESTS)
     # Makes `cmake --build . --target test` useful without remembering the flag.
     set(CMAKE_CTEST_ARGUMENTS "--output-on-failure")
-    include(CTest)
+    enable_testing()
     add_subdirectory(tests)
 endif()
 # TODO(phase 10): if(BUMP_BUILD_DOCS) add_subdirectory(doc) endif()
+
+#==============================================================================
+#                              Install and export
+#==============================================================================
+# Produces the BumpConfig package.
+#
+# The install(TARGETS ... EXPORT BumpTargets) that feeds this lives in
+# src/CMakeLists.txt, next to the target it describes.
+
+include(CMakePackageConfigHelpers)
+
+set(BUMP_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/Bump")
+
+# BumpTargets.cmake globs for its per-configuration BumpTargets-<config>.cmake
+# siblings, so installing Debug and then Release into one prefix accumulates
+# rather than clobbers. That is what makes both libbump.a and libbumpd.a usable
+# from a single find_package().
+install(EXPORT BumpTargets
+    FILE BumpTargets.cmake
+    NAMESPACE Bump::
+    DESTINATION "${BUMP_INSTALL_CMAKEDIR}"
+)
+
+# Normalised to a literal ON/OFF so the generated config can never contain a
+# bare `set(Boost_USE_STATIC_LIBS )`, which would read as defined-but-false and
+# quietly flip a consumer to shared Boost.
+set(BUMP_BOOST_USE_STATIC_LIBS OFF)
+if(Boost_USE_STATIC_LIBS)
+    set(BUMP_BOOST_USE_STATIC_LIBS ON)
+endif()
+list(JOIN BUMP_BOOST_COMPONENTS " " BUMP_BOOST_COMPONENTS_SPACED)
+
+configure_package_config_file(cmake/BumpConfig.cmake.in
+    "${PROJECT_BINARY_DIR}/BumpConfig.cmake"
+    INSTALL_DESTINATION "${BUMP_INSTALL_CMAKEDIR}"
+)
+
+# SameMajorVersion: find_package(Bump 2) keeps working across future 2.x
+# releases.
+write_basic_package_version_file(
+    "${PROJECT_BINARY_DIR}/BumpConfigVersion.cmake"
+    COMPATIBILITY SameMajorVersion
+)
+
+install(FILES
+    "${PROJECT_BINARY_DIR}/BumpConfig.cmake"
+    "${PROJECT_BINARY_DIR}/BumpConfigVersion.cmake"
+    DESTINATION "${BUMP_INSTALL_CMAKEDIR}"
+)
 
 #==============================================================================
 #                              Configuration summary

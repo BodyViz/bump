@@ -1,13 +1,10 @@
 #==============================================================================
 #                              Example applications
 #==============================================================================
-# Each example is a single translation unit at <name>/<name>.cpp, so a plain
-# foreach replaces the old SETUP_EXAMPLE macro and the eleven two-line leaf
-# CMakeLists files it drove.
+# Each example is a single translation unit at <name>/<name>.cpp.
 #
 # Everything an example needs -- include directories, C++20, the export define,
-# and Boost -- arrives through Bump::bump's usage requirements. Nothing is
-# restated here.
+# and Boost -- arrives through Bump::bump's usage requirements.
 
 set(BUMP_EXAMPLES
     bumpAutoTimer
@@ -27,11 +24,13 @@ foreach(example IN LISTS BUMP_EXAMPLES)
     add_executable(${example} "${example}/${example}.cpp")
     target_link_libraries(${example} PRIVATE Bump::bump)
 
-    set_target_properties(${example} PROPERTIES FOLDER "bump/examples")
+    # INSTALL_RPATH so the installed copy can still find a shared bump; see the
+    # Installed runtime paths section in the top-level CMakeLists.
+    set_target_properties(${example} PROPERTIES
+        FOLDER "bump/examples"
+        INSTALL_RPATH "${BUMP_RUNTIME_INSTALL_RPATH}"
+    )
 
-    # The examples are warning-clean, so they inherit
-    # CMAKE_COMPILE_WARNING_AS_ERROR along with the library rather than opting
-    # out of it.
     target_compile_options(${example} PRIVATE
         "$<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wall;-Wextra>"
         "$<$<CXX_COMPILER_ID:MSVC>:/W4;/utf-8;/permissive-;/EHsc>"
@@ -39,7 +38,7 @@ foreach(example IN LISTS BUMP_EXAMPLES)
     )
 
     # bumpFileSystem and bumpFileInfo call asctime/localtime, which MSVC
-    # deprecates. Example code, so silence rather than rewrite.
+    # deprecates.
     target_compile_definitions(${example} PRIVATE
         "$<$<PLATFORM_ID:Windows>:_CRT_SECURE_NO_WARNINGS>"
     )
@@ -55,5 +54,5 @@ foreach(example IN LISTS BUMP_EXAMPLES)
 endforeach()
 
 install(TARGETS ${BUMP_EXAMPLES}
-    RUNTIME DESTINATION "${CMAKE_INSTALL_DATADIR}/bump/examples"
+    RUNTIME DESTINATION "${BUMP_RUNTIME_INSTALL_DIR}/examples"
 )

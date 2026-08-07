@@ -1,0 +1,46 @@
+#==============================================================================
+#                                  BumpConfig
+#==============================================================================
+# Template for the package config file, expanded by
+# configure_package_config_file(). This is the only hand-written CMake file in
+# the project; everything else is a CMakeLists.txt or generated.
+#
+#     find_package(Bump 2 REQUIRED)
+#     target_link_libraries(app PRIVATE Bump::bump)
+#
+# The imported target carries the include directories, the
+# C++20 requirement, BUMP_STATIC_DEFINE for a static package, and the Boost
+# dependency.
+
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+# Hints recorded from the build that produced this package. Applied only when
+# the consumer has expressed no preference and the recorded path still exists:
+# an absolute path baked into a redistributable package is a convenience, not a
+# contract, so a consumer supplying CMAKE_PREFIX_PATH, BOOST_ROOT or Boost_DIR
+# has to win. Never FORCE, never overwrite.
+if(NOT DEFINED Boost_DIR AND NOT DEFINED BOOST_ROOT
+        AND NOT DEFINED ENV{BOOST_ROOT} AND EXISTS "@Boost_DIR@")
+    set(Boost_DIR "@Boost_DIR@")
+endif()
+
+# Recorded because the Boost this was built against may be static-only, in which
+# case find_dependency reports Boost as not found the moment a shared variant
+# appears alongside it.
+if(NOT DEFINED Boost_USE_STATIC_LIBS)
+    set(Boost_USE_STATIC_LIBS @BUMP_BOOST_USE_STATIC_LIBS@)
+endif()
+
+# All six components, including the two bump links PRIVATE. CMake records a
+# PRIVATE dependency of a library in INTERFACE_LINK_LIBRARIES as
+# $<LINK_ONLY:...>, so BumpTargets.cmake names date_time and regex regardless of
+# linkage and they have to resolve here. For a static package the consumer's
+# final link genuinely needs them.
+find_dependency(Boost @BUMP_BOOST_VERSION@ CONFIG
+                COMPONENTS @BUMP_BOOST_COMPONENTS_SPACED@)
+
+include("${CMAKE_CURRENT_LIST_DIR}/BumpTargets.cmake")
+
+check_required_components(Bump)

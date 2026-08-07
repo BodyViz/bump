@@ -131,15 +131,10 @@ list(APPEND BUMP_PUBLIC_HEADERS
 # Include directories
 #------------------------------------------------------------------------------
 
-target_include_directories(bump
-    PUBLIC
-        "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
-        "$<BUILD_INTERFACE:${BUMP_GENERATED_INCLUDE_DIR}>"
-        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
-    PRIVATE
-        # For <smallsha1/sha1.h> from CryptographicHash.cpp, which compiles into
-        # bump itself rather than into the object library.
-        "${PROJECT_SOURCE_DIR}/src"
+# For <smallsha1/sha1.h> from CryptographicHash.cpp, which compiles into bump
+# itself rather than into the object library.
+target_include_directories(bump PRIVATE
+    "${PROJECT_SOURCE_DIR}/src"
 )
 
 #------------------------------------------------------------------------------
@@ -148,6 +143,12 @@ target_include_directories(bump
 # A framework embeds its headers in the bundle and uses PUBLIC_HEADER;
 # everything else uses FILE_SET HEADERS, which additionally enables
 # CMAKE_VERIFY_INTERFACE_HEADER_SETS.
+#
+# The public include directories differ with it, so they are set per branch
+# rather than once above. Naming an install-tree include directory that the
+# flavour does not create is not harmless: CMake rejects a non-existent path in
+# an imported target's INTERFACE_INCLUDE_DIRECTORIES with a hard configure
+# error, in the consumer's build rather than in this one.
 
 if(BUMP_BUILD_FRAMEWORK)
     # PUBLIC_HEADER only nominates which of the target's sources go into the
@@ -155,6 +156,13 @@ if(BUMP_BUILD_FRAMEWORK)
     # copied and the framework ships with no headers at all.
     target_sources(bump PRIVATE ${BUMP_PUBLIC_HEADERS})
     set_target_properties(bump PROPERTIES PUBLIC_HEADER "${BUMP_PUBLIC_HEADERS}")
+
+    # A framework's headers are reached through framework lookup against the
+    # bundle, so there is no installed include directory to advertise.
+    target_include_directories(bump PUBLIC
+        "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
+        "$<BUILD_INTERFACE:${BUMP_GENERATED_INCLUDE_DIR}>"
+    )
 else()
     target_sources(bump
         PUBLIC
@@ -163,6 +171,14 @@ else()
                 "${PROJECT_SOURCE_DIR}/include"
                 "${BUMP_GENERATED_INCLUDE_DIR}"
             FILES ${BUMP_PUBLIC_HEADERS}
+    )
+
+    # FILE_SET HEADERS already appends its BASE_DIRS to
+    # INTERFACE_INCLUDE_DIRECTORIES wrapped in $<BUILD_INTERFACE:>, which
+    # evaluates to empty for an imported target, so the install-tree side has to
+    # be stated explicitly -- it is what makes the installed package usable.
+    target_include_directories(bump PUBLIC
+        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
     )
 endif()
 
@@ -227,9 +243,6 @@ target_link_libraries(bump
 #------------------------------------------------------------------------------
 # Warnings
 #------------------------------------------------------------------------------
-# Measured clean: this set yields zero warnings across the library on both the
-# static and dllexport paths. Warnings-as-errors is left to
-# CMAKE_COMPILE_WARNING_AS_ERROR from the presets rather than a custom option.
 
 target_compile_options(bump PRIVATE
     "$<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wall;-Wextra;-Wpedantic;-Wnon-virtual-dtor;-Woverloaded-virtual;-Wshadow>"
@@ -251,7 +264,6 @@ set_target_properties(bump PROPERTIES
 )
 
 if(BUMP_HIDE_PRIVATE_SYMBOLS)
-    # Makes the 117 BUMP_EXPORT annotations meaningful rather than decorative.
     set_target_properties(bump PROPERTIES
         CXX_VISIBILITY_PRESET hidden
         VISIBILITY_INLINES_HIDDEN ON
@@ -270,3 +282,29 @@ if(BUMP_BUILD_FRAMEWORK)
         FRAMEWORK_MULTI_CONFIG_POSTFIX_DEBUG "_debug"
     )
 endif()
+
+#------------------------------------------------------------------------------
+# Install
+#------------------------------------------------------------------------------
+# Associates the target with the BumpTargets export set; the top level turns
+# that set into the installed BumpConfig package.
+#
+# install(TARGETS ... EXPORT) requires every PUBLIC file set on the target to be
+# named explicitly, so the HEADERS argument is mandatory for the flavours that
+# have one. A framework has none -- its headers ride along inside the bundle.
+
+if(BUMP_BUILD_FRAMEWORK)
+    set(BUMP_HEADER_INSTALL_ARGS)
+else()
+    set(BUMP_HEADER_INSTALL_ARGS
+        FILE_SET HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+endif()
+
+install(TARGETS bump
+    EXPORT BumpTargets
+    RUNTIME   DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    LIBRARY   DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    ARCHIVE   DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    FRAMEWORK DESTINATION "Frameworks"
+    ${BUMP_HEADER_INSTALL_ARGS}
+)
