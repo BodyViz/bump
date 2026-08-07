@@ -31,7 +31,7 @@ void removeItemFromVector(std::vector<double>& values, int itemIndex) {
             "The item index was outside the bounds of values", BUMP_LOCATION);
     }
 
-    int previous_size = values.size();
+    const auto previous_size = values.size();
     values.erase(values.begin() + itemIndex);
     std::cout << "removeItemFromVector executed SUCCESSFULLY: old size: "
               << previous_size << " new size: " << values.size() << std::endl;

@@ -1,0 +1,118 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 30,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "deps",
+            "hidden": true,
+            "description": "Copy this file to CMakeUserPresets.json (that name is gitignored) and edit the paths below. CMakePresets.json contains only hidden presets, because everything it could make visible depends on where your dependencies live and which architecture they were built for -- Bump asserts none of that. Inheritable configure presets: macos-ninja, macos-ninja-shared, macos-ninja-framework, macos-xcode, windows-vs2022, windows-vs2022-shared.",
+            "cacheVariables": {
+                "Boost_DIR": "$env{HOME}/libs/boost-1.91.0/lib/cmake/Boost-1.91.0",
+                "Boost_USE_STATIC_LIBS": {
+                    "type": "BOOL",
+                    "value": "ON"
+                },
+                "GTest_DIR": "$env{HOME}/libs/googletest-1.17.0/lib/cmake/GTest",
+                "CMAKE_OSX_ARCHITECTURES": "arm64",
+                "CMAKE_OSX_DEPLOYMENT_TARGET": "13.0"
+            }
+        },
+        {
+            "name": "ninja",
+            "displayName": "Ninja Multi-Config (static)",
+            "inherits": [
+                "deps",
+                "macos-ninja"
+            ],
+            "installDir": "$env{HOME}/libs/bump-2.0.0"
+        },
+        {
+            "name": "ninja-shared",
+            "displayName": "Ninja Multi-Config (shared)",
+            "inherits": [
+                "deps",
+                "macos-ninja-shared"
+            ],
+            "installDir": "$env{HOME}/libs/bump-2.0.0-shared"
+        },
+        {
+            "name": "xcode",
+            "displayName": "Xcode (static)",
+            "inherits": [
+                "deps",
+                "macos-xcode"
+            ],
+            "installDir": "$env{HOME}/libs/bump-2.0.0"
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "ninja-debug",
+            "configurePreset": "ninja",
+            "configuration": "Debug"
+        },
+        {
+            "name": "ninja-release",
+            "configurePreset": "ninja",
+            "configuration": "Release"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "test-base",
+            "hidden": true,
+            "description": "Bump's suites are safe to run concurrently, so pick a job count that suits your machine.",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "jobs": 8
+            }
+        },
+        {
+            "name": "ninja-debug",
+            "inherits": "test-base",
+            "configurePreset": "ninja",
+            "configuration": "Debug"
+        },
+        {
+            "name": "ninja-release",
+            "inherits": "test-base",
+            "configurePreset": "ninja",
+            "configuration": "Release"
+        }
+    ],
+    "workflowPresets": [
+        {
+            "name": "ninja",
+            "displayName": "Configure, then build and test Debug and Release",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "ninja"
+                },
+                {
+                    "type": "build",
+                    "name": "ninja-debug"
+                },
+                {
+                    "type": "test",
+                    "name": "ninja-debug"
+                },
+                {
+                    "type": "build",
+                    "name": "ninja-release"
+                },
+                {
+                    "type": "test",
+                    "name": "ninja-release"
+                }
+            ]
+        }
+    ]
+}
