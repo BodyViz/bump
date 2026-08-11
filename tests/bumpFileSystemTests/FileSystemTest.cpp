@@ -6,12 +6,12 @@
 //	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
-#include "FileSystemTest.h"
-
 #include <bump/FileSystem.h>
 #include <bump/FileSystemError.h>
 
 #include <boost/foreach.hpp>
+
+#include "FileSystemTest.h"
 
 namespace bumpTest {
 
@@ -72,6 +72,17 @@ void FileSystemTest::SetUp() {
         "../files/archive.tar.gz", "unittest/symlink_files/archive.tar.gz");
     bump::FileSystem::createFileSymbolicLink(
         "../files/.hidden_file.txt", "unittest/symlink_files/.hidden_file.txt");
+
+    // Symlink creation is the one part of this fixture that fails for
+    // environmental rather than code reasons, and bump's create*SymbolicLink
+    // return false instead of throwing. This catches environmental failures
+    // before they get into the individuals tests.
+    ASSERT_TRUE(bump::FileInfo(_symlinkDirectory).isSymbolicLink())
+        << "Could not create symbolic links in "
+        << bump::FileSystem::currentPath()
+        << ". On Windows this needs Developer Mode enabled (or an elevated "
+           "process) and a build directory on a local disk -- network drives "
+           "and VM shared folders cannot hold symlinks.";
 }
 
 void FileSystemTest::TearDown() {

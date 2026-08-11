@@ -110,6 +110,17 @@ void FileInfoTest::SetUp() {
         "../files/.hidden_file.txt",
         "unittest/symlink_files/.hidden_archive.tar.gz");
 
+    // Symlink creation is the one part of this fixture that fails for
+    // environmental rather than code reasons, and bump's create*SymbolicLink
+    // return false instead of throwing. This catches environmental failures
+    // before they get into the individuals tests.
+    ASSERT_TRUE(bump::FileInfo(_symlinkDirectory).isSymbolicLink())
+        << "Could not create symbolic links in "
+        << bump::FileSystem::currentPath()
+        << ". On Windows this needs Developer Mode enabled (or an elevated "
+           "process) and a build directory on a local disk -- network drives "
+           "and VM shared folders cannot hold symlinks.";
+
     // Inject some text into info.xml
     std::ofstream stream("unittest/files/info.xml");
     bump::String xml_text =

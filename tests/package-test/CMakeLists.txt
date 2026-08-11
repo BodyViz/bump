@@ -22,6 +22,24 @@ find_package(Bump 2 REQUIRED)
 add_executable(bump_smoke main.cpp)
 target_link_libraries(bump_smoke PRIVATE Bump::bump)
 
+# Windows has no RPATH. A shared Bump installs bump.dll to <prefix>/bin and
+# bump.lib to <prefix>/lib, which is the right layout, but an executable only
+# finds a DLL in its own directory, the system directories, or PATH -- so linking
+# successfully and *running* are two different things there. Without this the
+# smoke test built fine against the shared package and then died at startup
+# unable to locate bump.dll, which is what a real consumer would hit too.
+#
+# $<TARGET_RUNTIME_DLLS> resolves through the imported target's
+# IMPORTED_LOCATION, so this is also a check that install(TARGETS) recorded the
+# DLL's location and not just the import library. The genex is empty on non-DLL
+# platforms, so no if(WIN32) guard is needed -- macOS and Linux resolve bump
+# through the RPATH the linker already wrote.
+add_custom_command(TARGET bump_smoke POST_BUILD
+    COMMAND "${CMAKE_COMMAND}" -E copy -t
+            "$<TARGET_FILE_DIR:bump_smoke>" "$<TARGET_RUNTIME_DLLS:bump_smoke>"
+    COMMAND_EXPAND_LISTS
+)
+
 # Reports what the imported target actually carried, so a failure says which
 # usage requirement went missing rather than just "it did not link".
 #

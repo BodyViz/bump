@@ -186,6 +186,28 @@ include(CMakePackageConfigHelpers)
 
 set(BUMP_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/Bump")
 
+#------------------------------------------------------------------------------
+# Windows counterpart to BUMP_RUNTIME_INSTALL_RPATH
+#------------------------------------------------------------------------------
+# Windows has no RPATH: an executable finds a DLL in its own directory, the
+# #system directories or PATH, and nowhere else. This installs DLLs next to
+# examples and tests so they don't fail at runtim.
+#
+# install(FILES $<TARGET_FILE:bump>) rather than install(TARGETS bump RUNTIME):
+# the latter would also install the unmentioned artifact kinds to their default
+# destinations, re-installing the import library. $<TARGET_FILE> on a Windows
+# shared library is the DLL; the import library is $<TARGET_LINKER_FILE>.
+if(WIN32 AND BUMP_BUILD_SHARED_LIBS)
+    if(BUMP_BUILD_EXAMPLES)
+        install(FILES "$<TARGET_FILE:bump>"
+            DESTINATION "${BUMP_RUNTIME_INSTALL_DIR}/examples")
+    endif()
+    if(BUMP_BUILD_TESTS)
+        install(FILES "$<TARGET_FILE:bump>"
+            DESTINATION "${BUMP_RUNTIME_INSTALL_DIR}/tests")
+    endif()
+endif()
+
 # BumpTargets.cmake globs for its per-configuration BumpTargets-<config>.cmake
 # siblings, so installing Debug and then Release into one prefix accumulates
 # rather than clobbers. That is what makes both libbump.a and libbumpd.a usable

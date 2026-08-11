@@ -18,6 +18,7 @@
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
+#include <cctype>
 #include <iomanip>
 #include <limits>
 #include <sstream>
@@ -319,7 +320,13 @@ const char* String::c_str() const { return std::string::c_str(); }
 
 String& String::capitalize() {
     if (!isEmpty()) {
-        (*this)[0] = toupper(at(0));
+        // std::toupper takes an int but requires the value to be representable
+        // as an unsigned char or EOF. char is signed on every platform bump
+        // targets, so passing a byte of 0x80 or above directly would make it
+        // negative and the call undefined. The casts are the standard idiom for
+        // that, and they also silence MSVC C4244 on the int-to-char assignment.
+        (*this)[0] =
+            static_cast<char>(std::toupper(static_cast<unsigned char>(at(0))));
     }
 
     return *this;

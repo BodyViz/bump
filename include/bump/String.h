@@ -15,15 +15,6 @@
 #include <string>
 #include <vector>
 
-// MSVC C4275: bump::String derives from std::string, which has no
-// dll-interface. Scoped to this header so the suppression never reaches
-// consumer code.
-#if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable \
-                : 4275)  // non dll-interface base for dll-interface class
-#endif
-
 namespace bump {
 
 // Forward Declarations
@@ -44,7 +35,7 @@ typedef std::set<String> StringSet; /**< A shortcut typedef for an std::set of
  * parsing by implementing a much more straight forward syntax to make
  * development much easier and less time consuming.
  */
-class BUMP_EXPORT String : public std::string {
+class String : public std::string {
 public:
     /**
      * Case Sensitivity enumeration.
@@ -62,91 +53,91 @@ public:
     /**
      * Default constructor.
      */
-    String();
+    BUMP_EXPORT String();
 
     /**
      * Constructor that takes a const char*.
      *
      * @param cString The c string to convert to a string.
      */
-    String(const char* cString);
+    BUMP_EXPORT String(const char* cString);
 
     /**
      * Constructor that takes a std::string.
      *
      * @param stdString The std::string to convert to a string.
      */
-    String(const std::string& stdString);
+    BUMP_EXPORT String(const std::string& stdString);
 
     /**
      * Constructor that takes an unsigned char.
      *
      * @param number The number to convert to a string.
      */
-    String(unsigned char number);
+    BUMP_EXPORT String(unsigned char number);
 
     /**
      * Constructor that takes a char.
      *
      * @param number The number to convert to a string.
      */
-    String(char number);
+    BUMP_EXPORT String(char number);
 
     /**
      * Constructor that takes an unsigned short.
      *
      * @param number The number to convert to a string.
      */
-    String(unsigned short number);
+    BUMP_EXPORT String(unsigned short number);
 
     /**
      * Constructor that takes a short.
      *
      * @param number The number to convert to a string.
      */
-    String(short number);
+    BUMP_EXPORT String(short number);
 
     /**
      * Constructor that takes an unsigned int.
      *
      * @param number The number to convert to a string.
      */
-    String(unsigned int number);
+    BUMP_EXPORT String(unsigned int number);
 
     /**
      * Constructor that takes an int.
      *
      * @param number The number to convert to a string.
      */
-    String(int number);
+    BUMP_EXPORT String(int number);
 
     /**
      * Constructor that takes an unsigned long.
      *
      * @param number The number to convert to a string.
      */
-    String(unsigned long number);
+    BUMP_EXPORT String(unsigned long number);
 
     /**
      * Constructor that takes a long.
      *
      * @param number The number to convert to a string.
      */
-    String(long number);
+    BUMP_EXPORT String(long number);
 
     /**
      * Constructor that takes an unsigned long long.
      *
      * @param number The number to convert to a string.
      */
-    String(unsigned long long number);
+    BUMP_EXPORT String(unsigned long long number);
 
     /**
      * Constructor that takes a long long.
      *
      * @param number The number to convert to a string.
      */
-    String(long long number);
+    BUMP_EXPORT String(long long number);
 
     /**
      * Constructor that takes a float.
@@ -157,7 +148,7 @@ public:
      * @param precision The number of decimal places, default is -1 which uses
      * full decimal representation.
      */
-    String(float number, int precision = -1);
+    BUMP_EXPORT String(float number, int precision = -1);
 
     /**
      * Constructor that takes a double.
@@ -168,14 +159,14 @@ public:
      * @param precision The number of decimal places, default is -1 which uses
      * full decimal representation.
      */
-    String(double number, int precision = -1);
+    BUMP_EXPORT String(double number, int precision = -1);
 
     /**
      * Constructor that takes a bool.
      *
      * @param boolValue A boolean to convert to a string.
      */
-    String(bool boolValue);
+    BUMP_EXPORT String(bool boolValue);
 
     /**
      * Joins all the strings into a single string each separated by the
@@ -186,7 +177,8 @@ public:
      * @return A single string consisting of the list of string joined together
      * by the separator string.
      */
-    static String join(const StringList& strings, const String& separator);
+    BUMP_EXPORT static String join(const StringList& strings,
+                                   const String& separator);
 
     /**
      * Appends the given string onto the end of this string.
@@ -194,7 +186,7 @@ public:
      * @param appendString The string to add.
      * @return A reference to the modified string.
      */
-    String& append(const String& appendString);
+    BUMP_EXPORT String& append(const String& appendString);
 
     /**
      * Appends the given string onto the end of this string.
@@ -202,7 +194,7 @@ public:
      * @param appendString The c string to add.
      * @return A reference to the modified string.
      */
-    String& append(const char* appendString);
+    BUMP_EXPORT String& append(const char* appendString);
 
     /**
      * Creates a copy of this string with the lowest numbered marker replaced by
@@ -222,7 +214,7 @@ public:
      * @param a1 A string to replace the lowest numbered marker.
      * @return A copy of the string with the lowest numbered marker replaced.
      */
-    String arg(const String& a1) const;
+    BUMP_EXPORT String arg(const String& a1) const;
 
     /**
      * Creates a copy of this string with the two lowest numbered markers
@@ -250,7 +242,7 @@ public:
      * @return A copy of the string with the two lowest numbered markers
      * replaced.
      */
-    String arg(const String& a1, const String& a2) const;
+    BUMP_EXPORT String arg(const String& a1, const String& a2) const;
 
     /**
      * Creates a copy of this string with the three lowest numbered markers
@@ -271,7 +263,8 @@ public:
      * @return a copy of the string with the three lowest numbered markers
      * replaced.
      */
-    String arg(const String& a1, const String& a2, const String& a3) const;
+    BUMP_EXPORT String arg(const String& a1, const String& a2,
+                           const String& a3) const;
 
     /**
      * Creates a copy of this string with the four lowest numbered markers
@@ -293,8 +286,8 @@ public:
      * @return a copy of the string with the four lowest numbered markers
      * replaced.
      */
-    String arg(const String& a1, const String& a2, const String& a3,
-               const String& a4) const;
+    BUMP_EXPORT String arg(const String& a1, const String& a2, const String& a3,
+                           const String& a4) const;
 
     /**
      * Creates a copy of this string with the five lowest numbered markers
@@ -317,8 +310,8 @@ public:
      * @return a copy of the string with the five lowest numbered markers
      * replaced.
      */
-    String arg(const String& a1, const String& a2, const String& a3,
-               const String& a4, const String& a5) const;
+    BUMP_EXPORT String arg(const String& a1, const String& a2, const String& a3,
+                           const String& a4, const String& a5) const;
 
     /**
      * Creates a copy of this string with the six lowest numbered markers
@@ -342,8 +335,9 @@ public:
      * @return a copy of the string with the six lowest numbered markers
      * replaced.
      */
-    String arg(const String& a1, const String& a2, const String& a3,
-               const String& a4, const String& a5, const String& a6) const;
+    BUMP_EXPORT String arg(const String& a1, const String& a2, const String& a3,
+                           const String& a4, const String& a5,
+                           const String& a6) const;
 
     /**
      * Creates a copy of this string with the seven lowest numbered markers
@@ -368,9 +362,9 @@ public:
      * @return a copy of the string with the seven lowest numbered markers
      * replaced.
      */
-    String arg(const String& a1, const String& a2, const String& a3,
-               const String& a4, const String& a5, const String& a6,
-               const String& a7) const;
+    BUMP_EXPORT String arg(const String& a1, const String& a2, const String& a3,
+                           const String& a4, const String& a5, const String& a6,
+                           const String& a7) const;
 
     /**
      * Creates a copy of this string with the eight lowest numbered markers
@@ -396,9 +390,9 @@ public:
      * @return a copy of the string with the eight lowest numbered markers
      * replaced.
      */
-    String arg(const String& a1, const String& a2, const String& a3,
-               const String& a4, const String& a5, const String& a6,
-               const String& a7, const String& a8) const;
+    BUMP_EXPORT String arg(const String& a1, const String& a2, const String& a3,
+                           const String& a4, const String& a5, const String& a6,
+                           const String& a7, const String& a8) const;
 
     /**
      * Creates a copy of this string with the nine lowest numbered markers
@@ -425,9 +419,10 @@ public:
      * @return a copy of the string with the nine lowest numbered markers
      * replaced.
      */
-    String arg(const String& a1, const String& a2, const String& a3,
-               const String& a4, const String& a5, const String& a6,
-               const String& a7, const String& a8, const String& a9) const;
+    BUMP_EXPORT String arg(const String& a1, const String& a2, const String& a3,
+                           const String& a4, const String& a5, const String& a6,
+                           const String& a7, const String& a8,
+                           const String& a9) const;
 
     /**
      * Locates and returns the character at the position in this string.
@@ -438,21 +433,21 @@ public:
      * @param position The position of the character to return of this string.
      * @return The character at the given position.
      */
-    const char& at(int position) const;
+    BUMP_EXPORT const char& at(int position) const;
 
     /**
      * Converts the string to a c string.
      *
      * @return The c string representation of the string.
      */
-    const char* c_str() const;
+    BUMP_EXPORT const char* c_str() const;
 
     /**
      * Capitalizes the first letter of this string.
      *
      * @return A reference to the modified string.
      */
-    String& capitalize();
+    BUMP_EXPORT String& capitalize();
 
     /**
      * Chops the specified number of characters off from the end of this string.
@@ -462,12 +457,12 @@ public:
      * @param n The number of characters to chop off the end of this string.
      * @return The modified version of this string.
      */
-    String& chop(unsigned int n);
+    BUMP_EXPORT String& chop(unsigned int n);
 
     /**
      * Clears the contents of the string making it empty.
      */
-    void clear();
+    BUMP_EXPORT void clear();
 
     /**
      * Compares the content of the this string with the given string.
@@ -478,8 +473,9 @@ public:
      * CaseSensitive.
      * @return Whether the content within both objects is the same.
      */
-    bool compare(const String& otherString,
-                 CaseSensitivity caseSensitivity = CaseSensitive) const;
+    BUMP_EXPORT bool compare(
+        const String& otherString,
+        CaseSensitivity caseSensitivity = CaseSensitive) const;
 
     /**
      * Compares the content of the this string with the given string.
@@ -490,8 +486,9 @@ public:
      * CaseSensitive.
      * @return Whether the content within both objects is the same.
      */
-    bool compare(const char* otherString,
-                 CaseSensitivity caseSensitivity = CaseSensitive) const;
+    BUMP_EXPORT bool compare(
+        const char* otherString,
+        CaseSensitivity caseSensitivity = CaseSensitive) const;
 
     /**
      * Finds out whether this string contains an occurrence of the given string.
@@ -503,8 +500,9 @@ public:
      * @return True if the string contains an occurrence of containString,
      * otherwise returns false.
      */
-    bool contains(const String& containString,
-                  CaseSensitivity caseSensitivity = CaseSensitive) const;
+    BUMP_EXPORT bool contains(
+        const String& containString,
+        CaseSensitivity caseSensitivity = CaseSensitive) const;
 
     /**
      * Finds out whether this string contains an occurrence of the given string.
@@ -516,8 +514,9 @@ public:
      * @return True if the string contains an occurrence of containString,
      * otherwise returns false.
      */
-    bool contains(const char* containString,
-                  CaseSensitivity caseSensitivity = CaseSensitive) const;
+    BUMP_EXPORT bool contains(
+        const char* containString,
+        CaseSensitivity caseSensitivity = CaseSensitive) const;
 
     /**
      * Counts the number of (potentially overlapping) occurrences of the given
@@ -528,8 +527,9 @@ public:
      * CaseSensitive.
      * @return The number of occurrences of the given string in this string.
      */
-    int count(const String& containString,
-              CaseSensitivity caseSensitivity = CaseSensitive) const;
+    BUMP_EXPORT int count(
+        const String& containString,
+        CaseSensitivity caseSensitivity = CaseSensitive) const;
 
     /**
      * Counts the number of (potentially overlapping) occurrences of the given
@@ -541,8 +541,9 @@ public:
      * CaseSensitive.
      * @return The number of occurrences of the given string in this string.
      */
-    int count(const char* containString,
-              CaseSensitivity caseSensitivity = CaseSensitive) const;
+    BUMP_EXPORT int count(
+        const char* containString,
+        CaseSensitivity caseSensitivity = CaseSensitive) const;
 
     /**
      * Returns a pointer to an array of characters without appending a
@@ -551,7 +552,7 @@ public:
      * @return A pointer to an array of characters without appending a
      * terminating null character.
      */
-    const char* data() const;
+    BUMP_EXPORT const char* data() const;
 
     /**
      * Checks whether this string ends with the given string.
@@ -561,8 +562,9 @@ public:
      * CaseSensitive.
      * @return True if this string ends with endString, otherwise returns false.
      */
-    bool endsWith(const String& endString,
-                  CaseSensitivity caseSensitivity = CaseSensitive) const;
+    BUMP_EXPORT bool endsWith(
+        const String& endString,
+        CaseSensitivity caseSensitivity = CaseSensitive) const;
 
     /**
      * Checks whether this string ends with the given string.
@@ -572,8 +574,9 @@ public:
      * CaseSensitive.
      * @return True if this string ends with endString, otherwise returns false.
      */
-    bool endsWith(const char* endString,
-                  CaseSensitivity caseSensitivity = CaseSensitive) const;
+    BUMP_EXPORT bool endsWith(
+        const char* endString,
+        CaseSensitivity caseSensitivity = CaseSensitive) const;
 
     /**
      * Sets every character in the string to character. If size is different
@@ -587,7 +590,7 @@ public:
      * @param size The size to resize this string to be filling.
      * @return A reference to the modified string.
      */
-    String& fill(const String& character, int size = -1);
+    BUMP_EXPORT String& fill(const String& character, int size = -1);
 
     /**
      * Finds the position of the first occurrence of indexString in this string
@@ -603,8 +606,9 @@ public:
      * @return The position of the first occurrence of indexString, defaults to
      * -1 if not found.
      */
-    int indexOf(const String& indexString, int startPosition = 0,
-                CaseSensitivity caseSensitivity = CaseSensitive) const;
+    BUMP_EXPORT int indexOf(
+        const String& indexString, int startPosition = 0,
+        CaseSensitivity caseSensitivity = CaseSensitive) const;
 
     /**
      * Finds the position of the first occurrence of indexString in this string
@@ -620,8 +624,9 @@ public:
      * @return The position of the first occurrence of indexString, defaults to
      * -1 if not found.
      */
-    int indexOf(const char* indexString, int startPosition = 0,
-                CaseSensitivity caseSensitivity = CaseSensitive) const;
+    BUMP_EXPORT int indexOf(
+        const char* indexString, int startPosition = 0,
+        CaseSensitivity caseSensitivity = CaseSensitive) const;
 
     /**
      * Inserts the insertString at the given position.
@@ -635,7 +640,7 @@ public:
      * this string.
      * @return A reference to the modified string.
      */
-    String& insert(const String& insertString, int position);
+    BUMP_EXPORT String& insert(const String& insertString, int position);
 
     /**
      * Inserts the insertString at the given position.
@@ -645,14 +650,14 @@ public:
      * in this string.
      * @return A reference to the modified string.
      */
-    String& insert(const char* insertString, int position);
+    BUMP_EXPORT String& insert(const char* insertString, int position);
 
     /**
      * Determines whether the string has any characters.
      *
      * @return True if the string has no characters, otherwise returns false.
      */
-    bool isEmpty() const;
+    BUMP_EXPORT bool isEmpty() const;
 
     /**
      * Determines whether the string is any kind of number (int, float, double,
@@ -661,7 +666,7 @@ public:
      * @return Whether the string is a valid number (int, float, double,
      * scientific).
      */
-    bool isNumber() const;
+    BUMP_EXPORT bool isNumber() const;
 
     /**
      * Finds the position of the last occurrence of indexString in this string
@@ -678,8 +683,9 @@ public:
      * @return The position of the last occurrence of indexString, defaults to
      * -1 if not found.
      */
-    int lastIndexOf(String indexString, int startPosition = -1,
-                    CaseSensitivity caseSensitivity = CaseSensitive) const;
+    BUMP_EXPORT int lastIndexOf(
+        String indexString, int startPosition = -1,
+        CaseSensitivity caseSensitivity = CaseSensitive) const;
 
     /**
      * Finds the position of the last occurrence of indexString in this string
@@ -696,8 +702,9 @@ public:
      * @return The position of the last occurrence of indexString, defaults to
      * -1 if not found.
      */
-    int lastIndexOf(const char* indexString, int startPosition = -1,
-                    CaseSensitivity caseSensitivity = CaseSensitive) const;
+    BUMP_EXPORT int lastIndexOf(
+        const char* indexString, int startPosition = -1,
+        CaseSensitivity caseSensitivity = CaseSensitive) const;
 
     /**
      * Finds the substring that contains the number of leftmost characters of
@@ -709,14 +716,14 @@ public:
      * @return The substring of the leftmost number of characters of this
      * string.
      */
-    String left(int n) const;
+    BUMP_EXPORT String left(int n) const;
 
     /**
      * Computes the total number of characters in this string.
      *
      * @return The total number of characters in this string.
      */
-    int length() const;
+    BUMP_EXPORT int length() const;
 
     /**
      * Pads the beginning of the string with the padString until the
@@ -733,7 +740,8 @@ public:
      * @param paddedLength The length of the string to stop padding at.
      * @return The modified version of this string.
      */
-    String& padWithString(const String& padString, unsigned int paddedLength);
+    BUMP_EXPORT String& padWithString(const String& padString,
+                                      unsigned int paddedLength);
 
     /**
      * Adds the given string to the beginning of this string.
@@ -741,7 +749,7 @@ public:
      * @param prependString The string to add to the beginning of this string.
      * @return The modified version of this string.
      */
-    String& prepend(const String& prependString);
+    BUMP_EXPORT String& prepend(const String& prependString);
 
     /**
      * Adds the given string to the beginning of this string.
@@ -750,7 +758,7 @@ public:
      * string.
      * @return The modified version of this string.
      */
-    String& prepend(const char* prependString);
+    BUMP_EXPORT String& prepend(const char* prependString);
 
     /**
      * Removes the given width of characters starting at the given position.
@@ -764,7 +772,7 @@ public:
      * @param n The number of characters to remove from this string.
      * @return The modified version of this string.
      */
-    String& remove(int position, int n);
+    BUMP_EXPORT String& remove(int position, int n);
 
     /**
      * Removes every occurrence of the given in this string.
@@ -776,8 +784,8 @@ public:
      * String::CaseSensitive.
      * @return The modified version of this string.
      */
-    String& remove(const String& removeString,
-                   CaseSensitivity caseSensitivity = CaseSensitive);
+    BUMP_EXPORT String& remove(const String& removeString,
+                               CaseSensitivity caseSensitivity = CaseSensitive);
 
     /**
      * Removes every occurrence of the given in this string.
@@ -789,8 +797,8 @@ public:
      * String::CaseSensitive.
      * @return The modified version of this string.
      */
-    String& remove(const char* removeString,
-                   CaseSensitivity caseSensitivity = CaseSensitive);
+    BUMP_EXPORT String& remove(const char* removeString,
+                               CaseSensitivity caseSensitivity = CaseSensitive);
 
     /**
      * Generates a new string repeated the specified number of times.
@@ -800,7 +808,7 @@ public:
      * @param times The number of times the new string will be repeated.
      * @return A new string repeated the specified number of times.
      */
-    String repeated(unsigned int times) const;
+    BUMP_EXPORT String repeated(unsigned int times) const;
 
     /**
      * Replaces n characters starting at position with the replace string.
@@ -815,7 +823,8 @@ public:
      * string.
      * @return The modified version of this string.
      */
-    String& replace(int position, int n, const String& replaceString);
+    BUMP_EXPORT String& replace(int position, int n,
+                                const String& replaceString);
 
     /**
      * Replaces n characters starting at position with the replace string.
@@ -830,7 +839,7 @@ public:
      * string.
      * @return The modified version of this string.
      */
-    String& replace(int position, int n, const char* replaceString);
+    BUMP_EXPORT String& replace(int position, int n, const char* replaceString);
 
     /**
      * Replaces every occurrence of the before string with the after string.
@@ -843,8 +852,9 @@ public:
      * CaseSensitive.
      * @return The modified version of this string.
      */
-    String& replace(const String& before, const String& after,
-                    CaseSensitivity caseSensitivity = CaseSensitive);
+    BUMP_EXPORT String& replace(
+        const String& before, const String& after,
+        CaseSensitivity caseSensitivity = CaseSensitive);
 
     /**
      * Replaces every occurrence of the before string with the after string.
@@ -857,8 +867,9 @@ public:
      * CaseSensitive.
      * @return The modified version of this string.
      */
-    String& replace(const char* before, const char* after,
-                    CaseSensitivity caseSensitivity = CaseSensitive);
+    BUMP_EXPORT String& replace(
+        const char* before, const char* after,
+        CaseSensitivity caseSensitivity = CaseSensitive);
 
     /**
      * Finds the substring that contains the number of rightmost characters of
@@ -870,7 +881,7 @@ public:
      * @return The substring of the rightmost number of characters of this
      * string.
      */
-    String right(int n) const;
+    BUMP_EXPORT String right(int n) const;
 
     /**
      * Creates a substring of the given length beginning at the start position.
@@ -885,7 +896,7 @@ public:
      * @return A section of the string beginning at the start position with the
      * given length.
      */
-    String section(int startPosition, int length = -1) const;
+    BUMP_EXPORT String section(int startPosition, int length = -1) const;
 
     /**
      * Splits the string into a list of string that were separated by the given
@@ -895,7 +906,7 @@ public:
      * strings.
      * @return A list of strings separated by the separator character.
      */
-    StringList split(const String& separator) const;
+    BUMP_EXPORT StringList split(const String& separator) const;
 
     /**
      * Checks whether this string starts with the given string.
@@ -906,8 +917,9 @@ public:
      * @return True if this string starts with startString, otherwise returns
      * false.
      */
-    bool startsWith(const String& startString,
-                    CaseSensitivity caseSensitivity = CaseSensitive) const;
+    BUMP_EXPORT bool startsWith(
+        const String& startString,
+        CaseSensitivity caseSensitivity = CaseSensitive) const;
 
     /**
      * Checks whether this string starts with the given string.
@@ -918,15 +930,16 @@ public:
      * @return True if this string starts with startString, otherwise returns
      * false.
      */
-    bool startsWith(const char* startString,
-                    CaseSensitivity caseSensitivity = CaseSensitive) const;
+    BUMP_EXPORT bool startsWith(
+        const char* startString,
+        CaseSensitivity caseSensitivity = CaseSensitive) const;
 
     /**
      * Capitalizes all the first letters of each word in the string.
      *
      * @return A new string with all the first letters of each word capitalized.
      */
-    String title() const;
+    BUMP_EXPORT String title() const;
 
     /**
      * Converts this string to a boolean.
@@ -936,7 +949,7 @@ public:
      *
      * @return The bool value of the string.
      */
-    bool toBool() const;
+    BUMP_EXPORT bool toBool() const;
 
     /**
      * Converts this string to a double.
@@ -946,7 +959,7 @@ public:
      *
      * @return The double value of the string.
      */
-    double toDouble() const;
+    BUMP_EXPORT double toDouble() const;
 
     /**
      * Converts this string to a float.
@@ -956,7 +969,7 @@ public:
      *
      * @return The float value of the string.
      */
-    float toFloat() const;
+    BUMP_EXPORT float toFloat() const;
 
     /**
      * Converts this string to an int.
@@ -966,7 +979,7 @@ public:
      *
      * @return The int value of the string.
      */
-    int toInt() const;
+    BUMP_EXPORT int toInt() const;
 
     /**
      * Converts this string to a long.
@@ -976,7 +989,7 @@ public:
      *
      * @return The long value of the string.
      */
-    long toLong() const;
+    BUMP_EXPORT long toLong() const;
 
     /**
      * Converts this string to a long long.
@@ -986,14 +999,14 @@ public:
      *
      * @return The long long value of the string.
      */
-    long long toLongLong() const;
+    BUMP_EXPORT long long toLongLong() const;
 
     /**
      * Converts this string to all lowercase text.
      *
      * @return The modified version of this string.
      */
-    String& toLowerCase();
+    BUMP_EXPORT String& toLowerCase();
 
     /**
      * Converts this string to a short.
@@ -1003,14 +1016,14 @@ public:
      *
      * @return The short value of the string.
      */
-    short toShort() const;
+    BUMP_EXPORT short toShort() const;
 
     /**
      * Converts the string to a std::string.
      *
      * @return The std::string representation of the string.
      */
-    std::string toStdString() const;
+    BUMP_EXPORT std::string toStdString() const;
 
     /**
      * Converts this string to an unsigned int.
@@ -1020,7 +1033,7 @@ public:
      *
      * @return The unsigned int value of the string.
      */
-    unsigned int toUInt() const;
+    BUMP_EXPORT unsigned int toUInt() const;
 
     /**
      * Converts this string to an unsigned long.
@@ -1030,7 +1043,7 @@ public:
      *
      * @return The unsigned long value of the string.
      */
-    unsigned long toULong() const;
+    BUMP_EXPORT unsigned long toULong() const;
 
     /**
      * Converts this string to an unsigned long long.
@@ -1040,14 +1053,14 @@ public:
      *
      * @return The unsigned long long value of the string.
      */
-    unsigned long long toULongLong() const;
+    BUMP_EXPORT unsigned long long toULongLong() const;
 
     /**
      * Converts this string to all uppercase text.
      *
      * @return The modified version of this string.
      */
-    String& toUpperCase();
+    BUMP_EXPORT String& toUpperCase();
 
     /**
      * Converts this string to an unsigned short.
@@ -1057,7 +1070,7 @@ public:
      *
      * @return The unsigned short value of the string.
      */
-    unsigned short toUShort() const;
+    BUMP_EXPORT unsigned short toUShort() const;
 
     /**
      * Generates a string that has all whitespace removed from the start and
@@ -1068,7 +1081,7 @@ public:
      * @return A new string that has all whitespace removed from the start and
      * end.
      */
-    String trimmed() const;
+    BUMP_EXPORT String trimmed() const;
 
     /**
      * Appends the string onto the end of this string.
@@ -1076,7 +1089,7 @@ public:
      * @param appendString The string to append onto this string.
      * @return The modified version of this string.
      */
-    String& operator<<(const String& appendString);
+    BUMP_EXPORT String& operator<<(const String& appendString);
 
     /**
      * Appends the string onto the end of this string.
@@ -1084,7 +1097,7 @@ public:
      * @param appendString The const char* to append onto this string.
      * @return The modified version of this string.
      */
-    String& operator<<(const char* appendString);
+    BUMP_EXPORT String& operator<<(const char* appendString);
 
     /**
      * Appends the unsigned char to the end of this string.
@@ -1092,7 +1105,7 @@ public:
      * @param appendChar The unsigned char to append onto this string.
      * @return The modified version of this string.
      */
-    String& operator<<(unsigned char appendChar);
+    BUMP_EXPORT String& operator<<(unsigned char appendChar);
 
     /**
      * Appends the char to the end of this string.
@@ -1100,7 +1113,7 @@ public:
      * @param appendChar The char to append onto this string.
      * @return The modified version of this string.
      */
-    String& operator<<(char appendChar);
+    BUMP_EXPORT String& operator<<(char appendChar);
 
     /**
      * Appends the unsigned short to the end of this string.
@@ -1108,7 +1121,7 @@ public:
      * @param appendShort The unsigned short to append onto this string.
      * @return The modified version of this string.
      */
-    String& operator<<(unsigned short appendShort);
+    BUMP_EXPORT String& operator<<(unsigned short appendShort);
 
     /**
      * Appends the short to the end of this string.
@@ -1116,7 +1129,7 @@ public:
      * @param appendShort The short to append onto this string.
      * @return The modified version of this string.
      */
-    String& operator<<(short appendShort);
+    BUMP_EXPORT String& operator<<(short appendShort);
 
     /**
      * Appends the unsigned int to the end of this string.
@@ -1124,7 +1137,7 @@ public:
      * @param appendInt The unsigned int to append onto this string.
      * @return The modified version of this string.
      */
-    String& operator<<(unsigned int appendInt);
+    BUMP_EXPORT String& operator<<(unsigned int appendInt);
 
     /**
      * Appends the int to the end of this string.
@@ -1132,7 +1145,7 @@ public:
      * @param appendInt The int to append onto this string.
      * @return The modified version of this string.
      */
-    String& operator<<(int appendInt);
+    BUMP_EXPORT String& operator<<(int appendInt);
 
     /**
      * Appends the unsigned long to the end of this string.
@@ -1140,7 +1153,7 @@ public:
      * @param appendLong The unsigned long to append onto this string.
      * @return The modified version of this string.
      */
-    String& operator<<(unsigned long appendLong);
+    BUMP_EXPORT String& operator<<(unsigned long appendLong);
 
     /**
      * Appends the long to the end of this string.
@@ -1148,7 +1161,7 @@ public:
      * @param appendLong The long to append onto this string.
      * @return The modified version of this string.
      */
-    String& operator<<(long appendLong);
+    BUMP_EXPORT String& operator<<(long appendLong);
 
     /**
      * Appends the unsigned long long to the end of this string.
@@ -1156,7 +1169,7 @@ public:
      * @param appendLongLong The unsigned long long to append onto this string.
      * @return The modified version of this string.
      */
-    String& operator<<(unsigned long long appendLongLong);
+    BUMP_EXPORT String& operator<<(unsigned long long appendLongLong);
 
     /**
      * Appends the long long to the end of this string.
@@ -1164,7 +1177,7 @@ public:
      * @param appendLongLong The long long to append onto this string.
      * @return The modified version of this string.
      */
-    String& operator<<(long long appendLongLong);
+    BUMP_EXPORT String& operator<<(long long appendLongLong);
 
     /**
      * Appends the float to the end of this string.
@@ -1172,7 +1185,7 @@ public:
      * @param appendFloat The float to append onto this string.
      * @return The modified version of this string.
      */
-    String& operator<<(float appendFloat);
+    BUMP_EXPORT String& operator<<(float appendFloat);
 
     /**
      * Appends the double to the end of this string.
@@ -1180,7 +1193,7 @@ public:
      * @param appendDouble The float to append onto this string.
      * @return The modified version of this string.
      */
-    String& operator<<(double appendDouble);
+    BUMP_EXPORT String& operator<<(double appendDouble);
 
     /**
      * Appends the bool to the end of this string.
@@ -1188,11 +1201,7 @@ public:
      * @param appendBool The bool to append onto this string.
      * @return The modified version of this string.
      */
-    String& operator<<(bool appendBool);
+    BUMP_EXPORT String& operator<<(bool appendBool);
 };
 
 }  // namespace bump
-
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif

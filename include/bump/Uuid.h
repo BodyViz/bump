@@ -12,15 +12,6 @@
 
 #include <boost/uuid/uuid.hpp>
 
-// MSVC C4275: bump::Uuid derives from boost::uuids::uuid, which has no
-// dll-interface. Scoped to this header so the suppression never reaches
-// consumer code.
-#if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable \
-                : 4275)  // non dll-interface base for dll-interface class
-#endif
-
 namespace bump {
 
 // Forward declarations
@@ -32,20 +23,20 @@ class String;
  * code. This class makes it easy to generate random UUIDs, as well as convert
  * them to/from bump::Strings.
  */
-class BUMP_EXPORT Uuid : public boost::uuids::uuid {
+class Uuid : public boost::uuids::uuid {
 public:
     /**
      * Default constructor creates a null uuid (i.e.
      * "00000000-0000-0000-0000-000000000000").
      */
-    Uuid();
+    BUMP_EXPORT Uuid();
 
     /**
      * Copy constructor creates a new uuid from a boost uuid.
      *
      * @param uuid The boost uuid to create a copy of.
      */
-    Uuid(const boost::uuids::uuid& uuid);
+    BUMP_EXPORT Uuid(const boost::uuids::uuid& uuid);
 
     /**
      * Generates a random uuid by automatically seeding a random number
@@ -53,7 +44,7 @@ public:
      *
      * @return A random uuid.
      */
-    static Uuid generateRandom();
+    BUMP_EXPORT static Uuid generateRandom();
 
     /**
      * Generates a uuid from the given string (i.e.
@@ -64,7 +55,7 @@ public:
      * @param uuidString A string formatted as a uuid to create the uuid from.
      * @return A new uuid based on the uuid string parameter.
      */
-    static Uuid fromString(const String& uuidString);
+    BUMP_EXPORT static Uuid fromString(const String& uuidString);
 
     /**
      * Determines whether the uuid is null or equal to
@@ -73,14 +64,14 @@ public:
      * @return Whether the uuid is null or equal to
      * "00000000-0000-0000-0000-000000000000".
      */
-    bool isNull() const;
+    BUMP_EXPORT bool isNull() const;
 
     /**
      * Converts the uuid to a string.
      *
      * @return A string representation of the uuid.
      */
-    String toString() const;
+    BUMP_EXPORT String toString() const;
 
     /**
      * Determines whether this uuid and the right-hand side uuid are equal.
@@ -89,7 +80,7 @@ public:
      * @return True if this uuid and the right-hand side uuid are equal,
      * otherwise returns false.
      */
-    bool operator==(const Uuid& rhs);
+    BUMP_EXPORT bool operator==(const Uuid& rhs);
 
     /**
      * Determines whether this uuid and the right-hand side uuid are not equal.
@@ -98,7 +89,7 @@ public:
      * @return True if this uuid and the right-hand side uuid are not equal,
      * otherwise returns false.
      */
-    bool operator!=(const Uuid& rhs);
+    BUMP_EXPORT bool operator!=(const Uuid& rhs);
 
     /**
      * Determines whether this uuid is less than the right-hand side uuid.
@@ -107,7 +98,7 @@ public:
      * @return True if this uuid is less than the right-hand side uuid,
      * otherwise returns false.
      */
-    bool operator<(const Uuid& rhs);
+    BUMP_EXPORT bool operator<(const Uuid& rhs);
 
     /**
      * Determines whether this uuid is greater than the right-hand side uuid.
@@ -116,7 +107,7 @@ public:
      * @return True if this uuid is greater than the right-side uuid, otherwise
      * returns false.
      */
-    bool operator>(const Uuid& rhs);
+    BUMP_EXPORT bool operator>(const Uuid& rhs);
 
     /**
      * Determines whether this uuid is less than or equal to the right-hand side
@@ -126,7 +117,7 @@ public:
      * @return True if this uuid is less than or equal to the right-side uuid,
      * otherwise returns false.
      */
-    bool operator<=(const Uuid& rhs);
+    BUMP_EXPORT bool operator<=(const Uuid& rhs);
 
     /**
      * Determines whether this uuid is greater than or equal to the right-hand
@@ -136,11 +127,7 @@ public:
      * @return True if this uuid is greater than or equal to the right-side
      * uuid, otherwise returns false.
      */
-    bool operator>=(const Uuid& rhs);
+    BUMP_EXPORT bool operator>=(const Uuid& rhs);
 };
 
 }  // namespace bump
-
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif

@@ -32,7 +32,18 @@ static_assert(std::is_nothrow_move_assignable<bump::String>::value,
 
 // The package must raise the consumer to C++20 through
 // INTERFACE_COMPILE_FEATURES without the consumer setting CMAKE_CXX_STANDARD.
-static_assert(__cplusplus >= 202002L,
+//
+// MSVC reports __cplusplus as 199711L whatever /std: is in effect unless
+// /Zc:__cplusplus is also passed, and that is not implied by /std:c++20 --
+// verified on 17.14. _MSVC_LANG carries the real value regardless, so test that
+// where it exists. Checking __cplusplus alone would fail here for a package
+// that propagated the standard perfectly well.
+#if defined(_MSVC_LANG)
+#define BUMP_SMOKE_CPLUSPLUS _MSVC_LANG
+#else
+#define BUMP_SMOKE_CPLUSPLUS __cplusplus
+#endif
+static_assert(BUMP_SMOKE_CPLUSPLUS >= 202002L,
               "Bump::bump did not propagate cxx_std_20");
 
 namespace {

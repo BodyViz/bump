@@ -530,7 +530,21 @@ bool copySymbolicLink(const String& source, const String& destination) {
     try {
         boost::filesystem::path source_path(source.c_str());
         boost::filesystem::path destination_path(destination.c_str());
-        boost::filesystem::copy_symlink(source_path, destination_path);
+
+        const auto target = boost::filesystem::read_symlink(source_path);
+
+        boost::system::error_code error;
+        const bool target_is_directory = boost::filesystem::is_directory(
+            target.is_absolute() ? target : source_path.parent_path() / target,
+            error);
+
+        if (target_is_directory) {
+            boost::filesystem::create_directory_symlink(target,
+                                                        destination_path);
+        } else {
+            boost::filesystem::create_symlink(target, destination_path);
+        }
+
         return true;
     } catch (const boost::filesystem::filesystem_error& /*e*/) {
         return false;

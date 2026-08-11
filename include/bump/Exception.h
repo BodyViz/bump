@@ -13,6 +13,16 @@
 
 #include <boost/current_function.hpp>
 
+// MSVC C4251: bump::Exception holds a StringList, which is a typedef for
+// std::vector<bump::String> and so has no dll-interface. The member
+// reads as a bump type rather than a standard container. The exception bases
+// themselves need no C4275, because Exception, LogicError and RuntimeError are
+// all BUMP_EXPORT and C4275 fires only for a base that is not.
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
+
 /**
  * The BUMP_LOCATION is used in exceptions to place the function name, filename
  * and line number directly into the description for the exception. This makes
@@ -143,3 +153,7 @@ protected:
 };
 
 }  // namespace bump
+
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif

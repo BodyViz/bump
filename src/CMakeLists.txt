@@ -101,6 +101,18 @@ add_library(Bump::bump ALIAS bump)
 # automatically rather than having to set CMAKE_CXX_STANDARD themselves.
 target_compile_features(bump PUBLIC cxx_std_20)
 
+# PUBLIC, unlike every other compile option here, because it completes the
+# promise cxx_std_20 makes rather than describing how bump is built. MSVC reports
+# __cplusplus as 199711L whatever /std: is in effect unless this is passed, and
+# it is *not* implied by /std:c++20 -- verified on 19.44. Without it a consumer
+# raised to C++20 by the line above still sees __cplusplus claim C++98, so any
+# `#if __cplusplus >= 202002L` in its own code silently takes the wrong branch.
+# _MSVC_LANG is the workaround, but consumers should not need one to learn a
+# standard bump already requires of them.
+target_compile_options(bump PUBLIC
+    "$<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>"
+)
+
 #------------------------------------------------------------------------------
 # Generated headers
 #------------------------------------------------------------------------------
@@ -249,7 +261,12 @@ target_compile_options(bump PRIVATE
     # /permissive- is implicit under /std:c++20 but stated for clarity.
     # _SCL_SECURE_NO_WARNINGS is deliberately absent: a no-op since VS2015 with
     # zero trigger sites here.
-    "$<$<CXX_COMPILER_ID:MSVC>:/W4;/utf-8;/permissive-;/Zc:__cplusplus;/EHsc;/bigobj>"
+    "$<$<CXX_COMPILER_ID:MSVC>:/W4;/utf-8;/permissive-;/EHsc;/bigobj>"
+
+    # C4267 is size_t-to-int narrowing, which /W4 reports.
+    # They all come from bump's int-based length and index API --
+    # String::length() returns int -- and disappear when that API is widened.
+    "$<$<CXX_COMPILER_ID:MSVC>:/wd4267>"
     "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<BOOL:${BUMP_WIN32_USE_MP}>>:/MP>"
 )
 
