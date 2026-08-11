@@ -10,6 +10,8 @@
 #include <bump/Environment.h>
 #include <gtest/gtest.h>
 
+#include <cstring>
+
 namespace bumpTest {
 
 /**
@@ -53,28 +55,28 @@ TEST_F(CryptographicHashTest, testSetDataCharStar) {
     // Normal case #1
     bump::CryptographicHash hash;
     const char* data = "This is a simple string that I'm going to hash";
-    hash.setData(data, strlen(data));
+    hash.setData(data, static_cast<int>(std::strlen(data)));
     bump::String result = hash.result();
     EXPECT_STREQ("364fd3e0c0c454cb0c0fb393ede75f7f66b28eb6", result.c_str());
 
     // Normal case #2
     hash = bump::CryptographicHash();
     data = "Let's try another one with some numbers: 98 730384 93.48390";
-    hash.setData(data, strlen(data));
+    hash.setData(data, static_cast<int>(std::strlen(data)));
     result = hash.result();
     EXPECT_STREQ("4e5afbcbc9701c5db9a61daea6f7f5760bf44652", result.c_str());
 
     // String created with a double
     hash = bump::CryptographicHash();
     data = "98.047384";
-    hash.setData(data, strlen(data));
+    hash.setData(data, static_cast<int>(std::strlen(data)));
     result = hash.result();
     EXPECT_STREQ("3f44cca1bbe945abf54da6c0f65cd8bcad6a9eb2", result.c_str());
 
     // Empty case
     hash = bump::CryptographicHash();
     data = "";
-    hash.setData(data, strlen(data));
+    hash.setData(data, static_cast<int>(std::strlen(data)));
     result = hash.result();
     EXPECT_STREQ("", result.c_str());
 }
@@ -83,28 +85,28 @@ TEST_F(CryptographicHashTest, testReset) {
     // Normal case #1
     bump::CryptographicHash hash;
     const char* data = "This is a simple string that I'm going to hash";
-    hash.setData(data, strlen(data));
+    hash.setData(data, static_cast<int>(std::strlen(data)));
     bump::String result = hash.result();
     EXPECT_STREQ("364fd3e0c0c454cb0c0fb393ede75f7f66b28eb6", result.c_str());
 
     // Normal case #2
     data = "Let's try another one with some numbers: 98 730384 93.48390";
     hash.reset();
-    hash.setData(data, strlen(data));
+    hash.setData(data, static_cast<int>(std::strlen(data)));
     result = hash.result();
     EXPECT_STREQ("4e5afbcbc9701c5db9a61daea6f7f5760bf44652", result.c_str());
 
     // String created with a double
     data = "98.047384";
     hash.reset();
-    hash.setData(data, strlen(data));
+    hash.setData(data, static_cast<int>(std::strlen(data)));
     result = hash.result();
     EXPECT_STREQ("3f44cca1bbe945abf54da6c0f65cd8bcad6a9eb2", result.c_str());
 
     // Empty case
     data = "";
     hash.reset();
-    hash.setData(data, strlen(data));
+    hash.setData(data, static_cast<int>(std::strlen(data)));
     result = hash.result();
     EXPECT_STREQ("", result.c_str());
 }

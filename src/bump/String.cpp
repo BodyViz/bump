@@ -179,7 +179,7 @@ String String::arg(const String& argument) const {
             std::pair<int, int>(marker_value, marker_position_index));
 
         // Update the current index for the next iteration
-        current_index = marker_position_index + markers.at(i).length();
+        current_index = marker_position_index + marker.length();
     }
 
     // Create a copy of this string for replacement
@@ -597,7 +597,7 @@ String String::left(int n) const {
     return section(0, n);
 }
 
-int String::length() const { return std::string::length(); }
+int String::length() const { return static_cast<int>(std::string::length()); }
 
 String& String::padWithString(const String& padString,
                               unsigned int paddedLength) {
@@ -738,11 +738,11 @@ String& String::replace(const String& before, const String& after,
     while (found != std::string::npos) {
         found = this_copy.find(before, found);
         if (found != std::string::npos) {
-            remove(int(found), before.length());
-            this_copy.remove(int(found), before.length());
+            remove(static_cast<int>(found), before.length());
+            this_copy.remove(static_cast<int>(found), before.length());
             if (!after.isEmpty()) {
-                insert(after, found);
-                this_copy.insert(after, found);
+                insert(after, static_cast<int>(found));
+                this_copy.insert(after, static_cast<int>(found));
                 found += after.length();
             }
         }

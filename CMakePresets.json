@@ -103,10 +103,9 @@
             "hidden": true,
             "inherits": "macos-base",
             "generator": "Xcode",
-            "description": "Scheme generation is on so every target -- including each of the eight test suites -- appears in the scheme selector and can be run or debugged on its own. Header-set verification is off because its three extra targets clutter a list the Xcode generator cannot group into folders; both Ninja presets still run it. GCC_WARN_64_TO_32_BIT_CONVERSION is off because Xcode enables it by default while Ninja does not, so with warnings as errors a Ninja-clean tree would fail under Xcode. It reports 12 real size_t-to-int narrowings, all stemming from bump's int-based length and index API; widening that API is tracked separately, and this keeps both generators checking the same things until it happens.",
+            "description": "Scheme generation is on so every target -- including each of the eight test suites -- appears in the scheme selector and can be run or debugged on its own. Header-set verification is off because its three extra targets clutter a list the Xcode generator cannot group into folders; both Ninja presets still run it.",
             "cacheVariables": {
                 "CMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH": "NO",
-                "CMAKE_XCODE_ATTRIBUTE_GCC_WARN_64_TO_32_BIT_CONVERSION": "NO",
                 "CMAKE_XCODE_GENERATE_SCHEME": {
                     "type": "BOOL",
                     "value": "ON"

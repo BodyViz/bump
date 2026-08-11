@@ -81,6 +81,7 @@ foreach(suite IN LISTS BUMP_TEST_SUITES)
 
     target_compile_options(${suite} PRIVATE
         "$<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wall;-Wextra>"
+        "$<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wshorten-64-to-32;-Wimplicit-int-conversion>"
         "$<$<CXX_COMPILER_ID:MSVC>:/W4;/utf-8;/permissive-;/EHsc;/bigobj>"
         "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<BOOL:${BUMP_WIN32_USE_MP}>>:/MP>"
     )
@@ -130,14 +131,6 @@ endforeach()
 target_compile_options(bumpTextFileReaderTests PRIVATE
     "$<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-literal-conversion>"
     "$<$<CXX_COMPILER_ID:MSVC>:/wd4244>"
-)
-
-# CryptographicHashTest calls setData(data, strlen(data)) eight times, and
-# strlen returns size_t while the parameter is int. Same root cause as the
-# String.cpp sites and suppressed for the same reason; see the note in
-# src/CMakeLists.txt. Widening CryptographicHash::setData removes this.
-target_compile_options(bumpCryptographicHashTests PRIVATE
-    "$<$<CXX_COMPILER_ID:MSVC>:/wd4267>"
 )
 
 install(TARGETS ${BUMP_TEST_SUITES}

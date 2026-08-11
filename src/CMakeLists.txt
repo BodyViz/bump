@@ -256,15 +256,11 @@ target_link_libraries(bump
 
 target_compile_options(bump PRIVATE
     "$<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wall;-Wextra;-Wpedantic;-Wnon-virtual-dtor;-Woverloaded-virtual;-Wshadow>"
+    "$<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wshorten-64-to-32;-Wimplicit-int-conversion>"
     # /permissive- is implicit under /std:c++20 but stated for clarity.
     # _SCL_SECURE_NO_WARNINGS is deliberately absent: a no-op since VS2015 with
     # zero trigger sites here.
     "$<$<CXX_COMPILER_ID:MSVC>:/W4;/utf-8;/permissive-;/EHsc;/bigobj>"
-
-    # C4267 is size_t-to-int narrowing, which /W4 reports.
-    # They all come from bump's int-based length and index API --
-    # String::length() returns int -- and disappear when that API is widened.
-    "$<$<CXX_COMPILER_ID:MSVC>:/wd4267>"
     "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<BOOL:${BUMP_WIN32_USE_MP}>>:/MP>"
 )
 
