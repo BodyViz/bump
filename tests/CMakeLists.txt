@@ -124,10 +124,11 @@ endforeach()
 # TextFileReaderTest deliberately passes 2.999 to int parameters to verify that a
 # float argument truncates. The narrowing is the thing under test, so the
 # diagnostic is disabled rather than the tests rewritten. MSVC's equivalent is
-# C4244, which /W4 reports for the same five call sites.
+# C4244, which /W4 reports at the same five call sites.
 #
-# Per-suite executables let this apply to the one suite that needs it; with a
-# single binary it had to be set for every test translation unit.
+# Per-suite executables narrow this to the one suite that needs it -- a single
+# binary had to set it for every test translation unit -- but it is still target
+# scope, so it covers all tests in the file and not just those five lines.
 target_compile_options(bumpTextFileReaderTests PRIVATE
     "$<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-literal-conversion>"
     "$<$<CXX_COMPILER_ID:MSVC>:/wd4244>"
