@@ -160,6 +160,11 @@ unset(_bump_rpath)
 #                                  Subdirectories
 #==============================================================================
 
+# Where src/ writes the two generated public headers, Version.h and Export.h.
+# Stated here rather than in src/ because doc/ documents them too, and a
+# directory-scoped set() in one subdirectory is not visible in a sibling.
+set(BUMP_GENERATED_INCLUDE_DIR "${PROJECT_BINARY_DIR}/include")
+
 add_subdirectory(src)
 
 if(BUMP_BUILD_EXAMPLES)
@@ -172,7 +177,10 @@ if(BUMP_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
 endif()
-# TODO(phase 10): if(BUMP_BUILD_DOCS) add_subdirectory(doc) endif()
+
+if(BUMP_BUILD_DOCS AND Doxygen_FOUND)
+    add_subdirectory(doc)
+endif()
 
 #==============================================================================
 #                              Install and export
@@ -190,8 +198,8 @@ set(BUMP_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/Bump")
 # Windows counterpart to BUMP_RUNTIME_INSTALL_RPATH
 #------------------------------------------------------------------------------
 # Windows has no RPATH: an executable finds a DLL in its own directory, the
-# #system directories or PATH, and nowhere else. This installs DLLs next to
-# examples and tests so they don't fail at runtim.
+# system directories or PATH, and nowhere else. This installs DLLs next to the
+# examples and tests so they don't fail at runtime.
 #
 # install(FILES $<TARGET_FILE:bump>) rather than install(TARGETS bump RUNTIME):
 # the latter would also install the unmentioned artifact kinds to their default
@@ -267,6 +275,11 @@ if(PROJECT_IS_TOP_LEVEL)
     endif()
     message(STATUS "  Hide private syms  ${BUMP_HIDE_PRIVATE_SYMBOLS}")
     message(STATUS "  Examples / tests   ${BUMP_BUILD_EXAMPLES} / ${BUMP_BUILD_TESTS}")
+    if(BUMP_BUILD_DOCS AND Doxygen_FOUND)
+        message(STATUS "  Documentation      Doxygen ${DOXYGEN_VERSION}")
+    else()
+        message(STATUS "  Documentation      ${BUMP_BUILD_DOCS}")
+    endif()
     message(STATUS "  Install prefix     ${CMAKE_INSTALL_PREFIX}")
     message(STATUS "")
 endif()

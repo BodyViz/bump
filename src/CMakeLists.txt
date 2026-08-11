@@ -117,8 +117,6 @@ target_compile_options(bump PUBLIC
 # Generated headers
 #------------------------------------------------------------------------------
 
-set(BUMP_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/include")
-
 configure_file(
     bump/Version.h.in
     "${BUMP_GENERATED_INCLUDE_DIR}/bump/Version.h"

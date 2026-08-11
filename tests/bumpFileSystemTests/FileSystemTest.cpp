@@ -6,12 +6,12 @@
 //	Copyright (c) 2012 Christian Noon. All rights reserved.
 //
 
+#include "FileSystemTest.h"
+
 #include <bump/FileSystem.h>
 #include <bump/FileSystemError.h>
 
 #include <boost/foreach.hpp>
-
-#include "FileSystemTest.h"
 
 namespace bumpTest {
 

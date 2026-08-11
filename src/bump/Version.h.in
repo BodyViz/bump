@@ -11,11 +11,38 @@
 #include <bump/Export.h>
 #include <bump/String.h>
 
+/**
+ * @file
+ * Compile-time and runtime access to the library version.
+ *
+ * Generated from Version.h.in at configure time, so the macros below always
+ * agree with the version CMake was told about.
+ *
+ * This is the only public header carrying an \@file comment, and it needs one:
+ * doxygen documents global entities only when the file defining them is itself
+ * documented, and the four macros below are the library's only public entities
+ * outside a namespace. Everything else lives in bump:: and reaches the docs
+ * through its namespace page.
+ */
+
 // clang-format off
+
+/** The library's major version number as an integer literal, for `#if` tests. */
 #define BUMP_MAJOR_VERSION @PROJECT_VERSION_MAJOR@
+
+/** The library's minor version number as an integer literal. */
 #define BUMP_MINOR_VERSION @PROJECT_VERSION_MINOR@
+
+/** The library's patch version number as an integer literal. */
 #define BUMP_PATCH_VERSION @PROJECT_VERSION_PATCH@
+
+/**
+ * The shared library ABI version as an integer literal.
+ *
+ * Tracks the major version, and is what a shared bump's SONAME carries.
+ */
 #define BUMP_SO_VERSION    @BUMP_SO_VERSION@
+
 // clang-format on
 
 namespace bump {
