@@ -192,27 +192,69 @@ endif()
 # carry -- a consumer picks its own ABI and has to match its dependencies -- so
 # the test states them exactly as a real consumer would, and only when this build
 # stated them itself.
-set(_bump_consume_options "-DCMAKE_PREFIX_PATH=${BUMP_PACKAGE_STAGE}")
+set(_bump_abi_options "")
 foreach(var IN ITEMS CMAKE_OSX_ARCHITECTURES CMAKE_OSX_DEPLOYMENT_TARGET)
     if(${var})
-        list(APPEND _bump_consume_options "-D${var}=${${var}}")
+        list(APPEND _bump_abi_options "-D${var}=${${var}}")
     endif()
 endforeach()
+set(_bump_consume_options
+    "-DCMAKE_PREFIX_PATH=${BUMP_PACKAGE_STAGE}" ${_bump_abi_options})
 
+# --build-noclean because the clean step runs before the solution exists, which
+# under the Visual Studio generator reports MSB1009 on a first configure.
 add_test(NAME package-consume
     COMMAND "${CMAKE_CTEST_COMMAND}"
             --build-and-test "${CMAKE_CURRENT_SOURCE_DIR}/package-test"
                              "${CMAKE_CURRENT_BINARY_DIR}/package-consume/$<CONFIG>"
             ${_bump_consume_generator}
             --build-config $<CONFIG>
+            --build-noclean
             --build-options ${_bump_consume_options}
             --test-command "${CMAKE_CTEST_COMMAND}" -C $<CONFIG> --output-on-failure
 )
 
-# FIXTURES_REQUIRED pulls package-install in automatically, so `ctest -R
+# A multi-config consumer resolves the imported target for every configuration
+# it offers at generate time, not just the one it builds, so a package that ships
+# fewer configurations than the consumer offers has to resolve through
+# MAP_IMPORTED_CONFIG_* or the generate step fails outright.
+#
+# Its own single-config prefix rather than the shared stage, which accumulates
+# whatever configurations have been run and so would make this order-dependent.
+#
+# It builds the configuration the package does ship. Building one it does not is
+# not a thing any mapping can rescue -- there is no compatible artifact to link,
+# and under MSVC the linker says so with an _ITERATOR_DEBUG_LEVEL mismatch. The
+# mapping itself is asserted by package-test's per-configuration checks, which
+# read generate-time resolution and so cover configurations nothing builds.
+set(BUMP_FALLBACK_STAGE "${PROJECT_BINARY_DIR}/package-stage-single/$<CONFIG>")
+
+add_test(NAME package-install-single
+    COMMAND "${CMAKE_COMMAND}" --install "${PROJECT_BINARY_DIR}"
+            --prefix "${BUMP_FALLBACK_STAGE}" --config $<CONFIG>
+)
+
+# Every standard configuration, stated rather than left to the generator: Ninja
+# Multi-Config offers Debug, Release and RelWithDebInfo while Visual Studio adds
+# MinSizeRel, so a mapping that fails only for MinSizeRel is invisible here
+# otherwise. $<SEMICOLON> keeps the list one argument through add_test.
+add_test(NAME package-consume-fallback
+    COMMAND "${CMAKE_CTEST_COMMAND}"
+            --build-and-test "${CMAKE_CURRENT_SOURCE_DIR}/package-test"
+                             "${CMAKE_CURRENT_BINARY_DIR}/package-fallback/$<CONFIG>"
+            ${_bump_consume_generator}
+            --build-config $<CONFIG>
+            --build-noclean
+            --build-options "-DCMAKE_PREFIX_PATH=${BUMP_FALLBACK_STAGE}"
+                            "-DCMAKE_CONFIGURATION_TYPES=Debug$<SEMICOLON>Release$<SEMICOLON>RelWithDebInfo$<SEMICOLON>MinSizeRel"
+                            ${_bump_abi_options}
+            --test-command "${CMAKE_CTEST_COMMAND}" -C $<CONFIG> --output-on-failure
+)
+
+# FIXTURES_REQUIRED pulls the matching install in automatically, so `ctest -R
 # package-consume` stages its own prefix. RESOURCE_LOCK keeps two configurations
-# from installing into that prefix at once under ctest -j; they share it
-# deliberately, since Debug and Release accumulating there is part of what
+# from installing into one prefix at once under ctest -j; package-consume's is
+# shared deliberately, since Debug and Release accumulating there is part of what
 # package-test asserts.
 set_tests_properties(package-install PROPERTIES
     FIXTURES_SETUP BumpPackage
@@ -221,4 +263,10 @@ set_tests_properties(package-install PROPERTIES
 set_tests_properties(package-consume PROPERTIES
     FIXTURES_REQUIRED BumpPackage
     RESOURCE_LOCK BumpPackageStage
+)
+set_tests_properties(package-install-single PROPERTIES
+    FIXTURES_SETUP BumpPackageSingle
+)
+set_tests_properties(package-consume-fallback PROPERTIES
+    FIXTURES_REQUIRED BumpPackageSingle
 )

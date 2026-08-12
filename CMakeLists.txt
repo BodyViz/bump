@@ -65,17 +65,16 @@ if(PROJECT_IS_TOP_LEVEL)
     set(CMAKE_CXX_EXTENSIONS OFF)
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-    # Boost's imported targets provide no Debug mapping for MinSizeRel or
-    # RelWithDebInfo and fall back to the release archives. Harmless on macOS,
-    # potentially heap-corrupting under MSVC, so restrict the set.
     if(CMAKE_CONFIGURATION_TYPES)
-        set(CMAKE_CONFIGURATION_TYPES Debug Release)
         if(CMAKE_GENERATOR STREQUAL "Ninja Multi-Config")
             set(CMAKE_DEFAULT_BUILD_TYPE Debug)
         endif()
-    elseif(NOT CMAKE_BUILD_TYPE)
-        set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
-        set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release)
+    else()
+        if(NOT CMAKE_BUILD_TYPE)
+            set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+        endif()
+        set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+            Debug Release RelWithDebInfo MinSizeRel)
     endif()
 
     # Distinguishes Debug from Release artifacts so both can be installed into a
@@ -106,6 +105,12 @@ find_package(Boost ${BUMP_BOOST_VERSION} REQUIRED CONFIG
 
 if(BUMP_BUILD_TESTS)
     find_package(GTest REQUIRED CONFIG)
+    foreach(target IN ITEMS GTest::gtest GTest::gtest_main)
+        set_target_properties(${target} PROPERTIES
+            MAP_IMPORTED_CONFIG_RELWITHDEBINFO "RelWithDebInfo;Release;MinSizeRel;Debug"
+            MAP_IMPORTED_CONFIG_MINSIZEREL "MinSizeRel;Release;RelWithDebInfo;Debug"
+        )
+    endforeach()
 endif()
 
 if(BUMP_BUILD_DOCS)
