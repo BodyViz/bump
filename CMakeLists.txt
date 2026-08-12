@@ -130,24 +130,18 @@ endif()
 # one, an installed example aborts at startup with "no LC_RPATH's found", which
 # the build tree never reveals because CMake gives it an absolute RPATH there
 # and strips it on install.
-#
-# Both groups sit exactly one level below share/bump, so a single value serves
-# both. Derived with file(RELATIVE_PATH) from the real destinations rather than
-# spelled out as ../../.., so it stays correct when CMAKE_INSTALL_LIBDIR is
-# lib64 or the framework flavour redirects the library elsewhere.
 
 set(BUMP_RUNTIME_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/bump")
 
 if(BUMP_BUILD_FRAMEWORK)
-    set(_bump_library_dir "Frameworks")
+    set(_bump_library_dir "${CMAKE_INSTALL_PREFIX}/Frameworks")
 else()
-    set(_bump_library_dir "${CMAKE_INSTALL_LIBDIR}")
+    set(_bump_library_dir "${CMAKE_INSTALL_FULL_LIBDIR}")
 endif()
 
-# "group" stands in for examples or tests; only the depth matters here.
 file(RELATIVE_PATH _bump_rpath
-    "${CMAKE_INSTALL_PREFIX}/${BUMP_RUNTIME_INSTALL_DIR}/group"
-    "${CMAKE_INSTALL_PREFIX}/${_bump_library_dir}"
+    "${CMAKE_INSTALL_FULL_DATADIR}/bump/group"
+    "${_bump_library_dir}"
 )
 
 # @loader_path on Apple platforms, $ORIGIN for ELF. Windows resolves DLLs by

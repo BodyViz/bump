@@ -6,6 +6,9 @@
 # Everything an example needs -- include directories, C++20, the export define,
 # and Boost -- arrives through Bump::bump's usage requirements.
 
+set(CMAKE_INSTALL_RPATH "${BUMP_RUNTIME_INSTALL_RPATH}")
+set(CMAKE_FOLDER "bump/examples")
+
 set(BUMP_EXAMPLES
     bumpAutoTimer
     bumpEnvironment
@@ -23,13 +26,6 @@ set(BUMP_EXAMPLES
 foreach(example IN LISTS BUMP_EXAMPLES)
     add_executable(${example} "${example}/${example}.cpp")
     target_link_libraries(${example} PRIVATE Bump::bump)
-
-    # INSTALL_RPATH so the installed copy can still find a shared bump; see the
-    # Installed runtime paths section in the top-level CMakeLists.
-    set_target_properties(${example} PROPERTIES
-        FOLDER "bump/examples"
-        INSTALL_RPATH "${BUMP_RUNTIME_INSTALL_RPATH}"
-    )
 
     target_compile_options(${example} PRIVATE
         "$<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wall;-Wextra>"

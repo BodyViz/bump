@@ -9,6 +9,9 @@
 
 include(GoogleTest)
 
+set(CMAKE_INSTALL_RPATH "${BUMP_RUNTIME_INSTALL_RPATH}")
+set(CMAKE_FOLDER "bump/tests")
+
 set(BUMP_TEST_SUITES
     bumpCryptographicHashTests
     bumpEnvironmentTests
@@ -71,13 +74,6 @@ foreach(suite IN LISTS BUMP_TEST_SUITES)
     # FileInfoTest.h and FileSystemTest.h are included as "FileInfoTest.h" from
     # their sibling partner translation units.
     target_include_directories(${suite} PRIVATE "${suite}")
-
-    # INSTALL_RPATH so the installed copy can still find a shared bump; see the
-    # Installed runtime paths section in the top-level CMakeLists.
-    set_target_properties(${suite} PROPERTIES
-        FOLDER "bump/tests"
-        INSTALL_RPATH "${BUMP_RUNTIME_INSTALL_RPATH}"
-    )
 
     target_compile_options(${suite} PRIVATE
         "$<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wall;-Wextra>"
@@ -270,3 +266,17 @@ set_tests_properties(package-install-single PROPERTIES
 set_tests_properties(package-consume-fallback PROPERTIES
     FIXTURES_REQUIRED BumpPackageSingle
 )
+
+# An installed example, launched from somewhere other than its own directory.
+# The only thing that proves INSTALL_RPATH resolves: a shared build aborts here
+# with "no LC_RPATH's found" if it is wrong.
+# A static build still exercises the install and the launch.
+if(BUMP_BUILD_EXAMPLES)
+    add_test(NAME installed-example-runs
+        COMMAND "${BUMP_PACKAGE_STAGE}/${BUMP_RUNTIME_INSTALL_DIR}/examples/$<TARGET_FILE_NAME:bumpUuids>"
+    )
+    set_tests_properties(installed-example-runs PROPERTIES
+        FIXTURES_REQUIRED BumpPackage
+        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    )
+endif()
