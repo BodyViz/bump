@@ -226,12 +226,14 @@ install(EXPORT BumpTargets
     DESTINATION "${BUMP_INSTALL_CMAKEDIR}"
 )
 
-# Normalised to a literal ON/OFF so the generated config can never contain a
-# bare `set(Boost_USE_STATIC_LIBS )`, which would read as defined-but-false and
-# quietly flip a consumer to shared Boost.
-set(BUMP_BOOST_USE_STATIC_LIBS OFF)
-if(Boost_USE_STATIC_LIBS)
-    set(BUMP_BOOST_USE_STATIC_LIBS ON)
+# Use the Boost specified static/shared when possible.
+set(BUMP_BOOST_USE_STATIC_LIBS "")
+if(DEFINED Boost_USE_STATIC_LIBS)
+    if(Boost_USE_STATIC_LIBS)
+        set(BUMP_BOOST_USE_STATIC_LIBS ON)
+    else()
+        set(BUMP_BOOST_USE_STATIC_LIBS OFF)
+    endif()
 endif()
 list(JOIN BUMP_BOOST_COMPONENTS " " BUMP_BOOST_COMPONENTS_SPACED)
 

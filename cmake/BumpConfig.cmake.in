@@ -21,16 +21,29 @@ include(CMakeFindDependencyMacro)
 # an absolute path baked into a redistributable package is a convenience, not a
 # contract, so a consumer supplying CMAKE_PREFIX_PATH, BOOST_ROOT or Boost_DIR
 # has to win. Never FORCE, never overwrite.
+#
+# A config file runs in the caller's scope, so anything set here outlives the
+# find_dependency below and reaches the consumer's own later find_package(Boost)
+# calls -- and every subdirectory they add afterwards. Each hint records whether
+# it was the one to apply the value, and undoes it once Boost has been found.
+set(_bump_applied_boost_dir FALSE)
+set(_bump_applied_boost_static_libs FALSE)
+
 if(NOT DEFINED Boost_DIR AND NOT DEFINED BOOST_ROOT
         AND NOT DEFINED ENV{BOOST_ROOT} AND EXISTS "@Boost_DIR@")
     set(Boost_DIR "@Boost_DIR@")
+    set(_bump_applied_boost_dir TRUE)
 endif()
 
 # Recorded because the Boost this was built against may be static-only, in which
 # case find_dependency reports Boost as not found the moment a shared variant
-# appears alongside it.
-if(NOT DEFINED Boost_USE_STATIC_LIBS)
-    set(Boost_USE_STATIC_LIBS @BUMP_BOOST_USE_STATIC_LIBS@)
+# appears alongside it. Empty when the build expressed no preference, and then
+# deliberately left undefined: Boost accepts a single-variant install either way
+# while it is undefined, and rejects the static one the instant it reads OFF.
+set(_bump_boost_static_libs "@BUMP_BOOST_USE_STATIC_LIBS@")
+if(NOT _bump_boost_static_libs STREQUAL "" AND NOT DEFINED Boost_USE_STATIC_LIBS)
+    set(Boost_USE_STATIC_LIBS ${_bump_boost_static_libs})
+    set(_bump_applied_boost_static_libs TRUE)
 endif()
 
 # All six components, including the two bump links PRIVATE. CMake records a
@@ -40,6 +53,20 @@ endif()
 # final link genuinely needs them.
 find_dependency(Boost @BUMP_BOOST_VERSION@ CONFIG
                 COMPONENTS @BUMP_BOOST_COMPONENTS_SPACED@)
+
+# Removed outright, not restored to something: a normal Boost_DIR satisfies
+# find_package directly, so it never searches and never caches an entry of its
+# own. The consumer is left exactly as they were, which is the point -- their own
+# later find_package(Boost) resolves against their CMAKE_PREFIX_PATH, not ours.
+if(_bump_applied_boost_dir)
+    unset(Boost_DIR)
+endif()
+if(_bump_applied_boost_static_libs)
+    unset(Boost_USE_STATIC_LIBS)
+endif()
+unset(_bump_applied_boost_dir)
+unset(_bump_applied_boost_static_libs)
+unset(_bump_boost_static_libs)
 
 include("${CMAKE_CURRENT_LIST_DIR}/BumpTargets.cmake")
 

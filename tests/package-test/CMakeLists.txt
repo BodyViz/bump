@@ -65,3 +65,9 @@ message(STATUS "  Definitions      ${_bump_defines}")
 message(STATUS "  Features         ${_bump_features}")
 message(STATUS "  Boost_DIR        ${Boost_DIR}")
 message(STATUS "")
+
+# Registered so the outer build can run this through `ctest --build-and-test
+# ... --test-command ctest` without having to reconstruct the binary's path,
+# which differs between single- and multi-config generators.
+enable_testing()
+add_test(NAME smoke COMMAND bump_smoke)

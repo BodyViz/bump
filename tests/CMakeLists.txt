@@ -4,8 +4,8 @@
 # One executable per suite, named after its directory. Each is independently
 # buildable, runnable, debuggable and installed.
 #
-# gtest_discover_tests still exposes every TEST_F individually on top of that, so
-# `ctest -R` and `ctest -j` keep working at single-test granularity.
+# gtest_discover_tests still exposes every TEST_F individually on top of that,
+# so `ctest -R` and `ctest -j` keep working at single-test granularity.
 
 include(GoogleTest)
 
@@ -121,8 +121,8 @@ foreach(suite IN LISTS BUMP_TEST_SUITES)
     )
 endforeach()
 
-# TextFileReaderTest deliberately passes 2.999 to int parameters to verify that a
-# float argument truncates. The narrowing is the thing under test, so the
+# TextFileReaderTest deliberately passes 2.999 to int parameters to verify that
+# a float argument truncates. The narrowing is the thing under test, so the
 # diagnostic is disabled rather than the tests rewritten. MSVC's equivalent is
 # C4244, which /W4 reports at the same five call sites.
 #
@@ -138,6 +138,87 @@ install(TARGETS ${BUMP_TEST_SUITES}
     RUNTIME DESTINATION "${BUMP_RUNTIME_INSTALL_DIR}/tests"
 )
 
-# package-test/ is deliberately not added here. It is a standalone project that
-# consumes an installed Bump through find_package, so it cannot be configured
-# from inside the build that produces that install. See its CMakeLists.txt.
+#==============================================================================
+#                              Installed package
+#==============================================================================
+# package-test/ consumes an *installed* Bump through find_package, so it cannot
+# be an add_subdirectory of the build that produces that install -- but it can
+# be driven. A fixture stages an install inside the build tree, then ctest
+# --build-and-test configures, builds and runs package-test against it.
+#
+# Nothing but the stage prefix is handed to the consumer. Every usage
+# requirement, including where Boost lives, has to arrive through the package.
+
+set(BUMP_PACKAGE_STAGE "${PROJECT_BINARY_DIR}/package-stage")
+
+# Empty when the build expressed no linkage preference, which is a value the
+# generated config has to be able to represent. Derived from the same input the
+# root CMakeLists reads rather than from what it recorded, so the test still
+# checks the mapping instead of restating it.
+if(NOT DEFINED Boost_USE_STATIC_LIBS)
+    set(_bump_expect_boost_static "")
+elseif(Boost_USE_STATIC_LIBS)
+    set(_bump_expect_boost_static ON)
+else()
+    set(_bump_expect_boost_static OFF)
+endif()
+
+add_test(NAME package-config-boost-linkage
+    COMMAND "${CMAKE_COMMAND}"
+            "-DCONFIG_FILE=${PROJECT_BINARY_DIR}/BumpConfig.cmake"
+            "-DEXPECTED=${_bump_expect_boost_static}"
+            -P "${CMAKE_CURRENT_SOURCE_DIR}/CheckPackageConfig.cmake"
+)
+
+add_test(NAME package-install
+    COMMAND "${CMAKE_COMMAND}" --install "${PROJECT_BINARY_DIR}"
+            --prefix "${BUMP_PACKAGE_STAGE}" --config $<CONFIG>
+)
+
+# The consumer has to be generated the same way bump was, or an x64 package gets
+# consumed by a Win32 build and the failure reads as a link error.
+set(_bump_consume_generator --build-generator "${CMAKE_GENERATOR}")
+if(CMAKE_GENERATOR_PLATFORM)
+    list(APPEND _bump_consume_generator
+         --build-generator-platform "${CMAKE_GENERATOR_PLATFORM}")
+endif()
+if(CMAKE_GENERATOR_TOOLSET)
+    list(APPEND _bump_consume_generator
+         --build-generator-toolset "${CMAKE_GENERATOR_TOOLSET}")
+endif()
+
+# The stage prefix is the only thing about *bump* the consumer is told. The
+# architecture and deployment target are not usage requirements a package should
+# carry -- a consumer picks its own ABI and has to match its dependencies -- so
+# the test states them exactly as a real consumer would, and only when this build
+# stated them itself.
+set(_bump_consume_options "-DCMAKE_PREFIX_PATH=${BUMP_PACKAGE_STAGE}")
+foreach(var IN ITEMS CMAKE_OSX_ARCHITECTURES CMAKE_OSX_DEPLOYMENT_TARGET)
+    if(${var})
+        list(APPEND _bump_consume_options "-D${var}=${${var}}")
+    endif()
+endforeach()
+
+add_test(NAME package-consume
+    COMMAND "${CMAKE_CTEST_COMMAND}"
+            --build-and-test "${CMAKE_CURRENT_SOURCE_DIR}/package-test"
+                             "${CMAKE_CURRENT_BINARY_DIR}/package-consume/$<CONFIG>"
+            ${_bump_consume_generator}
+            --build-config $<CONFIG>
+            --build-options ${_bump_consume_options}
+            --test-command "${CMAKE_CTEST_COMMAND}" -C $<CONFIG> --output-on-failure
+)
+
+# FIXTURES_REQUIRED pulls package-install in automatically, so `ctest -R
+# package-consume` stages its own prefix. RESOURCE_LOCK keeps two configurations
+# from installing into that prefix at once under ctest -j; they share it
+# deliberately, since Debug and Release accumulating there is part of what
+# package-test asserts.
+set_tests_properties(package-install PROPERTIES
+    FIXTURES_SETUP BumpPackage
+    RESOURCE_LOCK BumpPackageStage
+)
+set_tests_properties(package-consume PROPERTIES
+    FIXTURES_REQUIRED BumpPackage
+    RESOURCE_LOCK BumpPackageStage
+)
