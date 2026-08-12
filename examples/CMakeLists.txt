@@ -40,16 +40,21 @@ foreach(example IN LISTS BUMP_EXAMPLES)
         "$<$<PLATFORM_ID:Windows>:_CRT_SECURE_NO_WARNINGS>"
     )
 
-    # Put the DLL next to the executable on Windows so an example can be run
-    # straight from the build tree or a debugger. Expands to nothing elsewhere,
-    # so this needs no if(WIN32) guard.
-    add_custom_command(TARGET ${example} POST_BUILD
-        COMMAND "${CMAKE_COMMAND}" -E copy -t
-                "$<TARGET_FILE_DIR:${example}>" "$<TARGET_RUNTIME_DLLS:${example}>"
-        COMMAND_EXPAND_LISTS
-    )
 endforeach()
 
 install(TARGETS ${BUMP_EXAMPLES}
     RUNTIME DESTINATION "${BUMP_RUNTIME_INSTALL_DIR}/examples"
 )
+
+# Windows has no RPATH, so the DLLs have to sit beside the executables. The union
+# over the whole group, not one representative: an example that grows a
+# dependency the others lack is then still covered.
+if(WIN32 AND BUILD_SHARED_LIBS)
+    set(_bump_example_dlls "")
+    foreach(example IN LISTS BUMP_EXAMPLES)
+        list(APPEND _bump_example_dlls "$<TARGET_RUNTIME_DLLS:${example}>")
+    endforeach()
+
+    install(FILES "$<REMOVE_DUPLICATES:${_bump_example_dlls}>"
+        DESTINATION "${BUMP_RUNTIME_INSTALL_DIR}/examples")
+endif()

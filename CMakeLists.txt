@@ -178,6 +178,48 @@ if(BUMP_BUILD_DOCS AND Doxygen_FOUND)
 endif()
 
 #==============================================================================
+#                              Windows runtime DLLs
+#==============================================================================
+# Windows has no RPATH: an executable finds a DLL in its own directory, the
+# system directories or PATH, and nowhere else, so dependencies are copied
+# rather than pointed at.
+#
+# Every executable shares one output directory, so one step serves all of them.
+# Per-target POST_BUILD copies wrote the same files to that one directory once
+# per target, which under a parallel MSBuild is 19 writers racing for the same
+# destination. One step cannot race with itself.
+#
+# Not install(RUNTIME_DEPENDENCY_SET) for the install-tree half either: it
+# resolves through file(GET_RUNTIME_DEPENDENCIES), which needs CMAKE_OBJDUMP,
+# empty under the Visual Studio generator, where the install then fails and
+# copies nothing.
+
+get_property(BUMP_RUNTIME_TARGETS GLOBAL PROPERTY BUMP_RUNTIME_TARGETS)
+
+if(WIN32 AND BUILD_SHARED_LIBS AND BUMP_RUNTIME_TARGETS)
+    set(_bump_runtime_dlls "")
+    foreach(target IN LISTS BUMP_RUNTIME_TARGETS)
+        list(APPEND _bump_runtime_dlls "$<TARGET_RUNTIME_DLLS:${target}>")
+    endforeach()
+
+    add_custom_target(bump_stage_runtime_dlls ALL
+        COMMAND "${CMAKE_COMMAND}" -E copy -t "$<TARGET_FILE_DIR:bump>"
+                "$<REMOVE_DUPLICATES:${_bump_runtime_dlls}>"
+        COMMAND_EXPAND_LISTS
+        COMMENT "Staging runtime DLLs"
+    )
+    add_dependencies(bump_stage_runtime_dlls bump)
+
+    # So building one example or suite still stages what it needs, which the
+    # per-target copies did for free.
+    foreach(target IN LISTS BUMP_RUNTIME_TARGETS)
+        add_dependencies(${target} bump_stage_runtime_dlls)
+    endforeach()
+
+    unset(_bump_runtime_dlls)
+endif()
+
+#==============================================================================
 #                              Install and export
 #==============================================================================
 # Produces the BumpConfig package.
@@ -188,28 +230,6 @@ endif()
 include(CMakePackageConfigHelpers)
 
 set(BUMP_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/Bump")
-
-#------------------------------------------------------------------------------
-# Windows counterpart to BUMP_RUNTIME_INSTALL_RPATH
-#------------------------------------------------------------------------------
-# Windows has no RPATH: an executable finds a DLL in its own directory, the
-# system directories or PATH, and nowhere else, so dependencies are copied
-# rather than pointed at. One target stands in for its group; every target in a
-# group has the same closure.
-#
-# Not install(RUNTIME_DEPENDENCY_SET) -- it resolves at install time through
-# file(GET_RUNTIME_DEPENDENCIES), which needs CMAKE_OBJDUMP, empty under the
-# Visual Studio generator, where the install then fails and copies nothing.
-if(WIN32 AND BUILD_SHARED_LIBS)
-    if(BUMP_BUILD_EXAMPLES)
-        install(FILES "$<TARGET_RUNTIME_DLLS:bumpUuids>"
-            DESTINATION "${BUMP_RUNTIME_INSTALL_DIR}/examples")
-    endif()
-    if(BUMP_BUILD_TESTS)
-        install(FILES "$<TARGET_RUNTIME_DLLS:bumpUuidTests>"
-            DESTINATION "${BUMP_RUNTIME_INSTALL_DIR}/tests")
-    endif()
-endif()
 
 # BumpTargets.cmake globs for its per-configuration BumpTargets-<config>.cmake
 # siblings, so installing Debug and then Release into one prefix accumulates

@@ -82,15 +82,6 @@ foreach(suite IN LISTS BUMP_TEST_SUITES)
         "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<BOOL:${BUMP_WIN32_USE_MP}>>:/MP>"
     )
 
-    # Put bump.dll beside the executable on Windows so a suite can be launched
-    # straight from the build tree or a debugger. Expands to nothing on non-DLL
-    # platforms, so this needs no if(WIN32) guard.
-    add_custom_command(TARGET ${suite} POST_BUILD
-        COMMAND "${CMAKE_COMMAND}" -E copy -t
-                "$<TARGET_FILE_DIR:${suite}>" "$<TARGET_RUNTIME_DLLS:${suite}>"
-        COMMAND_EXPAND_LISTS
-    )
-
     #--------------------------------------------------------------------------
     # CTest registration
     #--------------------------------------------------------------------------
@@ -133,6 +124,19 @@ target_compile_options(bumpTextFileReaderTests PRIVATE
 install(TARGETS ${BUMP_TEST_SUITES}
     RUNTIME DESTINATION "${BUMP_RUNTIME_INSTALL_DIR}/tests"
 )
+
+# Windows has no RPATH, so the DLLs have to sit beside the executables. The union
+# over the whole group, not one representative: a suite that grows a dependency
+# the others lack is then still covered.
+if(WIN32 AND BUILD_SHARED_LIBS)
+    set(_bump_suite_dlls "")
+    foreach(suite IN LISTS BUMP_TEST_SUITES)
+        list(APPEND _bump_suite_dlls "$<TARGET_RUNTIME_DLLS:${suite}>")
+    endforeach()
+
+    install(FILES "$<REMOVE_DUPLICATES:${_bump_suite_dlls}>"
+        DESTINATION "${BUMP_RUNTIME_INSTALL_DIR}/tests")
+endif()
 
 #==============================================================================
 #                          Exported symbol policy
