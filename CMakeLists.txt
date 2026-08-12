@@ -121,6 +121,12 @@ endif()
 # the build tree never reveals because CMake gives it an absolute RPATH there
 # and strips it on install.
 
+# INSTALL_RPATH replaces the linker's search path rather than adding to it, so
+# installed binaries lose every directory they linked against -- a shared Boost,
+# in practice. In-project directories are excluded; the rest go in absolute,
+# which makes an install local rather than relocatable.
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
+
 set(BUMP_RUNTIME_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/bump")
 
 if(BUMP_BUILD_FRAMEWORK)
@@ -187,20 +193,20 @@ set(BUMP_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/Bump")
 # Windows counterpart to BUMP_RUNTIME_INSTALL_RPATH
 #------------------------------------------------------------------------------
 # Windows has no RPATH: an executable finds a DLL in its own directory, the
-# system directories or PATH, and nowhere else. This installs DLLs next to the
-# examples and tests so they don't fail at runtime.
+# system directories or PATH, and nowhere else, so dependencies are copied
+# rather than pointed at. One target stands in for its group; every target in a
+# group has the same closure.
 #
-# install(FILES $<TARGET_FILE:bump>) rather than install(TARGETS bump RUNTIME):
-# the latter would also install the unmentioned artifact kinds to their default
-# destinations, re-installing the import library. $<TARGET_FILE> on a Windows
-# shared library is the DLL; the import library is $<TARGET_LINKER_FILE>.
+# Not install(RUNTIME_DEPENDENCY_SET) -- it resolves at install time through
+# file(GET_RUNTIME_DEPENDENCIES), which needs CMAKE_OBJDUMP, empty under the
+# Visual Studio generator, where the install then fails and copies nothing.
 if(WIN32 AND BUILD_SHARED_LIBS)
     if(BUMP_BUILD_EXAMPLES)
-        install(FILES "$<TARGET_FILE:bump>"
+        install(FILES "$<TARGET_RUNTIME_DLLS:bumpUuids>"
             DESTINATION "${BUMP_RUNTIME_INSTALL_DIR}/examples")
     endif()
     if(BUMP_BUILD_TESTS)
-        install(FILES "$<TARGET_FILE:bump>"
+        install(FILES "$<TARGET_RUNTIME_DLLS:bumpUuidTests>"
             DESTINATION "${BUMP_RUNTIME_INSTALL_DIR}/tests")
     endif()
 endif()
