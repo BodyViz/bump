@@ -42,6 +42,22 @@ foreach(config RELWITHDEBINFO MINSIZEREL)
     endif()
 endforeach()
 
+# BUMP_STATIC_DEFINE is what makes Export.h take its static branch. It is PUBLIC,
+# so it reaches every consumer through the exported target, and it has to agree
+# with what was actually built: a static package without it leaves BUMP_EXPORT as
+# __declspec(dllimport) under MSVC, and the consumer fails to link with
+# unresolved __imp_ externals against an archive.
+if(_type STREQUAL "STATIC_LIBRARY" AND NOT _static_define STREQUAL "1")
+    message(FATAL_ERROR
+        "Bump::bump is a STATIC_LIBRARY but the package does not define "
+        "BUMP_STATIC_DEFINE.")
+elseif(_type STREQUAL "SHARED_LIBRARY" AND _static_define STREQUAL "1")
+    message(FATAL_ERROR
+        "Bump::bump is a SHARED_LIBRARY but the package defines "
+        "BUMP_STATIC_DEFINE, which suppresses the import attributes consumers "
+        "need.")
+endif()
+
 # Only meaningful where the consumer's configuration is one the package does not
 # ship; an exact match needs no mapping and is always right.
 string(TOUPPER "${_config}" _config_upper)

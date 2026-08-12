@@ -76,12 +76,12 @@ you would rather type `cmake --build --preset ninja-release`.
 
 | Option | Default | Effect |
 |---|---|---|
-| `BUMP_BUILD_SHARED_LIBS` | `OFF` | Build a shared library instead of a static one |
+| `BUILD_SHARED_LIBS` | `OFF` | Build a shared library instead of a static one. CMake's standard control. |
 | `BUMP_BUILD_EXAMPLES` | `ON` | Build the example applications |
 | `BUMP_BUILD_TESTS` | `OFF` | Build the test suites and register CTest tests |
 | `BUMP_BUILD_DOCS` | `OFF` | Build the Doxygen reference documentation |
 | `BUMP_HIDE_PRIVATE_SYMBOLS` | `ON` | Export only `BUMP_EXPORT`-annotated symbols |
-| `BUMP_BUILD_FRAMEWORK` | `OFF` | macOS only; requires `BUMP_BUILD_SHARED_LIBS`. Builds `bump.framework` |
+| `BUMP_BUILD_FRAMEWORK` | `OFF` | macOS only; requires `BUILD_SHARED_LIBS`. Builds `bump.framework` |
 | `BUMP_WIN32_USE_MP` | `ON` | MSVC only; compile with `/MP` |
 
 Static, shared and framework are one-at-a-time — Bump is a single target whose type is chosen at

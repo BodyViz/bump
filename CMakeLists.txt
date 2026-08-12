@@ -22,19 +22,9 @@ set(CMAKE_LINK_LIBRARIES_ONLY_TARGETS ON)
 #                                    Options
 #==============================================================================
 
-if(DEFINED BUILD_SHARED_LIBS)
-    set(_bump_shared_default ${BUILD_SHARED_LIBS})
-else()
-    set(_bump_shared_default OFF)
-endif()
-option(BUMP_BUILD_SHARED_LIBS
-    "Build Bump as a shared library instead of static" ${_bump_shared_default})
-unset(_bump_shared_default)
-
-if(BUMP_BUILD_SHARED_LIBS)
-    set(BUMP_LIBRARY_TYPE SHARED)
-else()
-    set(BUMP_LIBRARY_TYPE STATIC)
+if(PROJECT_IS_TOP_LEVEL)
+    option(BUILD_SHARED_LIBS
+        "Build Bump as a shared library instead of static" OFF)
 endif()
 
 option(BUMP_BUILD_EXAMPLES "Build the Bump example applications" ON)
@@ -51,10 +41,10 @@ cmake_dependent_option(BUMP_WIN32_USE_MP
     "Compile with /MP for parallel builds" ON "MSVC" OFF)
 
 # A framework is a shared bundle.
-if(BUMP_BUILD_FRAMEWORK AND NOT BUMP_BUILD_SHARED_LIBS)
+if(BUMP_BUILD_FRAMEWORK AND NOT BUILD_SHARED_LIBS)
     message(FATAL_ERROR
         "BUMP_BUILD_FRAMEWORK requires a shared build. Enable "
-        "BUMP_BUILD_SHARED_LIBS as well, or turn BUMP_BUILD_FRAMEWORK off.")
+        "BUILD_SHARED_LIBS as well, or turn BUMP_BUILD_FRAMEWORK off.")
 endif()
 
 #==============================================================================
@@ -204,7 +194,7 @@ set(BUMP_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/Bump")
 # the latter would also install the unmentioned artifact kinds to their default
 # destinations, re-installing the import library. $<TARGET_FILE> on a Windows
 # shared library is the DLL; the import library is $<TARGET_LINKER_FILE>.
-if(WIN32 AND BUMP_BUILD_SHARED_LIBS)
+if(WIN32 AND BUILD_SHARED_LIBS)
     if(BUMP_BUILD_EXAMPLES)
         install(FILES "$<TARGET_FILE:bump>"
             DESTINATION "${BUMP_RUNTIME_INSTALL_DIR}/examples")
@@ -268,7 +258,8 @@ if(PROJECT_IS_TOP_LEVEL)
     else()
         message(STATUS "  Build type         ${CMAKE_BUILD_TYPE}")
     endif()
-    message(STATUS "  Library type       ${BUMP_LIBRARY_TYPE}")
+    get_target_property(_bump_type bump TYPE)
+    message(STATUS "  Library type       ${_bump_type}")
     if(APPLE)
         message(STATUS "  Framework          ${BUMP_BUILD_FRAMEWORK}")
         message(STATUS "  Architectures      ${CMAKE_OSX_ARCHITECTURES}")

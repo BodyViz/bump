@@ -71,7 +71,7 @@
             "inherits": "macos-base",
             "generator": "Ninja Multi-Config",
             "cacheVariables": {
-                "BUMP_BUILD_SHARED_LIBS": {
+                "BUILD_SHARED_LIBS": {
                     "type": "BOOL",
                     "value": "ON"
                 }
@@ -84,7 +84,7 @@
             "generator": "Ninja Multi-Config",
             "description": "Header-set verification is off here because it only inspects FILE_SET HEADERS, and the framework flavour must use PUBLIC_HEADER instead. The static and shared presets cover that check.",
             "cacheVariables": {
-                "BUMP_BUILD_SHARED_LIBS": {
+                "BUILD_SHARED_LIBS": {
                     "type": "BOOL",
                     "value": "ON"
                 },
@@ -130,7 +130,7 @@
             "generator": "Visual Studio 17 2022",
             "architecture": "x64",
             "cacheVariables": {
-                "BUMP_BUILD_SHARED_LIBS": {
+                "BUILD_SHARED_LIBS": {
                     "type": "BOOL",
                     "value": "ON"
                 }

@@ -77,6 +77,8 @@ selected=$<TARGET_FILE:Bump::bump>
 release=$<TARGET_PROPERTY:Bump::bump,IMPORTED_LOCATION_RELEASE>
 map_relwithdebinfo=$<TARGET_PROPERTY:Bump::bump,MAP_IMPORTED_CONFIG_RELWITHDEBINFO>
 map_minsizerel=$<TARGET_PROPERTY:Bump::bump,MAP_IMPORTED_CONFIG_MINSIZEREL>
+type=$<TARGET_PROPERTY:Bump::bump,TYPE>
+static_define=$<IN_LIST:BUMP_STATIC_DEFINE,$<TARGET_PROPERTY:Bump::bump,INTERFACE_COMPILE_DEFINITIONS>>
 ")
 
 # Registered so the outer build can run these through `ctest --build-and-test

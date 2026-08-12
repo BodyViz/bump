@@ -91,10 +91,8 @@ set(BUMP_PUBLIC_HEADERS
 #==============================================================================
 #                                 The bump target
 #==============================================================================
-# Type comes from BUMP_BUILD_SHARED_LIBS via BUMP_LIBRARY_TYPE. Only one flavour
-# is built per configure; each installs into its own prefix.
 
-add_library(bump ${BUMP_LIBRARY_TYPE} ${BUMP_SOURCES} $<TARGET_OBJECTS:bump_smallsha1>)
+add_library(bump ${BUMP_SOURCES} $<TARGET_OBJECTS:bump_smallsha1>)
 add_library(Bump::bump ALIAS bump)
 
 # Exported as INTERFACE_COMPILE_FEATURES, so consumers are raised to C++20
@@ -196,10 +194,9 @@ endif()
 # Compile definitions
 #------------------------------------------------------------------------------
 
-if(NOT BUMP_BUILD_SHARED_LIBS)
-    # PUBLIC so consumers inherit it through the exported target.
-    target_compile_definitions(bump PUBLIC BUMP_STATIC_DEFINE)
-endif()
+target_compile_definitions(bump PUBLIC
+    "$<$<STREQUAL:$<TARGET_PROPERTY:bump,TYPE>,STATIC_LIBRARY>:BUMP_STATIC_DEFINE>"
+)
 
 target_compile_definitions(bump
     PUBLIC
