@@ -274,12 +274,19 @@ set_target_properties(bump PROPERTIES
     FOLDER "bump/libraries"
 )
 
-if(BUMP_HIDE_PRIVATE_SYMBOLS)
-    set_target_properties(bump PROPERTIES
+# Shared only. BUMP_EXPORT expands to nothing under BUMP_STATIC_DEFINE, so there
+# is nothing left annotated for hidden visibility to spare: it hides every symbol
+# in the archive, and a shared library that links it re-exports none of them.
+get_target_property(_bump_type bump TYPE)
+
+if(BUMP_HIDE_PRIVATE_SYMBOLS AND _bump_type STREQUAL "SHARED_LIBRARY")
+    set_target_properties(bump bump_smallsha1 PROPERTIES
         CXX_VISIBILITY_PRESET hidden
         VISIBILITY_INLINES_HIDDEN ON
     )
 endif()
+
+unset(_bump_type)
 
 if(BUMP_BUILD_FRAMEWORK)
     # CMAKE_DEBUG_POSTFIX does not apply to frameworks; this is the mechanism

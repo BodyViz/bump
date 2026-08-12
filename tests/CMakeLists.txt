@@ -135,6 +135,24 @@ install(TARGETS ${BUMP_TEST_SUITES}
 )
 
 #==============================================================================
+#                          Exported symbol policy
+#==============================================================================
+# Apple only: MSVC exports through __declspec, where CXX_VISIBILITY_PRESET does
+# nothing, so there is no policy to assert. The check reads Mach-O symbol
+# classes, which is also why it is not written against ELF here.
+
+if(APPLE AND BUMP_HIDE_PRIVATE_SYMBOLS)
+    get_target_property(_bump_target_type bump TYPE)
+    add_test(NAME symbol-visibility
+        COMMAND "${CMAKE_COMMAND}"
+                "-DLIBRARY=$<TARGET_FILE:bump>"
+                "-DTYPE=${_bump_target_type}"
+                -P "${CMAKE_CURRENT_SOURCE_DIR}/CheckSymbolVisibility.cmake"
+    )
+    unset(_bump_target_type)
+endif()
+
+#==============================================================================
 #                              Installed package
 #==============================================================================
 # package-test/ consumes an *installed* Bump through find_package, so it cannot
