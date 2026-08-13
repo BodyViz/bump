@@ -736,7 +736,7 @@ String& String::replace(const String& before, const String& after,
     // Replace all occurrences of before with after
     size_t found = 0;
     while (found != std::string::npos) {
-        found = this_copy.find(before, found);
+        found = this_copy.find(before_copy, found);
         if (found != std::string::npos) {
             remove(static_cast<int>(found), before.length());
             this_copy.remove(static_cast<int>(found), before.length());

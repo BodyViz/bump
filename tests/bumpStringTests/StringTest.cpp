@@ -1549,6 +1549,28 @@ TEST_F(StringTest, testReplaceBeforeAfterString) {
     EXPECT_STREQ("I Love To Program", str.c_str());
     str.replace(before, after, bump::String::NotCaseSensitive);
     EXPECT_STREQ("I Love Program", str.c_str());
+
+    // The before string carries the case, not just the string being searched,
+    // so an upper case before must match a lower case occurrence too
+    str = "Hello World";
+    before = "WORLD";
+    after = "Earth";
+    str.replace(before, after, bump::String::NotCaseSensitive);
+    EXPECT_STREQ("Hello Earth", str.c_str());
+
+    // Mixed case on both sides, every occurrence
+    str = "aAaA";
+    before = "A";
+    after = "b";
+    str.replace(before, after, bump::String::NotCaseSensitive);
+    EXPECT_STREQ("bbbb", str.c_str());
+
+    // The case sensitive path must still refuse the same replacement
+    str = "Hello World";
+    before = "WORLD";
+    after = "Earth";
+    str.replace(before, after);
+    EXPECT_STREQ("Hello World", str.c_str());
 }
 
 TEST_F(StringTest, testReplaceBeforeAfterCString) {
@@ -1597,6 +1619,11 @@ TEST_F(StringTest, testReplaceBeforeAfterCString) {
     EXPECT_STREQ("I Love To Program", str.c_str());
     str.replace(before, after, bump::String::NotCaseSensitive);
     EXPECT_STREQ("I Love Program", str.c_str());
+
+    // The before string carries the case, not just the string being searched
+    str = "Hello World";
+    str.replace("WORLD", "Earth", bump::String::NotCaseSensitive);
+    EXPECT_STREQ("Hello Earth", str.c_str());
 }
 
 TEST_F(StringTest, testRight) {
