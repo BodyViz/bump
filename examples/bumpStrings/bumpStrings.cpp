@@ -9,6 +9,7 @@
 #include <bump/String.h>
 
 #include <iomanip>
+#include <iostream>
 
 // Forward declarations
 void creationAndCasting();

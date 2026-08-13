@@ -9,6 +9,8 @@
 #include <bump/String.h>
 #include <bump/Uuid.h>
 
+#include <iostream>
+
 /**
  * This example demonstrates how to use the bump::Uuid class.
  *

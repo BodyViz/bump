@@ -8,6 +8,8 @@
 
 #include <bump/NotificationCenter.h>
 
+#include <iostream>
+
 /**
  * The Renderer class is a helper class to help test the NotificationCenter.
  */

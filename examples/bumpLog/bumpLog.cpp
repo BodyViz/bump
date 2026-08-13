@@ -9,6 +9,7 @@
 #include <bump/Log.h>
 
 #include <boost/thread.hpp>
+#include <iostream>
 
 // Custom prefixes for logging
 #define customPrefix "[bump] "

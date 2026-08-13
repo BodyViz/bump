@@ -15,9 +15,7 @@
 #include <boost/any.hpp>
 #include <boost/bind/bind.hpp>
 #include <boost/function.hpp>
-#include <boost/thread.hpp>
-
-using namespace boost::placeholders;
+#include <boost/thread/shared_mutex.hpp>
 
 // MSVC C4251: observers hold boost::function members; NotificationCenter holds
 // a boost::shared_mutex. Scoped to this header so the suppression never reaches

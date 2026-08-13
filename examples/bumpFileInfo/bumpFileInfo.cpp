@@ -10,6 +10,7 @@
 #include <bump/FileSystem.h>
 
 #include <boost/config.hpp>
+#include <iostream>
 
 /**
  * Prints out all the information about the bump::FileInfo object.

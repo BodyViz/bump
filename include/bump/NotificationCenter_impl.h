@@ -49,7 +49,8 @@ inline ObjectObserver<T1, T2>::ObjectObserver(T1* observer,
                                               void (T1::*functionPointer)(T2),
                                               const String& notificationName) {
     _observer = observer;
-    _functionPointerWithObject = boost::bind(functionPointer, observer, _1);
+    _functionPointerWithObject =
+        boost::bind(functionPointer, observer, boost::placeholders::_1);
     _functionPointerWithPointer.clear();
     _notificationName = notificationName;
     _observerType = OBJECT_OBSERVER;
@@ -60,7 +61,8 @@ inline ObjectObserver<T1, T2>::ObjectObserver(
     T1* observer, void (T1::*functionPointer)(const T2&),
     const String& notificationName) {
     _observer = observer;
-    _functionPointerWithObject = boost::bind(functionPointer, observer, _1);
+    _functionPointerWithObject =
+        boost::bind(functionPointer, observer, boost::placeholders::_1);
     _functionPointerWithPointer.clear();
     _notificationName = notificationName;
     _observerType = OBJECT_OBSERVER;
@@ -72,7 +74,8 @@ inline ObjectObserver<T1, T2>::ObjectObserver(T1* observer,
                                               const String& notificationName) {
     _observer = observer;
     _functionPointerWithObject.clear();
-    _functionPointerWithPointer = boost::bind(functionPointer, observer, _1);
+    _functionPointerWithPointer =
+        boost::bind(functionPointer, observer, boost::placeholders::_1);
     _notificationName = notificationName;
     _observerType = OBJECT_OBSERVER;
 }
@@ -83,7 +86,8 @@ inline ObjectObserver<T1, T2>::ObjectObserver(
     const String& notificationName) {
     _observer = observer;
     _functionPointerWithObject.clear();
-    _functionPointerWithPointer = boost::bind(functionPointer, observer, _1);
+    _functionPointerWithPointer =
+        boost::bind(functionPointer, observer, boost::placeholders::_1);
     _notificationName = notificationName;
     _observerType = OBJECT_OBSERVER;
 }

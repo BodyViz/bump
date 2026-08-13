@@ -10,6 +10,8 @@
 #include <bump/OutOfRangeError.h>
 #include <bump/TypeCastError.h>
 
+#include <iostream>
+
 void valueMustBePositive(int value) {
     if (value < 0) {
         std::cout << "valueMustBePositive FAILED with a value of " << value

@@ -11,6 +11,7 @@
 #include <bump/FileSystem.h>
 
 #include <boost/foreach.hpp>
+#include <iostream>
 
 /**
  * Demonstrates how to use the join path methods.

@@ -10,7 +10,6 @@
 
 #include <bump/Export.h>
 
-#include <iostream>
 #include <set>
 #include <string>
 #include <vector>

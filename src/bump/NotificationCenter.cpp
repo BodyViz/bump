@@ -9,6 +9,8 @@
 #include <bump/NotificationCenter.h>
 
 #include <boost/foreach.hpp>
+#include <boost/thread/lock_types.hpp>
+#include <boost/thread/mutex.hpp>
 
 namespace bump {
 

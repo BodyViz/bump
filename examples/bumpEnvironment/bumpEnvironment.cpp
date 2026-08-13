@@ -9,6 +9,8 @@
 #include <bump/Environment.h>
 #include <bump/String.h>
 
+#include <iostream>
+
 /**
  * This example demonstrates how to use the bump::Environment class.
  *
