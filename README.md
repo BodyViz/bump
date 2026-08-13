@@ -21,9 +21,9 @@ Requirements
 |---|---|---|
 | **CMake** | 3.30 or newer | |
 | **C++** | C++20 | Propagated to consumers; you do not set `CMAKE_CXX_STANDARD` yourself |
-| **Boost** | 1.91 or newer | `chrono date_time filesystem regex thread timer`. Found in CONFIG mode only — `FindBoost` was removed from CMake |
-| **Google Test** | 1.17 or newer | Only when `BUMP_BUILD_TESTS=ON` |
-| **Doxygen** | 1.9 or newer | Only when `BUMP_BUILD_DOCS=ON`. Graphviz is not required |
+| **Boost** | 1.91 or newer | `date_time filesystem regex thread timer` |
+| **Google Test** | 1.17 | Only when `BUMP_BUILD_TESTS=ON`. What Bump is tested against; no floor is enforced |
+| **Doxygen** | 1.9 or newer | Only when `BUMP_BUILD_DOCS=ON`. No floor is enforced; `WARN_AS_ERROR=FAIL_ON_WARNINGS` is what wants a recent one. Graphviz is not required |
 
 Compilers: AppleClang, Clang, GCC, and MSVC (Visual Studio 2022, `v143`).
 
@@ -54,7 +54,7 @@ ctest --test-dir build/ninja -C Release -j8
 cmake --install build/ninja --config Release
 ```
 
-Or without any presets at all, supplying the two dependency locations yourself:
+Or without any presets at all, supplying the dependency locations yourself:
 
 ```bash
 cmake -S . -B build/release -G "Ninja Multi-Config" \
@@ -62,10 +62,17 @@ cmake -S . -B build/release -G "Ninja Multi-Config" \
       -DCMAKE_INSTALL_PREFIX=/path/to/install
 ```
 
-`CMAKE_PREFIX_PATH` is also an environment variable CMake consults, so
-`CMAKE_PREFIX_PATH=/path/to/boost:/path/to/googletest cmake --preset macos-ninja` configures a fresh
-clone with no user presets. Note the separator is the platform's — `:` on Unix, `;` on Windows — not
-the `;` a CMake list uses.
+`CMAKE_PREFIX_PATH` is also an environment variable CMake consults, so a fresh clone with no user
+presets configures without a single `-D`:
+
+```bash
+CMAKE_PREFIX_PATH=/path/to/boost:/path/to/googletest \
+    cmake -S . -B build/release -G "Ninja Multi-Config"
+```
+
+Note the separator is the platform's — `:` on Unix, `;` on Windows — not the `;` a CMake list uses.
+The committed presets are all hidden, so `cmake --preset ninja` is not a command you can run;
+inherit from it in your own `CMakeUserPresets.json` instead.
 
 **The committed presets are configure presets only.** There are deliberately no committed build, test
 or package presets: they multiply with every flavour and configuration, and `--config`/`-C` says the
@@ -132,28 +139,27 @@ Configure with `-DBUMP_BUILD_TESTS=ON` and the suites become **individually addr
 tests**, one per `TEST_F`:
 
 ```bash
-ctest --test-dir build/ninja -C Release -j8         # all 215
-ctest --test-dir build/ninja -C Release -R String   # just bumpStringTests'
+ctest --test-dir build/ninja -C Release -j8                    # everything
+ctest --test-dir build/ninja -C Release -R "^StringTest\."     # one suite
 ctest --test-dir build/ninja -C Release --rerun-failed
 ```
 
-Each suite is also its own executable, so you can run or debug one on its own from Xcode or Visual
-Studio without running the other seven. JUnit XML for every test lands in
+Anchor the filter on the suite name — `-R String` also matches tests in other suites that happen to
+have `String` in the name. Each suite is also its own executable, so you can run or debug one on its
+own from Xcode or Visual Studio without running the others. JUnit XML for every test lands in
 `build/<preset>/test-results/`.
 
-**On Windows the build tree must be on a local disk.** Seven tests create symbolic links under
-`<binaryDir>/tests/test-scratch/`, which needs Developer Mode enabled (or an elevated process) *and*
-a filesystem that supports symlinks. Network drives and VM shared folders do not implement the SMB
-symlink extensions, so no privilege setting helps. The *source* may
-live on a share; only the build tree has to be local, so `-B C:/bump-build` is enough.
-The fixtures assert this up front and tell you so, rather than failing thirty unrelated assertions.
+**On Windows, some of the filesystem tests need Developer Mode enabled** (or an elevated process),
+because they create symbolic links. Each test that touches the filesystem works in a uniquely named
+directory under the system temporary location, created and removed by the fixture, so nothing is
+written beside the binary and the build tree itself may live on a network drive or VM shared folder.
 
 Documentation
 -------------
 
 ```bash
-cmake -S . -B build/docs -DBUMP_BUILD_DOCS=ON
-cmake --build build/docs --config Release --target bump_docs
+cmake -S . -B build/docs -DBUMP_BUILD_DOCS=ON -DCMAKE_PREFIX_PATH="/path/to/boost"
+cmake --build build/docs --target bump_docs
 open build/docs/doc/BumpReferenceDocs/index.html
 ```
 
@@ -168,8 +174,8 @@ cmake --install build/docs --config Release --component bump-doc
 
 **Documentation warnings are errors.** `WARN_AS_ERROR=FAIL_ON_WARNINGS` means a stale `@param`, a
 `@return` on a `void`, or a new public class or method with no doc comment fails the build. So
-document public API as you add it. The current baseline is zero warnings, and the whole doc build
-takes about a fifth of a second, so this is cheap to keep green. Private and protected data members
+document public API as you add it. The current baseline is zero warnings, so this is cheap to keep
+green. Private and protected data members
 are excluded by name rather than by being undocumented, which is what lets an undocumented *public*
 member be reported instead of silently omitted.
 
@@ -201,7 +207,7 @@ the meantime, here's a quick breakdown of most of the functionality within Bump.
 	* Manipulates the file system by creating, renaming, copying and removing directories, files and symbolic links.
 	* Ever wanted an easy way to copy or remove a directory that is **NOT** empty? Bump's got it!
 * **Log**
-	* Handles all logging with customizations including 5 different log levels and output redirection.
+	* Handles all logging with customizations including multiple log levels and output redirection.
 	* Uses thread-safe access to the stream buffer, can add a timestamp to the message or a custom prefix.
 	* Uses convenience macros providing a very concise syntax.
 	* Can be controlled at runtime through the use of environment variables.
@@ -240,9 +246,9 @@ Code Style
 
 Bump uses `clang-format` to keep formatting consistent. The style is defined in `.clang-format` at the repository root, so no arguments are needed:
 
-	$ clang-format -i include/bump/*.h src/bump/*.cpp
+	$ git ls-files '*.h' '*.cpp' | grep -v smallsha1 | xargs clang-format -i
 
-The vendored `src/smallsha1` sources are deliberately excluded from formatting.
+That covers the library, the examples and the tests, and picks up new files as they are added. The vendored `src/smallsha1` sources are deliberately excluded from formatting.
 
 Because the whole codebase was reformatted in a single commit, `git blame` needs to be told to skip it. Run this once per clone:
 
