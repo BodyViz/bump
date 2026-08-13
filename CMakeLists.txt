@@ -152,6 +152,30 @@ unset(_bump_library_dir)
 unset(_bump_rpath)
 
 #==============================================================================
+#                                Warning policy
+#==============================================================================
+# One policy for the library, the tests and the examples, so the code exercising
+# bump is held to the same standard as bump.
+#
+# Consumed through $<BUILD_LOCAL_INTERFACE:>, which keeps it out of the export.
+# A plain PRIVATE dependency of a *static* library survives as $<LINK_ONLY:> in
+# INTERFACE_LINK_LIBRARIES, and install(EXPORT) then refuses to export bump
+# without also exporting this -- a shared build has no such problem, so the
+# failure would only appear in the default flavour.
+#
+# /EHsc and /permissive- are deliberately absent: CMake's default MSVC flags
+# already carry /EHsc, and /std:c++20 implies /permissive-.
+
+add_library(bump_warnings INTERFACE)
+
+target_compile_options(bump_warnings INTERFACE
+    "$<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wall;-Wextra;-Wpedantic;-Wnon-virtual-dtor;-Woverloaded-virtual;-Wshadow>"
+    "$<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wshorten-64-to-32;-Wimplicit-int-conversion>"
+    "$<$<CXX_COMPILER_ID:MSVC>:/W4;/utf-8;/bigobj>"
+    "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<BOOL:${BUMP_WIN32_USE_MP}>>:/MP>"
+)
+
+#==============================================================================
 #                                  Subdirectories
 #==============================================================================
 

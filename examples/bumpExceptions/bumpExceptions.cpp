@@ -37,9 +37,9 @@ void removeItemFromVector(std::vector<double>& values, int itemIndex) {
               << previous_size << " new size: " << values.size() << std::endl;
 }
 
-// Example classes
 class Base {
-    virtual void dummy() {}
+public:
+    virtual ~Base() = default;
 };
 class Derived : public Base {};
 

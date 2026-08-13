@@ -251,15 +251,9 @@ target_link_libraries(bump
 # Warnings
 #------------------------------------------------------------------------------
 
-target_compile_options(bump PRIVATE
-    "$<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wall;-Wextra;-Wpedantic;-Wnon-virtual-dtor;-Woverloaded-virtual;-Wshadow>"
-    "$<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wshorten-64-to-32;-Wimplicit-int-conversion>"
-    # /permissive- is implicit under /std:c++20 but stated for clarity.
-    # _SCL_SECURE_NO_WARNINGS is deliberately absent: a no-op since VS2015 with
-    # zero trigger sites here.
-    "$<$<CXX_COMPILER_ID:MSVC>:/W4;/utf-8;/permissive-;/EHsc;/bigobj>"
-    "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<BOOL:${BUMP_WIN32_USE_MP}>>:/MP>"
-)
+# _SCL_SECURE_NO_WARNINGS is deliberately absent: a no-op since VS2015 with
+# zero trigger sites here.
+target_link_libraries(bump PRIVATE "$<BUILD_LOCAL_INTERFACE:bump_warnings>")
 
 #------------------------------------------------------------------------------
 # Target properties
