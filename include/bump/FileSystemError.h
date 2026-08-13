@@ -27,12 +27,12 @@ public:
      * @param location The file path, line number and function name of where the
      * exception was thrown.
      */
-    FileSystemError(const String& description, const String& location) throw();
+    FileSystemError(const String& description, const String& location);
 
     /**
      * Destructor.
      */
-    ~FileSystemError() throw();
+    ~FileSystemError() override = default;
 };
 
 }  // namespace bump

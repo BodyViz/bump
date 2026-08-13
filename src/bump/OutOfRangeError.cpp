@@ -11,11 +11,9 @@
 namespace bump {
 
 OutOfRangeError::OutOfRangeError(const String& description,
-                                 const String& location) throw()
+                                 const String& location)
     : RuntimeError("bump::OutOfRangeError", description, location) {
     ;
 }
-
-OutOfRangeError::~OutOfRangeError() throw() { ; }
 
 }  // namespace bump

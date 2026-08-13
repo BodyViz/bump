@@ -11,11 +11,9 @@
 namespace bump {
 
 NotImplementedError::NotImplementedError(const String& description,
-                                         const String& location) throw()
+                                         const String& location)
     : RuntimeError("bump::NotImplementedError", description, location) {
     ;
 }
-
-NotImplementedError::~NotImplementedError() throw() { ; }
 
 }  // namespace bump

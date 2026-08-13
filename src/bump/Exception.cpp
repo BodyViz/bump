@@ -15,23 +15,23 @@ namespace bump {
 //=============================================================================
 
 Exception::Exception(const String& className, const String& description,
-                     const String& location) throw()
+                     const String& location)
     : _className(className) {
     // Add the description
     extendDescription(description, location);
 }
 
-Exception::~Exception() throw() { ; }
+String Exception::description() const { return _description; }
 
-String Exception::description() const throw() {
-    return String::join(_descriptions, "\n");
-}
+const char* Exception::what() const noexcept { return _description.c_str(); }
 
 void Exception::extendDescription(const String& description,
                                   const String& location) {
-    String new_description;
-    new_description << _className << ": \"" << description << "\" " << location;
-    _descriptions.push_back(new_description);
+    if (!_description.isEmpty()) {
+        _description << "\n";
+    }
+
+    _description << _className << ": \"" << description << "\" " << location;
 }
 
 //=============================================================================
@@ -39,23 +39,19 @@ void Exception::extendDescription(const String& description,
 //=============================================================================
 
 LogicError::LogicError(const String& className, const String& description,
-                       const String& location) throw()
+                       const String& location)
     : Exception(className, description, location) {
     ;
 }
-
-LogicError::~LogicError() throw() { ; }
 
 //=============================================================================
 //                                    RuntimeError
 //=============================================================================
 
 RuntimeError::RuntimeError(const String& className, const String& description,
-                           const String& location) throw()
+                           const String& location)
     : Exception(className, description, location) {
     ;
 }
-
-RuntimeError::~RuntimeError() throw() { ; }
 
 }  // namespace bump

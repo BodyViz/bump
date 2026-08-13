@@ -11,11 +11,9 @@
 namespace bump {
 
 NotificationError::NotificationError(const String& description,
-                                     const String& location) throw()
+                                     const String& location)
     : RuntimeError("bump::NotificationError", description, location) {
     ;
 }
-
-NotificationError::~NotificationError() throw() { ; }
 
 }  // namespace bump

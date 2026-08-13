@@ -75,15 +75,17 @@ private:
                 return candidate;
             }
             if (ec) {
-                throw std::runtime_error("Could not create a scratch directory "
-                                         "under " +
-                                         base.string() + ": " + ec.message());
+                throw std::runtime_error(
+                    "Could not create a scratch directory "
+                    "under " +
+                    base.string() + ": " + ec.message());
             }
         }
 
-        throw std::runtime_error("Could not find an unused scratch directory "
-                                 "name under " +
-                                 base.string());
+        throw std::runtime_error(
+            "Could not find an unused scratch directory "
+            "name under " +
+            base.string());
     }
 
     std::filesystem::path _previousPath;

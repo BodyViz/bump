@@ -25,12 +25,12 @@ public:
      * @param location The file path, line number and function name of where the
      * exception was thrown.
      */
-    OutOfRangeError(const String& description, const String& location) throw();
+    OutOfRangeError(const String& description, const String& location);
 
     /**
      * Destructor.
      */
-    ~OutOfRangeError() throw();
+    ~OutOfRangeError() override = default;
 };
 
 }  // namespace bump

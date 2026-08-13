@@ -14,6 +14,7 @@ set(CMAKE_FOLDER "bump/tests")
 set(BUMP_TEST_SUITES
     bumpCryptographicHashTests
     bumpEnvironmentTests
+    bumpExceptionTests
     bumpFileInfoTests
     bumpFileSystemTests
     bumpNotificationTests
@@ -36,6 +37,7 @@ endif()
 # Sources are relative to each suite's own directory.
 set(bumpCryptographicHashTests_SOURCES CryptographicHashTest.cpp)
 set(bumpEnvironmentTests_SOURCES EnvironmentTest.cpp)
+set(bumpExceptionTests_SOURCES ExceptionTest.cpp)
 set(bumpFileInfoTests_SOURCES
     FileInfoTest.cpp
     FileInfoTest_${_bump_test_platform}.cpp
@@ -263,3 +265,21 @@ if(BUMP_BUILD_EXAMPLES)
         WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     )
 endif()
+
+#==============================================================================
+#                             Consumer header hygiene
+#==============================================================================
+# bump's own warning policy does not enable -Wdeprecated, so a construct the
+# headers carry but the sources never trip goes unnoticed here and fails in a
+# consumer's build instead. This compiles the umbrella header under flags
+# stricter than bump's own; CMAKE_COMPILE_WARNING_AS_ERROR turns a regression
+# into a build failure.
+#
+# Clang and GCC only. MSVC has no equivalent of -Wdeprecated, so there is
+# nothing to assert there rather than something being skipped.
+
+add_library(bump_header_hygiene OBJECT HeaderHygiene.cpp)
+target_link_libraries(bump_header_hygiene PRIVATE Bump::bump)
+target_compile_options(bump_header_hygiene PRIVATE
+    "$<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wdeprecated>"
+)

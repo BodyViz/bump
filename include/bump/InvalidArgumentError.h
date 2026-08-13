@@ -25,13 +25,12 @@ public:
      * @param location The file path, line number and function name of where the
      * exception was thrown.
      */
-    InvalidArgumentError(const String& description,
-                         const String& location) throw();
+    InvalidArgumentError(const String& description, const String& location);
 
     /**
      * Destructor.
      */
-    ~InvalidArgumentError() throw();
+    ~InvalidArgumentError() override = default;
 };
 
 }  // namespace bump

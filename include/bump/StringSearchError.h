@@ -25,13 +25,12 @@ public:
      * @param location The file path, line number and function name of where the
      * exception was thrown.
      */
-    StringSearchError(const String& description,
-                      const String& location) throw();
+    StringSearchError(const String& description, const String& location);
 
     /**
      * Destructor.
      */
-    ~StringSearchError() throw();
+    ~StringSearchError() override = default;
 };
 
 }  // namespace bump

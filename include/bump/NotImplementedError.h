@@ -27,13 +27,12 @@ public:
      * @param location The file path, line number and function name of where the
      * exception was thrown.
      */
-    NotImplementedError(const String& description,
-                        const String& location) throw();
+    NotImplementedError(const String& description, const String& location);
 
     /**
      * Destructor.
      */
-    ~NotImplementedError() throw();
+    ~NotImplementedError() override = default;
 };
 
 }  // namespace bump

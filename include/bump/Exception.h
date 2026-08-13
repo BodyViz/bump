@@ -12,15 +12,22 @@
 #include <bump/String.h>
 
 #include <boost/current_function.hpp>
+#include <exception>
 
-// MSVC C4251: bump::Exception holds a StringList, which is a typedef for
-// std::vector<bump::String> and so has no dll-interface. The member
-// reads as a bump type rather than a standard container. The exception bases
-// themselves need no C4275, because Exception, LogicError and RuntimeError are
-// all BUMP_EXPORT and C4275 fires only for a base that is not.
+// MSVC C4251: bump::Exception holds bump::String members, which derive from
+// std::string and so have no dll-interface.
+//
+// C4275: std::exception is the base and has none either. Confirmed on MSVC
+// 14.44 -- without this every translation unit including the header fails
+// under warnings-as-errors. It is unavoidable for an exported type that wants
+// to be caught by a consumer's ordinary handler, and benign here because the
+// base comes from the CRT, which both sides share.
+//
+// Both scoped to this header so neither suppression reaches consumer code.
 #if defined(_MSC_VER)
 #pragma warning(push)
-#pragma warning(disable : 4251)
+#pragma warning(disable : 4251)  // needs dll-interface to be used by clients
+#pragma warning(disable : 4275)  // non dll-interface base for exported class
 #endif
 
 /**
@@ -55,12 +62,12 @@ namespace bump {
  *         - TypeCastError - PUBLIC (when runtime cannot type cast an object as
  * requested)
  */
-class BUMP_EXPORT Exception {
+class BUMP_EXPORT Exception : public std::exception {
 public:
     /**
      * Destructor.
      */
-    virtual ~Exception() throw();
+    ~Exception() override = default;
 
     /**
      * Creates a string representation of all known information about the
@@ -69,7 +76,18 @@ public:
      * @return A string representation of all known information about the
      * exception.
      */
-    virtual String description() const throw();
+    virtual String description() const;
+
+    /**
+     * The same text as description(), as a null terminated string.
+     *
+     * This is what makes a bump exception catchable, and reportable, by a
+     * consumer that knows nothing about bump beyond std::exception.
+     *
+     * @return The description, valid until the exception is modified or
+     * destroyed.
+     */
+    const char* what() const noexcept override;
 
     /**
      * Appends the description and location onto a new line of the message.
@@ -94,12 +112,14 @@ protected:
      * exception was thrown.
      */
     Exception(const String& className, const String& description,
-              const String& location) throw();
+              const String& location);
 
     // Instance member variables
-    String _className;        /**< @internal The class name of the exception. */
-    StringList _descriptions; /**< @internal A list of descriptions each time an
-                                 exception is thrown or re-thrown. */
+    String _className;   /**< @internal The class name of the exception. */
+    String _description; /**< @internal The accumulated description, one line
+                            per throw or re-throw. Held whole rather than
+                            joined on demand so what() has something with a
+                            lifetime to hand back. */
 };
 
 /**
@@ -111,7 +131,7 @@ public:
     /**
      * Destructor.
      */
-    virtual ~LogicError() throw();
+    ~LogicError() override = default;
 
 protected:
     /**
@@ -124,7 +144,7 @@ protected:
      * exception was thrown.
      */
     LogicError(const String& className, const String& description,
-               const String& location) throw();
+               const String& location);
 };
 
 /**
@@ -136,7 +156,7 @@ public:
     /**
      * Destructor.
      */
-    virtual ~RuntimeError() throw();
+    ~RuntimeError() override = default;
 
 protected:
     /**
@@ -149,7 +169,7 @@ protected:
      * exception was thrown.
      */
     RuntimeError(const String& className, const String& description,
-                 const String& location) throw();
+                 const String& location);
 };
 
 }  // namespace bump

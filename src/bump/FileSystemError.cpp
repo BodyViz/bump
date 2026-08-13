@@ -11,11 +11,9 @@
 namespace bump {
 
 FileSystemError::FileSystemError(const String& description,
-                                 const String& location) throw()
+                                 const String& location)
     : RuntimeError("bump::FileSystemError", description, location) {
     ;
 }
-
-FileSystemError::~FileSystemError() throw() { ; }
 
 }  // namespace bump

@@ -11,11 +11,9 @@
 namespace bump {
 
 StringSearchError::StringSearchError(const String& description,
-                                     const String& location) throw()
-    : RuntimeError("bump::~StringSearchError", description, location) {
+                                     const String& location)
+    : RuntimeError("bump::StringSearchError", description, location) {
     ;
 }
-
-StringSearchError::~StringSearchError() throw() { ; }
 
 }  // namespace bump

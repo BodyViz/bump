@@ -81,8 +81,9 @@ TEST_F(CryptographicHashTest, testSetDataStringLifetime) {
     hash = bump::CryptographicHash();
     bump::String data = text;
     hash.setData(data);
-    data = "a completely different and rather longer string, forcing the "
-           "original buffer to be given up";
+    data =
+        "a completely different and rather longer string, forcing the "
+        "original buffer to be given up";
     EXPECT_STREQ(expected, hash.result().c_str());
 }
 

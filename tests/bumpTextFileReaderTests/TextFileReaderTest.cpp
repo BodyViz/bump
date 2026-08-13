@@ -27,7 +27,7 @@ namespace bumpTest {
  */
 class TextFileReaderTest : public ::testing::Test {
 protected:
-    /** Owns the working directory the tree below is built in and removed from. */
+    /** Owns the working directory the tree is built in. */
     ScratchDirectory _scratch;
 
     /** Run immediately before a test starts. Starts the timer. */

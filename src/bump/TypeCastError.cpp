@@ -10,12 +10,9 @@
 
 namespace bump {
 
-TypeCastError::TypeCastError(const String& description,
-                             const String& location) throw()
+TypeCastError::TypeCastError(const String& description, const String& location)
     : RuntimeError("bump::TypeCastError", description, location) {
     ;
 }
-
-TypeCastError::~TypeCastError() throw() { ; }
 
 }  // namespace bump

@@ -31,7 +31,7 @@ protected:
 
     /** Instance member variables. */
 
-    /** Owns the working directory the tree below is built in and removed from. */
+    /** Owns the working directory the tree is built in. */
     ScratchDirectory _scratch;
 
     bump::String _unittestDirectory;

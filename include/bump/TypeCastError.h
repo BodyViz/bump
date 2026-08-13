@@ -25,12 +25,12 @@ public:
      * @param location The file path, line number and function name of where the
      * exception was thrown.
      */
-    TypeCastError(const String& description, const String& location) throw();
+    TypeCastError(const String& description, const String& location);
 
     /**
      * Destructor.
      */
-    ~TypeCastError() throw();
+    ~TypeCastError() override = default;
 };
 
 }  // namespace bump

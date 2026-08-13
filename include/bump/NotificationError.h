@@ -27,13 +27,12 @@ public:
      * @param location The file path, line number and function name of where the
      * exception was thrown.
      */
-    NotificationError(const String& description,
-                      const String& location) throw();
+    NotificationError(const String& description, const String& location);
 
     /**
      * Destructor.
      */
-    ~NotificationError() throw();
+    ~NotificationError() override = default;
 };
 
 }  // namespace bump

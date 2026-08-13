@@ -11,11 +11,9 @@
 namespace bump {
 
 InvalidArgumentError::InvalidArgumentError(const String& description,
-                                           const String& location) throw()
+                                           const String& location)
     : LogicError("bump::InvalidArgumentError", description, location) {
     ;
 }
-
-InvalidArgumentError::~InvalidArgumentError() throw() { ; }
 
 }  // namespace bump
