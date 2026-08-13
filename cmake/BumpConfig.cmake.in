@@ -46,13 +46,12 @@ if(NOT _bump_boost_static_libs STREQUAL "" AND NOT DEFINED Boost_USE_STATIC_LIBS
     set(_bump_applied_boost_static_libs TRUE)
 endif()
 
-# All six components, including the two bump links PRIVATE. CMake records a
-# PRIVATE dependency of a library in INTERFACE_LINK_LIBRARIES as
-# $<LINK_ONLY:...>, so BumpTargets.cmake names date_time and regex regardless of
-# linkage and they have to resolve here. For a static package the consumer's
-# final link genuinely needs them.
+# Only what this package's exported target actually references. A static build
+# adds date_time and regex, which survive as $<LINK_ONLY:> and are needed for
+# the consumer's final link; a shared or framework build omits them, because
+# CMake drops a shared library's private dependencies from the export.
 find_dependency(Boost @BUMP_BOOST_VERSION@ CONFIG
-                COMPONENTS @BUMP_BOOST_COMPONENTS_SPACED@)
+                COMPONENTS @BUMP_BOOST_PACKAGE_COMPONENTS@)
 
 # Removed outright, not restored to something: a normal Boost_DIR satisfies
 # find_package directly, so it never searches and never caches an entry of its

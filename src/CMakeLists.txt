@@ -234,7 +234,6 @@ target_compile_definitions(bump
 #   filesystem  FileInfo.h holds a boost::filesystem::path by value
 #   thread      Log.h holds boost::mutex; NotificationCenter.h boost::shared_mutex
 #   timer       Timer.h holds a boost::timer::cpu_timer by value
-#   chrono      transitive of timer, named for clarity
 #   headers     Export.h, Uuid.h, NotificationCenter.h include Boost headers
 #   regex       String.cpp only
 #   date_time   Log.cpp only
@@ -242,7 +241,6 @@ target_compile_definitions(bump
 target_link_libraries(bump
     PUBLIC
         Boost::headers
-        Boost::chrono
         Boost::filesystem
         Boost::thread
         Boost::timer

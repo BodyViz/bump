@@ -84,10 +84,8 @@ endif()
 #                                  Dependencies
 #==============================================================================
 
-# Stated once and reused by cmake/BumpConfig.cmake.in, so the package's
-# find_dependency() call cannot drift from what bump was actually built against.
 set(BUMP_BOOST_VERSION 1.91)
-set(BUMP_BOOST_COMPONENTS chrono date_time filesystem regex thread timer)
+set(BUMP_BOOST_COMPONENTS date_time filesystem regex thread timer)
 
 find_package(Boost ${BUMP_BOOST_VERSION} REQUIRED CONFIG
     COMPONENTS ${BUMP_BOOST_COMPONENTS}
@@ -274,7 +272,15 @@ if(DEFINED Boost_USE_STATIC_LIBS)
         set(BUMP_BOOST_USE_STATIC_LIBS OFF)
     endif()
 endif()
-list(JOIN BUMP_BOOST_COMPONENTS " " BUMP_BOOST_COMPONENTS_SPACED)
+
+get_target_property(_bump_type bump TYPE)
+
+set(BUMP_BOOST_PACKAGE_COMPONENTS filesystem thread timer)
+if(_bump_type STREQUAL "STATIC_LIBRARY")
+    list(APPEND BUMP_BOOST_PACKAGE_COMPONENTS date_time regex)
+endif()
+
+unset(_bump_type)
 
 configure_package_config_file(cmake/BumpConfig.cmake.in
     "${PROJECT_BINARY_DIR}/BumpConfig.cmake"
