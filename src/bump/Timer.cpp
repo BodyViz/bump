@@ -13,17 +13,13 @@
 
 namespace bump {
 
-// Global singleton mutex
-static boost::mutex gTimerSingletonMutex;
-
 Timer::Timer() : _timer() { ; }
 
 Timer::~Timer() { ; }
 
-Timer* Timer::instance() {
-    boost::mutex::scoped_lock lock(gTimerSingletonMutex);
+Timer& Timer::instance() {
     static Timer timer;
-    return &timer;
+    return timer;
 }
 
 void Timer::start() { _timer.start(); }

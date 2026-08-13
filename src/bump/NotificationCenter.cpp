@@ -14,9 +14,6 @@
 
 namespace bump {
 
-// Global singleton mutex
-static boost::mutex gNotificationCenterSingletonMutex;
-
 //=============================================================================
 //                                     Observer
 //=============================================================================
@@ -53,10 +50,9 @@ NotificationCenter::NotificationCenter() { ; }
 
 NotificationCenter::~NotificationCenter() { ; }
 
-NotificationCenter* NotificationCenter::instance() {
-    boost::mutex::scoped_lock lock(gNotificationCenterSingletonMutex);
+NotificationCenter& NotificationCenter::instance() {
     static NotificationCenter notification_center;
-    return &notification_center;
+    return notification_center;
 }
 
 void NotificationCenter::addObserver(Observer* observer) {
@@ -150,20 +146,20 @@ void NotificationCenter::removeObserver(void* observer) {
 }  // namespace bump
 
 void ADD_OBSERVER(bump::Observer* observer) {
-    bump::NotificationCenter::instance()->addObserver(observer);
+    bump::NotificationCenter::instance().addObserver(observer);
 }
 
 void REMOVE_OBSERVER(void* observer) {
-    bump::NotificationCenter::instance()->removeObserver(observer);
+    bump::NotificationCenter::instance().removeObserver(observer);
 }
 
 unsigned int POST_NOTIFICATION(const bump::String& notificationName) {
-    return bump::NotificationCenter::instance()->postNotification(
+    return bump::NotificationCenter::instance().postNotification(
         notificationName);
 }
 
 unsigned int POST_NOTIFICATION_WITH_OBJECT(const bump::String& notificationName,
                                            const boost::any& object) {
-    return bump::NotificationCenter::instance()->postNotificationWithObject(
+    return bump::NotificationCenter::instance().postNotificationWithObject(
         notificationName, object);
 }

@@ -114,8 +114,7 @@ int main() {
           "bump::FileSystem::currentPath");
 
     // A singleton has to resolve to one instance across the boundary.
-    check(bump::Timer::instance() != nullptr &&
-              bump::Timer::instance() == bump::Timer::instance(),
+    check(&bump::Timer::instance() == &bump::Timer::instance(),
           "bump::Timer::instance is stable");
 
     // Observer instantiated here, notification dispatched by the library.
@@ -125,17 +124,17 @@ int main() {
     // observer wrapping it. That makes this a boundary test in both directions
     // -- constructed here, destroyed inside the library through its vtable.
     Listener listener;
-    bump::NotificationCenter::instance()->addObserver(
+    bump::NotificationCenter::instance().addObserver(
         new bump::ObjectObserver<Listener, bump::String>(
             &listener, &Listener::onNotified, "bump/smoke"));
     const unsigned int notified =
-        bump::NotificationCenter::instance()->postNotificationWithObject(
+        bump::NotificationCenter::instance().postNotificationWithObject(
             "bump/smoke", boost::any(bump::String("delivered")));
     check(notified == 1 && listener.received() == "delivered",
           "bump::ObjectObserver instantiated in the consumer");
 
-    bump::NotificationCenter::instance()->removeObserver(&listener);
-    check(!bump::NotificationCenter::instance()->containsObserver(&listener),
+    bump::NotificationCenter::instance().removeObserver(&listener);
+    check(!bump::NotificationCenter::instance().containsObserver(&listener),
           "bump::NotificationCenter deletes a consumer-built observer");
 
     // Thrown inside the library, caught here by type. This is the check that

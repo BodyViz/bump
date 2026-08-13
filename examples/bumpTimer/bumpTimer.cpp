@@ -35,17 +35,17 @@ int main() {
     // Start up the singleton timer
     std::cout << "============= Starting the singleton timer ============="
               << std::endl;
-    bump::Timer::instance()->start();
+    bump::Timer::instance().start();
 
     // Do some work
     std::cout << "\nDoing some work:" << std::endl;
     doSomeWork();
 
     // Ask the timer how much time has elapsed in seconds
-    double elapsed_time_s = bump::Timer::instance()->secondsElapsed();
-    double elapsed_time_ms = bump::Timer::instance()->millisecondsElapsed();
-    double elapsed_time_us = bump::Timer::instance()->microsecondsElapsed();
-    double elapsed_time_ns = bump::Timer::instance()->nanosecondsElapsed();
+    double elapsed_time_s = bump::Timer::instance().secondsElapsed();
+    double elapsed_time_ms = bump::Timer::instance().millisecondsElapsed();
+    double elapsed_time_us = bump::Timer::instance().microsecondsElapsed();
+    double elapsed_time_ns = bump::Timer::instance().nanosecondsElapsed();
     std::cout << "- Elapsed Time (s):  " << elapsed_time_s << std::endl;
     std::cout << "- Elapsed Time (ms): " << elapsed_time_ms << std::endl;
     std::cout << "- Elapsed Time (us): " << elapsed_time_us << std::endl;
@@ -56,10 +56,10 @@ int main() {
     doSomeWork();
 
     // Let's ask the timer for the cumulative elapsed time
-    elapsed_time_s = bump::Timer::instance()->secondsElapsed();
-    elapsed_time_ms = bump::Timer::instance()->millisecondsElapsed();
-    elapsed_time_us = bump::Timer::instance()->microsecondsElapsed();
-    elapsed_time_ns = bump::Timer::instance()->nanosecondsElapsed();
+    elapsed_time_s = bump::Timer::instance().secondsElapsed();
+    elapsed_time_ms = bump::Timer::instance().millisecondsElapsed();
+    elapsed_time_us = bump::Timer::instance().microsecondsElapsed();
+    elapsed_time_ns = bump::Timer::instance().nanosecondsElapsed();
     std::cout << "- Elapsed Time (s):  " << elapsed_time_s << std::endl;
     std::cout << "- Elapsed Time (ms): " << elapsed_time_ms << std::endl;
     std::cout << "- Elapsed Time (us): " << elapsed_time_us << std::endl;
@@ -68,7 +68,7 @@ int main() {
     // Now let's restart the timer
     std::cout << "\n============= Restarting the singleton timer ============="
               << std::endl;
-    bump::Timer::instance()->restart();
+    bump::Timer::instance().restart();
 
     // Let's do some more work
     std::cout << "\nDoing lots of work:" << std::endl;
@@ -77,10 +77,10 @@ int main() {
     doSomeWork();
 
     // Let's ask the timer once more for the cumulative elapsed time
-    elapsed_time_s = bump::Timer::instance()->secondsElapsed();
-    elapsed_time_ms = bump::Timer::instance()->millisecondsElapsed();
-    elapsed_time_us = bump::Timer::instance()->microsecondsElapsed();
-    elapsed_time_ns = bump::Timer::instance()->nanosecondsElapsed();
+    elapsed_time_s = bump::Timer::instance().secondsElapsed();
+    elapsed_time_ms = bump::Timer::instance().millisecondsElapsed();
+    elapsed_time_us = bump::Timer::instance().microsecondsElapsed();
+    elapsed_time_ns = bump::Timer::instance().nanosecondsElapsed();
     std::cout << "- Elapsed Time (s):  " << elapsed_time_s << std::endl;
     std::cout << "- Elapsed Time (ms): " << elapsed_time_ms << std::endl;
     std::cout << "- Elapsed Time (us): " << elapsed_time_us << std::endl;

@@ -112,7 +112,7 @@ public:
      *
      * @return The singleton instance.
      */
-    static Log* instance();
+    static Log& instance();
 
     /**
      * Sets whether the log is enabled.

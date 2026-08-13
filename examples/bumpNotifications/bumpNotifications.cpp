@@ -148,18 +148,18 @@ protected:
  *       - bump::AbstractObserver* observer = new
  * bump::ObjectObserver<ObjectType, Event*>(this, &ObjectType::eventCompleted,
  * "EventCompleted");
- *       - bump::NotificationCenter::instance()->addObjectObserver(observer);
+ *       - bump::NotificationCenter::instance().addObjectObserver(observer);
  *       - ADD_OBSERVER(observer); // convenience macro
  *
  * 2) Make sure to remove the observer from the NotificationCenter in its
  * destructor
- *       - bump::NotificationCenter::instance()->removeObserver(this);
+ *       - bump::NotificationCenter::instance().removeObserver(this);
  *       - REMOVE_OBSERVER(this); // convenience macro
  *
  * 3) When the event completes, post a notification that the event completed
  * with a matching name
  *       -
- * bump::NotificationCenter::instance()->postNotificationWithObject("EventCompleted",
+ * bump::NotificationCenter::instance().postNotificationWithObject("EventCompleted",
  * event);
  *       - POST_NOTIFICATION_WITH_OBJECT("EventCompleted", event); //
  * convenience macro
@@ -186,13 +186,13 @@ int main() {
 
     // Post a RequestRedraw notification the long and short way
     std::cout << "Posting \"RequestRedraw\" notifications" << std::endl;
-    bump::NotificationCenter::instance()->postNotification("RequestRedraw");
+    bump::NotificationCenter::instance().postNotification("RequestRedraw");
     POST_NOTIFICATION("RequestRedraw");
 
     // Post an UpdateNumRenderPasses notification the long and short way
     std::cout << "\nPosting \"UpdateNumRenderPasses\" notifications"
               << std::endl;
-    bump::NotificationCenter::instance()->postNotificationWithObject(
+    bump::NotificationCenter::instance().postNotificationWithObject(
         "UpdateNumRenderPasses", (unsigned int)4);
     POST_NOTIFICATION_WITH_OBJECT("UpdateNumRenderPasses", (unsigned int)8);
 

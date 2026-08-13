@@ -139,30 +139,30 @@ int main() {
     //=======================================================================
 
     // Set the log level to "ALWAYS"
-    bump::Log::instance()->setLogLevel(bump::Log::ALWAYS_LVL);
+    bump::Log::instance().setLogLevel(bump::Log::ALWAYS_LVL);
     bumpALWAYS("Setting LogLevel to ALWAYS:");
     pushAllLogMessageLevels();
 
     // Set the log level to "ERROR"
-    bump::Log::instance()->setLogLevel(bump::Log::ERROR_LVL);
+    bump::Log::instance().setLogLevel(bump::Log::ERROR_LVL);
     bumpNEWLINE();
     bumpALWAYS("Setting LogLevel to ERROR:");
     pushAllLogMessageLevels();
 
     // Set the log level to "WARNING"
-    bump::Log::instance()->setLogLevel(bump::Log::WARNING_LVL);
+    bump::Log::instance().setLogLevel(bump::Log::WARNING_LVL);
     bumpNEWLINE();
     bumpALWAYS("Setting LogLevel to WARNING:");
     pushAllLogMessageLevels();
 
     // Set the log level to "INFO"
-    bump::Log::instance()->setLogLevel(bump::Log::INFO_LVL);
+    bump::Log::instance().setLogLevel(bump::Log::INFO_LVL);
     bumpNEWLINE();
     bumpALWAYS("Setting LogLevel to INFO:");
     pushAllLogMessageLevels();
 
     // Set the log level to "DEBUG"
-    bump::Log::instance()->setLogLevel(bump::Log::DEBUG_LVL);
+    bump::Log::instance().setLogLevel(bump::Log::DEBUG_LVL);
     bumpNEWLINE();
     bumpALWAYS("Setting LogLevel to DEBUG:");
     pushAllLogMessageLevels();
@@ -187,8 +187,8 @@ int main() {
     // By default, the timestamp formatting is disabled. To enable it, just turn
     // it on.
     bumpNEWLINE();
-    bump::Log::instance()->setIsTimestampingEnabled(true);
-    bump::Log::instance()->setTimestampFormat(bump::Log::DATE_TIME_TIMESTAMP);
+    bump::Log::instance().setIsTimestampingEnabled(true);
+    bump::Log::instance().setTimestampFormat(bump::Log::DATE_TIME_TIMESTAMP);
     bumpALWAYS(
         "Example message with \"DATE_TIME_TIMESTAMP\" timestamp formatting");
     bumpALWAYS_P(customPrefix,
@@ -196,7 +196,7 @@ int main() {
                  "timestamp formatting\n");
 
     // From here, you can customize the timestamp format as you wish
-    bump::Log::instance()->setTimestampFormat(
+    bump::Log::instance().setTimestampFormat(
         bump::Log::DATE_TIME_WITH_AM_PM_TIMESTAMP);
     bumpALWAYS(
         "Example message with \"DATE_TIME_WITH_AM_PM_TIMESTAMP\" timestamp "
@@ -205,13 +205,13 @@ int main() {
                  "Example prefix message with "
                  "\"DATE_TIME_WITH_AM_PM_TIMESTAMP\" timestamp formatting\n");
 
-    bump::Log::instance()->setTimestampFormat(bump::Log::TIME_TIMESTAMP);
+    bump::Log::instance().setTimestampFormat(bump::Log::TIME_TIMESTAMP);
     bumpALWAYS("Example message with \"TIME_TIMESTAMP\" timestamp formatting");
     bumpALWAYS_P(customPrefix,
                  "Example prefix message with \"TIME_TIMESTAMP\" timestamp "
                  "formatting\n");
 
-    bump::Log::instance()->setTimestampFormat(
+    bump::Log::instance().setTimestampFormat(
         bump::Log::TIME_WITHOUT_AM_PM_TIMESTAMP);
     bumpALWAYS(
         "Example message with \"TIME_WITHOUT_AM_PM_TIMESTAMP\" timestamp "
@@ -221,7 +221,7 @@ int main() {
                  "timestamp formatting\n");
 
     // Then to turn it back off, simply disable it.
-    bump::Log::instance()->setIsTimestampingEnabled(false);
+    bump::Log::instance().setIsTimestampingEnabled(false);
     bumpALWAYS("The timestamps should now be disabled and not visible");
     bumpNEWLINE();
 

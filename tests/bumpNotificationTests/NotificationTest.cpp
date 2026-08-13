@@ -125,9 +125,9 @@ protected:
     /** Invoked immediately after a test finishes. Stops the timer. */
     void TearDown() override {
         // Cleanup the heap renderers
-        bump::NotificationCenter::instance()->removeObserver(_r1);
-        bump::NotificationCenter::instance()->removeObserver(_r2);
-        bump::NotificationCenter::instance()->removeObserver(&_r3);
+        bump::NotificationCenter::instance().removeObserver(_r1);
+        bump::NotificationCenter::instance().removeObserver(_r2);
+        bump::NotificationCenter::instance().removeObserver(&_r3);
         delete _r1;
         delete _r2;
     }
@@ -216,9 +216,9 @@ TEST_F(NotificationTest, testContainsObserver) {
     ADD_OBSERVER(update3);
 
     // Test the containsObserver method
-    EXPECT_TRUE(bump::NotificationCenter::instance()->containsObserver(_r1));
-    EXPECT_FALSE(bump::NotificationCenter::instance()->containsObserver(_r2));
-    EXPECT_TRUE(bump::NotificationCenter::instance()->containsObserver(&_r3));
+    EXPECT_TRUE(bump::NotificationCenter::instance().containsObserver(_r1));
+    EXPECT_FALSE(bump::NotificationCenter::instance().containsObserver(_r2));
+    EXPECT_TRUE(bump::NotificationCenter::instance().containsObserver(&_r3));
 }
 
 TEST_F(NotificationTest, testPostNotification) {
@@ -366,9 +366,9 @@ TEST_F(NotificationTest, testRemoveObserver) {
     ADD_OBSERVER(update3);
 
     // Test to make sure the notification center registered the observers
-    EXPECT_TRUE(bump::NotificationCenter::instance()->containsObserver(_r1));
-    EXPECT_FALSE(bump::NotificationCenter::instance()->containsObserver(_r2));
-    EXPECT_TRUE(bump::NotificationCenter::instance()->containsObserver(&_r3));
+    EXPECT_TRUE(bump::NotificationCenter::instance().containsObserver(_r1));
+    EXPECT_FALSE(bump::NotificationCenter::instance().containsObserver(_r2));
+    EXPECT_TRUE(bump::NotificationCenter::instance().containsObserver(&_r3));
 
     // Remove the observers
     REMOVE_OBSERVER(_r1);
@@ -376,9 +376,9 @@ TEST_F(NotificationTest, testRemoveObserver) {
     REMOVE_OBSERVER(&_r3);
 
     // Test to make sure all the observers were in fact removed
-    EXPECT_FALSE(bump::NotificationCenter::instance()->containsObserver(_r1));
-    EXPECT_FALSE(bump::NotificationCenter::instance()->containsObserver(_r2));
-    EXPECT_FALSE(bump::NotificationCenter::instance()->containsObserver(&_r3));
+    EXPECT_FALSE(bump::NotificationCenter::instance().containsObserver(_r1));
+    EXPECT_FALSE(bump::NotificationCenter::instance().containsObserver(_r2));
+    EXPECT_FALSE(bump::NotificationCenter::instance().containsObserver(&_r3));
 }
 
 }  // namespace bumpTest

@@ -33,9 +33,9 @@ protected:
     /** Run immediately before a test starts. Starts the timer. */
     void SetUp() override {
         // Set the Log level so no unneccessary information is provided
-        bump::Log::instance()->setIsLogEnabled(true);
-        _previousLogLevel = bump::Log::instance()->logLevel();
-        bump::Log::instance()->setLogLevel(bump::Log::ALWAYS_LVL);
+        bump::Log::instance().setIsLogEnabled(true);
+        _previousLogLevel = bump::Log::instance().logLevel();
+        bump::Log::instance().setLogLevel(bump::Log::ALWAYS_LVL);
 
         // Save the current path so we can always put it back after a test
         // modifies it
@@ -79,7 +79,7 @@ protected:
         // The tree itself goes when the scratch directory does.
 
         // Reset the Log level to what it was before
-        bump::Log::instance()->setLogLevel(_previousLogLevel);
+        bump::Log::instance().setLogLevel(_previousLogLevel);
     }
 
     bump::String _currentPath;

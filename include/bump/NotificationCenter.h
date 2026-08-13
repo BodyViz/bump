@@ -248,7 +248,7 @@ protected:
  * @code
  *   bump::AbstractObserver* observer = new bump::ObjectObserver<ObjectType,
  * Event*>(this, &ObjectType::eventCompleted, "EventCompleted");
- *   bump::NotificationCenter::instance()->addObserver(observer);
+ *   bump::NotificationCenter::instance().addObserver(observer);
  *   ADD_OBSERVER(observer); // convenience function
  * @endcode
  *
@@ -256,7 +256,7 @@ protected:
  * destructor
  *
  * @code
- *   bump::NotificationCenter::instance()->removeObserver(this);
+ *   bump::NotificationCenter::instance().removeObserver(this);
  *   REMOVE_OBSERVER(observer); // convenience function
  * @endcode
  *
@@ -264,7 +264,7 @@ protected:
  * with a matching name
  *
  * @code
- *   bump::NotificationCenter::instance()->postNotificationWithObject("EventCompleted",
+ *   bump::NotificationCenter::instance().postNotificationWithObject("EventCompleted",
  * event); POST_NOTIFICATION_WITH_OBJECT("EventCompleted", event); //
  * convenience function
  * @endcode
@@ -280,7 +280,7 @@ public:
      *
      * @return The singleton instance.
      */
-    static NotificationCenter* instance();
+    static NotificationCenter& instance();
 
     /**
      * Adds the observer to the list of observers to send notifications.

@@ -14,9 +14,6 @@
 
 namespace bump {
 
-// Global singleton mutex
-static boost::mutex gLogSingletonMutex;
-
 Log::Log()
     : _isEnabled(true),
       _logLevel(WARNING_LVL),
@@ -89,10 +86,9 @@ Log::Log()
 
 Log::~Log() { ; }
 
-Log* Log::instance() {
-    boost::mutex::scoped_lock lock(gLogSingletonMutex);
+Log& Log::instance() {
     static Log log;
-    return &log;
+    return log;
 }
 
 void Log::setIsLogEnabled(bool enabled) {
@@ -238,177 +234,177 @@ boost::mutex& Log::convenienceFunctionMutex() {
 }  // namespace bump
 
 void bumpALWAYS(const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::ALWAYS_LVL)) {
-        bump::Log::instance()->logStream() << message << std::endl;
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::ALWAYS_LVL)) {
+        log.logStream() << message << std::endl;
     }
 }
 
 void bumpERROR(const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::ERROR_LVL)) {
-        bump::Log::instance()->logStream() << message << std::endl;
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::ERROR_LVL)) {
+        log.logStream() << message << std::endl;
     }
 }
 
 void bumpWARNING(const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::WARNING_LVL)) {
-        bump::Log::instance()->logStream() << message << std::endl;
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::WARNING_LVL)) {
+        log.logStream() << message << std::endl;
     }
 }
 
 void bumpINFO(const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::INFO_LVL)) {
-        bump::Log::instance()->logStream() << message << std::endl;
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::INFO_LVL)) {
+        log.logStream() << message << std::endl;
     }
 }
 
 void bumpDEBUG(const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::DEBUG_LVL)) {
-        bump::Log::instance()->logStream() << message << std::endl;
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::DEBUG_LVL)) {
+        log.logStream() << message << std::endl;
     }
 }
 
 void bumpNEWLINE() {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::ALWAYS_LVL)) {
-        bump::Log::instance()->logStream() << std::endl;
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::ALWAYS_LVL)) {
+        log.logStream() << std::endl;
     }
 }
 
 void bumpALWAYS_F(const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::ALWAYS_LVL)) {
-        std::flush(bump::Log::instance()->logStream() << message);
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::ALWAYS_LVL)) {
+        std::flush(log.logStream() << message);
     }
 }
 
 void bumpERROR_F(const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::ERROR_LVL)) {
-        std::flush(bump::Log::instance()->logStream() << message);
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::ERROR_LVL)) {
+        std::flush(log.logStream() << message);
     }
 }
 
 void bumpWARNING_F(const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::WARNING_LVL)) {
-        std::flush(bump::Log::instance()->logStream() << message);
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::WARNING_LVL)) {
+        std::flush(log.logStream() << message);
     }
 }
 
 void bumpINFO_F(const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::INFO_LVL)) {
-        std::flush(bump::Log::instance()->logStream() << message);
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::INFO_LVL)) {
+        std::flush(log.logStream() << message);
     }
 }
 
 void bumpDEBUG_F(const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::DEBUG_LVL)) {
-        std::flush(bump::Log::instance()->logStream() << message);
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::DEBUG_LVL)) {
+        std::flush(log.logStream() << message);
     }
 }
 
 void bumpALWAYS_P(const bump::String& prefix, const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::ALWAYS_LVL)) {
-        bump::Log::instance()->logStream(prefix) << message << std::endl;
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::ALWAYS_LVL)) {
+        log.logStream(prefix) << message << std::endl;
     }
 }
 
 void bumpERROR_P(const bump::String& prefix, const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::ERROR_LVL)) {
-        bump::Log::instance()->logStream(prefix) << message << std::endl;
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::ERROR_LVL)) {
+        log.logStream(prefix) << message << std::endl;
     }
 }
 
 void bumpWARNING_P(const bump::String& prefix, const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::WARNING_LVL)) {
-        bump::Log::instance()->logStream(prefix) << message << std::endl;
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::WARNING_LVL)) {
+        log.logStream(prefix) << message << std::endl;
     }
 }
 
 void bumpINFO_P(const bump::String& prefix, const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::INFO_LVL)) {
-        bump::Log::instance()->logStream(prefix) << message << std::endl;
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::INFO_LVL)) {
+        log.logStream(prefix) << message << std::endl;
     }
 }
 
 void bumpDEBUG_P(const bump::String& prefix, const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::DEBUG_LVL)) {
-        bump::Log::instance()->logStream(prefix) << message << std::endl;
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::DEBUG_LVL)) {
+        log.logStream(prefix) << message << std::endl;
     }
 }
 
 void bumpNEWLINE_P(const bump::String& prefix) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::ALWAYS_LVL)) {
-        bump::Log::instance()->logStream(prefix) << std::endl;
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::ALWAYS_LVL)) {
+        log.logStream(prefix) << std::endl;
     }
 }
 
 void bumpALWAYS_PF(const bump::String& prefix, const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::ALWAYS_LVL)) {
-        std::flush(bump::Log::instance()->logStream(prefix) << message);
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::ALWAYS_LVL)) {
+        std::flush(log.logStream(prefix) << message);
     }
 }
 
 void bumpERROR_PF(const bump::String& prefix, const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::ERROR_LVL)) {
-        std::flush(bump::Log::instance()->logStream(prefix) << message);
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::ERROR_LVL)) {
+        std::flush(log.logStream(prefix) << message);
     }
 }
 
 void bumpWARNING_PF(const bump::String& prefix, const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::WARNING_LVL)) {
-        std::flush(bump::Log::instance()->logStream(prefix) << message);
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::WARNING_LVL)) {
+        std::flush(log.logStream(prefix) << message);
     }
 }
 
 void bumpINFO_PF(const bump::String& prefix, const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::INFO_LVL)) {
-        std::flush(bump::Log::instance()->logStream(prefix) << message);
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::INFO_LVL)) {
+        std::flush(log.logStream(prefix) << message);
     }
 }
 
 void bumpDEBUG_PF(const bump::String& prefix, const bump::String& message) {
-    boost::mutex::scoped_lock lock(
-        bump::Log::instance()->convenienceFunctionMutex());
-    if (bump::Log::instance()->isLogLevelEnabled(bump::Log::DEBUG_LVL)) {
-        std::flush(bump::Log::instance()->logStream(prefix) << message);
+    bump::Log& log = bump::Log::instance();
+    boost::mutex::scoped_lock lock(log.convenienceFunctionMutex());
+    if (log.isLogLevelEnabled(bump::Log::DEBUG_LVL)) {
+        std::flush(log.logStream(prefix) << message);
     }
 }

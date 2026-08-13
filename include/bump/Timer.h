@@ -41,7 +41,7 @@ public:
      *
      * @return The singleton instance.
      */
-    static Timer* instance();
+    static Timer& instance();
 
     /**
      * Starts the timer.
