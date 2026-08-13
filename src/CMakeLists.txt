@@ -199,10 +199,14 @@ target_compile_definitions(bump PUBLIC
 )
 
 target_compile_definitions(bump
-    PUBLIC
+    PRIVATE
+        # Only Environment_win.cpp includes <windows.h>, and no public header
+        # reaches it -- not through Boost either, whose thread, timer, filesystem
+        # and uuid headers declare what they need through boost/winapi rather
+        # than including it. So these describe how bump compiles, not anything a
+        # consumer needs to use bump.
         "$<$<PLATFORM_ID:Windows>:NOMINMAX>"
         "$<$<PLATFORM_ID:Windows>:WIN32_LEAN_AND_MEAN>"
-    PRIVATE
         # Boost.Filesystem defaults consumers to v3 while building its own
         # binaries as v4 (config.hpp:26-31). v3 and v4 differ observably:
         # path("/a/b/").filename() is "." under v3 and "" under v4, which reaches
