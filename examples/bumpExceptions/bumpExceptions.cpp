@@ -11,6 +11,7 @@
 #include <bump/TypeCastError.h>
 
 #include <iostream>
+#include <memory>
 
 void valueMustBePositive(int value) {
     if (value < 0) {
@@ -46,13 +47,11 @@ public:
 class Derived : public Base {};
 
 void tryToTypeCast() {
-    // Create some Base and Derived objects
-    Base* base1 = new Derived;
-    Base* base2 = new Base;
-    Derived* base3;
+    std::unique_ptr<Base> base1 = std::make_unique<Derived>();
+    std::unique_ptr<Base> base2 = std::make_unique<Base>();
 
     // Try to cast base1 to a Derived
-    base3 = dynamic_cast<Derived*>(base1);
+    Derived* base3 = dynamic_cast<Derived*>(base1.get());
     if (base3) {
         std::cout << "Successfully cast base1 to a Derived" << std::endl;
     } else {
@@ -61,7 +60,7 @@ void tryToTypeCast() {
     }
 
     // Try to cast base2 to a Derived
-    base3 = dynamic_cast<Derived*>(base2);
+    base3 = dynamic_cast<Derived*>(base2.get());
     if (base3) {
         std::cout << "Successfully cast base2 to a Derived" << std::endl;
     } else {
