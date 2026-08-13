@@ -2,14 +2,13 @@
 #                                   Unit tests
 #==============================================================================
 # One executable per suite, named after its directory. Each is independently
-# buildable, runnable, debuggable and installed.
+# buildable, runnable and debuggable.
 #
 # gtest_discover_tests still exposes every TEST_F individually on top of that,
 # so `ctest -R` and `ctest -j` keep working at single-test granularity.
 
 include(GoogleTest)
 
-set(CMAKE_INSTALL_RPATH "${BUMP_RUNTIME_INSTALL_RPATH}")
 set(CMAKE_FOLDER "bump/tests")
 
 set(BUMP_TEST_SUITES
@@ -50,20 +49,16 @@ set(bumpStringTests_SOURCES StringTest.cpp)
 set(bumpTextFileReaderTests_SOURCES TextFileReaderTest.cpp)
 set(bumpUuidTests_SOURCES UuidTest.cpp)
 
-# The three suites whose fixtures create a "unittest" tree in the working
-# directory, chdir into it, and delete it wholesale in TearDown. The other five
-# never touch the filesystem.
-set(BUMP_FILESYSTEM_SUITES
-    bumpFileInfoTests
-    bumpFileSystemTests
-    bumpTextFileReaderTests
-)
-
 foreach(suite IN LISTS BUMP_TEST_SUITES)
     list(TRANSFORM ${suite}_SOURCES PREPEND "${suite}/"
          OUTPUT_VARIABLE _bump_suite_sources)
 
-    add_executable(${suite} ${_bump_suite_sources})
+    # LaunchDirectoryGuard registers a global test environment asserting that
+    # running the suite leaves the directory it was launched from alone.
+    add_executable(${suite}
+        ${_bump_suite_sources}
+        "${CMAKE_CURRENT_SOURCE_DIR}/LaunchDirectoryGuard.cpp"
+    )
 
     target_link_libraries(${suite} PRIVATE
         Bump::bump
@@ -71,9 +66,10 @@ foreach(suite IN LISTS BUMP_TEST_SUITES)
         GTest::gtest_main
     )
 
-    # FileInfoTest.h and FileSystemTest.h are included as "FileInfoTest.h" from
-    # their sibling partner translation units.
-    target_include_directories(${suite} PRIVATE "${suite}")
+    target_include_directories(${suite} PRIVATE
+        "${suite}"
+        "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
 
     target_compile_options(${suite} PRIVATE
         "$<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wall;-Wextra>"
@@ -85,26 +81,12 @@ foreach(suite IN LISTS BUMP_TEST_SUITES)
     #--------------------------------------------------------------------------
     # CTest registration
     #--------------------------------------------------------------------------
-    # A scratch directory per suite, which removes cross-suite collision
-    # outright.
-
-    set(_bump_suite_scratch "${CMAKE_CURRENT_BINARY_DIR}/test-scratch/${suite}")
-    file(MAKE_DIRECTORY "${_bump_suite_scratch}")
-
-    if("${suite}" IN_LIST BUMP_FILESYSTEM_SUITES)
-        set(_bump_suite_properties PROPERTIES RESOURCE_LOCK "${suite}")
-    else()
-        set(_bump_suite_properties)
-    endif()
-
     # PRE_TEST rather than the default POST_BUILD: POST_BUILD runs the binary at
     # build time to enumerate tests, which fails for a shared build before the
     # loader path is set and is wrong when cross-compiling x86_64 on arm64.
     gtest_discover_tests(${suite}
         DISCOVERY_MODE PRE_TEST
-        WORKING_DIRECTORY "${_bump_suite_scratch}"
         XML_OUTPUT_DIR "${CMAKE_BINARY_DIR}/test-results"
-        ${_bump_suite_properties}
     )
 endforeach()
 
@@ -120,23 +102,6 @@ target_compile_options(bumpTextFileReaderTests PRIVATE
     "$<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-literal-conversion>"
     "$<$<CXX_COMPILER_ID:MSVC>:/wd4244>"
 )
-
-install(TARGETS ${BUMP_TEST_SUITES}
-    RUNTIME DESTINATION "${BUMP_RUNTIME_INSTALL_DIR}/tests"
-)
-
-# Windows has no RPATH, so the DLLs have to sit beside the executables. The union
-# over the whole group, not one representative: a suite that grows a dependency
-# the others lack is then still covered.
-if(WIN32 AND BUILD_SHARED_LIBS)
-    set(_bump_suite_dlls "")
-    foreach(suite IN LISTS BUMP_TEST_SUITES)
-        list(APPEND _bump_suite_dlls "$<TARGET_RUNTIME_DLLS:${suite}>")
-    endforeach()
-
-    install(FILES "$<REMOVE_DUPLICATES:${_bump_suite_dlls}>"
-        DESTINATION "${BUMP_RUNTIME_INSTALL_DIR}/tests")
-endif()
 
 #==============================================================================
 #                          Exported symbol policy

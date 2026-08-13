@@ -11,6 +11,8 @@
 #include <bump/String.h>
 #include <gtest/gtest.h>
 
+#include "ScratchDirectory.h"
+
 namespace bumpTest {
 
 /**
@@ -32,6 +34,10 @@ protected:
     void TearDown() override;
 
     // Instance member variables
+
+    /** Owns the working directory the tree below is built in and removed from. */
+    ScratchDirectory _scratch;
+
     bump::String _unittestDirectory;
     bump::String _filesDirectory;
     bump::String _regularDirectory;

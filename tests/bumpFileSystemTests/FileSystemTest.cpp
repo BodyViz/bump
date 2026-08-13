@@ -86,11 +86,9 @@ void FileSystemTest::SetUp() {
 }
 
 void FileSystemTest::TearDown() {
-    // Put the current path back to what it was originally
+    // Put the current path back to what it was originally. The tree itself goes
+    // when the scratch directory does.
     bump::FileSystem::setCurrentPath(_currentPath);
-
-    // Remove the entire directory structure that was built
-    bump::FileSystem::removeDirectoryAndContents("unittest");
 }
 
 TEST_F(FileSystemTest, testConvertToWindowsPath) {

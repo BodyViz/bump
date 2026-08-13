@@ -15,6 +15,8 @@
 
 #include <fstream>
 
+#include "ScratchDirectory.h"
+
 namespace bumpTest {
 
 /**
@@ -25,6 +27,9 @@ namespace bumpTest {
  */
 class TextFileReaderTest : public ::testing::Test {
 protected:
+    /** Owns the working directory the tree below is built in and removed from. */
+    ScratchDirectory _scratch;
+
     /** Run immediately before a test starts. Starts the timer. */
     void SetUp() override {
         // Set the Log level so no unneccessary information is provided
@@ -71,8 +76,7 @@ protected:
         // Put the current path back to what it was originally
         bump::FileSystem::setCurrentPath(_currentPath);
 
-        // Remove the entire directory structure that was built
-        bump::FileSystem::removeDirectoryAndContents("unittest");
+        // The tree itself goes when the scratch directory does.
 
         // Reset the Log level to what it was before
         bump::Log::instance()->setLogLevel(_previousLogLevel);

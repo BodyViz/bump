@@ -136,11 +136,6 @@ void FileInfoTest::SetUp() {
     stream.close();
 }
 
-void FileInfoTest::TearDown() {
-    // Remove the entire directory structure that was built
-    bump::FileSystem::removeDirectoryAndContents("unittest");
-}
-
 TEST_F(FileInfoTest, testExists) {
     // Test valid directories
     EXPECT_TRUE(bump::FileInfo(_unittestDirectory).exists());
