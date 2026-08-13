@@ -65,12 +65,11 @@ public:
 
 protected:
     // Instance member variables
-    Algorithm _algorithm; /**< @internal The algorithm to use to generate the
-                             cryptographic hash. */
-    const char* _data;    /**< @internal The data used to generate the
-                             cryptographic hash. */
-    int _length; /**< @internal The length of the data used to generate the
-                    cryptographic hash. */
+    Algorithm _algorithm;    /**< @internal The algorithm to use to generate the
+                                cryptographic hash. */
+    bool _hasData;           /**< @internal Whether any data has been set. */
+    unsigned char _hash[20]; /**< @internal The digest of the data most recently
+                                set. The data itself is not retained. */
 };
 
 }  // namespace bump

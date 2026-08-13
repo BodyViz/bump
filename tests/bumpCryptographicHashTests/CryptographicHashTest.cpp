@@ -51,6 +51,41 @@ TEST_F(CryptographicHashTest, testSetDataString) {
     EXPECT_STREQ("", result.c_str());
 }
 
+TEST_F(CryptographicHashTest, testSetDataStringLifetime) {
+    // The same content as testSetDataString's first case, so the expected hash
+    // is the one that case already pins down.
+    const char* const text = "This is a simple string that I'm going to hash";
+    const char* const expected = "364fd3e0c0c454cb0c0fb393ede75f7f66b28eb6";
+
+    // A temporary. String has a non-explicit constructor from const char*, so
+    // this is what the obvious one-argument call actually does.
+    bump::CryptographicHash hash;
+    hash.setData(text);
+    EXPECT_STREQ(expected, hash.result().c_str());
+
+    // An explicit temporary, which dies at the end of the full expression
+    hash = bump::CryptographicHash();
+    hash.setData(bump::String(text));
+    EXPECT_STREQ(expected, hash.result().c_str());
+
+    // The result of an expression, which is the same thing a caller writes when
+    // building the input inline
+    hash = bump::CryptographicHash();
+    hash.setData(bump::String("This is a simple string ") +
+                 bump::String("that I'm going to hash"));
+    EXPECT_STREQ(expected, hash.result().c_str());
+
+    // A named string that outlives the call but is reassigned before the hash
+    // is asked for. Nothing here is a temporary; the data still has to have
+    // been taken at setData time.
+    hash = bump::CryptographicHash();
+    bump::String data = text;
+    hash.setData(data);
+    data = "a completely different and rather longer string, forcing the "
+           "original buffer to be given up";
+    EXPECT_STREQ(expected, hash.result().c_str());
+}
+
 TEST_F(CryptographicHashTest, testSetDataCharStar) {
     // Normal case #1
     bump::CryptographicHash hash;

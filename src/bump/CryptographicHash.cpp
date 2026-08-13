@@ -12,37 +12,30 @@
 namespace bump {
 
 CryptographicHash::CryptographicHash(const Algorithm& algorithm)
-    : _algorithm(algorithm), _data(nullptr), _length(0) {
+    : _algorithm(algorithm), _hasData(false), _hash() {
     ;
 }
 
 void CryptographicHash::setData(const String& data) {
-    _data = data.c_str();
-    _length = data.length();
+    setData(data.data(), static_cast<int>(data.size()));
 }
 
 void CryptographicHash::setData(const char* data, int length) {
-    _data = data;
-    _length = length;
+    _hasData = length > 0;
+    if (_hasData) {
+        sha1::calc(data, length, _hash);
+    }
 }
 
-void CryptographicHash::reset() {
-    _data = nullptr;
-    _length = 0;
-}
+void CryptographicHash::reset() { _hasData = false; }
 
 String CryptographicHash::result() {
-    // Make sure the data has been set
-    if (_data == nullptr || _length == 0) {
+    if (!_hasData) {
         return String();
     }
 
-    // Compute the hash using the sha1 algorithm
-    unsigned char hash[20];
     char hexstring[41];
-    hexstring[40] = 0;
-    sha1::calc(_data, _length, hash);
-    sha1::toHexString(hash, hexstring);
+    sha1::toHexString(_hash, hexstring);
 
     return String(hexstring);
 }
